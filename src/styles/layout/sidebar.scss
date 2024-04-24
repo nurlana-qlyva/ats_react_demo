@@ -1,0 +1,41 @@
+.sidebar {
+    height: 100vh;
+    padding: 16px 24px;
+    background-color: #2b3a4a;
+    color: #fff;
+
+    img {
+        width: 200px;
+    }
+
+    .panel {
+        padding: 50px 0;
+
+        .p-panelmenu-panel {
+            a {
+                color: $white;
+                @include flex($align: center, $justify: space-between);
+                padding: 6px 0;
+
+                .link {
+                    @include flex($align: center, $justify: start);
+                    gap: 14px;
+                }
+            }
+
+
+            .p-panelmenu-root-list.p-submenu-list {
+                padding: 0 16px;
+            }
+        }
+    }
+
+}
+
+.p-sidebar-header.p-sidebar-custom-header {
+    flex-direction: row-reverse;
+}
+
+.pi-filter::before {
+    font-size: 12px;
+}
