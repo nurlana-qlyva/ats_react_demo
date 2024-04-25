@@ -38,6 +38,9 @@ const LoginForm = () => {
       if (!!response.data.accessToken) {
         setToken(response.data?.accessToken)
         localStorage.setItem('token', response.data?.accessToken)
+        const expirationTime = new Date();
+        expirationTime.setHours(23, 59, 5, 9);
+        localStorage.setItem("tokenExpiration", expirationTime);
         navigate('/')
       }
     } catch (error) {

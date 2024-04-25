@@ -66,6 +66,13 @@ const Araclar = () => {
   }
 
   useEffect(() => {
+    AraclarSearchService(search).then(res => {
+      setVehicles(res.data.vehicleList)
+      setVehiclesCount(res.data.vehicleCount)
+    })
+  }, [])
+
+  useEffect(() => {
     AraclarSearchService(search, currentPage).then(res => {
       setVehicles(res.data.vehicleList)
       setVehiclesCount(res.data.vehicleCount)
