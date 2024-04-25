@@ -1,10 +1,17 @@
 import React, { createContext, useState, ReactNode } from "react";
 import { AracData } from "../../../../../types";
 
-
 interface DataContextType {
     data: AracData | null;
     setData: React.Dispatch<React.SetStateAction<AracData | null>>;
+    isLoaded: {
+        iseLoad: boolean;
+        selectId: string;
+    };
+    setIsLoaded: React.Dispatch<React.SetStateAction<{
+        iseLoad: boolean;
+        selectId: string;
+    }>>;
 }
 
 export const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -15,7 +22,6 @@ const DataContextProvider = ({ children }: { children: ReactNode }) => {
         iseLoad: false,
         selectId: ''
     });
-
 
     return (
         <DataContext.Provider value={{ data, setData, isLoaded, setIsLoaded }}>
