@@ -9,13 +9,16 @@ import 'primeicons/primeicons.css'
 import { BrowserRouter } from 'react-router-dom'
 import { TokenProvider } from './context/TokenContext.tsx'
 import DataContextProvider from './_root/pages/araclar/components/add-modal/DataContext.tsx'
+import VehicleContextProvider from './_root/pages/araclar/VehicleContext.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <TokenProvider>
         <DataContextProvider>
-          <App />
+          <VehicleContextProvider>
+            <App />
+          </VehicleContextProvider>
         </DataContextProvider>
       </TokenProvider>
     </BrowserRouter>

@@ -1,26 +1,25 @@
 import { useContext, useEffect, useState } from 'react';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Controller } from 'react-hook-form';
+import { CodeSelectService } from '../../api/service';
+import { CodeCustomSelectService } from '../../../../../../api/service';
 import { DataContext } from '../DataContext';
-import { CodeSelectService } from '../../../../../../api/service';
 
 interface SelectOptionValue {
-    codeDelete: boolean;
-    codeText: string;
-    codeUpdate: boolean;
-    codeView: boolean;
-    id: number;
+    mark: string;
+    modelDef: string;
+    markId: number;
     siraNo: number;
 }
 
-const SelectBox = ({ control, label, name, selectID }) => {
+const ModelSelectbox = ({ control, label, name, url }) => {
     const [selectData, setSelectData] = useState<SelectOptionValue[]>([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const handleRequest = () => {
-        if (selectID && !isLoaded && selectData.length === 0) {
-            CodeSelectService(selectID).then(res => {
+        if (url && !isLoaded && selectData.length === 0) {
+            CodeCustomSelectService(url).then(res => {
                 setSelectData(res.data);
                 setIsLoaded(true);
             });
@@ -32,7 +31,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{option.codeText}</div>
+                    <div>{option.modelDef}</div>
                 </div>
             );
         }
@@ -43,7 +42,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
         return (
             <>
                 <div className="flex align-items-center">
-                    <div>{option.codeText}</div>
+                    <div>{option.modelDef}</div>
                 </div>
             </>
         );
@@ -77,4 +76,4 @@ const SelectBox = ({ control, label, name, selectID }) => {
     );
 };
 
-export default SelectBox;
+export default ModelSelectbox;

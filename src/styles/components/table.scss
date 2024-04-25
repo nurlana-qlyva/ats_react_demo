@@ -10,10 +10,21 @@
 }
 
 .p-dialog-mask {
-    h2 {
+    h3 {
         color: $secondary;
         border-bottom: 1px solid $gray-300;
         padding-bottom: 18px;
+    }
+
+    h2 {
+        font-size: 20px;
+        border-bottom: 1px solid $gray-300;
+        padding-bottom: 18px;
+
+        span {
+            color: $secondary;
+            font-size: 20px;
+        }
     }
 }
 

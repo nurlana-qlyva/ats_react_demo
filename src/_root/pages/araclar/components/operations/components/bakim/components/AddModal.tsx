@@ -3,14 +3,12 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 // components
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-// import { TabView, TabPanel } from 'primereact/tabview';
-// import { InputText } from "primereact/inputtext";
-// import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-// import TextInput from './components/TextInput';
-// import SelectBox from './components/SelectBox';
-// import PhotoUpload from './components/PhotoUpload';
-// import FileUploadComp from './components/FileUploadComp';
-
+import { Calendar } from 'primereact/calendar';
+import TextInput from '../../../../../../../components/TextInput';
+import SelectBox from '../../../../../../../components/SelectBox';
+import { Divider } from 'primereact/divider';
+import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
+import { Checkbox } from "primereact/checkbox";
 
 const AddModal = () => {
     const [visible, setVisible] = useState<boolean>(false);
@@ -34,115 +32,189 @@ const AddModal = () => {
         <div className="card flex">
             <Button label="Ekle" icon="pi pi-plus" onClick={() => setVisible(true)} className='add-btn' />
             <Dialog visible={visible} style={{ width: '70vw' }} onHide={() => setVisible(false)} footer={footerContent}>
-                salam
-                {/* <TabView>
-                    <TabPanel header="Genel Bilgiler">
-                        <div className="border-1 border-300 border-round p-3">
-                            <div className="grid">
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Plaka"} name={"plaka"} type="text" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <SelectBox control={control} label="Araç Tipi" name="aracTipi" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Güncel Km."} name={"guncelKm"} type="text" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid mt-1">
-                            <div className="col-12 md:col-8">
-                                <div className="border-1 border-300 border-round p-3">
-                                    <h2>Araç Bilgileri</h2>
-                                    <div className="grid mt-2">
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Marka" name="marka" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <TextInput control={control} label={"Model Yılı"} name={"modelYili"} type="text" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Model" name="model" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Araç Grubu" name="aracGrubu" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Araç Cinsi" name="aracCinsi" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Renk" name="renk" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Lokasyon" name="lokasyon" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Departman" name="departman" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Sürücü" name="surucu" />
-                                        </div>
-                                        <div className="col-12 md:col-6 lg:col-4">
-                                            <SelectBox control={control} label="Yakıt Tipi" name="yakitTipi" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 md:col-4">
-                                <div className="border-1 border-300 border-round p-3">
-                                    <h2>Yenilenme Tarihleri</h2>
-                                    <div className="grid mt-2">
-                                        <div className="col-12 md:col-6">
-                                            <TextInput control={control} label={"Muayene"} name={"muayene"} type="date" color={"#007bff"} />
-                                        </div>
-                                        <div className="col-12 md:col-6">
-                                            <TextInput control={control} label={"Sözleşme"} name={"sozlesme"} type="date" color={"#007bff"} />
-                                        </div>
-                                        <div className="col-12 md:col-6">
-                                            <TextInput control={control} label={"Egzoz Emisyon"} name={"egzozEmisyon"} type="date" color={"#007bff"} />
-                                        </div>
-                                        <div className="col-12 md:col-6">
-                                            <TextInput control={control} label={"Vergi"} name={"vergi"} type="date" color={"#007bff"} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </TabPanel>
-                    <TabPanel header="Özel Alanlar">
+                <h2>Servis Bilgileri Plaka: <span>[16 EG 1231 [BMW - X6]]</span></h2>
+                <div className="grid py-4">
+                    <div className="col-12 md:col-6 lg:col-3">
                         <div className="grid">
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label={"Özel Alan 1"} name={"aracOzelAlan1"} type="text" />
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"servisTarih"}>Tarih</label>
+                                <Controller
+                                    name="servisTarih"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                                />
                             </div>
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label="Özel Alan 2" name="aracOzelAlan2" />
-                            </div>
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label={"Özel Alan 3"} name={"aracOzelAlan3"} type="text" />
-                            </div>
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label={"Özel Alan 4"} name={"aracOzelAlan4"} type="text" />
-                            </div>
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label={"Özel Alan 5"} name={"aracOzelAlan5"} type="text" />
-                            </div>
-                            <div className="col-12 md:col-6 lg:col-4">
-                                <TextInput control={control} label={"Özel Alan 6"} name={"aracOzelAlan6"} type="text" />
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"servisSaat"}>Saat</label>
+                                <Controller
+                                    name="servisSaat"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} timeOnly />}
+                                />
                             </div>
                         </div>
-                    </TabPanel>
-                    <TabPanel header="Resimler">
-                        <PhotoUpload />
-                    </TabPanel>
-                    <TabPanel header="Ekli Belgeler">
-                        <FileUploadComp />
-                    </TabPanel>
-                </TabView> */}
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"Servis Kodu"} name={"servisKodu"} type="text" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label="Servis Tipi" name="servisTipi" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label="Servis Tanımı" name="servisTanimi" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label="Servis Nedeni" name="servisNedeni" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label={"Sürücü"} name={"surucu"} />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"Fatura No"} name={"faturaNo"} type="text" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3 flex flex-column gap-2">
+                        <label htmlFor={"faturaTarihi"}>Fatura Tarihi</label>
+                        <Controller
+                            name="faturaTarihi"
+                            control={control}
+                            render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                        />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"Hasar No"} name={"hasarNo"} type="text" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"Talep No"} name={"talepNo"} type="text" />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"İş Emri No"} name={"isEmriNo"} type="text" />
+                    </div>
+                </div>
+                <Divider />
+                <div className="grid py-4">
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="grid">
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"baslamaTarihi"}>Başlama Tarihi</label>
+                                <Controller
+                                    name="baslamaTarihi"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                                />
+                            </div>
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"baslamaSaati"}>Saat</label>
+                                <Controller
+                                    name="baslamaSaati"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} timeOnly />}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="grid">
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"bitisTarihi"}>Bitiş Tarihi</label>
+                                <Controller
+                                    name="bitisTarihi"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                                />
+                            </div>
+                            <div className="col-6 flex flex-column gap-2">
+                                <label htmlFor={"bitisSaati"}>Saat</label>
+                                <Controller
+                                    name="bitisSaati"
+                                    control={control}
+                                    render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} timeOnly />}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <TextInput control={control} label={"Araç Km."} name={"aracKm"} type="text" />
+                    </div>
+                </div>
+                <Divider />
+                <div className="grid py-4">
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label={"Masraf Merkezi"} name={"masrafMerkei"} />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label={"Lokasyon"} name={"lokasyon"} />
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <SelectBox control={control} label={"Onay"} name={"onay"} />
+                    </div>
+                </div>
+                <Divider />
+                <div className="grid py-4">
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="durum"
+                                control={control}
+                                render={({ field }) => <Checkbox inputId="tamamlandi" name="durum" value="tamamlandi" />}
+                            />
+                            <label htmlFor="tamamlandi" className="ml-2">Tamamlandı</label>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="durum"
+                                control={control}
+                                render={({ field }) => <Checkbox inputId="tekrarlanacak" name="durum" value="tekrarlanacak" />}
+                            />
+                            <label htmlFor="tekrarlanacak" className="ml-2">Tekrarlanacak</label>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="durum"
+                                control={control}
+                                render={({ field }) => <Checkbox inputId="yapilamadi" name="durum" value="Cheese" />}
+                            />
+                            <label htmlFor="yapilamadi" className="ml-2">Yapılamadı</label>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="durum"
+                                control={control}
+                                render={({ field }) => <Checkbox inputId="garantiKapsaminda" name="durum" value="Cheese" />}
+                            />
+                            <label htmlFor="garantiKapsaminda" className="ml-2">Garanti Kapsamında</label>
+                        </div>
+                    </div>
+                </div>
+                <Divider />
+                <div className="grid py-4">
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="islemiYapan"
+                                control={control}
+                                render={({ field }) => <RadioButton {...field} inputId="islemiYapan1" name="islemiYapan" value="yetkiliServis" />}
+                            />
+                            <label htmlFor="islemiYapa1" className="ml-2">Yetkili Servis</label>
+                        </div>
+                    </div>
+                    <div className="col-12 md:col-6 lg:col-3">
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="baslamaSaati"
+                                control={control}
+                                render={({ field }) => <RadioButton {...field} inputId="islemiYapan2" name="islemiYapan" value="BakimAtolyesi" />}
+                            />
+                            <label htmlFor="islemiYapa2" className="ml-2">Bakım Atölyesi</label>
+                        </div>
+                    </div>
+                </div>
             </Dialog>
-
         </div>
     )
 }

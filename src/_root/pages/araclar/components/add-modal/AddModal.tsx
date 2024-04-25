@@ -4,16 +4,18 @@ import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-for
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { TabView, TabPanel } from 'primereact/tabview';
-import TextInput from './components/TextInput';
-import SelectBox from './components/SelectBox';
-import PhotoUpload from './components/PhotoUpload';
-import FileUploadComp from './components/FileUploadComp';
+import TextInput from '../../../../components/TextInput';
+import SelectBox from '../../../../components/SelectBox';
+import PhotoUpload from '../../../../components/PhotoUpload';
+import FileUploadComp from '../../../../components/FileUploadComp';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 
 
 import { DataContext } from './DataContext';
 import { AracData } from '../../../../../types';
+import MarkaSelectbox from './components/MarkaSelectbox';
+import ModelSelectbox from './components/ModelSelectbox';
 
 
 const AddModal = () => {
@@ -83,16 +85,16 @@ const AddModal = () => {
                             <div className="grid mt-1">
                                 <div className="col-12 md:col-8">
                                     <div className="border-1 border-300 border-round p-3">
-                                        <h2>Araç Bilgileri</h2>
+                                        <h3>Araç Bilgileri</h3>
                                         <div className="grid mt-2">
                                             <div className="col-12 md:col-6 lg:col-4">
-                                                <SelectBox control={control} label="Marka" name="marka" />
+                                                <MarkaSelectbox control={control} label="Marka" name="marka" url="Mark/GetMarkList" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
                                                 <TextInput control={control} label={"Model Yılı"} name={"modelYili"} type="text" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
-                                                <SelectBox control={control} label="Model" name="model" />
+                                                <ModelSelectbox control={control} label="Model" name="model" url="Model/GetModelList" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
                                                 <SelectBox control={control} label="Araç Grubu" name="aracGrubu" selectID="101" />
@@ -123,10 +125,10 @@ const AddModal = () => {
                                 </div>
                                 <div className="col-12 md:col-4">
                                     <div className="border-1 border-300 border-round p-3">
-                                        <h2>Yenilenme Tarihleri</h2>
+                                        <h3>Yenilenme Tarihleri</h3>
                                         <div className="grid mt-2">
                                             <div className="col-12 md:col-6 flex flex-column gap-2">
-                                                <label htmlFor={"muayene"} style={{ color: "#007bff"}}>Muayene</label>
+                                                <label htmlFor={"muayene"} style={{ color: "#007bff" }}>Muayene</label>
                                                 <Controller
                                                     name="muayene"
                                                     control={control}
