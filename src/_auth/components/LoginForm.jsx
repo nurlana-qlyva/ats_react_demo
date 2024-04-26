@@ -1,8 +1,6 @@
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-import { ILoginForm } from '../../types'
+import { useForm, Controller } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginUserService } from '../../api/service';
-
 // components
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button';
@@ -26,7 +24,7 @@ const LoginForm = () => {
     }
   })
 
-  const onSubmit: SubmitHandler<ILoginForm> = async data => {
+  const onSubmit= async data => {
     setIsLoading(true)
     const body = {
       KULLANICIKOD: data.username,

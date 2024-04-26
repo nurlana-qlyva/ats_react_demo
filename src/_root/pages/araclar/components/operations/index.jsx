@@ -1,15 +1,13 @@
 import { useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
-import { MenuItem } from 'primereact/menuitem';
-import { Dialog } from 'primereact/dialog';
 import BakimModal from './components/bakim';
 
 export default function Operations() {
-    const [visible, setVisible] = useState<boolean>(false);
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
+    const [visible, setVisible] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
     const menu = useRef(null);
-    const items: MenuItem[] = [
+    const items = [
         {
             label: 'Bakımlar',
             icon: 'pi pi-file',
@@ -96,7 +94,7 @@ export default function Operations() {
         }
     ];
 
-    const handleItemClick = (itemName: string) => {
+    const handleItemClick = (itemName) => {
         setSelectedItem(itemName);
         setVisible(true);
     };
@@ -106,7 +104,7 @@ export default function Operations() {
             case 'Bakımlar':
                 return <BakimModal visible={visible} setVisible={setVisible} />;
             case 'Yakıtlar':
-                return ;
+                return;
             default:
                 return null;
         }

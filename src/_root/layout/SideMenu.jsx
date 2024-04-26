@@ -2,29 +2,28 @@ import { Link } from 'react-router-dom';
 // component
 import { PanelMenu } from 'primereact/panelmenu';
 // icons
-import { FaChartBar, FaCar, FaChevronRight } from 'react-icons/fa';
 
 const SideMenu = () => {
     const itemRenderer = (item, options) => (
         <Link to={item.url} onClick={options.onClick}>
             <div className="link">
-                <span>{item.icon}</span>
+                <span className={item.icon}></span>
                 <span >{item.label}</span>
             </div>
-            {!!item.items && <span><FaChevronRight /></span>}
+            {!!item.items && <span className='pi pi-angle-right' />}
         </Link>
     );
 
     const items = [
         {
             label: 'Dashboard',
-            icon: <FaChartBar />,
+            icon: "pi pi-wave-pulse",
             url: '/',
             template: itemRenderer,
         },
         {
             label: 'Araç Yönetimi',
-            icon: <FaCar />,
+            icon: "pi pi-car",
             template: itemRenderer,
             items: [
                 {

@@ -1,21 +1,20 @@
 
 import { useRef, useState } from 'react';
 import { Toast } from 'primereact/toast';
-import { FileUpload, FileUploadHeaderTemplateOptions, FileUploadSelectEvent, FileUploadUploadEvent, ItemTemplateOptions, } from 'primereact/fileupload';
+import { FileUpload } from 'primereact/fileupload';
 import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
-import { MdDelete } from "react-icons/md"
 
-export default function PhotoUpload() {
-    const toast = useRef<Toast>(null);
+export default function FileUploadComp() {
+    const toast = useRef(null);
     const [totalSize, setTotalSize] = useState(0);
-    const fileUploadRef = useRef<FileUpload>(null);
+    const fileUploadRef = useRef(null);
 
-    const onTemplateSelect = (e: FileUploadUploadEvent) => {
+    const onTemplateSelect = (e) => {
         let _totalSize = totalSize;
-        let files = e.files;
+        const files = e.files;
 
         for (let i = 0; i < files.length; i++) {
             _totalSize += files[i].size || 0;
@@ -24,7 +23,7 @@ export default function PhotoUpload() {
         setTotalSize(_totalSize);
     };
 
-    const onTemplateUpload = (e: FileUploadUploadEvent) => {
+    const onTemplateUpload = (e) => {
         let _totalSize = 0;
 
         e.files.forEach((file) => {
@@ -35,7 +34,7 @@ export default function PhotoUpload() {
         toast.current?.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
 
-    const onTemplateRemove = (file: File, callback: Function) => {
+    const onTemplateRemove = (file, callback) => {
         setTotalSize(totalSize - file.size);
         callback();
     };
@@ -44,8 +43,8 @@ export default function PhotoUpload() {
         setTotalSize(0);
     };
 
-    const headerTemplate = (options: FileUploadHeaderTemplateOptions) => {
-        const { className, chooseButton, uploadButton, cancelButton } = options;
+    const headerTemplate = (options) => {
+        const { className, chooseButton } = options;
         const value = totalSize / 10000;
         const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
 
@@ -60,19 +59,24 @@ export default function PhotoUpload() {
         );
     };
 
-    const itemTemplate = (inFile: object, props: ItemTemplateOptions) => {
-        const file = inFile as File;
+    const itemTemplate = (inFile, props) => {
+        const file = inFile;
         return (
             <div className="flex align-items-center flex-wrap">
                 <div className="flex align-items-center" style={{ width: '40%' }}>
-                    <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
+                    {/* <IoIosDocument style={{ fontSize: '30px', color: '#5B548B' }} /> */}
                     <span className="flex flex-column text-left ml-3">
                         {file.name}
                         <small>{new Date().toLocaleDateString()}</small>
                     </span>
                 </div>
                 <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
-                <Button type="button" icon={<MdDelete />} className="p-button-outlined p-button-rounded p-button-danger ml-auto" onClick={() => onTemplateRemove(file, props.onRemove)} />
+                <Button
+                    type="button"
+                    icon={"<MdDelete />"}
+                    className="p-button-outlined p-button-rounded p-button-danger ml-auto"
+                    onClick={() => onTemplateRemove(file, props.onRemove)}
+                />
             </div>
         );
     };
@@ -98,10 +102,22 @@ export default function PhotoUpload() {
             <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
             <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={10000000}
-                onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
-                headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
-                chooseOptions={chooseOptions} />
+            <FileUpload
+                ref={fileUploadRef}
+                name="demo[]"
+                url="/api/upload"
+                multiple
+                accept="*"
+                maxFileSize={10000000}
+                onUpload={onTemplateUpload}
+                onSelect={onTemplateSelect}
+                onError={onTemplateClear}
+                onClear={onTemplateClear}
+                headerTemplate={headerTemplate}
+                itemTemplate={itemTemplate}
+                emptyTemplate={emptyTemplate}
+                chooseOptions={chooseOptions}
+            />
         </div>
     )
 }

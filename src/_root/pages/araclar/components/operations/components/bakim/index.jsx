@@ -1,22 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { IBakim } from '../../../../../../../types'
 import AddModal from './components/AddModal'
-import {
-    Paginator, PaginatorPageChangeEvent, PaginatorCurrentPageReportOptions, PaginatorRowsPerPageDropdownOptions
-} from 'primereact/paginator';
+import { Paginator } from 'primereact/paginator';
 import { Dropdown } from 'primereact/dropdown';
 
 
-interface ColumnMeta {
-    field: string;
-    header: string;
-}
-const columns: ColumnMeta[] = [
+const columns = [
     { field: 'tarih', header: 'TARİH' },
     { field: 'saat', header: 'SAAT' },
     { field: 'servisTanimi', header: 'SERVİS TANIMI' },
@@ -29,29 +22,28 @@ const columns: ColumnMeta[] = [
 ];
 
 const BakimModal = ({ visible, setVisible }) => {
-    const [bakim, setBakim] = useState<IBakim[]>([]);
-    const [selectedData, setSelectedData] = useState<IBakim[] | null>(null);
-    const [visibleColumns, setVisibleColumns] = useState(columns);
+    const [bakim, setBakim] = useState([]);
+    // const [selectedData, setSelectedData] = useState(null);
+    // const [visibleColumns, setVisibleColumns] = useState(columns);
     // pagination
-    const [first, setFirst] = useState<number[]>([0, 0, 0]);
+    const [first, setFirst] = useState([0, 0, 0]);
     const [rows, setRows] = useState([10, 10, 10]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
 
     const onHide = () => {
         setVisible(false);
     };
 
-    const onPageChange = (e: PaginatorPageChangeEvent, index: number) => {
+    const onPageChange = (e, index) => {
         setFirst(first.map((f, i) => (index === i ? e.first : f)));
         setRows(rows.map((r, i) => (index === i ? e.rows : r)));
         setCurrentPage(e.page + 1)
     };
 
-
     const paginationTemplate = {
         layout: 'RowsPerPageDropdown CurrentPageReport PrevPageLink NextPageLink',
-        RowsPerPageDropdown: (options: PaginatorRowsPerPageDropdownOptions) => {
+        RowsPerPageDropdown: (options) => {
             const dropdownOptions = [
                 { label: 5, value: 5 },
                 { label: 10, value: 10 },
@@ -68,7 +60,7 @@ const BakimModal = ({ visible, setVisible }) => {
                 </React.Fragment>
             );
         },
-        CurrentPageReport: (options: PaginatorCurrentPageReportOptions) => {
+        CurrentPageReport: (options) => {
             return (
                 <span style={{ color: 'var(--text-color)', userSelect: 'none', width: '120px', textAlign: 'center' }}>
                     {options.first} - {options.last} of {options.totalRecords}

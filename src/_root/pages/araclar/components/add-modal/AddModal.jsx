@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form'
+import { useForm, FormProvider, Controller } from 'react-hook-form'
 // components
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -9,17 +9,13 @@ import SelectBox from '../../../../components/SelectBox';
 import PhotoUpload from '../../../../components/PhotoUpload';
 import FileUploadComp from '../../../../components/FileUploadComp';
 import { Calendar } from 'primereact/calendar';
-import { Nullable } from "primereact/ts-helpers";
-
-
 import { DataContext } from './DataContext';
-import { AracData } from '../../../../../types';
 import MarkaSelectbox from './components/MarkaSelectbox';
 import ModelSelectbox from './components/ModelSelectbox';
 
 
 const AddModal = () => {
-    const [visible, setVisible] = useState<boolean>(false);
+    const [visible, setVisible] = useState(false);
     const { setData } = useContext(DataContext)
 
     const defaultValues = {
@@ -36,18 +32,27 @@ const AddModal = () => {
         mulkiyet: "",
         departman: null,
         surucu: null,
-        yakitTipi: null
+        yakitTipi: null,
+        muayene: null,
+        sozlesme: null,
+        egzozEmisyon: null,
+        vergi: null,
+        aracOzelAlan1: "",
+        aracOzelAlan2: "",
+        aracOzelAlan3: "",
+        aracOzelAlan4: "",
+        aracOzelAlan5: "",
+        aracOzelAlan6: "",
     }
 
-    const methods = useForm<AracData>({
+    const methods = useForm({
         defaultValues: defaultValues
     })
 
     const { control, handleSubmit, reset } = methods
 
 
-    const handleSubmitClick: SubmitHandler<FormData> = handleSubmit(value => {
-        console.log(value);
+    const handleSubmitClick = handleSubmit(() => {
         setData(defaultValues);
         reset();
     });

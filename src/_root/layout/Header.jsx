@@ -1,12 +1,9 @@
-// components
+// components 
 import { Menubar } from 'primereact/menubar';
 import { InputText } from 'primereact/inputtext';
 import { Avatar } from 'primereact/avatar';
 
-// icons
-import { AiFillHome } from "react-icons/ai";
-import { FaSearch } from "react-icons/fa";
-
+ 
 const Header = () => {
     const itemRenderer = (item) => (
         <a className="flex align-items-center p-menuitem-link gap-3">
@@ -18,11 +15,11 @@ const Header = () => {
     const items = [
         {
             label: '',
-            icon: <AiFillHome />
+            icon: "pi pi-home"
         },
         {
             label: 'Projects',
-            icon: <FaSearch />,
+            icon: "pi pi-search",
             items: [
                 {
                     label: 'Core',

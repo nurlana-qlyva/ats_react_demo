@@ -1,5 +1,5 @@
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import AuthLayout from "./_auth/AuthLayout";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import AuthLayout from "./_auth/AuthLayout"
 import RootLayout from "./_root/RootLayout";
 import Dashboard from "./_root/pages/dashboard/Dashboard";
 import Araclar from "./_root/pages/araclar";

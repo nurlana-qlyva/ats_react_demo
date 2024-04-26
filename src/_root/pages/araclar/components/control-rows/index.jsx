@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 
 const ControlRows = () => {
-    const [visible, setVisible] = useState<boolean>(false);
+    const [visible, setVisible] = useState(false);
 
     const footerContent = (
         <div className='flex justify-content-end gap-2'>

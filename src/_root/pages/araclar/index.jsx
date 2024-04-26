@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { AraclarFilterService, AraclarSearchService, AraclarService } from '../../../api/service'
+import React, { useEffect, useState } from 'react'
+import { AraclarFilterService, AraclarSearchService } from '../../../api/service'
 import 'primereact/resources/primereact.min.css'
-// types
-import { IAraclar } from '../../../types/index'
 // components
 import { DataTable } from 'primereact/datatable'
 import {
-  Paginator, PaginatorPageChangeEvent, PaginatorCurrentPageReportOptions, PaginatorRowsPerPageDropdownOptions
-} from 'primereact/paginator';
+  Paginator,
+} from 'primereact/paginator'
 import { Column } from 'primereact/column'
 import BreadCrumbComp from '../../components/BreadCrumbComp'
 import AddModal from './components/add-modal/AddModal'
@@ -15,13 +13,10 @@ import Operations from './components/operations'
 import { InputText } from "primereact/inputtext";
 import ControlRows from './components/control-rows'
 import FilterRows from './components/filter'
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
-interface ColumnMeta {
-  field: string;
-  header: string;
-}
-const columns: ColumnMeta[] = [
+
+const columns = [
   { field: 'aracId', header: 'ARAÇ ID' },
   { field: 'plaka', header: 'ARAÇ PLAKA' },
   { field: 'aracTip', header: 'ARAÇ TİP' },
@@ -34,14 +29,14 @@ const columns: ColumnMeta[] = [
 ];
 
 const Araclar = () => {
-  const [vehicles, setVehicles] = useState<IAraclar[]>([]);
-  const [vehiclesCount, setVehiclesCount] = useState<number>(0);
-  const [selectedVehicles, setSelectedVehicles] = useState<number>(0);
+  const [vehicles, setVehicles] = useState([]);
+  const [vehiclesCount, setVehiclesCount] = useState(0);
+  const [selectedVehicles, setSelectedVehicles] = useState(0);
   const [search, setSearch] = useState("")
   // pagination
-  const [first, setFirst] = useState<number[]>([0, 0, 0]);
+  const [first, setFirst] = useState([0, 0, 0]);
   const [rows, setRows] = useState([10, 10, 10]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleSearch = (e) => {
     setSearch(e.target.value)
@@ -59,27 +54,30 @@ const Araclar = () => {
   }
 
   const handleSearchForFilters = (data) => {
+    console.log(data)
     AraclarFilterService(search, data).then(res => {
+      console.log(res.data)
       setVehicles(res.data.vehicleList)
       setVehiclesCount(res.data.vehicleCount)
     })
   }
 
   useEffect(() => {
-    AraclarSearchService(search).then(res => {
-      setVehicles(res.data.vehicleList)
-      setVehiclesCount(res.data.vehicleCount)
-    })
-  }, [])
-
-  useEffect(() => {
-    AraclarSearchService(search, currentPage).then(res => {
-      setVehicles(res.data.vehicleList)
-      setVehiclesCount(res.data.vehicleCount)
-    })
+    if (currentPage === 1) {
+      AraclarSearchService(search).then(res => {
+        setVehicles(res.data.vehicleList)
+        setVehiclesCount(res.data.vehicleCount)
+      })
+    } else {
+      AraclarSearchService(search, currentPage).then(res => {
+        setVehicles(res.data.vehicleList)
+        setVehiclesCount(res.data.vehicleCount)
+      })
+    }
   }, [currentPage])
 
-  const onPageChange = (e: PaginatorPageChangeEvent, index: number) => {
+
+  const onPageChange = (e, index) => {
     setFirst(first.map((f, i) => (index === i ? e.first : f)));
     setRows(rows.map((r, i) => (index === i ? e.rows : r)));
     setCurrentPage(e.page + 1)
@@ -92,10 +90,9 @@ const Araclar = () => {
     })
   }
 
-
   const paginationTemplate = {
     layout: 'RowsPerPageDropdown CurrentPageReport PrevPageLink NextPageLink',
-    RowsPerPageDropdown: (options: PaginatorRowsPerPageDropdownOptions) => {
+    RowsPerPageDropdown: (options) => {
       const dropdownOptions = [
         { label: 5, value: 5 },
         { label: 10, value: 10 },
@@ -112,7 +109,7 @@ const Araclar = () => {
         </React.Fragment>
       );
     },
-    CurrentPageReport: (options: PaginatorCurrentPageReportOptions) => {
+    CurrentPageReport: (options) => {
       return (
         <span style={{ color: 'var(--text-color)', userSelect: 'none', width: '120px', textAlign: 'center' }}>
           {options.first} - {options.last} of {options.totalRecords}

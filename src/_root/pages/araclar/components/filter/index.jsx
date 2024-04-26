@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Dropdown } from "primereact/dropdown";
 
-interface ColumnMeta {
-    name: string;
-    code: string;
-}
 
-const columns: ColumnMeta[] = [
+const columns = [
     { code: "aracId", name: "ARAÇ ID" },
     { code: "plaka", name: "ARAÇ PLAKA" },
     { code: "aracTip", name: "ARAÇ TİP" },
@@ -21,12 +17,12 @@ const columns: ColumnMeta[] = [
     { code: "yakitTip", name: "YAKIT TİPİ" },
 ];
 
-const FilterRows = ({handleSearchForFilters}) => {
-    const [visible, setVisible] = useState<boolean>(false);
-    const [filters, setFilters] = useState<ColumnMeta[]>([]);
-    const [selectedFilter, setSelectedFilter] = useState<ColumnMeta | null>(null);
-    const [inputValues, setInputValues] = useState<string[]>([]);
-    const [data, setData] = useState<{ [key: string]: string }>({
+const FilterRows = ({ handleSearchForFilters }) => {
+    const [visible, setVisible] = useState(false);
+    const [filters, setFilters] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState(null);
+    const [inputValues, setInputValues] = useState([]);
+    const [data, setData] = useState({
         aracId: 0,
         plaka: "",
         aracTip: "",
@@ -52,11 +48,11 @@ const FilterRows = ({handleSearchForFilters}) => {
             updatedData[filter.code] = inputValues[index];
         });
         setData(updatedData);
-        handleSearchForFilters(data)
+        handleSearchForFilters(updatedData)
         setVisible(false)
     };
 
-    const removeFilter = (index: number) => {
+    const removeFilter = (index) => {
         setFilters((prevFilters) => prevFilters.filter((_, i) => i !== index));
         setInputValues((prevInputValues) => prevInputValues.filter((_, i) => i !== index));
     };
@@ -65,7 +61,7 @@ const FilterRows = ({handleSearchForFilters}) => {
         <div key={index} className="border-1 border-300 mb-3 p-3">
             <Dropdown
                 value={filter}
-                onChange={(e: DropdownChangeEvent) => {
+                onChange={(e) => {
                     const updatedFilters = [...filters];
                     updatedFilters[index] = e.value;
                     setFilters(updatedFilters);
@@ -118,7 +114,7 @@ const FilterRows = ({handleSearchForFilters}) => {
                 {filterTemplates}
                 <Dropdown
                     value={selectedFilter}
-                    onChange={(e: DropdownChangeEvent) => setSelectedFilter(e.value)}
+                    onChange={(e) => setSelectedFilter(e.value)}
                     options={columns}
                     optionLabel="name"
                     placeholder="Select a Column"

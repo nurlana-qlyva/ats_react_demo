@@ -1,19 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { useContext, useState } from 'react';
+import { Dropdown } from 'primereact/dropdown';
 import { Controller } from 'react-hook-form';
-import { CodeSelectService } from '../../api/service';
 import { CodeCustomSelectService } from '../../../../../../api/service';
 import { DataContext } from '../DataContext';
 
-interface SelectOptionValue {
-    mark: string;
-    modelDef: string;
-    markId: number;
-    siraNo: number;
-}
 
 const ModelSelectbox = ({ control, label, name, url }) => {
-    const [selectData, setSelectData] = useState<SelectOptionValue[]>([]);
+    const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -27,7 +20,7 @@ const ModelSelectbox = ({ control, label, name, url }) => {
         }
     }
 
-    const selectedTemplate = (option: SelectOptionValue, props) => {
+    const selectedTemplate = (option, props) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
@@ -38,7 +31,7 @@ const ModelSelectbox = ({ control, label, name, url }) => {
         return <span>{props.name}</span>;
     };
 
-    const optionTemplate = (option: SelectOptionValue) => {
+    const optionTemplate = (option) => {
         return (
             <>
                 <div className="flex align-items-center">
@@ -58,7 +51,7 @@ const ModelSelectbox = ({ control, label, name, url }) => {
                     <Dropdown
                         {...field}
                         value={data ? data[name] : null}
-                        onChange={(e: DropdownChangeEvent) => {
+                        onChange={(e) => {
                             setData({ ...data, [name]: e.value });
                             field.onChange(e.value);
                         }}

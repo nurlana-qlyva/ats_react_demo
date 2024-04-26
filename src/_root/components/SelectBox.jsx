@@ -1,20 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { useContext, useState } from 'react';
+import { Dropdown } from 'primereact/dropdown';
 import { Controller } from 'react-hook-form';
 import { DataContext } from '../pages/araclar/components/add-modal/DataContext';
 import { CodeSelectService } from '../../api/service';
 
-interface SelectOptionValue {
-    codeDelete: boolean;
-    codeText: string;
-    codeUpdate: boolean;
-    codeView: boolean;
-    id: number;
-    siraNo: number;
-}
 
 const SelectBox = ({ control, label, name, selectID }) => {
-    const [selectData, setSelectData] = useState<SelectOptionValue[]>([]);
+    const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -24,11 +16,11 @@ const SelectBox = ({ control, label, name, selectID }) => {
                 setSelectData(res.data);
                 setIsLoaded(true);
             });
-            
+
         }
     }
 
-    const selectedTemplate = (option: SelectOptionValue, props) => {
+    const selectedTemplate = (option, props) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
@@ -39,7 +31,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
         return <span>{props.name}</span>;
     };
 
-    const optionTemplate = (option: SelectOptionValue) => {
+    const optionTemplate = (option) => {
         return (
             <>
                 <div className="flex align-items-center">
@@ -59,7 +51,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
                     <Dropdown
                         {...field}
                         value={data ? data[name] : null}
-                        onChange={(e: DropdownChangeEvent) => {
+                        onChange={(e) => {
                             setData({ ...data, [name]: e.value });
                             field.onChange(e.value);
                         }}
