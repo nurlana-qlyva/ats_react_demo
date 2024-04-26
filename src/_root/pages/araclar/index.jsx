@@ -12,9 +12,9 @@ import AddModal from './components/add-modal/AddModal'
 import Operations from './components/operations'
 import { InputText } from "primereact/inputtext";
 import ControlRows from './components/control-rows'
-import FilterRows from './components/filter'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
+import FilterRows from './components/filter'
 
 const columns = [
   { field: 'aracId', header: 'ARAÇ ID' },
@@ -118,6 +118,10 @@ const Araclar = () => {
     }
   };
 
+  const dynamicColumns = columns.map((col, i) => {
+    return <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} />;
+  });
+
   return (
     <>
       <BreadCrumbComp items={[{ label: 'ARAÇ LİSTESİ' }]} />
@@ -127,12 +131,7 @@ const Araclar = () => {
             <ControlRows />
             <InputText v-model="value1" placeholder="Search" onChange={handleSearch} />
             <AddModal />
-            <FilterRows columns={columns} handleSearchForFilters={handleSearchForFilters} />
-            <Button
-              className="filtre-btn ml-2"
-              label="Temizle"
-              onClick={clear}
-            />
+            <FilterRows columns={columns} handleSearchForFilters={handleSearchForFilters} clear={clear} />
           </div>
           <div>
             <Operations />
@@ -146,10 +145,8 @@ const Araclar = () => {
             reorderableColumns reorderableRows onRowReorder={(e) => setVehicles(e.value)}
           >
             <Column rowReorder style={{ width: '3rem' }} />
-            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-            {columns.map((col, index) => (
-              <Column key={index} field={col.field} header={col.header} />
-            ))}
+            {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} /> */}
+            {dynamicColumns}
           </DataTable>
           <Paginator template={paginationTemplate} first={first[0]} rows={rows[0]} totalRecords={vehiclesCount} onPageChange={(e) => onPageChange(e, 0)} />
         </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 // components
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -7,11 +7,11 @@ import { Calendar } from 'primereact/calendar';
 import TextInput from '../../../../../../../components/TextInput';
 import SelectBox from '../../../../../../../components/SelectBox';
 import { Divider } from 'primereact/divider';
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
+import { RadioButton } from "primereact/radiobutton";
 import { Checkbox } from "primereact/checkbox";
 
 const AddModal = () => {
-    const [visible, setVisible] = useState<boolean>(false);
+    const [visible, setVisible] = useState(false);
 
     const { control, handleSubmit } = useForm({
         defaultValues: {
@@ -23,8 +23,8 @@ const AddModal = () => {
 
     const footerContent = (
         <div className='flex justify-content-end gap-2'>
-            <Button label="Kaydet" icon="pi pi-times" onClick={() => setVisible(false)} className="save-btn" />
-            <Button label="İptal" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
+            <Button label="Kaydet" icon="pi pi-check" onClick={() => setVisible(false)} className="save-btn" />
+            <Button label="İptal" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
         </div>
     );
 

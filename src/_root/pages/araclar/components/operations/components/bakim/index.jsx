@@ -22,7 +22,9 @@ const columns = [
 ];
 
 const BakimModal = ({ visible, setVisible }) => {
-    const [bakim, setBakim] = useState([]);
+    const [bakim, setBakim] = useState([
+        { tarih: 'tarih', saat: 'saat', servisTanimi: 'servisTanimi', servisNedeni: 'servisNedeni', firma: 'firma', baslamaTarihi: 'baslamaTarihi', bitisTarihi: 'bitisTarihi', servisKm: 'servisKm' }
+    ]);
     // const [selectedData, setSelectedData] = useState(null);
     // const [visibleColumns, setVisibleColumns] = useState(columns);
     // pagination
@@ -71,14 +73,17 @@ const BakimModal = ({ visible, setVisible }) => {
 
     const footerContent = (
         <div className='flex justify-content-end gap-2'>
-            <Button label="Kaydet" icon="pi pi-times" onClick={() => setVisible(false)} className="save-btn" />
-            <Button label="İptal" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
+            <Button label="Kapat" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
         </div>
     );
 
     const header = (
         <h2>Servis Bilgileri Plaka: <span>[16 EG 1231 [BMW - X6]]</span></h2>
     )
+
+    const dynamicColumns = columns.map((col, i) => {
+        return <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} />;
+    });
 
     return (
         <Dialog header={header} style={{ width: '70vw' }} visible={visible} onHide={onHide} footer={footerContent}>
@@ -89,9 +94,7 @@ const BakimModal = ({ visible, setVisible }) => {
                         reorderableColumns reorderableRows onRowReorder={(e) => setBakim(e.value)}
                     >
                         <Column rowReorder style={{ width: '3rem' }} />
-                        {columns.map((col, index) => (
-                            <Column key={index} field={col.field} header={col.header} />
-                        ))}
+                        {dynamicColumns}
                     </DataTable>
                     <Paginator template={paginationTemplate} first={first[0]} rows={rows[0]} totalRecords={0} onPageChange={(e) => onPageChange(e, 0)} />
                 </div>

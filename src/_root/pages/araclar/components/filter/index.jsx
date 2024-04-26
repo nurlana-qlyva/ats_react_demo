@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -17,10 +17,11 @@ const columns = [
     { code: "yakitTip", name: "YAKIT TİPİ" },
 ];
 
-const FilterRows = ({ handleSearchForFilters }) => {
+const FilterRows = ({ handleSearchForFilters, clear }) => {
     const [visible, setVisible] = useState(false);
     const [filters, setFilters] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState(null);
+    const [hasFilters, setHasFilters] = useState(false)
     const [inputValues, setInputValues] = useState([]);
     const [data, setData] = useState({
         aracId: 0,
@@ -56,6 +57,15 @@ const FilterRows = ({ handleSearchForFilters }) => {
         setFilters((prevFilters) => prevFilters.filter((_, i) => i !== index));
         setInputValues((prevInputValues) => prevInputValues.filter((_, i) => i !== index));
     };
+
+    const handleClear = () => {
+        clear();
+        setFilters([])
+    }
+
+    useEffect(() => {
+        filters.length > 0 ? setHasFilters(true) : setHasFilters(false)
+    }, [filters])
 
     const filterTemplates = filters.map((filter, index) => (
         <div key={index} className="border-1 border-300 mb-3 p-3">
@@ -96,13 +106,27 @@ const FilterRows = ({ handleSearchForFilters }) => {
                 <span className="pi pi-filter mr-2"></span>
                 Fİltreler
             </p>
+            <Button
+                className="filtre-btn ml-2"
+                label="Temizle"
+                onClick={handleClear}
+            />
             <Button className="filtre-btn" label="Uygula" onClick={handleSelectedFilters} />
         </div>
     );
 
     return (
         <>
-            <Button className="filtre-btn" label="Filtreler" icon="pi pi-filter" onClick={() => setVisible(true)} />
+            <Button
+                className="filtre-btn"
+                iconPos="left"
+                onClick={() => setVisible(true)}
+            >
+                {hasFilters && <i className="pi pi-circle-fill" />}
+                <i className="pi pi-filter" />
+                <span>Filtreler</span>
+            </Button>
+
             <Sidebar
                 visible={visible}
                 header={customHeader}

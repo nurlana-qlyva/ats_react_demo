@@ -8,8 +8,8 @@ const ControlRows = () => {
 
     const footerContent = (
         <div className='flex justify-content-end gap-2'>
-            <Button label="Kaydet" icon="pi pi-times" onClick={() => setVisible(false)} className="save-btn" />
-            <Button label="İptal" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
+            <Button label="Kaydet" icon="pi pi-check" onClick={() => setVisible(false)} className="save-btn" />
+            <Button label="İptal" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
         </div>
     );
 

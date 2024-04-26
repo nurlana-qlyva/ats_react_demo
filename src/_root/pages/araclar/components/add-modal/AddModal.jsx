@@ -12,6 +12,8 @@ import { Calendar } from 'primereact/calendar';
 import { DataContext } from './DataContext';
 import MarkaSelectbox from './components/MarkaSelectbox';
 import ModelSelectbox from './components/ModelSelectbox';
+import DriverSelectbox from './components/DriverSelectbox';
+import MaterialListSelectbox from '../../../../components/MaterialListSelectbox';
 
 
 const AddModal = () => {
@@ -59,8 +61,8 @@ const AddModal = () => {
 
     const footerContent = (
         <div className='flex justify-content-end gap-2'>
-            <Button label="Kaydet" icon="pi pi-times" onClick={() => setVisible(false)} className="save-btn" onClickCapture={handleSubmitClick} />
-            <Button label="İptal" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
+            <Button label="Kaydet" icon="pi pi-check" onClick={() => setVisible(false)} className="save-btn" onClickCapture={handleSubmitClick} />
+            <Button label="İptal" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus className='iptal-btn' />
         </div>
     );
 
@@ -120,10 +122,10 @@ const AddModal = () => {
                                                 <SelectBox control={control} label="Departman" name="departman" selectID="200" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
-                                                <SelectBox control={control} label="Sürücü" name="surucu" />
+                                                <DriverSelectbox control={control} label="Sürücü" name="surucu" url="Driver/GetDriverListForInput" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
-                                                <SelectBox control={control} label="Yakıt Tipi" name="yakitTipi" />
+                                                <MaterialListSelectbox control={control} label="Yakıt Tipi" name="yakitTipi" type="YAKIT"/>
                                             </div>
                                         </div>
                                     </div>
