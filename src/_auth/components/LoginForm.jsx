@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { useContext, useState } from 'react';
 import { TokenContext } from '../../context/TokenContext';
+import login from "../../assets/images/ats_pro_logo.png"
 
 
 const LoginForm = () => {
@@ -50,7 +51,7 @@ const LoginForm = () => {
 
   return (
     <div className='form'>
-      <img src="/assets/images/ats_pro_logo.png" alt="ats logo" />
+      <img src={login} alt="ats logo" />
       <Controller
         name='username'
         control={control}
