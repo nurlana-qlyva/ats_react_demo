@@ -13,8 +13,8 @@ import Operations from './components/operations'
 import { InputText } from "primereact/inputtext";
 import ControlRows from './components/control-rows'
 import { Dropdown } from 'primereact/dropdown'
-import { Button } from 'primereact/button'
 import FilterRows from './components/filter'
+import { MultiSelect } from 'primereact/multiselect'
 
 const columns = [
   { field: 'aracId', header: 'ARAÇ ID' },
@@ -33,6 +33,9 @@ const Araclar = () => {
   const [vehiclesCount, setVehiclesCount] = useState(0);
   const [selectedVehicles, setSelectedVehicles] = useState(0);
   const [search, setSearch] = useState("")
+  const [visibleColumns, setVisibleColumns] = useState(columns);
+  const [visible, setVisible] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   // pagination
   const [first, setFirst] = useState([0, 0, 0]);
   const [rows, setRows] = useState([10, 10, 10]);
@@ -42,6 +45,7 @@ const Araclar = () => {
     setSearch(e.target.value)
     if (search.length >= 3) {
       AraclarSearchService(search, currentPage).then(res => {
+        console.log(res.data)
         setVehicles(res.data.vehicleList)
         setVehiclesCount(res.data.vehicleCount)
       })
@@ -90,6 +94,15 @@ const Araclar = () => {
     })
   }
 
+  const onColumnToggle = (event) => {
+    let selectedColumns = event.value;
+    let orderedSelectedColumns = columns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
+
+    setVisibleColumns(orderedSelectedColumns);
+  };
+
+
+
   const paginationTemplate = {
     layout: 'RowsPerPageDropdown CurrentPageReport PrevPageLink NextPageLink',
     RowsPerPageDropdown: (options) => {
@@ -118,9 +131,11 @@ const Araclar = () => {
     }
   };
 
-  const dynamicColumns = columns.map((col, i) => {
+  const dynamicColumns = visibleColumns.map((col, i) => {
     return <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} />;
   });
+
+  const header = <MultiSelect value={visibleColumns} options={columns} optionLabel="header" onChange={onColumnToggle} className="w-full sm:w-20rem" display="chip" />;
 
   return (
     <>
@@ -128,7 +143,7 @@ const Araclar = () => {
       <div className="card card-shadow mt-5">
         <div className="flex justify-content-between align-items-center">
           <div className='flex align-items-center'>
-            <ControlRows />
+            <ControlRows header={header} />
             <InputText v-model="value1" placeholder="Search" onChange={handleSearch} />
             <AddModal />
             <FilterRows columns={columns} handleSearchForFilters={handleSearchForFilters} clear={clear} />

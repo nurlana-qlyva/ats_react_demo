@@ -14,6 +14,7 @@ import MarkaSelectbox from './components/MarkaSelectbox';
 import ModelSelectbox from './components/ModelSelectbox';
 import DriverSelectbox from './components/DriverSelectbox';
 import MaterialListSelectbox from '../../../../components/MaterialListSelectbox';
+import Location from '../../../../components/Location';
 
 
 const AddModal = () => {
@@ -113,7 +114,7 @@ const AddModal = () => {
                                                 <SelectBox control={control} label="Renk" name="renk" selectID="111" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
-                                                <SelectBox control={control} label="Lokasyon" name="lokasyon" selectID="201" />
+                                                <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
                                                 <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" />

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
 import BakimModal from './components/bakim';
+import YakitModal from './components/yakit';
 
 export default function Operations() {
     const [visible, setVisible] = useState(false);
@@ -20,7 +21,6 @@ export default function Operations() {
             label: 'Yakıtlar',
             icon: 'pi pi-file-edit',
             command: () => handleItemClick('Yakıtlar')
-
         },
         {
             separator: true
@@ -104,7 +104,7 @@ export default function Operations() {
             case 'Bakımlar':
                 return <BakimModal visible={visible} setVisible={setVisible} />;
             case 'Yakıtlar':
-                return;
+                return <YakitModal visible={visible} setVisible={setVisible} />;
             default:
                 return null;
         }

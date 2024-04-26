@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 
-const ControlRows = () => {
+const ControlRows = ({ header }) => {
     const [visible, setVisible] = useState(false);
 
     const footerContent = (
@@ -14,11 +14,13 @@ const ControlRows = () => {
     );
 
     return (
-        <div className="card flex">
-            <Button label="" icon="pi pi-align-left" onClick={() => setVisible(true)} className='add-btn' />
-            <Dialog visible={visible} style={{ width: '70vw' }} onHide={() => setVisible(false)} footer={footerContent}>
-                sutunlar
-            </Dialog>
+        <div className="card flex relative">
+            {visible && (
+                <div className='columns-row'>
+                    {header}
+                </div>
+            )}
+            <Button label="" icon="pi pi-align-left" onClick={() => setVisible(!visible)} className='add-btn' />
         </div>
     )
 }

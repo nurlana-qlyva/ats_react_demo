@@ -17,7 +17,7 @@ const SideMenu = () => {
     const items = [
         {
             label: 'Dashboard',
-            icon: "pi pi-wave-pulse",
+            icon: "pi pi-chart-line",
             url: '/',
             template: itemRenderer,
         },

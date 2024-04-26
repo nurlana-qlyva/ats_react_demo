@@ -49,3 +49,34 @@
 .p-dropdown-filter-icon {
     transform: translateY(-50%);
 }
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content,
+.p-panelmenu-panel {
+    padding: 0 8px;
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content:hover,
+.p-panelmenu-content .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover {
+    background-color: #b1b1b1 !important;
+}
+
+.columns-row {
+    position: absolute;
+    top: 43px;
+    z-index: 1200;
+}
+
+.popup {
+    position: relative;
+
+    .popup-dialog {
+        position: absolute;
+        z-index: 1200;
+        top: 40px;
+        left: 0;
+    }
+}
+
+.p-tree {
+    border: none;
+}
