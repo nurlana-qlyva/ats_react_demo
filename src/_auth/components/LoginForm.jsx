@@ -50,7 +50,7 @@ const LoginForm = () => {
 
   return (
     <div className='form'>
-      <img src="assets/images/ats_pro_logo.png" alt="ats logo" />
+      <img src="/assets/images/ats_pro_logo.png" alt="ats logo" />
       <Controller
         name='username'
         control={control}
