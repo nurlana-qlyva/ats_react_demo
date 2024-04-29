@@ -21,20 +21,20 @@ const App = () => {
 
   if (!localStorage.getItem('token') || isTokenExpired()) {
     navigate("/login");
-    setHasToken(true)
   }
 
   return (
     <Routes>
-      {hasToken ? <Route path="/login" element={<AuthLayout />} /> : (
-        <Route path="/" element={<RootLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/araclar" element={<Araclar />} />
-          <Route path="/detay/:id" element={<VehicleDetail />} />
-        </Route>
-      )}
+      <Route path="/login" element={<AuthLayout />} />
+
+      <Route path="/" element={<RootLayout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/araclar" element={<Araclar />} />
+        <Route path="/detay/:id" element={<VehicleDetail />} />
+      </Route>
     </Routes>
   );
 };
 
 export default App;
+``
