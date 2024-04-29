@@ -15,6 +15,9 @@ import ModelSelectbox from "./components/add-modal/components/ModelSelectbox"
 import MarkaSelectbox from "./components/add-modal/components/MarkaSelectbox"
 import { Checkbox } from 'primereact/checkbox';
 import { useState } from "react"
+import { Button } from "primereact/button"
+import { Divider } from 'primereact/divider';
+        
 
 const VehicleDetail = () => {
   const [images, setImages] = useState([])
@@ -64,73 +67,68 @@ const VehicleDetail = () => {
     <div>
       <BreadCrumbComp items={[{ label: 'ARAÇ LİSTESİ' }, { label: 'ARAÇ DETAY KARTI' }]} />
       <div className="card mt-3">
-        <div className="grid">
-          <div className="col-12 md:col-4">
-            <img src="/assets/images/ats_login_image.jpg" alt="" style={{ width: "100%", height: "260px" }} />
-            <div className="flex">
+        <div className="grid p-3">
+          <div className="col-12 md:col-3">
+            <img src="/assets/images/ats_login_image.jpg" alt="" className="border-round" style={{ width: "100%", height: "280px" }} />
+            <div className="flex gap-4 mt-3">
               <div>
-                <span className="pi pi-circle-fill" />
+                <span className="pi pi-circle-fill mr-1" style={{color: "green"}}/>
                 <span>Aktif</span>
               </div>
               <div>
-                <span className="pi pi-map-marker" />
+                <span className="pi pi-map-marker mr-1" />
                 <span>Bursa</span>
               </div>
               <div>
-                <span className="pi pi-history" />
+                <span className="pi pi-history mr-1" />
                 <span>50 km/h</span>
               </div>
             </div>
           </div>
-          <div className="col-12 md:col-8">
+          <div className="col-12 md:col-9">
             <div className="grid">
+              <div className="col-12">
+                <div className='flex justify-content-end gap-2'>
+                  <Button label="Güncelle" icon="pi pi-check" className="save-btn" />
+                  <Button label="İptal" icon="pi pi-times" className='iptal-btn' />
+                </div>
+              </div>
+              <Divider className="my-3"/>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"plaka"}>Plaka</label>
+                <TextInput control={control} name="plaka" label="Plaka" />
+              </div>
+              <div className="col-12 md:col-6 lg:col-4">
+                <SelectBox control={control} name="aracTipi" label="Araç Tipi" selectID="100" />
+              </div>
+              <div className="col-12 md:col-6 lg:col-4">
+                <TextInput control={control} name="guncelKm" label="Güncel Km." />
+              </div>
+              <div className="col-12 md:col-6 lg:col-4">
+                <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" onChangeValue={handleLocationChange} />
                 <Controller
-                  name="plaka"
+                  name={"lokasyon"}
                   control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
+                  render={({ field }) => (
+                    <>
+                      <InputText {...field} value={selectedValue} hidden />
+                    </>
+                  )}
                 />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"aracTipi"}>Araç Tipi</label>
-                <Controller
-                  name="aracTipi"
-                  control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
-                />
+                <MarkaSelectbox control={control} label="Marka" name="marka" url="Mark/GetMarkList" />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"guncelKm"}>Güncel Km.</label>
-                <Controller
-                  name="guncelKm"
-                  control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
-                />
+                <ModelSelectbox control={control} label="Model" name="model" url="Model/GetModelList" />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"lokasyon"}>Lokasyon </label>
-                <Controller
-                  name="lokasyon"
-                  control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
-                />
+                <DriverSelectbox control={control} label="Sürücü" name="surucu" url="Driver/GetDriverListForInput" />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"marka"}>Marka</label>
-                <Controller
-                  name="marka"
-                  control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
-                />
+                <MaterialListSelectbox control={control} label="Yakıt Tipi" name="yakitTipi" type="YAKIT" />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <label htmlFor={"model"}>Model</label>
-                <Controller
-                  name="model"
-                  control={control}
-                  render={({ field }) => <InputText {...field} className="w-full" />}
-                />
+                <SelectBox control={control} label="Renk" name="renk" selectID="111" />
               </div>
             </div>
           </div>
@@ -154,19 +152,10 @@ const VehicleDetail = () => {
                       <SelectBox control={control} label="Araç Cinsi" name="aracCinsi" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="Renk" name="renk" selectID="111" />
-                    </div>
-                    <div className="col-12 md:col-6 lg:col-3">
                       <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Departman" name="departman" selectID="200" />
-                    </div>
-                    <div className="col-12 md:col-6 lg:col-3">
-                      <DriverSelectbox control={control} label="Sürücü" name="surucu" url="Driver/GetDriverListForInput" />
-                    </div>
-                    <div className="col-12 md:col-6 lg:col-3">
-                      <MaterialListSelectbox control={control} label="Yakıt Tipi" name="yakitTipi" type="YAKIT" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Proje" name="proje" />

@@ -15,10 +15,11 @@ import ModelSelectbox from './components/ModelSelectbox';
 import DriverSelectbox from './components/DriverSelectbox';
 import MaterialListSelectbox from '../../../../components/MaterialListSelectbox';
 import Location from '../../../../components/Location';
-import { AracAddService, AraclarSearchService, FileUploadService, PhotoUploadService } from '../../../../../api/service';
+import { AracAddService, AraclarSearchService, FileUploadService, OzelAlanUpdateService, PhotoUploadService } from '../../../../../api/service';
 import { InputText } from 'primereact/inputtext';
 import { Messages } from 'primereact/messages';
 import { useMountEffect } from 'primereact/hooks';
+import OzelAlan from '../../../../components/OzelAlan';
 
 const format = (date) => {
     const d = new Date(date)
@@ -41,7 +42,7 @@ const MessageTemplate = () => {
         }
     });
     return (
-        <div className="card" style={{position: 'fixed', top: "0", right: "0", zIndex: "2000"}}>
+        <div className="card" style={{ position: 'fixed', top: "0", right: "0", zIndex: "2000" }}>
             <Messages ref={msgs} />
         </div>
     )
@@ -98,6 +99,7 @@ const AddModal = () => {
     };
 
     const handleSubmitClick = handleSubmit((value) => {
+        console.log(value)
         const data = {
             "plaka": value.plaka,
             "yil": +value.modelYili,
@@ -167,14 +169,26 @@ const AddModal = () => {
                         <TabPanel header="Genel Bilgiler">
                             <div className="border-1 border-300 border-round p-3">
                                 <div className="grid">
-                                    <div className="col-12 md:col-6 lg:col-4">
+                                    <div className="col-12 md:col-6 lg:col-3">
                                         <TextInput control={control} label={"Plaka"} name={"plaka"} type="text" />
                                     </div>
-                                    <div className="col-12 md:col-6 lg:col-4">
+                                    <div className="col-12 md:col-6 lg:col-3">
                                         <SelectBox control={control} name={"aracTipi"} label={"Arac tip"} selectID="100" />
                                     </div>
-                                    <div className="col-12 md:col-6 lg:col-4">
+                                    <div className="col-12 md:col-6 lg:col-3">
                                         <TextInput control={control} label={"Güncel Km."} name={"guncelKm"} type="text" />
+                                    </div>
+                                    <div className="col-12 md:col-6 lg:col-3">
+                                        <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" onChangeValue={handleLocationChange} />
+                                        <Controller
+                                            name={"lokasyon"}
+                                            control={control}
+                                            render={({ field }) => (
+                                                <>
+                                                    <InputText {...field} value={selectedValue} hidden />
+                                                </>
+                                            )}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -200,18 +214,6 @@ const AddModal = () => {
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
                                                 <SelectBox control={control} label="Renk" name="renk" selectID="111" />
-                                            </div>
-                                            <div className="col-12 md:col-6 lg:col-4">
-                                                <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" onChangeValue={handleLocationChange} />
-                                                <Controller
-                                                    name={"lokasyon"}
-                                                    control={control}
-                                                    render={({ field }) => (
-                                                        <>
-                                                            <InputText {...field} value={selectedValue} hidden/>
-                                                        </>
-                                                    )}
-                                                />
                                             </div>
                                             <div className="col-12 md:col-6 lg:col-4">
                                                 <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" />
@@ -271,24 +273,7 @@ const AddModal = () => {
                         </TabPanel>
                         <TabPanel header="Özel Alanlar">
                             <div className="grid">
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Özel Alan 1"} name={"aracOzelAlan1"} type="text" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label="Özel Alan 2" name="aracOzelAlan2" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Özel Alan 3"} name={"aracOzelAlan3"} type="text" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Özel Alan 4"} name={"aracOzelAlan4"} type="text" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Özel Alan 5"} name={"aracOzelAlan5"} type="text" />
-                                </div>
-                                <div className="col-12 md:col-6 lg:col-4">
-                                    <TextInput control={control} label={"Özel Alan 6"} name={"aracOzelAlan6"} type="text" />
-                                </div>
+                                <OzelAlan form="Arac" />
                             </div>
                         </TabPanel>
                         <TabPanel header="Resimler">

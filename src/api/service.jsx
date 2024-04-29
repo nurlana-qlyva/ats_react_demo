@@ -44,3 +44,11 @@ export const PhotoUploadService = (id, group, data) => {
 export const FileUploadService = (id, group, data) => {
   return http.post(`/Document/UploadDocument?refId=${id}&refGroup=${group}`, data)
 }
+
+// ozel alan
+export const OzelAlanReadService = (form) => {
+  return http.get(`/CustomField/GetCustomFields?form=${form}`)
+}
+export const OzelAlanUpdateService = (form, topic, field) => {
+  return http.post(`/CustomField/AddCustomFieldTopic?form=${form}&topic=${topic}&field=${field}`,)
+}

@@ -102,8 +102,6 @@ const Araclar = () => {
     setVisibleColumns(orderedSelectedColumns);
   };
 
-
-
   const paginationTemplate = {
     layout: 'RowsPerPageDropdown CurrentPageReport PrevPageLink NextPageLink',
     RowsPerPageDropdown: (options) => {
