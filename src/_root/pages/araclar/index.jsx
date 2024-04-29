@@ -15,6 +15,7 @@ import ControlRows from './components/control-rows'
 import { Dropdown } from 'primereact/dropdown'
 import FilterRows from './components/filter'
 import { MultiSelect } from 'primereact/multiselect'
+import { Link } from 'react-router-dom'
 
 const columns = [
   { field: 'aracId', header: 'ARAÇ ID' },
@@ -132,7 +133,17 @@ const Araclar = () => {
   };
 
   const dynamicColumns = visibleColumns.map((col, i) => {
-    return <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} />;
+    if (col.field === 'aracId') {
+      return (
+        <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} body={(rowData) => (
+          <Link to={`/detay/${rowData.aracId}`} target="_blank" rel="noopener noreferrer">
+            {rowData[col.field]}
+          </Link>
+        )} />
+      );
+    } else {
+      return <Column key={col.field} columnKey={col.field} field={col.field} header={col.header} />;
+    }
   });
 
   const header = <MultiSelect value={visibleColumns} options={columns} optionLabel="header" onChange={onColumnToggle} className="w-full sm:w-20rem" display="chip" />;

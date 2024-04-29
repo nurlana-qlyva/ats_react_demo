@@ -6,11 +6,13 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
+import { Controller } from 'react-hook-form';
 
-export default function PhotoUpload() {
+export default function PhotoUpload({control, name, setImages}) {
     const toast = useRef(null);
     const [totalSize, setTotalSize] = useState(0);
     const fileUploadRef = useRef(null);
+    const images = []
 
     const onTemplateSelect = (e) => {
         let _totalSize = totalSize;
@@ -21,7 +23,10 @@ export default function PhotoUpload() {
         }
 
         setTotalSize(_totalSize);
+        e.files.map(file => images.push(file.name))
+        setImages(images)
     };
+
 
     const onTemplateUpload = (e) => {
         let _totalSize = 0;
@@ -32,6 +37,7 @@ export default function PhotoUpload() {
 
         setTotalSize(_totalSize);
         toast.current?.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+
     };
 
     const onTemplateRemove = (file, callback) => {
@@ -71,11 +77,10 @@ export default function PhotoUpload() {
                     </span>
                 </div>
                 <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
-                <Button type="button" icon={""} className="p-button-outlined p-button-rounded p-button-danger ml-auto" onClick={() => onTemplateRemove(file, props.onRemove)} />
+                <Button type="button" icon={"pi pi-trash"} className="p-button-outlined p-button-rounded p-button-danger ml-auto" onClick={() => onTemplateRemove(file, props.onRemove)} />
             </div>
         );
     };
-
 
     const emptyTemplate = () => {
         return (
@@ -98,10 +103,14 @@ export default function PhotoUpload() {
             <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
             <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={10000000}
-                onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
-                headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
-                chooseOptions={chooseOptions} />
+            <Controller
+                name={name}
+                control={control}
+                render={({ field }) => <FileUpload {...field} ref={fileUploadRef} multiple accept="image/.png, .jpg, .jpeg" maxFileSize={10000000}
+                    onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
+                    headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
+                    chooseOptions={chooseOptions} />}
+            />
         </div>
     )
 }

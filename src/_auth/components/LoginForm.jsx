@@ -61,15 +61,7 @@ const LoginForm = () => {
         control={control}
         render={({ field }) => <InputText type='password' placeholder='Password' {...field} />}
       />
-      <div className='flex-between'>
-        <div className='flex-default'>
-          <Controller
-            name='remember'
-            control={control}
-            render={({ field }) => <Checkbox {...field} onChange={(e) => setChecked(e.target.checked)} checked={checked}></Checkbox>}
-          />
-          <p>Remember me</p>
-        </div>
+      <div className='flex justify-content-end w-full'>
         <div>
           <Link to={''}>Forgot Password?</Link>
         </div>

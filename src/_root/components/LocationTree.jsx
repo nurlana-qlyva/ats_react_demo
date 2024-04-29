@@ -98,21 +98,23 @@ const CustomTreeTable = () => {
 
     const renderRows = (nodes, level = 0) => {
         return nodes.map((node) => (
-            <React.Fragment key={node.id}>
+            <React.Fragment key={node.lokasyonId}>
                 <tr>
                     <td style={{ paddingLeft: level * 20 }}>
                         {node.children && (
-                            <button onClick={() => toggleRow(node.id)}>
-                                {expandedRows[node.id] ? '-' : '+'}
+                            <button onClick={() => toggleRow(node.lokasyonId)}>
+                                {node.children.length > 0 && expandedRows[node.lokasyonId] ? '-' : '+'}
                             </button>
                         )}
                         {node.lokasyonTanim}
                     </td>
-                    <td>{node.description}</td>
-                    <td>{node.value}</td>
+                    <td>{node.lokasyonAciklama}</td>
+                    {/* <td>{node.lokasyonAktif ? 'Active' : 'Inactive'}</td> */}
                 </tr>
-                {expandedRows[node.id] && node.children && (
-                    <React.Fragment>{renderRows(node.children, level + 1)}</React.Fragment>
+                {expandedRows[node.lokasyonId] && node.children && (
+                    <React.Fragment>
+                        {renderRows(node.children, level + 1)}
+                    </React.Fragment>
                 )}
             </React.Fragment>
         ));
@@ -124,7 +126,7 @@ const CustomTreeTable = () => {
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Value</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>{renderRows(convertToTreeFormat(data))}</tbody>

@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Tree } from 'primereact/tree';
 
-const Location = ({ control, label, name, url }) => {
+const Location = ({ control, label, name, url, onChangeValue  }) => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [value, setValue] = useState('');
@@ -17,7 +17,6 @@ const Location = ({ control, label, name, url }) => {
         setVisible(!visible)
         if (url && !isLoaded && data.length === 0) {
             CodeCustomSelectService(url).then(res => {
-                console.log(res.data)
                 setData(res.data);
                 setIsLoaded(true);
             });
@@ -45,8 +44,14 @@ const Location = ({ control, label, name, url }) => {
     }, [data]);
 
     const onSelect = (event) => {
-        alert(JSON.stringify(event.node))
-        setValue(event.node)
+        setValue({
+            key: event.node.key,
+            label: event.node.label,
+            lokasyon: event.node.label
+        });
+        setSelectedNodeKey(event.node.key);
+
+        onChangeValue(event.node.key);
     };
 
     return (
@@ -54,14 +59,8 @@ const Location = ({ control, label, name, url }) => {
             <label htmlFor={name}>{label}</label>
             <div className='grid'>
                 <div className="col-12 md:col-10">
-                    <Controller
-                        name={name}
-                        control={control}
-                        render={({ field }) => (
-                            <InputText {...field} value={value.key} readOnly hidden/>
-                        )}
-                    />
                     <InputText value={value.label} readOnly />
+                
                 </div>
                 <div className="col-12 md:col-2 popup">
                     <Button icon="pi pi-plus" onClick={handleCLick} />

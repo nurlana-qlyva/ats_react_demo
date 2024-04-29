@@ -4,7 +4,7 @@ export const LoginUserService = (data) => {
   return http.post("/Login", data);
 };
 
-// all vehicles
+// all vehicles get
 export const AraclarSearchService = (search, page) => {
   if (page) {
     return http.post(`/Vehicle/GetVehicles?parameter=${search}&page=${page}`);
@@ -18,6 +18,11 @@ export const AraclarFilterService = (search, data) => {
   return http.post(`/Vehicle/GetVehicles?parameter=${search}`, data);
 };
 
+// Arac add 
+export const AracAddService = (data) => {
+  return http.post(`Vehicle/AddVehicle`, data);
+};
+
 // kod yonetimi
 export const CodeSelectService = (id) => {
   return http.get(`/Code/GetCodeTextById?codeNumber=${id}`);
@@ -28,3 +33,14 @@ export const CodeCustomSelectService = (url) => {
 export const MaterialListSelectService = (type) => {
   return http.get(`/Material/GetMaterialListByType?type=${type}`);
 };
+
+// image upload
+
+export const PhotoUploadService = (id, group, data) => {
+  return http.post(`/Photo/UploadPhoto?refId=${id}&refGroup=${group}`, data)
+}
+
+// file upload
+export const FileUploadService = (id, group, data) => {
+  return http.post(`/Document/UploadDocument?refId=${id}&refGroup=${group}`, data)
+}
