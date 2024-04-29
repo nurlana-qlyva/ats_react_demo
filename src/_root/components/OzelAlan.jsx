@@ -49,11 +49,23 @@ const OzelAlan = ({ form }) => {
 
     useEffect(() => {
         OzelAlanReadService(form).then(res => {
-            fields.filter(field => {
-                setFields({...fields, value: fiel })
-            })
-        })
-    }, [])
+            const apiData = res.data;
+            const updatedFields = fields.map(field => {
+                const apiFieldName = field.label;
+                if (apiData.hasOwnProperty(apiFieldName)) {
+                    // Update label and value based on API data
+                    return {
+                        ...field,
+                        value: apiData[apiFieldName], // Update value
+                        label: apiFieldName, // Update label if needed
+                    };
+                } else {
+                    return field; // Return unchanged if not found in API data
+                }
+            });
+            setFields(updatedFields); // Update the fields state
+        });
+    }, [form]);
 
     return (
         <>
