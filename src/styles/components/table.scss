@@ -80,3 +80,10 @@
 .p-tree {
     border: none;
 }
+
+.ozel-alan input:focus{
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid !important;
+}

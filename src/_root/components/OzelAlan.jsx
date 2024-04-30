@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import TextInput from "./TextInput"
-import { OzelAlanReadService } from "../../api/service"
+import { OzelAlanReadService, OzelAlanUpdateService } from "../../api/service"
+import { Controller } from "react-hook-form"
+import { InputText } from "primereact/inputtext"
 
 
 const OzelAlan = ({ form }) => {
+
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -45,6 +48,16 @@ const OzelAlan = ({ form }) => {
             key: "OZELALAN_8",
             value: "Özel Alan 8",
         },
+        {
+            label: "ozelAlan9",
+            key: "OZELALAN_9",
+            value: "Özel Alan 9",
+        },
+        {
+            label: "ozelAlan10",
+            key: "OZELALAN_10",
+            value: "Özel Alan 10",
+        },
     ])
 
     useEffect(() => {
@@ -67,12 +80,41 @@ const OzelAlan = ({ form }) => {
         });
     }, [form]);
 
+
+    const handleInputChange = async (field, value) => {
+        const updatedFields = fields.map((fld) =>
+            fld.key === field.key ? { ...fld, value } : fld
+        );
+        setFields(updatedFields);
+
+        if (field.debounceTimer) {
+            clearTimeout(field.debounceTimer);
+        }
+
+        field.debounceTimer = setTimeout(async () => {
+            OzelAlanUpdateService("Arac", value, field.key).then(res => console.log(res.data))
+         
+        }, 5000);
+    };
+
     return (
         <>
             {fields.map(field => {
                 return (
                     <div key={field.label} className="col-12 md:col-6 lg:col-4">
-                        <TextInput label={field.value} name={field.label} />
+                        <div className="flex flex-column gap-2 ozel-alan">
+                            <input
+                                id={field.label}
+                                onChange={(e) => handleInputChange(field, e.target.value)}
+                                value={field.value}
+                                style={{ border: "none", outline: "none" }}
+                            />
+                            <Controller
+                                name={field.label}
+                                // control={control}
+                                render={({ field: { onChange } }) => <InputText onChange={(e) => onChange(e.target.value)} />}
+                            />
+                        </div>
                     </div>
                 )
             })}
