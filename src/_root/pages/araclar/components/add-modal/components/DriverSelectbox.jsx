@@ -5,7 +5,7 @@ import { CodeCustomSelectService } from '../../../../../../api/service';
 import { DataContext } from '../DataContext';
 
 
-const DriverSelectbox = ({ control, label, name, url }) => {
+const DriverSelectbox = ({ control, label, name, url, value }) => {
     const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -23,11 +23,11 @@ const DriverSelectbox = ({ control, label, name, url }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{option.isim}</div>
+                    <div>{value ? value : option.isim}</div>
                 </div>
             );
         }
-        return <span>{props.name}</span>;
+        return <span>{props.placeholder ? props.placeholder : props.name}</span>;
     };
 
     const optionTemplate = (option) => {
@@ -61,6 +61,7 @@ const DriverSelectbox = ({ control, label, name, url }) => {
                         valueTemplate={selectedTemplate}
                         itemTemplate={optionTemplate}
                         className="w-full"
+                        placeholder={value}
                     />
                 )}
             />

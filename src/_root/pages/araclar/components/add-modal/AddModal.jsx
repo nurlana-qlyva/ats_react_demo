@@ -48,14 +48,15 @@ const MessageTemplate = () => {
     )
 }
 
-const AddModal = () => {
+const AddModal = ({ setVehicles, setVehiclesCount }) => {
     const [visible, setVisible] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
     const [status, setStatus] = useState(false);
     const [fileStatus, setFileStatus] = useState(false);
     const [imageStatus, setImageStatus] = useState(false);
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState(null)
     const [documents, setDocuments] = useState([])
+    const [aracId, setAracId] = useState(0)
 
     const { setData } = useContext(DataContext)
 
@@ -122,11 +123,8 @@ const AddModal = () => {
         reset();
 
         AracAddService(data).then(res => {
-            if (res.status === 200) {
-                // AraclarSearchService(search).then(res => {
-                //     setVehicles(res.data.vehicleList)
-                //     setVehiclesCount(res.data.vehicleCount)
-                //   })
+
+            if (res.data.statusCode === 201) {
                 setStatus(true)
             }
         })
@@ -134,19 +132,27 @@ const AddModal = () => {
 
     useEffect(() => {
         if (status) {
-            PhotoUploadService(3, "Arac", images).then(res => {
-                if (res.status === 200) {
+            PhotoUploadService(1041, "Arac", images).then(res => {
+                console.log(res)
+                if (res.data.statusCode === 201) {
                     setImageStatus(true)
                 }
             })
 
-            FileUploadService(3, "Arac", documents).then(res => {
-                if (res.status === 200) {
+            FileUploadService(1041, "Arac", documents).then(res => {
+                if (res.data.statusCode === 201) {
                     setFileStatus(true)
                 }
             })
+
+            AraclarSearchService("").then(res => {
+                setVehicles(res.data.vehicleList)
+                setVehiclesCount(res.data.vehicleCount)
+            })
         }
     }, [status, images, documents])
+
+
 
 
     const footerContent = (
@@ -158,7 +164,7 @@ const AddModal = () => {
 
     return (
         <FormProvider {...methods}>
-            {(imageStatus & fileStatus) ? <MessageTemplate /> : null}
+            {(imageStatus || fileStatus || status) ? <MessageTemplate /> : null}
             <div className="card flex">
                 <Button label="Ekle" icon="pi pi-plus" onClick={() => setVisible(true)} className='add-btn' />
                 <Dialog visible={visible} style={{ width: '70vw' }} onHide={() => {
@@ -277,7 +283,7 @@ const AddModal = () => {
                             </div>
                         </TabPanel>
                         <TabPanel header="Resimler">
-                            <PhotoUpload control={control} name="images[]" setImages={setImages} />
+                            <PhotoUpload control={control} name="images[]" setImages={setImages} images={images} />
                         </TabPanel>
                         <TabPanel header="Ekli Belgeler">
                             <FileUploadComp control={control} name="documents[]" setDocuments={setDocuments} />

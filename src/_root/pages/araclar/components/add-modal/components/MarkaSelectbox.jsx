@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 import { CodeCustomSelectService } from '../../../../../../api/service';
 import { DataContext } from '../DataContext';
 
-const MarkaSelectbox = ({ control, label, name, url }) => {
+const MarkaSelectbox = ({ control, label, name, url, value }) => {
     const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -23,11 +23,11 @@ const MarkaSelectbox = ({ control, label, name, url }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{option.marka}</div>
+                    <div>{value ? value : option.marka}</div>
                 </div>
             );
         }
-        return <span>{props.name}</span>;
+        return <span>{props.placeholder ? props.placeholder : props.name}</span>;
     };
 
     const optionTemplate = (option) => {
@@ -61,6 +61,7 @@ const MarkaSelectbox = ({ control, label, name, url }) => {
                         valueTemplate={selectedTemplate}
                         itemTemplate={optionTemplate}
                         className="w-full"
+                        placeholder={value}
                     />
                 )}
             />

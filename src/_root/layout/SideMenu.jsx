@@ -86,7 +86,7 @@ const SideMenu = () => {
 
     return (
         <div className='sidebar'>
-            <img src="assets/images/logo_white.png" alt="" />
+            <img src="/assets/images/logo_white.png" alt="" />
             <div className='panel'>
                 <PanelMenu model={items} className="w-full" />
             </div>

@@ -52,3 +52,8 @@ export const OzelAlanReadService = (form) => {
 export const OzelAlanUpdateService = (form, topic, field) => {
   return http.post(`/CustomField/AddCustomFieldTopic?form=${form}&topic=${topic}&field=${field}`,)
 }
+
+// update vehicles
+export const AraclarUpdateReadService = (id) => {
+  return http.get(`/Vehicle/GetVehicleById?id=${id}`);
+};

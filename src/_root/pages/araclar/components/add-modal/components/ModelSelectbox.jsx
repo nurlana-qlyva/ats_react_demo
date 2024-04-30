@@ -5,7 +5,7 @@ import { CodeCustomSelectService } from '../../../../../../api/service';
 import { DataContext } from '../DataContext';
 
 
-const ModelSelectbox = ({ control, label, name, url }) => {
+const ModelSelectbox = ({ control, label, name, url, value }) => {
     const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -24,11 +24,11 @@ const ModelSelectbox = ({ control, label, name, url }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{option.modelDef}</div>
+                    <div>{value ? value : option.modelDef}</div>
                 </div>
             );
         }
-        return <span>{props.name}</span>;
+        return <span>{props.placeholder ? props.placeholder : props.name}</span>;
     };
 
     const optionTemplate = (option) => {
@@ -62,6 +62,7 @@ const ModelSelectbox = ({ control, label, name, url }) => {
                         valueTemplate={selectedTemplate}
                         itemTemplate={optionTemplate}
                         className="w-full"
+                        placeholder={value}
                     />
                 )}
             />

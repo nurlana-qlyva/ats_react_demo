@@ -5,7 +5,7 @@ import { DataContext } from '../pages/araclar/components/add-modal/DataContext';
 import { CodeSelectService } from '../../api/service';
 
 
-const SelectBox = ({ control, label, name, selectID }) => {
+const SelectBox = ({ control, label, name, selectID, value }) => {
     const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -28,7 +28,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
                 </div>
             );
         }
-        return <span>{props.name}</span>;
+        return <span>{props.placeholder ? props.placeholder : props.name}</span>;
     };
 
     const optionTemplate = (option) => {
@@ -50,7 +50,8 @@ const SelectBox = ({ control, label, name, selectID }) => {
                 render={({ field }) => (
                     <Dropdown
                         {...field}
-                        value={data ? data[name] : null}
+                        value={data && data[name] ? data[name] : value}
+                        defaultValue={data && data[name] ? data[name] : value}
                         onChange={(e) => {
                             setData({ ...data, [name]: e.value });
                             field.onChange(e.value);
@@ -62,6 +63,7 @@ const SelectBox = ({ control, label, name, selectID }) => {
                         valueTemplate={selectedTemplate}
                         itemTemplate={optionTemplate}
                         className="w-full"
+                        placeholder={value}
                     />
                 )}
             />

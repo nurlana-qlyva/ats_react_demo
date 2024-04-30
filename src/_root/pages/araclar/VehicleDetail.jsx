@@ -14,15 +14,19 @@ import RadioInput from "../../components/RadioInput"
 import ModelSelectbox from "./components/add-modal/components/ModelSelectbox"
 import MarkaSelectbox from "./components/add-modal/components/MarkaSelectbox"
 import { Checkbox } from 'primereact/checkbox';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "primereact/button"
 import { Divider } from 'primereact/divider';
-        
+import { AraclarUpdateReadService } from "../../../api/service"
+import { useParams } from "react-router-dom"
 
 const VehicleDetail = () => {
   const [images, setImages] = useState([])
   const [documents, setDocuments] = useState([])
   const [selectedValue, setSelectedValue] = useState('');
+  const [data, setData] = useState([])
+
+  const { id } = useParams()
 
   const defaultValues = {
     plaka: "",
@@ -63,6 +67,13 @@ const VehicleDetail = () => {
     setSelectedValue(value);
   };
 
+  useEffect(() => {
+    AraclarUpdateReadService(id).then(res => {
+      console.log(res.data)
+      setData(res.data)
+    })
+  }, [])
+
   return (
     <div>
       <BreadCrumbComp items={[{ label: 'ARAÇ LİSTESİ' }, { label: 'ARAÇ DETAY KARTI' }]} />
@@ -72,7 +83,7 @@ const VehicleDetail = () => {
             <img src="/assets/images/ats_login_image.jpg" alt="" className="border-round" style={{ width: "100%", height: "280px" }} />
             <div className="flex gap-4 mt-3">
               <div>
-                <span className="pi pi-circle-fill mr-1" style={{color: "green"}}/>
+                <span className="pi pi-circle-fill mr-1" style={{ color: "green" }} />
                 <span>Aktif</span>
               </div>
               <div>
@@ -93,18 +104,18 @@ const VehicleDetail = () => {
                   <Button label="İptal" icon="pi pi-times" className='iptal-btn' />
                 </div>
               </div>
-              <Divider className="my-3"/>
+              <Divider className="my-3" />
               <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} name="plaka" label="Plaka" />
+                <TextInput control={control} name="plaka" label="Plaka" value={data.plaka} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <SelectBox control={control} name="aracTipi" label="Araç Tipi" selectID="100" />
+                <SelectBox control={control} name="aracTipi" label="Araç Tipi" selectID="100" value={data.aracTip} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} name="guncelKm" label="Güncel Km." />
+                <TextInput control={control} name="guncelKm" label="Güncel Km." value={data.guncelKm} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" onChangeValue={handleLocationChange} />
+                <Location control={control} label="Lokasyon" name="lokasyon" url="Location/GetLocationList" onChangeValue={handleLocationChange} defaultValue={data.lokasyon} />
                 <Controller
                   name={"lokasyon"}
                   control={control}
@@ -116,19 +127,19 @@ const VehicleDetail = () => {
                 />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <MarkaSelectbox control={control} label="Marka" name="marka" url="Mark/GetMarkList" />
+                <MarkaSelectbox control={control} label="Marka" name="marka" url="Mark/GetMarkList" value={data.marka} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <ModelSelectbox control={control} label="Model" name="model" url="Model/GetModelList" />
+                <ModelSelectbox control={control} label="Model" name="model" url="Model/GetModelList" value={data.model} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <DriverSelectbox control={control} label="Sürücü" name="surucu" url="Driver/GetDriverListForInput" />
+                <DriverSelectbox control={control} label="Sürücü" name="surucu" url="Driver/GetDriverListForInput" value={data.surucu} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <MaterialListSelectbox control={control} label="Yakıt Tipi" name="yakitTipi" type="YAKIT" />
+                <MaterialListSelectbox control={control} label="Yakıt Tipi" name="yakitTipi" type="YAKIT" value={data.yakitTip} />
               </div>
               <div className="col-12 md:col-6 lg:col-4">
-                <SelectBox control={control} label="Renk" name="renk" selectID="111" />
+                <SelectBox control={control} label="Renk" name="renk" selectID="111" value={data.renk} />
               </div>
             </div>
           </div>
@@ -143,19 +154,19 @@ const VehicleDetail = () => {
                   <h3>Araç Bilgileri</h3>
                   <div className="grid mt-2">
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label={"Model Yılı"} name={"modelYili"} type="text" />
+                      <TextInput control={control} label={"Model Yılı"} name={"modelYili"} type="text" value={data.yil} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="Araç Grubu" name="aracGrubu" selectID="101" />
+                      <SelectBox control={control} label="Araç Grubu" name="aracGrubu" selectID="101" value={data.grup} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Araç Cinsi" name="aracCinsi" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" />
+                      <TextInput control={control} label={"Mülkiyet"} name={"mulkiyyet"} type="text" value={data.mulkiyet} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="Departman" name="departman" selectID="200" />
+                      <SelectBox control={control} label="Departman" name="departman" selectID="200" value={data.departman} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Proje" name="proje" />

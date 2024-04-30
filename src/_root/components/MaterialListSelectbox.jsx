@@ -5,7 +5,7 @@ import { DataContext } from '../pages/araclar/components/add-modal/DataContext';
 import { MaterialListSelectService } from '../../api/service';
 
 
-const MaterialListSelectbox = ({ control, label, name, type }) => {
+const MaterialListSelectbox = ({ control, label, name, type, value }) => {
     const [selectData, setSelectData] = useState([]);
     const { data, setData } = useContext(DataContext);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -23,11 +23,11 @@ const MaterialListSelectbox = ({ control, label, name, type }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{option.tanim}</div>
+                    <div>{value ? value : option.tanim}</div>
                 </div>
             );
         }
-        return <span>{props.name}</span>;
+        return <span>{props.placeholder ? props.placeholder : props.name}</span>;
     };
 
     const optionTemplate = (option) => {
@@ -61,6 +61,7 @@ const MaterialListSelectbox = ({ control, label, name, type }) => {
                         valueTemplate={selectedTemplate}
                         itemTemplate={optionTemplate}
                         className="w-full"
+                        placeholder={value}
                     />
                 )}
             />

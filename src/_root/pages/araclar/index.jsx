@@ -154,7 +154,7 @@ const Araclar = () => {
           <div className='flex align-items-center'>
             <ControlRows header={header} />
             <InputText v-model="value1" placeholder="Search" onChange={handleSearch} />
-            <AddModal />
+            <AddModal setVehicles={setVehicles} setVehiclesCount={setVehiclesCount}/>
             <FilterRows columns={columns} handleSearchForFilters={handleSearchForFilters} clear={clear} />
           </div>
           <div>

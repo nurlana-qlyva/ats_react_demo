@@ -12,7 +12,6 @@ export default function PhotoUpload({control, name, setImages}) {
     const toast = useRef(null);
     const [totalSize, setTotalSize] = useState(0);
     const fileUploadRef = useRef(null);
-    const images = []
 
     const onTemplateSelect = (e) => {
         let _totalSize = totalSize;
@@ -23,21 +22,23 @@ export default function PhotoUpload({control, name, setImages}) {
         }
 
         setTotalSize(_totalSize);
-        e.files.map(file => images.push(file.name))
-        setImages(images)
+
+        const formData = new FormData();
+        e.files.forEach((file) => {
+            formData.append('images', file, file.name);
+        });
+        setImages(formData)
     };
 
 
     const onTemplateUpload = (e) => {
-        let _totalSize = 0;
-
-        e.files.forEach((file) => {
-            _totalSize += file.size || 0;
-        });
-
-        setTotalSize(_totalSize);
-        toast.current?.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
-
+        try {
+            console.log(e)
+            // File upload logic here
+            // Check for errors and handle them appropriately
+        } catch (error) {
+            console.error("Upload error:", error);
+        }
     };
 
     const onTemplateRemove = (file, callback) => {

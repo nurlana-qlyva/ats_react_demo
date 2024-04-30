@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Tree } from 'primereact/tree';
 
-const Location = ({ control, label, name, url, onChangeValue  }) => {
+const Location = ({ control, label, name, url, onChangeValue, defaultValue  }) => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [value, setValue] = useState('');
@@ -59,8 +59,7 @@ const Location = ({ control, label, name, url, onChangeValue  }) => {
             <label htmlFor={name}>{label}</label>
             <div className='grid'>
                 <div className="col-12 md:col-10">
-                    <InputText value={value.label} readOnly />
-                
+                    <InputText value={defaultValue ? defaultValue : value.label} readOnly />
                 </div>
                 <div className="col-12 md:col-2 popup">
                     <Button icon="pi pi-plus" onClick={handleCLick} />
