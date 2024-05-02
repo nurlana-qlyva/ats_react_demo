@@ -7,8 +7,9 @@ import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
 import { Controller } from 'react-hook-form';
+import { PhotoUploadService } from '../../api/service';
 
-export default function PhotoUpload({control, name, setImages}) {
+export default function PhotoUpload({ control, name, setImages }) {
     const toast = useRef(null);
     const [totalSize, setTotalSize] = useState(0);
     const fileUploadRef = useRef(null);
@@ -24,22 +25,29 @@ export default function PhotoUpload({control, name, setImages}) {
         setTotalSize(_totalSize);
 
         const formData = new FormData();
-        e.files.forEach((file) => {
-            formData.append('images', file, file.name);
-        });
+
+        formData.append('images', e.files)
         setImages(formData)
     };
 
 
-    const onTemplateUpload = (e) => {
+    const onTemplateUpload = async (e) => {
         try {
-            console.log(e)
-            // File upload logic here
-            // Check for errors and handle them appropriately
+            console.log('onTemplateUpload called with files:', e.files);
+            const formData = new FormData();
+            e.files.forEach((file) => {
+                formData.append('images', file); // Append each file to the form data
+            });
+            console.log('FormData:', formData);
+            await PhotoUploadService(1041, "Arac", formData).then(res => {
+                console.log('Upload response:', res.data);
+            });
+            console.log('Upload completed.');
         } catch (error) {
             console.error("Upload error:", error);
         }
     };
+    
 
     const onTemplateRemove = (file, callback) => {
         setTotalSize(totalSize - file.size);

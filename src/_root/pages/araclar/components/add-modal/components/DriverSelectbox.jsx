@@ -23,7 +23,7 @@ const DriverSelectbox = ({ control, label, name, url, value }) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <div>{value ? value : option.isim}</div>
+                    <div>{option.isim}</div>
                 </div>
             );
         }
@@ -49,7 +49,8 @@ const DriverSelectbox = ({ control, label, name, url, value }) => {
                 render={({ field }) => (
                     <Dropdown
                         {...field}
-                        value={data ? data[name] : null}
+                        value={data && data[name] ? data[name] : value}
+                        defaultValue={value}
                         onChange={(e) => {
                             setData({ ...data, [name]: e.value });
                             field.onChange(e.value);

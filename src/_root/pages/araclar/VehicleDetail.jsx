@@ -17,18 +17,25 @@ import { Checkbox } from 'primereact/checkbox';
 import { useEffect, useState } from "react"
 import { Button } from "primereact/button"
 import { Divider } from 'primereact/divider';
-import { AraclarUpdateReadService } from "../../../api/service"
+import { AraclarUpdateReadService, AraclarUpdateSetService } from "../../../api/service"
 import { useParams } from "react-router-dom"
+
+const format = (date) => {
+  const d = new Date(date)
+  let month = d.getMonth() + 1
+  let day = d.getDate()
+  if (month < 10) month = "0" + month
+  if (day < 10) day = "0" + day
+  const format = d.getFullYear() + "-" + month + "-" + day
+  return format
+}
 
 const VehicleDetail = () => {
   const [images, setImages] = useState([])
   const [documents, setDocuments] = useState([])
   const [selectedValue, setSelectedValue] = useState('');
   const [data, setData] = useState([])
-
-  const { id } = useParams()
-
-  const defaultValues = {
+  const [defaultValues, setDefaultValues] = useState({
     plaka: "",
     aracTipi: null,
     guncelKm: "",
@@ -55,7 +62,9 @@ const VehicleDetail = () => {
     aracOzelAlan6: "",
     images: [],
     documents: []
-  }
+  })
+
+  const { id } = useParams()
 
   const methods = useForm({
     defaultValues: defaultValues
@@ -72,7 +81,39 @@ const VehicleDetail = () => {
       console.log(res.data)
       setData(res.data)
     })
-  }, [])
+  }, [id])
+
+  useEffect(() => setDefaultValues(data), [data])
+
+
+  const handleUpdate = handleSubmit((value) => {
+    console.log(value)
+    const body = {
+      "aracId": id,
+      "plaka": value.plaka !== '' ? value.plaka : defaultValues.plaka,
+      "yil": value.modelYili !== '' ? value.modelYili : defaultValues.yil,
+      "markaId": value?.marka?.siraNo || 0,
+      "modelId": value?.model?.siraNo || 0,
+      "aracGrubuId": value?.aracGrubu?.siraNo || 0,
+      "aracRenkId": value?.renk?.siraNo || 0,
+      "lokasyonId": +selectedValue,
+      "departmanId": value?.departman?.siraNo || 0,
+      "surucuId": value?.surucu?.surucuId || 0,
+      "aracTipId": value?.aracTipi?.siraNo || 0,
+      "guncelKm": value.guncelKm !== '' ? value.guncelKm : defaultValues.guncelKm,
+      "muayeneTarih": value.muayene !== null ? format(value.muayene) : format(new Date(defaultValues.muayeneTarih)),
+      "egzosTarih": value.egzozEmisyon !== null ? format(value.egzozEmisyon) : format(new Date(defaultValues.egzosTarih)),
+      "vergiTarih": value.vergi !== null ? format(value.vergi) : format(new Date(defaultValues.vergiTarih)),
+      "sozlesmeTarih": value.sozlesme !== null ? format(value.sozlesme) : format(new Date(defaultValues.sozlesmeTarih)),
+      "yakitId": value?.yakitTipi?.malzemeId || 0,
+      "tts": "",
+      "durumKodId": value?.durum?.siraNo || 0,
+      "aktif": true,
+      "havuzGrup": ""
+    }
+
+    AraclarUpdateSetService(body).then(res => console.log(res.data))
+  })
 
   return (
     <div>
@@ -100,7 +141,7 @@ const VehicleDetail = () => {
             <div className="grid">
               <div className="col-12">
                 <div className='flex justify-content-end gap-2'>
-                  <Button label="Güncelle" icon="pi pi-check" className="save-btn" />
+                  <Button label="Güncelle" icon="pi pi-check" className="save-btn" onClick={handleUpdate} />
                   <Button label="İptal" icon="pi pi-times" className='iptal-btn' />
                 </div>
               </div>
@@ -175,13 +216,13 @@ const VehicleDetail = () => {
                       <SelectBox control={control} label="Masraf Merkezi" name="masrafMerkezi" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="Havuz" name="havuz" />
+                      <TextInput control={control} label="Havuz" name="havuz" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Kullanım Amacı" name="kullanimAmaci" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="Durum" name="durum" />
+                      <SelectBox control={control} label="Durum" name="durum" selectID="122" value={data.durum} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Bağlı Araç" name="bagliArac" />
@@ -190,7 +231,7 @@ const VehicleDetail = () => {
                       <SelectBox control={control} label="HGS" name="hgs" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <SelectBox control={control} label="TTS" name="tts" />
+                      <TextInput control={control} label="TTS" name="tts" />
                     </div>
                   </div>
                 </div>
@@ -226,7 +267,17 @@ const VehicleDetail = () => {
                       <Controller
                         name="muayene"
                         control={control}
-                        render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                        render={({ field }) => (
+                          <Calendar
+                            dateFormat="dd/mm/yy"
+                            value={field.value ? field.value : new Date(data.muayeneTarih)}
+                            onChange={(e) => {
+                              field.onChange(e.target.value)
+                            }}
+                            showIcon={true}
+                            appendTo={document.body}
+                          />
+                        )}
                       />
                     </div>
                     <div className="col-12 md:col-6 flex flex-column gap-2">
@@ -234,7 +285,17 @@ const VehicleDetail = () => {
                       <Controller
                         name="sozlesme"
                         control={control}
-                        render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                        render={({ field }) => (
+                          <Calendar
+                            dateFormat="dd/mm/yy"
+                            value={field.value ? field.value : new Date(data.sozlesmeTarih)}
+                            onChange={(e) => {
+                              field.onChange(e.target.value)
+                            }}
+                            showIcon={true}
+                            appendTo={document.body}
+                          />
+                        )}
                       />
                     </div>
                     <div className="col-12 md:col-6 flex flex-column gap-2">
@@ -242,7 +303,17 @@ const VehicleDetail = () => {
                       <Controller
                         name="egzozEmisyon"
                         control={control}
-                        render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                        render={({ field }) => (
+                          <Calendar
+                            dateFormat="dd/mm/yy"
+                            value={field.value ? field.value : new Date(data.egzosTarih)}
+                            onChange={(e) => {
+                              field.onChange(e.target.value)
+                            }}
+                            showIcon={true}
+                            appendTo={document.body}
+                          />
+                        )}
                       />
                     </div>
                     <div className="col-12 md:col-6 flex flex-column gap-2">
@@ -250,7 +321,17 @@ const VehicleDetail = () => {
                       <Controller
                         name="vergi"
                         control={control}
-                        render={({ field }) => <Calendar dateFormat="dd/mm/yy" {...field} />}
+                        render={({ field }) => (
+                          <Calendar
+                            dateFormat="dd/mm/yy"
+                            value={field.value ? field.value : new Date(data.vergiTarih)}
+                            onChange={(e) => {
+                              field.onChange(e.target.value)
+                            }}
+                            showIcon={true}
+                            appendTo={document.body}
+                          />
+                        )}
                       />
                     </div>
                   </div>

@@ -100,7 +100,6 @@ const AddModal = ({ setVehicles, setVehiclesCount }) => {
     };
 
     const handleSubmitClick = handleSubmit((value) => {
-        console.log(value)
         const data = {
             "plaka": value.plaka,
             "yil": +value.modelYili,
@@ -123,34 +122,34 @@ const AddModal = ({ setVehicles, setVehiclesCount }) => {
         reset();
 
         AracAddService(data).then(res => {
-
             if (res.data.statusCode === 201) {
                 setStatus(true)
             }
         })
+  
     });
 
-    useEffect(() => {
-        if (status) {
-            PhotoUploadService(1041, "Arac", images).then(res => {
-                console.log(res)
-                if (res.data.statusCode === 201) {
-                    setImageStatus(true)
-                }
-            })
+    // useEffect(() => {
+    //     if (status) {
+    //         PhotoUploadService(1041, "Arac", images).then(res => {
+    //             console.log(res)
+    //             if (res.data.statusCode === 201) {
+    //                 setImageStatus(true)
+    //             }
+    //         })
 
-            FileUploadService(1041, "Arac", documents).then(res => {
-                if (res.data.statusCode === 201) {
-                    setFileStatus(true)
-                }
-            })
+    //         FileUploadService(1041, "Arac", documents).then(res => {
+    //             if (res.data.statusCode === 201) {
+    //                 setFileStatus(true)
+    //             }
+    //         })
 
-            AraclarSearchService("").then(res => {
-                setVehicles(res.data.vehicleList)
-                setVehiclesCount(res.data.vehicleCount)
-            })
-        }
-    }, [status, images, documents])
+    //         AraclarSearchService("").then(res => {
+    //             setVehicles(res.data.vehicleList)
+    //             setVehiclesCount(res.data.vehicleCount)
+    //         })
+    //     }
+    // }, [status, images, documents])
 
 
 

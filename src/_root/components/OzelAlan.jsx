@@ -65,7 +65,7 @@ const OzelAlan = ({ form }) => {
             const apiData = res.data;
             const updatedFields = fields.map(field => {
                 const apiFieldName = field.label;
-                if (apiData.hasOwnProperty(apiFieldName)) {
+                if (apiData?.hasOwnProperty(apiFieldName)) {
                     // Update label and value based on API data
                     return {
                         ...field,
@@ -92,7 +92,7 @@ const OzelAlan = ({ form }) => {
         }
 
         field.debounceTimer = setTimeout(async () => {
-            OzelAlanUpdateService("Arac", value, field.key).then(res => console.log(res.data))
+            OzelAlanUpdateService(form, value, field.key).then(res => console.log(res.data))
          
         }, 5000);
     };

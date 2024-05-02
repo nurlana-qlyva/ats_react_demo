@@ -10,7 +10,6 @@ import { TokenContext } from '../../context/TokenContext';
 
 
 const LoginForm = () => {
-  const [checked, setChecked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -19,12 +18,11 @@ const LoginForm = () => {
   const { control, handleSubmit } = useForm({
     defaultValues: {
       username: "",
-      password: "",
-      remember: false
+      password: ""
     }
   })
 
-  const onSubmit= async data => {
+  const onSubmit = async data => {
     setIsLoading(true)
     const body = {
       KULLANICIKOD: data.username,

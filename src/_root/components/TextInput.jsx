@@ -9,7 +9,9 @@ const TextInput = ({ control, label, name, type, color, value }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { onChange } }) => <InputText type={type} value={value} onChange={(e) => onChange(e.target.value)} />}
+                render={({ field: { onChange } }) => <InputText type={type} defaultValue={value} onChange={(e) => {
+                    onChange(e.target.value)
+                }} />}
             />
         </div>
     )
