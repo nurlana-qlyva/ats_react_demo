@@ -19,6 +19,14 @@ import { Button } from "primereact/button"
 import { Divider } from 'primereact/divider';
 import { AraclarUpdateReadService, AraclarUpdateSetService } from "../../../api/service"
 import { useParams } from "react-router-dom"
+import OzelAlan from "../../components/OzelAlan"
+import { ListBox } from 'primereact/listbox';
+import { Dialog } from 'primereact/dialog';
+
+const details = [
+  { name: 'Ruhsat Bilgileri', code: 'RB' },
+];
+
 
 const format = (date) => {
   const d = new Date(date)
@@ -34,7 +42,9 @@ const VehicleDetail = () => {
   const [images, setImages] = useState([])
   const [documents, setDocuments] = useState([])
   const [selectedValue, setSelectedValue] = useState('');
+  const [visible, setVisible] = useState(false);
   const [data, setData] = useState([])
+  const [selectedDetail, setSelectedDetail] = useState(null);
   const [defaultValues, setDefaultValues] = useState({
     plaka: "",
     aracTipi: null,
@@ -54,14 +64,24 @@ const VehicleDetail = () => {
     sozlesme: null,
     egzozEmisyon: null,
     vergi: null,
-    aracOzelAlan1: "",
-    aracOzelAlan2: "",
-    aracOzelAlan3: "",
-    aracOzelAlan4: "",
-    aracOzelAlan5: "",
-    aracOzelAlan6: "",
+    ozelAlan1: "",
+    ozelAlan2: "",
+    ozelAlan3: "",
+    ozelAlan4: "",
+    ozelAlan5: "",
+    ozelAlan6: "",
+    ozelAlan7: "",
+    ozelAlan8: "",
+    ozelAlan9: 0,
+    ozelAlan10: 0,
+    ozelAlan11: 0,
+    ozelAlan12: 0,
     images: [],
-    documents: []
+    documents: [],
+    onGorulenMin: 0,
+    onGorulen: 0,
+    gerceklesen: 0,
+
   })
 
   const { id } = useParams()
@@ -78,7 +98,6 @@ const VehicleDetail = () => {
 
   useEffect(() => {
     AraclarUpdateReadService(id).then(res => {
-      console.log(res.data)
       setData(res.data)
     })
   }, [id])
@@ -87,7 +106,6 @@ const VehicleDetail = () => {
 
 
   const handleUpdate = handleSubmit((value) => {
-    console.log(value)
     const body = {
       "aracId": id,
       "plaka": value.plaka !== '' ? value.plaka : defaultValues.plaka,
@@ -106,14 +124,33 @@ const VehicleDetail = () => {
       "vergiTarih": value.vergi !== null ? format(value.vergi) : format(new Date(defaultValues.vergiTarih)),
       "sozlesmeTarih": value.sozlesme !== null ? format(value.sozlesme) : format(new Date(defaultValues.sozlesmeTarih)),
       "yakitId": value?.yakitTipi?.malzemeId || 0,
-      "tts": "",
+      "tts": value.tts !== '' ? value.tts : defaultValues.Tts,
       "durumKodId": value?.durum?.siraNo || 0,
       "aktif": true,
-      "havuzGrup": ""
+      "havuzGrup": value.havuz !== '' ? value.havuz : defaultValues.havuzGrup,
+      "onGorulenMin": value.onGorulenMin !== "" ? +value.onGorulenMin : defaultValues.onGorulenMin,
+      "onGorulen": value.onGorulen !== "" ? +value.onGorulen : defaultValues.onGorulen,
+      "gerceklesen": value.gerceklesen !== "" ? +value.gerceklesen : defaultValues.gerceklesen,
+      ozelAlan1: value.ozelAlan1 !== "" ? value.ozelAlan1 : defaultValues.ozelAlan1,
+      ozelAlan2: value.ozelAlan2 !== "" ? value.ozelAlan2 : defaultValues.ozelAlan2,
+      ozelAlan3: value.ozelAlan3 !== "" ? value.ozelAlan3 : defaultValues.ozelAlan3,
+      ozelAlan4: value.ozelAlan4 !== "" ? value.ozelAlan4 : defaultValues.ozelAlan4,
+      ozelAlan5: value.ozelAlan5 !== "" ? value.ozelAlan5 : defaultValues.ozelAlan5,
+      ozelAlan6: value.ozelAlan6 !== "" ? value.ozelAlan6 : defaultValues.ozelAlan6,
+      ozelAlan7: value.ozelAlan7 !== "" ? value.ozelAlan7 : defaultValues.ozelAlan7,
+      ozelAlan8: value.ozelAlan8 !== "" ? value.ozelAlan8 : defaultValues.ozelAlan8,
+      ozelAlanKodId9: value?.ozelAlan9.siraNo || 0,
+      ozelAlanKodId10: value?.ozelAlan10.siraNo || 0,
+      ozelAlan11: value.ozelAlan11,
+      ozelAlan12: value.ozelAlan12 || defaultValues.ozelAlan12,
     }
 
     AraclarUpdateSetService(body).then(res => console.log(res.data))
   })
+
+  const handleDetailClick = (detail) => {
+    setSelectedDetail(detail);
+  };
 
   return (
     <div>
@@ -186,7 +223,7 @@ const VehicleDetail = () => {
           </div>
         </div>
       </div>
-      <div className="card mt-3">
+      <div className="card mt-3" style={{ position: 'relative' }}>
         <TabView>
           <TabPanel header="Genel Bilgiler">
             <div className="grid mt-1">
@@ -216,7 +253,7 @@ const VehicleDetail = () => {
                       <SelectBox control={control} label="Masraf Merkezi" name="masrafMerkezi" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label="Havuz" name="havuz" />
+                      <TextInput control={control} label="Havuz" name="havuz" value={data.havuzGrup} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <SelectBox control={control} label="Kullanım Amacı" name="kullanimAmaci" />
@@ -231,7 +268,7 @@ const VehicleDetail = () => {
                       <SelectBox control={control} label="HGS" name="hgs" />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label="TTS" name="tts" />
+                      <TextInput control={control} label="TTS" name="tts" value={data.tts} />
                     </div>
                   </div>
                 </div>
@@ -239,13 +276,13 @@ const VehicleDetail = () => {
                   <h3>Yakıt Tüketim Kontrol</h3>
                   <div className="grid mt-2">
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label={"Min. Yakıt Tüketimi"} name={"minYakitTuketimi"} type="text" />
+                      <TextInput control={control} label={"Min. Yakıt Tüketimi"} name={"onGorulenMin"} type="text" value={data.onGorulenMin} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label="Maks. Yakıt Tüketimi" name="maksYakitTuketimi" />
+                      <TextInput control={control} label="Maks. Yakıt Tüketimi" name="onGorulen" value={data.onGorulen} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
-                      <TextInput control={control} label="Gerçek Yakıt Tüketimi" name="gercekYakitTuketimi" />
+                      <TextInput control={control} label="Gerçek Yakıt Tüketimi" name="gerceklesen" value={data.gerceklesen} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-3">
                       <label htmlFor="uyari">Uyarı</label>
@@ -352,13 +389,13 @@ const VehicleDetail = () => {
                 <div className="border-1 border-300 border-round p-3 mt-3">
                   <div className="grid mt-2">
                     <div className="col-12 md:col-6 lg:col-4 flex flex-column gap-2">
-                      <RadioInput control={control} label="Aktif" name="aracDurum" value="aktif" />
+                      <RadioInput control={control} label="Aktif" name="aracDurum" value={data.aktif && "AKTIF"} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-4 flex flex-column gap-2">
-                      <RadioInput control={control} label="Pasif" name="aracDurum" value={"pasif"} />
+                      <RadioInput control={control} label="Pasif" name="aracDurum" value={data.pasif && "PASIF"} />
                     </div>
                     <div className="col-12 md:col-6 lg:col-4 flex flex-column gap-2">
-                      <RadioInput control={control} label="Arşiv" name="aracDurum" value={"arsiv"} />
+                      <RadioInput control={control} label="Arşiv" name="aracDurum" value={data.arsiv && "ARSIV"} />
                     </div>
                   </div>
                 </div>
@@ -367,24 +404,7 @@ const VehicleDetail = () => {
           </TabPanel>
           <TabPanel header="Özel Alanlar">
             <div className="grid">
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label={"Özel Alan 1"} name={"aracOzelAlan1"} type="text" />
-              </div>
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label="Özel Alan 2" name="aracOzelAlan2" />
-              </div>
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label={"Özel Alan 3"} name={"aracOzelAlan3"} type="text" />
-              </div>
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label={"Özel Alan 4"} name={"aracOzelAlan4"} type="text" />
-              </div>
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label={"Özel Alan 5"} name={"aracOzelAlan5"} type="text" />
-              </div>
-              <div className="col-12 md:col-6 lg:col-4">
-                <TextInput control={control} label={"Özel Alan 6"} name={"aracOzelAlan6"} type="text" />
-              </div>
+              <OzelAlan form="Arac" control={control} data={data} />
             </div>
           </TabPanel>
           <TabPanel header="Resimler">
@@ -394,6 +414,22 @@ const VehicleDetail = () => {
             <FileUploadComp control={control} name="documents[]" setDocuments={setDocuments} />
           </TabPanel>
         </TabView>
+        <Button label="Detay Bilgileri" icon="pi pi-external-link" onClick={() => setVisible(true)} style={{ position: "absolute", top: "10px", right: "10px" }} />
+        {visible && (
+          <div style={{ position: 'absolute', top: '41px', right: '10px', background: '#fff', zIndex: "2003", width: "200px" }}>
+            <ListBox options={details} optionLabel="name" onClick={(e) => handleDetailClick(e.value)} className="w-full md:w-14rem" />
+            {selectedDetail && (
+              <Dialog header="Header" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+                <p className="m-0">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </Dialog>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

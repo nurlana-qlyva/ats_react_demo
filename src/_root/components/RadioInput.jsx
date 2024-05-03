@@ -1,7 +1,10 @@
 import { Controller } from 'react-hook-form';
 import { RadioButton } from 'primereact/radiobutton';
+import { useState } from 'react';
 
 const RadioInput = ({ control, label, name, value }) => {
+    const [aracDurum, setAracDurum] = useState('')
+    
     const inputId = `input_${name}`;
 
     return (

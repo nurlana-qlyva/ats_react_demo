@@ -79,12 +79,18 @@ const AddModal = ({ setVehicles, setVehiclesCount }) => {
         sozlesme: null,
         egzozEmisyon: null,
         vergi: null,
-        aracOzelAlan1: "",
-        aracOzelAlan2: "",
-        aracOzelAlan3: "",
-        aracOzelAlan4: "",
-        aracOzelAlan5: "",
-        aracOzelAlan6: "",
+        ozelAlan1: "",
+        ozelAlan2: "",
+        ozelAlan3: "",
+        ozelAlan4: "",
+        ozelAlan5: "",
+        ozelAlan6: "",
+        ozelAlan7: "",
+        ozelAlan8: "",
+        ozelAlan9: 0,
+        ozelAlan10: 0,
+        ozelAlan11: 0,
+        ozelAlan12: 0,
         images: [],
         documents: []
     }
@@ -113,10 +119,22 @@ const AddModal = ({ setVehicles, setVehiclesCount }) => {
             "aracTipId": value?.aracTipi?.siraNo || 0,
             "guncelKm": value.guncelKm,
             "muayeneTarih": format(value.muayene) || "",
-            "egzosTarih": format(value.egzozEmisyon) || null,
-            "vergiTarih": format(value.vergi) || null,
-            "sozlesmeTarih": format(value.sozlesme) || null,
+            "egzosTarih": format(value.egzozEmisyon) || "",
+            "vergiTarih": format(value.vergi) || "",
+            "sozlesmeTarih": format(value.sozlesme) || "",
             "yakitId": value?.yakitTipi?.malzemeId || 0,
+            "ozelAlan1": value?.ozelAlan1 || "",
+            "ozelAlan2": value?.ozelAlan2 || "",
+            "ozelAlan3": value?.ozelAlan3 || "",
+            "ozelAlan4": value?.ozelAlan4 || "",
+            "ozelAlan5": value?.ozelAlan5 || "",
+            "ozelAlan6": value?.ozelAlan6 || "",
+            "ozelAlan7": value?.ozelAlan7 || "",
+            "ozelAlan8": value?.ozelAlan8 || "",
+            "ozelAlan9": value?.ozelAlan9 || 0,
+            "ozelAlan10": value?.ozelAlan10 || 0,
+            "ozelAlan11": value?.ozelAlan11 || 0,
+            "ozelAlan12": value?.ozelAlan12 || 0,
         }
         setData(defaultValues);
         reset();
@@ -278,14 +296,8 @@ const AddModal = ({ setVehicles, setVehiclesCount }) => {
                         </TabPanel>
                         <TabPanel header="Özel Alanlar">
                             <div className="grid">
-                                <OzelAlan form="Arac" />
+                                <OzelAlan form="Arac" control={control} />
                             </div>
-                        </TabPanel>
-                        <TabPanel header="Resimler">
-                            <PhotoUpload control={control} name="images[]" setImages={setImages} images={images} />
-                        </TabPanel>
-                        <TabPanel header="Ekli Belgeler">
-                            <FileUploadComp control={control} name="documents[]" setDocuments={setDocuments} />
                         </TabPanel>
                     </TabView>
                 </Dialog>
