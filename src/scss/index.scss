@@ -3,8 +3,6 @@
 @import './utilities/variables.scss';
 @import './utilities/mixins.scss';
 
-@import './base/antd.scss';
-
 @import './components/buttons.scss';
 @import './components/elements.scss';
 @import './components/table.scss';
@@ -16,3 +14,5 @@
 @import './layout/header.scss';
 @import './layout/footer.scss';
 @import './layout/sidebar.scss';
+
+@import './base/antd.scss';
