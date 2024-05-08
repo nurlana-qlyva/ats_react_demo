@@ -6,8 +6,8 @@ export const LoginUserService = (data) => {
 };
 
 // vehicles
-export const VehiclesReadForSearchService = (search) => {
-  return http.post(`/Vehicle/GetVehicles?parameter=${search}`);
+export const VehiclesReadForSearchService = async (search) => {
+  return await http.post(`/Vehicle/GetVehicles?parameter=${search}`);
 };
 
 export const VehiclesReadForPageService = (search, page) => {

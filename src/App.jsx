@@ -12,7 +12,7 @@ const AppRouter = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getItemWithExpiration("token", setHasToken);
+    const token = getItemWithExpiration("token");
 
     if (token) {
       setHasToken(true);

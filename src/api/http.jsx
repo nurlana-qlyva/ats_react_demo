@@ -1,16 +1,20 @@
 import axios from "axios";
-
-const token = JSON.parse(localStorage.getItem("token"))
+import { getItemWithExpiration } from "../utils/expireToken";
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
   headers: {
     "Content-type": "application/json",
-    Authorization: `Bearer ${token.value}`,
   },
 });
 
-http.interceptors.request.use((config) => {
+http.interceptors.request.use(async (config) => {
+  const token = await getItemWithExpiration("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 });
 
