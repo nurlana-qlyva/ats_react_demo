@@ -1,12 +1,14 @@
-import { Modal, Button, Checkbox, Divider } from 'antd';
+import { Modal, Button, Checkbox, Divider, Input } from 'antd';
 import SelectInput from '../../../../components/form/SelectInput';
 import { Controller, useForm } from 'react-hook-form';
 import TextInput from '../../../../components/form/TextInput';
 import DateInput from '../../../../components/form/DateInput';
 import TextArea from 'antd/es/input/TextArea';
 import { useEffect, useState } from 'react';
-import { RuhsatInfoGetService } from '../../../../../api/service';
+import { RuhsatInfoGetService, RuhsatInfoUpdateService } from '../../../../../api/service';
 import dayjs from 'dayjs';
+import { formatDate } from '../../../../../utils/format';
+import IlSelect from '../../../../components/form/IlSelect';
 
 const RuhsatModal = ({ visible, onClose, id }) => {
     const [hakMahrumiyetChecked, setHakMahrumiyetChecked] = useState(false);
@@ -18,6 +20,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
     const [resmi, setResmi] = useState(false);
     const [yolcuNakli, setYolcuNakli] = useState(false);
     const [hususi, setHususi] = useState(false);
+    const [status, setStatus] = useState(false)
 
     const defaultValues = {
         aciklama: '',
@@ -68,6 +71,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
 
     useEffect(() => {
         RuhsatInfoGetService(id).then(res => {
+            console.log(res.data)
             setValue("aciklama", res?.data.aciklama)
             setValue("aracCinsi", res?.data.aracCinsi)
             setValue("aracSinifi", res?.data.aracSinifi)
@@ -115,11 +119,56 @@ const RuhsatModal = ({ visible, onClose, id }) => {
             setValue("yukNakli", res?.data.yukNakli)
             setYukNakli(res?.data.yukNakli)
         })
-    }, [id])
+    }, [id, status])
+
+    const onSumbit = handleSubmit((values) => {
+        console.log(values)
+
+        const data = {
+            "dtyAracId": id,
+            "ilKodId": values.ilKodId,
+            "ruhsatSahibiKodId": values.ruhsatSahibiKodId,
+            "ilce": values.ilce,
+            "tescilNo": values.tescilNo,
+            "tescilTarih": values?.tescilTarih ? formatDate(values?.tescilTarih.$d) : "1970-01-01",
+            "trafikciktarih": values?.trafikciktarih ? formatDate(values?.trafikciktarih.$d) : "1970-01-01",
+            "istiapHaddi": values.istiapHaddi,
+            "romorkIstiap": values.romorkIstiap,
+            "romok": values.romok,
+            "taksiMetre": values.taksiMetre,
+            "tokograf": values.tokograf,
+            "aciklama": values.aciklama,
+            "istiapHaddiBirimKodId": values.istiapHaddiBirimKodId,
+            "belgeSeriNo": values.belgeSeriNo,
+            "ticariAdi": values.ticariAdi,
+            "aracSinifi": values.aracSinifi,
+            "koltukSayisi": values.koltukSayisi,
+            "ayaktaYolcuSayisi": values.ayaktaYolcuSayisi,
+            "kullanimAmaci": values.kullanimAmaci,
+            "hakMahrumiyet": values.hakMahrumiyet,
+            "hakMahrumiyetAciklama": values.hakMahrumiyetAciklama,
+            "hakMahrumiyetDurum": values.hakMahrumiyetDurum,
+            "hakMahrumiyettarih": values?.hakMahrumiyettarih ? formatDate(values?.hakMahrumiyettarih.$d) : "1970-01-01",
+            "onayNo": values.onayNo,
+            "yolcuNakli": values.yolcuNakli,
+            "yukNakli": values.yukNakli,
+            "ticari": values.ticari,
+            "resmi": values.resmi,
+            "hususi": values.hususi,
+            "vergiNo": values.vergiNo,
+            "vergiDaire": values.vergiDaire
+        }
+
+        // RuhsatInfoUpdateService(data).then(res => {
+        //     if (res.data.statusCode === 200) {
+        //         setStatus(true)
+        //     }
+        // })
+    })
 
     const footer = (
         [
-            <Button key="submit" className="btn primary-btn">
+            <Button key="submit" className="btn primary-btn" onClick={onSumbit}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
@@ -146,10 +195,28 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                 <div className="col-span-9 border p-10">
                     <div className="grid gap-1">
                         <div className="col-span-3">
-                            <SelectInput control={control} name="ruhsatSahibi" label="Ruhsat Sahibi" name2="ruhsatSahibiId" setValue={setValue} />
+                            <SelectInput control={control} name="ruhsatSahibi" label="Ruhsat Sahibi" name2="ruhsatSahibiKodId" selectID={115} setValue={setValue} />
+                            <Controller
+                                name='ruhsatSahibiKodId'
+                                control={control}
+                                render={({ field }) => <Input
+                                    {...field}
+                                    style={{ display: 'none' }}
+                                />
+                                }
+                            />
                         </div>
                         <div className="col-span-3">
-                            <SelectInput control={control} name="il" label="Verdiği İl" name2="ilKodId" setValue={setValue} />
+                            <IlSelect control={control} name="il" label="Verdiği İl" name2="ilSehirId" setValue={setValue} />
+                            <Controller
+                                name='ilSehirId'
+                                control={control}
+                                render={({ field }) => <Input
+                                    {...field}
+                                    style={{ display: 'none' }}
+                                />
+                                }
+                            />
                         </div>
                         <div className="col-span-3">
                             <TextInput control={control} name="ilce" label="Verdiği İlçe" />
@@ -171,12 +238,21 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                         </div>
                         <div className="col-span-3">
                             <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" name2="" setValue={setValue} />
+                            <Controller
+                                name=''
+                                control={control}
+                                render={({ field }) => <Input
+                                    {...field}
+                                    style={{ display: 'none' }}
+                                />
+                                }
+                            />
                         </div>
                         <div className="col-span-3">
-                            <SelectInput control={control} name="" label="R.Azami Yüklü Ağırlığı" name2="" setValue={setValue} />
+                            <TextInput control={control} name="ticariAdi" label="Ticari Adı" />
                         </div>
                         <div className="col-span-3">
-                            <TextInput control={control} name="" label="Azami Yüklü Ağırlığı" />
+                            <TextInput control={control} name="azamiYukluAgirligi" label="Azami Yüklü Ağırlığı" />
                         </div>
                         <div className="col-span-3">
                             <TextInput control={control} name="koltukSayisi" label="Koltuk Sayısı" />
@@ -194,13 +270,45 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <TextInput control={control} name="vergiDaire" label="Vergi Dairesi" />
                         </div>
                         <div className="col-span-4">
-                            <TextInput control={control} name="ticariAdi" label="Ticari Adı" />
-                        </div>
-                        <div className="col-span-4">
-                            <SelectInput control={control} name="istiapHaddi" label="İstiap Haddi" name2="" setValue={setValue} />
-                        </div>
-                        <div className="col-span-4">
                             <TextInput control={control} name="kullanimAmaci" label="Kullanım Amacı" />
+                        </div>
+                        <div className="col-span-4">
+                            <div className="grid gap-1">
+                                <div className="col-span-9">
+                                    <TextInput control={control} name="istiapHaddi" label="İstiap Haddi" />
+                                </div>
+                                <div className="col-span-3 self-end">
+                                    <SelectInput control={control} name="istiapHaddiBirim" label="" selectID={109} name2="istiapHaddiBirimKodId" setValue={setValue} />
+                                    <Controller
+                                        name='istiapHaddiBirimKodId'
+                                        control={control}
+                                        render={({ field }) => <Input
+                                            {...field}
+                                            style={{ display: 'none' }}
+                                        />
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="grid gap-1">
+                                <div className="col-span-9">
+                                    <TextInput control={control} name="rAzamiYuklu" label="R.Azami Yüklü Ağırlığı" />
+                                </div>
+                                <div className="col-span-3 self-end">
+                                    <SelectInput control={control} name="rAzamiIstiapHaddiBirim" label="" name2="rAzamiIstiapHaddiBirimKodId" selectID={109} setValue={setValue} />
+                                    <Controller
+                                        name='rAzamiIstiapHaddiBirimKodId'
+                                        control={control}
+                                        render={({ field }) => <Input
+                                            {...field}
+                                            style={{ display: 'none' }}
+                                        />
+                                        }
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
@@ -228,15 +336,15 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="taksiMetre"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={taksimetre} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
-                            <label htmlFor="yolcuNakli">Yüklü Nakli</label>
+                            <label htmlFor="yukNakli">Yüklü Nakli</label>
                             <Controller
-                                name="yolcuNakli"
+                                name="yukNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={yukNakli} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -244,7 +352,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="tokograf"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={tokograf} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -252,7 +360,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="ticari"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={ticari} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -261,7 +369,9 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                                 name="romok"
                                 control={control}
                                 render={({ field }) => {
-                                    return <Checkbox {...field} checked={romok} onChange={e => field.onChange(e.target.value)} />
+                                    return <Checkbox {...field} onChange={e => {
+                                        field.onChange(e.target.checked)
+                                    }} />
                                 }}
                             />
                         </div>
@@ -270,7 +380,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="resmi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={resmi} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -278,7 +388,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="yolcuNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={yolcuNakli} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -286,7 +396,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="hususi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={hususi} />}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         </div>
                         <div className="col-span-12">
@@ -296,8 +406,9 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 control={control}
                                 name='hakMahrumiyet'
-                                render={({ field }) => <Checkbox {...field} className='mr-10' checked={hakMahrumiyetChecked} onChange={e => {
-                                    setHakMahrumiyetChecked(e.target.value)
+                                render={({ field }) => <Checkbox {...field} className='mr-10' onChange={e => {
+                                    field.onChange(e.target.checked)
+                                    setHakMahrumiyetChecked(e.target.checked)
                                 }} />}
                             />
                             <label htmlFor="">Hak Mahrumiyeti</label>

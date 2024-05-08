@@ -52,7 +52,7 @@
     border: none !important;
 }
 
-.file-btn:hover {
+.file-btn:hover, .detail-info:hover {
     background-color: $dark-blue !important;
     color: $white !important;
     border: none !important;

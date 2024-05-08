@@ -3,21 +3,20 @@ import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { CustomCodeControlService } from "../../../api/service";
 
-
-const ModelSelectInput = ({ control, setValue, name2 }) => {
+const IlSelect = ({ control, name, label, setValue, name2 }) => {
     const [data, setData] = useState([]);
 
     const handleClickSelect = () => {
-        CustomCodeControlService("Model/GetModelList").then(res => {
+        CustomCodeControlService("Town/GetTownList").then(res => {
             setData(res.data)
         })
     }
 
     return (
         <div className="flex flex-col gap-1">
-            <label htmlFor="model">Model</label>
+            <label htmlFor={name}>{label}</label>
             <Controller
-                name="model"
+                name={name}
                 control={control}
                 render={({ field }) => (
                     <Select
@@ -30,8 +29,8 @@ const ModelSelectInput = ({ control, setValue, name2 }) => {
                             (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                         }
                         options={data.map((item) => ({
-                            label: item.modelDef,
-                            value: item.siraNo,
+                            label: item.tanim,
+                            value: item.sehirId,
                         }))}
                         onClick={handleClickSelect}
                         onChange={e => {
@@ -39,7 +38,7 @@ const ModelSelectInput = ({ control, setValue, name2 }) => {
                             if (e === undefined) {
                                 field.onChange("")
                                 setValue(name2, -1)
-                            }else {
+                            } else {
                                 setValue(name2, e)
                             }
                         }}
@@ -50,4 +49,4 @@ const ModelSelectInput = ({ control, setValue, name2 }) => {
     )
 }
 
-export default ModelSelectInput
+export default IlSelect

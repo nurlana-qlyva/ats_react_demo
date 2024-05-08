@@ -94,5 +94,9 @@ export const SpecialFieldsUpdateService = (form, topic, field) => {
 
 // Ruhsat
 export const RuhsatInfoGetService = (id) => {
-  return http.post(`/VehicleDetail/GetLicenceInfo?vehicleId=${id}`)
+  return http.get(`/VehicleDetail/GetLicenceInfo?vehicleId=${id}`)
+}
+
+export const RuhsatInfoUpdateService = (data) => {
+  return http.get(`/Vehicle/UpdateVehicle`, data)
 }

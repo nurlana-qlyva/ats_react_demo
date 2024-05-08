@@ -5,6 +5,7 @@ import { MdHealthAndSafety } from "react-icons/md";
 import RuhsatModal from "./components/RuhsatModal";
 import { useState } from "react";
 import TeknikModal from "./components/TeknikModal";
+import DriversModal from "./components/DriversModal";
 
 const DetailInfo = ({ id }) => {
     const [selectedItem, setSelectedItem] = useState(null);
@@ -91,6 +92,8 @@ const DetailInfo = ({ id }) => {
                 return <RuhsatModal visible={selectedItem === '1'} onClose={handleModalClose} id={id} />;
             case '2':
                 return <TeknikModal visible={selectedItem === '2'} onClose={handleModalClose} id={id} />;
+            case '3':
+                return <DriversModal visible={selectedItem === '3'} onClose={handleModalClose} id={id} />;
             default:
                 return null;
         }

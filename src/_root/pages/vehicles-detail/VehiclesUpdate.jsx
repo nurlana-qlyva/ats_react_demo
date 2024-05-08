@@ -19,6 +19,7 @@ import { FileReadService, PhotoReadService, VehiclesUpdateReadService, VehiclesU
 import dayjs from "dayjs"
 import { formatDate } from "../../../utils/format"
 import DetailInfo from "./components/DetailInfo"
+import NumberInput from "../../components/form/NumberInput"
 
 const breadcrumb = [
   {
@@ -156,13 +157,13 @@ const VehiclesUpdate = () => {
     },
     {
       key: '3',
-      label: 'Resimler',
+      label: `${imageUrls.length} Resimler`,
       children: <PhotoUpload uploadImages={uploadImages} imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} setLoadingImages={setLoadingImages} setImageUrls={setImageUrls} />,
     },
     {
       key: '4',
-      label: 'Ekli Belgeler',
-      children: <FileUpload uploadFiles={uploadFiles} filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} setLoadingFiles={setLoadingFiles} setFilesUrl={setFilesUrl}/>,
+      label: `${filesUrl.length} Ekli Belgeler`,
+      children: <FileUpload uploadFiles={uploadFiles} filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} setLoadingFiles={setLoadingFiles} setFilesUrl={setFilesUrl} />,
     },
   ];
 
@@ -170,10 +171,10 @@ const VehiclesUpdate = () => {
     VehiclesUpdateReadService(id).then(res => {
       setVehiclesData(res.data)
       setValue("plaka", res?.data.plaka)
-      setValue("guncelKm", res?.data.guncelKm)
+      setValue("guncelKm", res?.data.guncelKm ? res?.data.guncelKm : null)
       setValue("aracTip", res?.data.aracTip)
       setValue("aracTipId", res?.data.aracTipId)
-      setValue("aracCinsi", res?.data.aracCinsi)
+      setValue("aracCinsi", res?.data.aracCinsi ? res?.data.aracCinsi : null)
       setValue("marka", res?.data.marka)
       setValue("markaId", res?.data.markaId)
       setValue("model", res?.data.model)
@@ -186,7 +187,7 @@ const VehiclesUpdate = () => {
       setValue("yakitId", res?.data.yakitId)
       setValue("renk", res?.data.renk)
       setValue("aracRenkId", res?.data.aracRenkId)
-      setValue("yil", res?.data.yil)
+      setValue("yil", res?.data.yil ? res?.data.yil : "")
       setValue("grup", res?.data.grup)
       setValue("aracGrubuId", res?.data.aracGrubuId)
       setValue("departman", res?.data.departman)
@@ -230,9 +231,9 @@ const VehiclesUpdate = () => {
     const data = {
       "aracId": id,
       "plaka": values.plaka,
-      "yil": values.yil,
+      "yil": values.yil ? values.yil : 0,
       "aracTipId": values.aracTipId,
-      "guncelKm": values.guncelKm,
+      "guncelKm": values.guncelKm ? values.guncelKm : 0,
       "markaId": values.markaId,
       "modelId": values.modelId,
       "aracGrubuId": values.aracGrubuId,
@@ -316,7 +317,7 @@ const VehiclesUpdate = () => {
                 />
               </div>
               <div className="col-span-4">
-                <TextInput control={control} name="guncelKm" label="Güncel Km." />
+                <NumberInput control={control} name="guncelKm" label="Güncel Km." setValue={setValue} />
               </div>
               <div className="col-span-4">
                 <LocationTreeSelect control={control} name2="lokasyonId" setValue={setValue} />

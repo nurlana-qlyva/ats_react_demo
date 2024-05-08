@@ -15,7 +15,7 @@ const GeneralInfo = ({ control, setValue }) => {
                         <h3 className="sub-title">Araç Bilgileri</h3>
                         <div className="grid gap-1">
                             <div className="col-span-3">
-                                <TextInput control={control} name="yil" label="Model Yılı" />
+                                <NumberInput control={control} name="yil" label="Model Yılı" />
                             </div>
                             <div className="col-span-3">
                                 <SelectInput control={control} name="grup" label="Araç Grup" selectID="101" setValue={setValue} name2="aracGrubuId" />

@@ -64,6 +64,11 @@
     color: $secondary;
 }
 
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active, :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
+    color: $black;
+}
+
+
 .ant-drawer-content-wrapper {
     width: 500px !important;
 }
@@ -85,4 +90,8 @@
 
 :where(.css-dev-only-do-not-override-kghr11).ant-spin .ant-spin-dot-item {
     background-color: $white !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-ink-bar {
+    background-color: transparent;
 }
