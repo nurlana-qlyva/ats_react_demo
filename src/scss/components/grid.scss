@@ -135,8 +135,3 @@
 .relative {
     position: relative;
 }
-
-:where(.css-kghr11).ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline,
-:where(.css-kghr11).ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
-    background: transparent !important;
-}

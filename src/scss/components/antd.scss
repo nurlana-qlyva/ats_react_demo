@@ -95,3 +95,7 @@
 :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-ink-bar {
     background-color: transparent;
 }
+
+:where(.css-kghr11).ant-menu-dark, :where(.css-kghr11).ant-menu-dark>.ant-menu {
+    background: transparent !important;
+}
