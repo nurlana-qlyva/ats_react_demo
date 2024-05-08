@@ -1,0 +1,97 @@
+.ant-popover-content .ant-checkbox-group.css-dev-only-do-not-override-kghr11 {
+    flex-direction: column;
+}
+
+.ant-drawer,
+.ant-select-dropdown {
+    z-index: 2003 !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark .ant-menu-item-selected,
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark>.ant-menu .ant-menu-item-selected {
+    background-color: $gray-600;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark .ant-menu-item:not(.ant-menu-item-disabled):focus-visible,
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark>.ant-menu .ant-menu-item:not(.ant-menu-item-disabled):focus-visible,
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark .ant-menu-submenu-title:not(.ant-menu-item-disabled):focus-visible,
+:where(.css-dev-only-do-not-override-kghr11).ant-menu-dark>.ant-menu .ant-menu-submenu-title:not(.ant-menu-item-disabled):focus-visible {
+    outline: none;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $secondary;
+    border: none;
+    border-radius: 3px;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-btn {
+    height: unset;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-item-active a {
+    color: $primary;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-item-active {
+    border-color: $primary;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-item-active:hover {
+    border-color: $secondary;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-item-active:hover a,
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-link-icon,
+:where(.css-dev-only-do-not-override-kghr11).ant-pagination .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
+    color: $secondary;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-thead>tr>th,
+:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-thead>tr>td {
+    font-weight: 400;
+}
+
+.ant-modal-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    position: relative;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab:hover {
+    color: $secondary;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active, :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
+    color: $black;
+}
+
+
+.ant-drawer-content-wrapper {
+    width: 500px !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-input-outlined.ant-input-disabled,
+:where(.css-dev-only-do-not-override-kghr11).ant-input-outlined[disabled],
+:where(.css-dev-only-do-not-override-kghr11).ant-picker-outlined.ant-picker-disabled,
+:where(.css-dev-only-do-not-override-kghr11).ant-picker-outlined[disabled] {
+    background-color: rgba(0, 0, 0, 0.14);
+}
+
+.ant-modal-title {
+    font-size: 24px !important;
+    color: $primary !important;
+    font-weight: 400 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    padding-bottom: 10px;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-spin .ant-spin-dot-item {
+    background-color: $white !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-ink-bar {
+    background-color: transparent;
+}
