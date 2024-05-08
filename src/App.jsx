@@ -26,8 +26,8 @@ const AppRouter = () => {
     <Routes>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="/araclar" element={<Vehicles />} />
-        <Route path="/detay/:id" element={<VehiclesUpdate />} />
+        <Route path="araclar" element={<Vehicles />} />
+        <Route path="detay/:id" element={<VehiclesUpdate />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
