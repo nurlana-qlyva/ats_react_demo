@@ -8,7 +8,7 @@ import ErrorAlert from '../_root/components/alert/ErrorAlert';
 import SuccessAlert from '../_root/components/alert/SuccessAlert';
 import { setItemWithExpiration } from '../utils/expireToken';
 
-const AuthLayout = ({ setHasToken }) => {
+const AuthLayout = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -31,12 +31,10 @@ const AuthLayout = ({ setHasToken }) => {
 
         try {
             const response = await LoginUserService(body);
-            console.log(response)
             if (response?.data.accessToken) {
                 setIsSuccess(true)
                 setItemWithExpiration("token", response?.data.accessToken, 24)
-                setHasToken(true)
-                navigate("/dashboard")
+                navigate("/")
             }
         } catch (error) {
             setIsError(true)
