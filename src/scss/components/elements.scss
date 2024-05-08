@@ -1,0 +1,10 @@
+.sub-title {
+    color: $secondary;
+    border-bottom: 1px solid $gray-300;
+    padding: 14px 0;
+    font-weight: 400;
+}
+
+.border {
+    @include border($color: $gray-300, $radius: 4px);
+}

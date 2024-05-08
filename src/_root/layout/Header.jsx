@@ -1,74 +1,64 @@
-// components 
-import { Menubar } from 'primereact/menubar';
-import { InputText } from 'primereact/inputtext';
-import { Avatar } from 'primereact/avatar';
+import {
+    HomeOutlined,
+    DownOutlined,
+    AntDesignOutlined
+} from '@ant-design/icons';
+import { Dropdown, Space, Input, Avatar } from 'antd';
+import { Link } from 'react-router-dom';
 
- 
+const { Search } = Input;
+
+const items = [
+    {
+        label: <a href="https://www.antgroup.com">1st menu item</a>,
+        key: '0',
+    },
+    {
+        label: <a href="https://www.aliyun.com">2nd menu item</a>,
+        key: '1',
+    },
+    {
+        type: 'divider',
+    },
+    {
+        label: '3rd menu item',
+        key: '3',
+    },
+];
+
+const onSearch = (value, _e, info) => console.log(info?.source, value);
+
 const Header = () => {
-    const itemRenderer = (item) => (
-        <a className="flex align-items-center p-menuitem-link gap-3">
-            <span className={item.icon} style={{marginRight: 10}}/>
-            <span className="mx-2">{item.label}</span>
-        </a>
-    );
-    
-    const items = [
-        {
-            label: '',
-            icon: "pi pi-home"
-        },
-        {
-            label: 'Projects',
-            icon: "pi pi-search",
-            items: [
-                {
-                    label: 'Core',
-                    icon: 'pi pi-bolt',
-                    template: itemRenderer
-                },
-                {
-                    label: 'Blocks',
-                    icon: 'pi pi-server',
-                    template: itemRenderer
-                },
-                {
-                    label: 'UI Kit',
-                    icon: 'pi pi-pencil',
-                    template: itemRenderer
-                },
-                {
-                    separator: true
-                },
-                {
-                    label: 'Templates',
-                    icon: 'pi pi-palette',
-                    items: [
-                        {
-                            label: 'Apollo',
-                            icon: 'pi pi-palette',
-                            template: itemRenderer
-                        },
-                        {
-                            label: 'Ultima',
-                            icon: 'pi pi-palette',
-                            template: itemRenderer
-                        }
-                    ]
-                }
-            ]
-        },
-    ];
-
-    const end = (
-        <div className="flex align-items-center gap-3">
-            <InputText placeholder="Search" type="text" className="w-8rem sm:w-auto search-input" />
-            <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" />
-        </div>
-    );
-
     return (
-        <div className='header'>
-            <Menubar model={items} end={end} className='w-full justify-content-between' />
+        <div className="header">
+            <div className='flex gap-4'>
+                <HomeOutlined />
+                <Dropdown
+                    menu={{
+                        items,
+                    }}
+                    trigger={['click']}
+                >
+                    <Link onClick={(e) => e.preventDefault()}>
+                        <Space>
+                            Click me
+                            <DownOutlined />
+                        </Space>
+                    </Link>
+                </Dropdown>
+            </div>
+            <div className='flex align-center gap-4'>
+                <Input
+                    className='search-input'
+                    placeholder="Arama"
+                    allowClear
+                    onSearch={onSearch}
+                />
+                <Avatar
+                    style={{width: "60px", height: "40px"}}
+                    icon={<AntDesignOutlined />}
+                />
+            </div>
         </div>
     )
 }

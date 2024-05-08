@@ -1,0 +1,42 @@
+.main-content {
+    height: 100vh;
+    background-color: #dcdcdc;
+    position: relative;
+    overflow: hidden;
+
+    .main {
+        padding: 64px 40px;
+        overflow: auto;
+        height: 100%;
+    }
+}
+
+.content {
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 20px;
+    box-shadow: $shadow;
+}
+
+.car-image {
+    width: 100%;
+    height: 200px;
+}
+
+.text-secondary {
+    color: $secondary;
+}
+
+.text-primary {
+    color: $primary;
+}
+
+.detail-info {
+    position: absolute;
+    top: 26px;
+    right: 20px;
+    z-index: 1000 !important;
+    background-color: $info;
+    color: $white;
+}

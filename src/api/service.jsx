@@ -1,63 +1,96 @@
 import http from "./http";
 
+// login
 export const LoginUserService = (data) => {
   return http.post("/Login", data);
 };
 
-// all vehicles get
-export const AraclarSearchService = (search, page) => {
-  if (page) {
-    return http.post(`/Vehicle/GetVehicles?parameter=${search}&page=${page}`);
-  } else {
-    return http.post(`/Vehicle/GetVehicles?parameter=${search}`);
-  }
+// vehicles
+export const VehiclesReadForSearchService = (search) => {
+  return http.post(`/Vehicle/GetVehicles?parameter=${search}`);
 };
 
-// filter vehicles
-export const AraclarFilterService = (search, data) => {
+export const VehiclesReadForPageService = (search, page) => {
+  return http.post(`/Vehicle/GetVehicles?parameter=${search}&page=${page}`);
+};
+
+export const VehiclesReadForFilterService = (search, data) => {
   return http.post(`/Vehicle/GetVehicles?parameter=${search}`, data);
 };
 
-// Arac add 
-export const AracAddService = (data) => {
+// add vehicle 
+export const NewVehicleAddService = (data) => {
   return http.post(`Vehicle/AddVehicle`, data);
 };
 
-// kod yonetimi
-export const CodeSelectService = (id) => {
+// update vehicles
+export const VehiclesUpdateReadService = (id) => {
+  return http.get(`/Vehicle/GetVehicleById?id=${id}`);
+};
+
+export const VehiclesUpdateSetService = (data) => {
+  return http.post(`/Vehicle/UpdateVehicle`, data);
+};
+
+// code control data
+export const CodeControlService = (id) => {
   return http.get(`/Code/GetCodeTextById?codeNumber=${id}`);
 };
-export const CodeCustomSelectService = (url) => {
+
+export const CustomCodeControlService = (url) => {
   return http.get(`/${url}`);
 };
 export const MaterialListSelectService = (type) => {
   return http.get(`/Material/GetMaterialListByType?type=${type}`);
 };
 
-// image upload
-
+// upload photo
 export const PhotoUploadService = (id, group, data) => {
   return http.post(`/Photo/UploadPhoto?refId=${id}&refGroup=${group}`, data)
 }
 
-// file upload
+export const PhotoReadService = (id, group) => {
+  return http.get(`/Photo/GetPhotosByRefGroup?refId=${id}&refGroup=${group}`) 
+}
+
+export const PhotoDownloadService = (data) => {
+  return http.post(`/Photo/DownloadPhotoById`, data, {
+    responseType: 'blob'
+  })
+}
+
+// upload file 
 export const FileUploadService = (id, group, data) => {
   return http.post(`/Document/UploadDocument?refId=${id}&refGroup=${group}`, data)
 }
 
-// ozel alan
-export const OzelAlanReadService = (form) => {
+export const FileReadService = (id, group) => {
+  return http.get(`/Document/GetDocumentsByRefGroup?refId=${id}&refGroup=${group}`) 
+}
+
+export const FileDownloadService = (data) => {
+  return http.post(`/Document/DownloadDocumentById`, data)
+}
+
+// custom inputs
+export const CustomInputsReadService = (form) => {
   return http.get(`/CustomField/GetCustomFields?form=${form}`)
 }
-export const OzelAlanUpdateService = (form, topic, field) => {
+
+export const CustomInputsUpdateService = (form, topic, field) => {
   return http.post(`/CustomField/AddCustomFieldTopic?form=${form}&topic=${topic}&field=${field}`,)
 }
 
-// update vehicles
-export const AraclarUpdateReadService = (id) => {
-  return http.get(`/Vehicle/GetVehicleById?id=${id}`);
-};
+// special fields
+export const SpecialFieldsReadService = (form) => {
+  return http.get(`/CustomField/GetCustomFields?form=${form}`)
+}
+export const SpecialFieldsUpdateService = (form, topic, field) => {
+  return http.post(`/CustomField/AddCustomFieldTopic?form=${form}&topic=${topic}&field=${field}`,)
+}
 
-export const AraclarUpdateSetService = (data) => {
-  return http.post(`/Vehicle/UpdateVehicle`, data);
-};
+
+// Ruhsat
+export const RuhsatInfoGetService = (id) => {
+  return http.post(`/VehicleDetail/GetLicenceInfo?vehicleId=${id}`)
+}
