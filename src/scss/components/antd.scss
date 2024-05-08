@@ -64,7 +64,10 @@
     color: $secondary;
 }
 
-:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible), :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active, :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active,
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
     color: $black;
 }
 
@@ -96,6 +99,14 @@
     background-color: transparent;
 }
 
-:where(.css-kghr11).ant-menu-dark, :where(.css-kghr11).ant-menu-dark>.ant-menu {
+:where(.css-kghr11).ant-menu-dark,
+:where(.css-kghr11).ant-menu-dark>.ant-menu,
+:where(.css-kghr11).ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline,
+:where(.css-kghr11).ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
     background: transparent !important;
+}
+
+:where(.css-kghr11).ant-menu-dark .ant-menu-item-selected,
+:where(.css-kghr11).ant-menu-dark>.ant-menu .ant-menu-item-selected {
+    background-color: #6c757d !important;
 }
