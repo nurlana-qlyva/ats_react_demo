@@ -50,7 +50,7 @@ export const PhotoUploadService = (id, group, data) => {
 }
 
 export const PhotoReadService = (id, group) => {
-  return http.get(`/Photo/GetPhotosByRefGroup?refId=${id}&refGroup=${group}`) 
+  return http.get(`/Photo/GetPhotosByRefGroup?refId=${id}&refGroup=${group}`)
 }
 
 export const PhotoDownloadService = (data) => {
@@ -65,11 +65,13 @@ export const FileUploadService = (id, group, data) => {
 }
 
 export const FileReadService = (id, group) => {
-  return http.get(`/Document/GetDocumentsByRefGroup?refId=${id}&refGroup=${group}`) 
+  return http.get(`/Document/GetDocumentsByRefGroup?refId=${id}&refGroup=${group}`)
 }
 
 export const FileDownloadService = (data) => {
-  return http.post(`/Document/DownloadDocumentById`, data)
+  return http.post(`/Document/DownloadDocumentById`, data, {
+    responseType: 'blob'
+  })
 }
 
 // custom inputs

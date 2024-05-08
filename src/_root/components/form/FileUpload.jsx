@@ -1,5 +1,5 @@
 import { Button, Spin, Upload, message } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, FileOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { FileDownloadService } from "../../../api/service";
 
@@ -17,7 +17,24 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles, uploadFiles, setLoadingF
         setFiles(formData);
     };
 
-    const downloadFile = () => {}
+    const downloadFile = file => {
+        const data = {
+            "fileId": file.tbDosyaId,
+            "extension": file.dosyaUzanti,
+            "fileName": file.dosyaAd
+        }
+
+        FileDownloadService(data).then(res => {
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(res.data);
+            link.download = file.dosyaAd;
+            link.click();
+
+            window.URL.revokeObjectURL(link.href);
+        }).catch(err => {
+            console.error("Error downloading file:", err);
+        });
+    }
 
     return (
         <div>
@@ -26,11 +43,10 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles, uploadFiles, setLoadingF
                 <Spin />
             ) : (
                 <div className="flex gap-1">
-                    {filesArr.map((url, i) => {
-                        console.log(url)
+                    {filesArr.map((file, i) => {
                         return (
                             <div key={i} className="mb-10">
-                                <Button onClick={downloadFile}>{url.dosyaAd}</Button>
+                                <Button className="file-btn" onClick={() => downloadFile(file)}> <FileOutlined /> {file.dosyaAd}</Button>
                             </div>
                         );
                     })}
