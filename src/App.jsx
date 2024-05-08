@@ -15,22 +15,22 @@ const AppRouter = () => {
     const token = getItemWithExpiration("token");
 
     if (token) {
-      setHasToken(false);
-    } else {
       setHasToken(true);
+    } else {
+      setHasToken(false);
       navigate('/login');
     }
   }, [navigate]);
 
   return (
     <Routes>
-      <Route path="/" element={<RootLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="araclar" element={<Vehicles />} />
-        <Route path="detay/:id" element={<VehiclesUpdate />} />
-      </Route>
+      <Route path="/login" element={<AuthLayout />} />
       {hasToken && (
-        <Route path="/login" element={<AuthLayout />} />
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/araclar" element={<Vehicles />} />
+          <Route path="/detay/:id" element={<VehiclesUpdate />} />
+        </Route>
       )}
     </Routes>
   );
