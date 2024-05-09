@@ -116,10 +116,10 @@
 }
 
 .ant-layout.ant-layout-has-sider.css-dev-only-do-not-override-kghr11 {
-    height: 100vh;
-    overflow: hidden;
+    height: 100vh !important;
+    overflow: hidden !important;
 }
 
 :where(.css-dev-only-do-not-override-kghr11).ant-layout-header {
-    height: inherit;
+    height: inherit !important;
 }
