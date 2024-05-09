@@ -115,7 +115,7 @@
     color: $info !important;
 }
 
-.ant-layout.ant-layout-has-sider.css-dev-only-do-not-override-kghr11 {
+:where(.css-kghr11).ant-layout {
     height: 100vh !important;
     overflow: hidden !important;
 }
