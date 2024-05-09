@@ -3,13 +3,12 @@ import { InboxOutlined, FileOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { FileDownloadService } from "../../../api/service";
 
-const FileUpload = ({ filesUrl, loadingFiles, setFiles, uploadFiles, setLoadingFiles, setFilesUrl }) => {
+const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
     const [filesArr, setFilesArr] = useState([]);
 
     useEffect(() => {
         setFilesArr(filesUrl)
     }, [filesUrl])
-
 
     const handleUpload = (file) => {
         const formData = new FormData();
@@ -58,18 +57,18 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles, uploadFiles, setLoadingF
                 listType="picture"
                 className="upload-list-inline"
                 beforeUpload={(file) => {
-                    const isImage = file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg";
+                    const isFile = file.type === "application/doc" || file.type === "application/pdf" || file.type === "application/txt" || file.type === "application/docs" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     const isLt2M = file.size / 1024 / 1024 < 2; // Limiting file size to 2MB
 
-                    if (!isImage) {
-                        message.error("You can only upload PNG, JPG, or JPEG files!");
+                    if (!isFile) {
+                        message.error("You can only upload DOC, DOCS, TXT, PDF or XLSX files!");
                     }
 
                     if (!isLt2M) {
-                        message.error("Image must be smaller than 2MB!");
+                        message.error("File must be smaller than 2MB!");
                     }
 
-                    if (isImage && isLt2M) {
+                    if (isFile && isLt2M) {
                         handleUpload(file);
                     }
                     handleUpload(file);

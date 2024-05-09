@@ -110,3 +110,16 @@
 :where(.css-kghr11).ant-menu-dark>.ant-menu .ant-menu-item-selected {
     background-color: #6c757d !important;
 }
+
+.ant-table-cell a {
+    color: $info !important;
+}
+
+.ant-layout.ant-layout-has-sider.css-dev-only-do-not-override-kghr11 {
+    height: 100vh;
+    overflow: hidden;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-layout-header {
+    height: inherit;
+}

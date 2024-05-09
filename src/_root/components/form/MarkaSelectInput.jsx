@@ -37,8 +37,16 @@ const MarkaSelectInput = ({ control, setValue, name2 }) => {
                             if (e === undefined) {
                                 field.onChange("")
                                 setValue(name2, -1)
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (!selectedOption) {
+                                    setValue("markaFilter", "")
+                                }
                             }else {
                                 setValue(name2, e)
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (selectedOption) {
+                                    setValue("markaFilter", selectedOption.marka)
+                                }
                             }
                         }}
                     />

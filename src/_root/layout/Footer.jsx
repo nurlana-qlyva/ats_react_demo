@@ -1,10 +1,14 @@
+import { Layout } from "antd";
 
-const Footer = () => {
+const { Footer } = Layout;
+
+const FooterComp = () => {
   return (
-    <div className="footer">
-      <small>© 1998 - 2024 Orjin Yazılım</small>
-    </div>
+    <Footer className="footer">
+        <small>© 1998 - 2024 Orjin Yazılım</small>
+    </Footer>
+
   )
 }
 
-export default Footer
+export default FooterComp

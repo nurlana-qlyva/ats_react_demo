@@ -12,14 +12,6 @@ import IlSelect from '../../../../components/form/IlSelect';
 
 const RuhsatModal = ({ visible, onClose, id }) => {
     const [hakMahrumiyetChecked, setHakMahrumiyetChecked] = useState(false);
-    const [romok, setRomok] = useState(false);
-    const [taksimetre, setTaksimetre] = useState(false);
-    const [tokograf, setTokograf] = useState(false);
-    const [yukNakli, setYukNakli] = useState(false);
-    const [ticari, setTicari] = useState(false);
-    const [resmi, setResmi] = useState(false);
-    const [yolcuNakli, setYolcuNakli] = useState(false);
-    const [hususi, setHususi] = useState(false);
     const [status, setStatus] = useState(false)
 
     const defaultValues = {
@@ -45,9 +37,6 @@ const RuhsatModal = ({ visible, onClose, id }) => {
         onayNo: "",
         resmi: false,
         romok: false,
-        romorkIstiap: null,
-        romorkIstiapHaddiBirim: null,
-        romorkIstiapHaddiBirimKodId: 0,
         ruhsatSahibi: "",
         ruhsatSahibiKodId: 0,
         taksiMetre: false,
@@ -73,7 +62,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
         RuhsatInfoGetService(id).then(res => {
             console.log(res.data)
             setValue("aciklama", res?.data.aciklama)
-            setValue("aracCinsi", res?.data.aracCinsi)
+            setValue("aracCinsi", res?.data.aracCinsi ? res?.data.aracCinsi : "")
             setValue("aracSinifi", res?.data.aracSinifi)
             setValue("ayaktaYolcuSayisi", res?.data.ayaktaYolcuSayisi)
             setValue("belgeSeriNo", res?.data.belgeSeriNo)
@@ -82,58 +71,50 @@ const RuhsatModal = ({ visible, onClose, id }) => {
             setHakMahrumiyetChecked(res?.data.hakMahrumiyet)
             setValue("hakMahrumiyetAciklama", res?.data.hakMahrumiyetAciklama)
             setValue("hakMahrumiyetDurum", res?.data.hakMahrumiyetDurum)
-            setValue("hakMahrumiyettarih", res?.data.hakMahrumiyettarih !== "1970-01-21T00:00:00" ? dayjs(res?.data.hakMahrumiyettarih) : "")
+            setValue("hakMahrumiyettarih", res?.data.hakMahrumiyettarih && res?.data.hakMahrumiyettarih !== '1970-01-01T00:00:00' ? dayjs(res?.data.hakMahrumiyettarih) : null)
             setValue("hususi", res?.data.hususi)
-            setHususi(res?.data.hususi)
             setValue("il", res?.data.il)
-            setValue("ilKodId", res?.data.ilKodId)
+            setValue("ilSehirId", res?.data.ilSehirId)
             setValue("ilce", res?.data.ilce)
             setValue("istiapHaddi", res?.data.istiapHaddi)
             setValue("istiapHaddiBirim", res?.data.istiapHaddiBirim)
             setValue("istiapHaddiBirimKodId", res?.data.istiapHaddiBirimKodId)
             setValue("koltukSayisi", res?.data.koltukSayisi)
             setValue("kullanimAmaci", res?.data.kullanimAmaci)
+            setValue("rAzamiIstiapHaddiBirim", res?.data.rAzamiIstiapHaddiBirim)
+            setValue("rAzamiIstiapHaddiBirimKodId", res?.data.rAzamiIstiapHaddiBirimKodId)
+            setValue("rAzamiYuklu", res?.data.rAzamiYuklu)
+            setValue("azamiYukluAgirligi", res?.data.azamiYukluAgirligi)
             setValue("onayNo", res?.data.onayNo)
             setValue("resmi", res?.data.resmi)
-            setResmi(res?.data.resmi)
             setValue("romok", res?.data.romok)
-            setRomok(res?.data.romok)
-            setValue("romorkIstiap", res?.data.romorkIstiap)
-            setValue("romorkIstiapHaddiBirim", res?.data.romorkIstiapHaddiBirim)
-            setValue("romorkIstiapHaddiBirimKodId", res?.data.romorkIstiapHaddiBirimKodId)
             setValue("ruhsatSahibi", res?.data.ruhsatSahibi)
             setValue("ruhsatSahibiKodId", res?.data.ruhsatSahibiKodId)
             setValue("taksiMetre", res?.data.taksiMetre)
-            setTaksimetre(res?.data.taksiMetre)
             setValue("tescilNo", res?.data.tescilNo)
+            setValue("tescilTarih", res?.data.tescilTarih && res?.data.tescilTarih !== '1970-01-01T00:00:00' ? dayjs(res?.data.tescilTarih) : null)
             setValue("ticari", res?.data.ticari)
-            setTicari(res?.data.ticari)
             setValue("ticariAdi", res?.data.ticariAdi)
             setValue("tokograf", res?.data.tokograf)
-            setTokograf(res?.data.tokograf)
-            setValue("trafikciktarih", dayjs(res?.data.trafikciktarih))
+            setValue("trafikciktarih", res?.data.trafikciktarih && res?.data.trafikciktarih !== '1970-01-01T00:00:00' ? dayjs(res?.data.trafikciktarih) : null)
             setValue("vergiDaire", res?.data.vergiDaire)
             setValue("vergiNo", res?.data.vergiNo)
             setValue("yolcuNakli", res?.data.yolcuNakli)
-            setYolcuNakli(res?.data.yolcuNakli)
             setValue("yukNakli", res?.data.yukNakli)
-            setYukNakli(res?.data.yukNakli)
         })
     }, [id, status])
 
     const onSumbit = handleSubmit((values) => {
         console.log(values)
-
         const data = {
-            "dtyAracId": id,
-            "ilKodId": values.ilKodId,
+            "dtyAracId": +id,
+            "ilSehirId": values.ilSehirId,
             "ruhsatSahibiKodId": values.ruhsatSahibiKodId,
             "ilce": values.ilce,
             "tescilNo": values.tescilNo,
             "tescilTarih": values?.tescilTarih ? formatDate(values?.tescilTarih.$d) : "1970-01-01",
             "trafikciktarih": values?.trafikciktarih ? formatDate(values?.trafikciktarih.$d) : "1970-01-01",
             "istiapHaddi": values.istiapHaddi,
-            "romorkIstiap": values.romorkIstiap,
             "romok": values.romok,
             "taksiMetre": values.taksiMetre,
             "tokograf": values.tokograf,
@@ -156,14 +137,17 @@ const RuhsatModal = ({ visible, onClose, id }) => {
             "resmi": values.resmi,
             "hususi": values.hususi,
             "vergiNo": values.vergiNo,
-            "vergiDaire": values.vergiDaire
+            "vergiDaire": values.vergiDaire,
         }
 
-        // RuhsatInfoUpdateService(data).then(res => {
-        //     if (res.data.statusCode === 200) {
-        //         setStatus(true)
-        //     }
-        // })
+        console.log(data)
+
+        RuhsatInfoUpdateService(data).then(res => {
+            console.log(res.data)
+            if (res.data.statusCode === 200) {
+                setStatus(true)
+            }
+        })
     })
 
     const footer = (
@@ -177,18 +161,13 @@ const RuhsatModal = ({ visible, onClose, id }) => {
         ]
     )
 
-    const header = (
-        <h2>Ruhsat Bilgileri</h2>
-    )
-
     return (
         <Modal
             title="Ruhsat Bilgileri"
-            visible={visible}
+            open={visible}
             onCancel={onClose}
             maskClosable={false}
             footer={footer}
-            header={header}
             width={1200}
         >
             <div className="grid gap-1 mt-14">
@@ -336,7 +315,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="taksiMetre"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -344,7 +323,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="yukNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -352,7 +331,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="tokograf"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -360,7 +339,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="ticari"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -369,9 +348,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                                 name="romok"
                                 control={control}
                                 render={({ field }) => {
-                                    return <Checkbox {...field} onChange={e => {
-                                        field.onChange(e.target.checked)
-                                    }} />
+                                    return <Checkbox {...field} checked={field.value} />
                                 }}
                             />
                         </div>
@@ -380,7 +357,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="resmi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -388,7 +365,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="yolcuNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -396,7 +373,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="hususi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} />}
+                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
                             />
                         </div>
                         <div className="col-span-12">
@@ -406,7 +383,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 control={control}
                                 name='hakMahrumiyet'
-                                render={({ field }) => <Checkbox {...field} className='mr-10' onChange={e => {
+                                render={({ field }) => <Checkbox {...field} className='mr-10' checked={field.value} onChange={e => {
                                     field.onChange(e.target.checked)
                                     setHakMahrumiyetChecked(e.target.checked)
                                 }} />}

@@ -39,8 +39,16 @@ const ModelSelectInput = ({ control, setValue, name2 }) => {
                             if (e === undefined) {
                                 field.onChange("")
                                 setValue(name2, -1)
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (!selectedOption) {
+                                    setValue("modelFilter", "")
+                                }
                             }else {
                                 setValue(name2, e)
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (selectedOption) {
+                                    setValue("modelFilter", selectedOption.modelDef)
+                                }
                             }
                         }}
                     />

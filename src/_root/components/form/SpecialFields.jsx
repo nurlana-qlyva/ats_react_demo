@@ -4,85 +4,7 @@ import { Input, InputNumber } from "antd"
 import { SpecialFieldsReadService, SpecialFieldsUpdateService } from "../../../api/service"
 import SelectInput from "./SelectInput"
 
-const SpecialFields = ({ form, control, setValue }) => {
-    const [fields, setFields] = useState([
-        {
-            label: "ozelAlan1",
-            key: "OZELALAN_1",
-            value: "Özel Alan 1",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan2",
-            key: "OZELALAN_2",
-            value: "Özel Alan 2",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan3",
-            key: "OZELALAN_3",
-            value: "Özel Alan 3",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan4",
-            key: "OZELALAN_4",
-            value: "Özel Alan 4",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan5",
-            key: "OZELALAN_5",
-            value: "Özel Alan 5",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan6",
-            key: "OZELALAN_6",
-            value: "Özel Alan 6",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan7",
-            key: "OZELALAN_7",
-            value: "Özel Alan 7",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan8",
-            key: "OZELALAN_8",
-            value: "Özel Alan 8",
-            type: 'text'
-        },
-        {
-            label: "ozelAlan9",
-            key: "OZELALAN_9",
-            value: "Özel Alan 9",
-            type: 'select',
-            code: 865,
-            name2: "ozelAlanKodId9"
-        },
-        {
-            label: "ozelAlan10",
-            key: "OZELALAN_10",
-            value: "Özel Alan 10",
-            type: 'select',
-            code: 866,
-            name2: "ozelAlanKodId10"
-        },
-        {
-            label: "ozelAlan11",
-            key: "OZELALAN_11",
-            value: "Özel Alan 11",
-            type: 'number'
-        },
-        {
-            label: "ozelAlan12",
-            key: "OZELALAN_12",
-            value: "Özel Alan 12",
-            type: 'number'
-        },
-    ])
+const SpecialFields = ({ form, control, setValue, fields, setFields }) => {
 
     useEffect(() => {
         SpecialFieldsReadService(form).then(res => {
@@ -90,17 +12,16 @@ const SpecialFields = ({ form, control, setValue }) => {
             const updatedFields = fields.map(field => {
                 const apiFieldName = field.label;
                 if (apiData?.hasOwnProperty(apiFieldName)) {
-                    // Update label and value based on API data
                     return {
                         ...field,
-                        value: apiData[apiFieldName], // Update value
-                        label: apiFieldName, // Update label if needed
+                        value: apiData[apiFieldName],
+                        label: apiFieldName, 
                     };
                 } else {
-                    return field; // Return unchanged if not found in API data
+                    return field; 
                 }
             });
-            setFields(updatedFields); // Update the fields state
+            setFields(updatedFields);
         });
     }, [form]);
 

@@ -1,4 +1,5 @@
 import TextInput from "../../../../../components/form/TextInput"
+import NumberInput from "../../../../../components/form/NumberInput"
 import SelectInput from "../../../../../components/form/SelectInput"
 import LocationTreeSelect from "../../../../../components/form/LocationTreeSelect"
 import MarkaSelectInput from "../../../../../components/form/MarkaSelectInput"
@@ -8,7 +9,7 @@ import MaterialListSelect from "../../../../../components/form/MaterialListSelec
 import DateInput from "../../../../../components/form/DateInput"
 
 
-const GeneralInfo = ({ control }) => {
+const GeneralInfo = ({ control, setValue }) => {
     return (
         <>
             <div className="grid grid-cols-12 gap-1 border">
@@ -18,7 +19,7 @@ const GeneralInfo = ({ control }) => {
                             <TextInput control={control} name="plaka" label="Plaka" />
                         </div>
                         <div className="col-span-4">
-                            <SelectInput control={control} name="aracTipi" label="Araç Tipi" selectID="100" />
+                            <SelectInput control={control} name="aracTipi" label="Araç Tipi" selectID="100" setValue={setValue}/>
                         </div>
                         <div className="col-span-4">
                             <TextInput control={control} name="guncelKm" label="Güncel Km." />
@@ -37,10 +38,10 @@ const GeneralInfo = ({ control }) => {
                             <MarkaSelectInput control={control} />
                         </div>
                         <div className="col-span-4">
-                            <TextInput control={control} name="modelYili" label="Model Yılı" />
+                            <NumberInput control={control} name="modelYili" label="Model Yılı" />
                         </div>
                         <div className="col-span-4">
-                            <ModelSelectInput control={control} />
+                            <ModelSelectInput control={control} setValue={setValue}/>
                         </div>
                         <div className="col-span-4">
                             <SelectInput control={control} name="aracGrup" label="Araç Grup" selectID="101" />

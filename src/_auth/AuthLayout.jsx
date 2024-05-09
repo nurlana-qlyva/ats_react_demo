@@ -60,7 +60,7 @@ const AuthLayout = () => {
                                 rules={{ required: 'Username is required' }}
                                 render={({ field }) => <Input {...field} placeholder='Kullanıcı adı' className={errors.username ? 'border-red-500' : null} />}
                             />
-                            {errors.username && <span className='text-red-500'>{errors.username.message}</span>}
+                            {errors.username && <span className='text-danger'>{errors.username.message}</span>}
                         </div>
                         <div className='mt-20 mb-10'>
                             <Controller

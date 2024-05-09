@@ -34,18 +34,13 @@ const TeknikModal = ({ visible, onClose, id }) => {
         ]
     )
 
-    const header = (
-        <h2>Teknik Bilgileri</h2>
-    )
-
     return (
         <Modal
             title="Teknik Bilgileri"
-            visible={visible}
+            open={visible}
             onCancel={onClose}
             maskClosable={false}
             footer={footer}
-            header={header}
             width={1200}
         >
             <div className="grid gap-1 mt-14">

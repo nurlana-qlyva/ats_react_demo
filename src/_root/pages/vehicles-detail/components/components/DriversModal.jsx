@@ -92,18 +92,13 @@ const DriversModal = ({ visible, onClose, id }) => {
         ]
     )
 
-    const header = (
-        <h2>Araç Sürücüleri Bilgileri</h2>
-    )
-
     return (
         <Modal
             title="Araç Sürücüleri Bilgileri"
-            visible={visible}
+            open={visible}
             onCancel={onClose}
             maskClosable={false}
             footer={footer}
-            header={header}
             width={1200}
         >
             <Table

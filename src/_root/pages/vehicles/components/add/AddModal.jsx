@@ -9,6 +9,84 @@ import SpecialFields from '../../../../components/form/SpecialFields';
 
 const AddModal = ({ setStatus, data }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [fields, setFields] = useState([
+        {
+            label: "ozelAlan1",
+            key: "OZELALAN_1",
+            value: "Özel Alan 1",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan2",
+            key: "OZELALAN_2",
+            value: "Özel Alan 2",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan3",
+            key: "OZELALAN_3",
+            value: "Özel Alan 3",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan4",
+            key: "OZELALAN_4",
+            value: "Özel Alan 4",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan5",
+            key: "OZELALAN_5",
+            value: "Özel Alan 5",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan6",
+            key: "OZELALAN_6",
+            value: "Özel Alan 6",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan7",
+            key: "OZELALAN_7",
+            value: "Özel Alan 7",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan8",
+            key: "OZELALAN_8",
+            value: "Özel Alan 8",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan9",
+            key: "OZELALAN_9",
+            value: "Özel Alan 9",
+            type: 'select',
+            code: 865,
+            name2: "ozelAlanKodId9"
+        },
+        {
+            label: "ozelAlan10",
+            key: "OZELALAN_10",
+            value: "Özel Alan 10",
+            type: 'select',
+            code: 866,
+            name2: "ozelAlanKodId10"
+        },
+        {
+            label: "ozelAlan11",
+            key: "OZELALAN_11",
+            value: "Özel Alan 11",
+            type: 'number'
+        },
+        {
+            label: "ozelAlan12",
+            key: "OZELALAN_12",
+            value: "Özel Alan 12",
+            type: 'number'
+        },
+    ])
 
     const defaultValues = {
         plaka: "",
@@ -35,19 +113,19 @@ const AddModal = ({ setStatus, data }) => {
         defaultValues: defaultValues
     })
 
-    const { control, handleSubmit, reset } = methods
+    const { control, handleSubmit, reset, setValue } = methods
 
 
     const items = [
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo control={control} />,
+            children: <GeneralInfo control={control} setValue={setValue} />,
         },
         {
             key: '2',
             label: 'Özel Alanlar',
-            children: <SpecialFields form="Arac" control={control} data={data} />,
+            children: <SpecialFields form="Arac" control={control} data={data} fields={fields} setFields={setFields} />,
         },
     ];
 
@@ -82,36 +160,6 @@ const AddModal = ({ setStatus, data }) => {
                 reset();
             }
         })
-
-        // try {
-        //     // setLoadingImages(true);
-        //     const token = localStorage.getItem("token");
-        //     if (!token) {
-        //         throw new Error("Authentication token not found.");
-        //     }
-
-        //     const response = await fetch("https://demo.orjin.net:1212/api/Photo/UploadPhoto?refId=1041&refGroup=Arac", {
-        //         method: "POST",
-        //         headers: {
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //         body: images,
-        //     });
-
-        //     if (!response.ok) {
-        //         throw new Error(`Failed to upload images. Status: ${response.status}`);
-        //     }
-
-        //     const data = await response.json();
-        //     console.log("Upload response:", data);
-        //     // setImageUrls([...imageUrls, ...data.imageUrls]); // Assuming API returns an array of image URLs
-        //     // message.success("Images uploaded successfully!");
-        // } catch (error) {
-        //     console.error("Error uploading images:", error.message);
-        //     // message.error("Error uploading images. Please try again.");
-        // } finally {
-        //     // setLoadingImages(false);
-        // }
     })
 
     const handleCancel = () => {

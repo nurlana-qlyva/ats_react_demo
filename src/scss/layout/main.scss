@@ -17,6 +17,7 @@
     margin: 10px 0;
     padding: 20px;
     box-shadow: $shadow;
+    position: relative;
 }
 
 .car-image {
@@ -36,6 +37,10 @@
     color: $info;
 }
 
+.text-danger {
+    color: $error;
+}
+
 .detail-info {
     position: absolute;
     top: 26px;
@@ -43,4 +48,14 @@
     z-index: 1000 !important;
     background-color: $info;
     color: $white;
+    border: none;
+}
+
+.filter-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $white;
+    margin-right: 4px;
 }

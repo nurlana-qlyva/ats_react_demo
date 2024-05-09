@@ -1,25 +1,44 @@
-import { Outlet } from "react-router-dom"
-// components
-import Header from "./layout/Header"
-import Sidebar from "./layout/Sidebar"
-import Footer from "./layout/Footer"
+import React, { useState } from 'react';
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    UploadOutlined,
+    UserOutlined,
+    VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Button, Layout, Menu, theme } from 'antd';
+import HeaderComp from './layout/Header';
+import FooterComp from './layout/Footer';
+import { Outlet } from 'react-router-dom';
+import Sidebar from './layout/Sidebar';
+const { Sider, Content } = Layout;
 
 const RootLayout = () => {
+
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+
     return (
-        <div className="grid h-full">
-            <div className="col-span-2">
+        <Layout>
+            <Sider trigger={null} collapsible collapsed={collapsed}>
                 <Sidebar />
-            </div>
-            <div className="col-span-10">
-                <div className="main-content">
-                    <Header />
-                    <div className="main">
-                        <Outlet />
-                    </div>
-                    <Footer />
-                </div>
-            </div>
-        </div>
+            </Sider>
+            <Layout>
+                <HeaderComp colorBgContainer={colorBgContainer} setCollapsed={setCollapsed} collapsed={collapsed}/>
+                <Content
+                    style={{
+                        padding: 20,
+                        minHeight: 280,
+                        overflow: "auto"
+                    }}
+                >
+                    <Outlet />
+                </Content>
+                <FooterComp />
+            </Layout>
+        </Layout>
     )
 }
 

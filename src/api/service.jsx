@@ -98,5 +98,5 @@ export const RuhsatInfoGetService = (id) => {
 }
 
 export const RuhsatInfoUpdateService = (data) => {
-  return http.get(`/Vehicle/UpdateVehicle`, data)
+  return http.post(`/Vehicle/UpdateVehicle`, data)
 }

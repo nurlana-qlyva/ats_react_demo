@@ -1,60 +1,16 @@
 import { useState } from 'react'
 import { FunnelPlotOutlined } from "@ant-design/icons"
-import { Button, Drawer, Input } from 'antd'
+import { Button, Drawer } from 'antd'
+import SelectInput from '../../../../components/form/SelectInput'
+import MarkaSelectInput from '../../../../components/form/MarkaSelectInput'
+import ModelSelectInput from '../../../../components/form/ModelSelectInput'
+import TextInput from '../../../../components/form/TextInput'
+import NumberInput from '../../../../components/form/NumberInput'
+import MaterialListSelect from '../../../../components/form/MaterialListSelect'
 
-const options = [
-    {
-        value: 'aracId',
-        label: 'ARAÇ ID',
-    },
-    {
-        value: 'plaka',
-        label: 'ARAÇ PLAKA',
-    },
-    {
-        value: 'aracTip',
-        label: 'ARAÇ TİP',
-    },
-    {
-        value: 'marka',
-        label: 'MARKA',
-    },
-    {
-        value: 'model',
-        label: 'MODEL',
-    },
-    {
-        value: 'grup',
-        label: 'GRUP',
-    },
-    {
-        value: 'renk',
-        label: 'RENK',
-    },
-    {
-        value: 'yil',
-        label: 'ÜRETİM YILI',
-    },
-    {
-        value: 'yakitTip',
-        label: 'YAKIT TİPİ',
-    },
-]
-
-const Filter = ({ setVehiclesData }) => {
+const Filter = ({ control, setValue, handleSearchFilters, clear, hasValue }) => {
 
     const [openDrawer, setOpenDrawer] = useState(false);
-    const [filter, setFilter] = useState({
-        aracId: "",
-        plaka: "",
-        aracTip: "",
-        marka: "",
-        model: "",
-        grup: "",
-        renk: "",
-        yil: "",
-        yakitTip: ""
-    })
 
     const showDrawer = () => {
         setOpenDrawer(true);
@@ -67,8 +23,11 @@ const Filter = ({ setVehiclesData }) => {
         <div className='flex justify-between align-center'>
             <p><FunnelPlotOutlined /> Filtreler</p>
             <div className='flex gap-1'>
-                <Button className='cancel-btn'>Temizle</Button>
-                <Button className='primary-btn'>Uygula</Button>
+                <Button className='cancel-btn' onClick={clear}>Temizle</Button>
+                <Button className='primary-btn' onClick={() => {
+                    handleSearchFilters()
+                    setOpenDrawer(false)
+                }}>Uygula</Button>
             </div>
         </div>
     )
@@ -76,17 +35,38 @@ const Filter = ({ setVehiclesData }) => {
     return (
         <div>
             <Button className="primary-btn" onClick={showDrawer}>
+                {hasValue && <div className='filter-icon'/>}
                 <FunnelPlotOutlined /> Filtreler
             </Button>
             <Drawer title={title} onClose={onCloseDrawer} open={openDrawer}>
-                <div className="flex flex-col gap-1">
-                    {options.map(option => (
-                        <div key={option.value} className="border grid gap-1 p-10 align-center">
-                            <label htmlFor={option.value} className='col-span-3'>{option.label}</label>
-                            <Input className='col-span-9' onChange={e => setFilter({ ...filter, [option.value]: e.target.value })} />
-                        </div>
-                    ))}
-
+                <div className="grid gap-1">
+                    <div className="col-span-6 border p-10 align-center">
+                        <TextInput control={control} name="aracId" label="Araç İd" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <TextInput control={control} name="plaka" label="Plaka" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <SelectInput control={control} name="aracTip" label="Araç Tip" setValue={setValue} selectID="100" filter="aracTipFilter" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <MarkaSelectInput control={control} />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <ModelSelectInput control={control} />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <SelectInput control={control} name="grup" label="Araç Grup" setValue={setValue} selectID="101" filter="grupFilter" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <SelectInput control={control} name="renk" label="Renk" selectID="111" filter="renkFilter" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <NumberInput control={control} name="yil" label="Model Yılı" />
+                    </div>
+                    <div className="col-span-6 border p-10 align-center">
+                        <MaterialListSelect control={control} name="yakitTip" label="Yakıt Tipi" type="YAKIT" setValue={setValue} />
+                    </div>
                 </div>
             </Drawer>
         </div>

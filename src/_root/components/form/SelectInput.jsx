@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { CodeControlService } from "../../../api/service";
 
-const SelectInput = ({ control, name, label, selectID, name2, setValue }) => {
+const SelectInput = ({ control, name, label, selectID, name2, setValue, filter }) => {
     const [data, setData] = useState([]);
 
     const handleClickSelect = () => {
@@ -38,8 +38,16 @@ const SelectInput = ({ control, name, label, selectID, name2, setValue }) => {
                             if (e === undefined) {
                                 setValue(name, "")
                                 setValue(name2, -1)
-                            }else {
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (!selectedOption) {
+                                    setValue(filter, "")
+                                }
+                            } else {
                                 setValue(name2, e)
+                                const selectedOption = data.find(option => option.siraNo === e);
+                                if (selectedOption) {
+                                    setValue(filter, selectedOption.codeText)
+                                }
                             }
                         }}
                     />

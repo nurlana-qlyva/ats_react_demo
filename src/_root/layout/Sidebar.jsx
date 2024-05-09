@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import {
     PieChartOutlined,
     CarOutlined
 } from '@ant-design/icons';
-import { Button, Menu } from 'antd';
+import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
 const items = [
@@ -62,40 +61,22 @@ const items = [
 ];
 
 const Sidebar = () => {
-    const [collapsed, setCollapsed] = useState(false);
-
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
 
     return (
-        <div
-            className='sidebar w-full h-full'
-        >
-            <div className="flex justify-center w-full py-20">
+        <>
+            <div className="flex justify-center w-full py-20" style={{ textAlign: "center" }}>
                 <Link to="/">
                     <img src="/images/logo_white.png" alt="" className='sidebar-logo' />
                 </Link>
             </div>
-
-            {/* <Button
-                type="primary"
-                onClick={toggleCollapsed}
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            </Button> */}
             <Menu
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode="inline"
                 theme="dark"
-                inlineCollapsed={collapsed}
                 items={items}
             />
-        </div>
+        </>
     )
 }
 
