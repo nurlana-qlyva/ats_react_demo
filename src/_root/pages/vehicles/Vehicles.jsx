@@ -19,8 +19,19 @@ const breadcrumb = [
     },
 ]
 
+
 const Vehicles = () => {
     const columns = [
+        {
+            title: "",
+            key: "selection",
+            render: (text, record) => (
+                <Checkbox
+                    onChange={(e) => handleCheckboxChange(e, record.aracId)}
+                    checked={selectedRowKeys.includes(record.aracId)}
+                />
+            ),
+        },
         {
             title: 'Araç İD',
             dataIndex: 'aracId',
@@ -207,13 +218,17 @@ const Vehicles = () => {
         setHasValue(false)
     }
 
-    const onSelectChange = (newSelectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
+    const handleCheckboxChange = (e, aracId) => {
+        const keys = [...selectedRowKeys];
+        if (e.target.checked) {
+            keys.push(aracId);
+        } else {
+            const index = keys.indexOf(aracId);
+            if (index !== -1) {
+                keys.splice(index, 1);
+            }
+        }
+        setSelectedRowKeys(keys);
     };
 
 
@@ -280,7 +295,6 @@ const Vehicles = () => {
                     loading={loading}
                     size="small"
                     onChange={handleTableChange}
-                    rowSelection={rowSelection}
                 />
             </div>
         </>
