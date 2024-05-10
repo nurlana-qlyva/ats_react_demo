@@ -1,7 +1,6 @@
 .btn {
     min-width: 100px;
     border-radius: 4px;
-    padding: 8px 12px;
 }
 
 .primary-btn {
@@ -52,8 +51,19 @@
     border: none !important;
 }
 
-.file-btn:hover, .detail-info:hover {
+.file-btn:hover,
+.detail-info:hover {
     background-color: $dark-blue !important;
     color: $white !important;
     border: none !important;
+}
+
+.detail-info {
+    position: absolute;
+    top: 26px;
+    right: 20px;
+    z-index: 1000 !important;
+    background-color: $info;
+    color: $white;
+    border: none;
 }
