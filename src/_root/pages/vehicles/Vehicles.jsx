@@ -239,8 +239,8 @@ const Vehicles = () => {
             </div>
 
             <div className="content">
-                <div className="flex justify-between">
-                    <div className="flex align-items-center gap-1">
+                <div className="flex justify-between align-center">
+                    <div className="flex align-center gap-1">
                         <Popover
                             content={content}
                             placement="bottom"

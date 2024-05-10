@@ -67,3 +67,15 @@
     color: $white;
     border: none;
 }
+
+.operations-btn {
+    background-color: $info;
+    color: $white;
+    border: none;
+}
+
+.operations-btn:hover {
+    background-color: $dark-blue !important;
+    color: $white !important;
+    border: none !important;
+}

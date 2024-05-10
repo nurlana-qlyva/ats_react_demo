@@ -87,7 +87,7 @@ const OperationsInfo = ({ id }) => {
     return (
         <>
             <Dropdown menu={menuProps}>
-                <Button className="detail-info">
+                <Button className="operations-btn">
                     <Space>
                         İşlemler
                         <DownOutlined />
