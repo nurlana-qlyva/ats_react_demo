@@ -45,6 +45,19 @@ const data = [
     },
 ];
 
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="custom-tooltip">
+                <p>{`${label} : ${payload[0].value}`}</p>
+                <p>{`Custom Info: ${payload[0].payload.customInfo}`}</p>
+            </div>
+        );
+    }
+
+    return null;
+};
+
 const BarChartCOmp = () => {
     return (
         <>
@@ -60,14 +73,16 @@ const BarChartCOmp = () => {
                     left: 0,
                     bottom: 0,
                 }}
+                animationBegin={0}
+                animationDuration={1500}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis dataKey="name" stroke="#333" tick={{ fontSize: 12 }} tickLine={false} />
+                <YAxis stroke="#333" tick={{ fontSize: 12 }} tickLine={false} />
                 <Tooltip />
-                <Legend />
-                <Bar dataKey="pv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-                <Bar dataKey="uv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+                <Legend align="center" height={36} />
+                <Bar dataKey="pv" fill="#FF5733" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                <Bar dataKey="uv" fill="#3498DB" activeBar={<Rectangle fill="gold" stroke="purple" />} />
             </BarChart>
         </>
     )

@@ -66,8 +66,8 @@ const LineChartComp = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend color='#fff' />
-                <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={4} strokeDasharray={5} activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="pv" stroke="#FF5733" strokeWidth={4} activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="uv" stroke="#3498DB" strokeWidth={4} />
             </LineChart>
         </>
     )

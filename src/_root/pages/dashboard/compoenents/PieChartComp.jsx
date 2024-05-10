@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { PieChart, Pie, Sector } from 'recharts';
+import { PieChart, Pie, Sector, Cell } from 'recharts';
 
 const data = [
-    { name: 'Group A', value: 400 },
-    { name: 'Group B', value: 300 },
-    { name: 'Group C', value: 300 },
-    { name: 'Group D', value: 200 },
+    { name: 'Group A', value: 400, color: '#FF5733' }, // Orange
+    { name: 'Group B', value: 300, color: '#1ABC9C' }, // Turquoise
+    { name: 'Group C', value: 300, color: '#9B59B6' }, // Purple
+    { name: 'Group D', value: 200, color: '#F1C40F' }, // Yellow
 ];
+
 
 const renderActiveShape = (props) => {
     const RADIAN = Math.PI / 180;
@@ -24,7 +25,7 @@ const renderActiveShape = (props) => {
     return (
         <g>
             <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-                {payload.name}
+                {/* {payload.name} */}
             </text>
             <Sector
                 cx={cx}
@@ -65,7 +66,7 @@ const PieChartComp = () => {
     return (
         <>
             <h2>Pie Chart</h2>
-            <PieChart width={460} height={300} style={{ width: "100%" }}>
+            <PieChart width={460} height={300} style={{ width: "100%", filter: 'drop-shadow(0px 0px 10px rgba(255, 255, 0, 0.1))', borderRadius: '8px' }}>
                 <Pie
                     activeIndex={activeIndex}
                     activeShape={renderActiveShape}
@@ -74,10 +75,13 @@ const PieChartComp = () => {
                     cy="50%"
                     innerRadius={60}
                     outerRadius={100}
-                    fill="#8884d8"
                     dataKey="value"
                     onMouseEnter={onPieEnter}
-                />
+                >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                </Pie>
             </PieChart>
         </>
     )
