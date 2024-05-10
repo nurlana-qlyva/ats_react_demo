@@ -64,9 +64,9 @@ const PieChartComp = () => {
     };
 
     return (
-        <>
+        <div>
             <h2>Pie Chart</h2>
-            <PieChart width={460} height={300} style={{ width: "100%", filter: 'drop-shadow(0px 0px 10px rgba(255, 255, 0, 0.1))', borderRadius: '8px' }}>
+            <PieChart width={460} height={300} style={{ width: "100%", filter: 'drop-shadow(0px 0px 10px rgba(255, 255, 0, 0.1))', borderRadius: '8px' }} className="pie-chart-container">
                 <Pie
                     activeIndex={activeIndex}
                     activeShape={renderActiveShape}
@@ -83,7 +83,7 @@ const PieChartComp = () => {
                     ))}
                 </Pie>
             </PieChart>
-        </>
+        </div>
     )
 }
 

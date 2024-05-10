@@ -6,6 +6,7 @@ import Dashboard from './_root/pages/dashboard/Dashboard';
 import Vehicles from './_root/pages/vehicles/Vehicles';
 import VehiclesUpdate from './_root/pages/vehicles-detail/VehiclesUpdate';
 import { getItemWithExpiration } from './utils/expireToken';
+import KmUpdate from './_root/pages/km-update/KmUpdate';
 
 const AppRouter = () => {
   const [hasToken, setHasToken] = useState(false);
@@ -28,11 +29,11 @@ const AppRouter = () => {
         <Route index element={<Dashboard />} />
         <Route path="/araclar" element={<Vehicles />} />
         <Route path="/detay/:id" element={<VehiclesUpdate />} />
-      
+        <Route path="/hizli-km-guncelleme" element={<KmUpdate />} />
       </Route>
-       {hasToken && (
-          <Route path="/login" element={<AuthLayout />} />
-        )}
+      {hasToken && (
+        <Route path="/login" element={<AuthLayout />} />
+      )}
     </Routes>
   );
 };

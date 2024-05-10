@@ -1,6 +1,7 @@
 import {
     PieChartOutlined,
-    CarOutlined
+    CarOutlined,
+    FastForwardOutlined 
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
@@ -57,7 +58,14 @@ const items = [
                 label: 'Lokasyonlar',
             },
         ],
-    }
+    },
+    {
+        key: '15',
+        icon: <FastForwardOutlined  />,
+        label: (
+            <Link to={'/hizli-km-guncelleme'}>Hızlı Km Güncelleme</Link>
+        ),
+    },
 ];
 
 const Sidebar = () => {
