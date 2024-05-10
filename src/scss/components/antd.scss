@@ -142,3 +142,12 @@ aside {
     max-width: 260px !important;
     min-width: 260px !important;
 }
+
+:where(.css-kghr11).ant-spin .ant-spin-dot-item {
+    background-color: #04274b !important;
+}
+
+:where(.css-kghr11).ant-checkbox-group,
+.ant-checkbox-group {
+    flex-direction: column !important;
+}
