@@ -2,8 +2,8 @@ import LineChartComp from "./compoenents/LineChartComp"
 import BarChartComp from "./compoenents/BarChartComp"
 import PieChartComp from "./compoenents/PieChartComp"
 
-
 const Dashboard = () => {
+
   return (
     <div className="dashboard">
       <div className="content">
