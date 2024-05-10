@@ -123,3 +123,7 @@
 :where(.css-dev-only-do-not-override-kghr11).ant-layout-header {
     height: inherit !important;
 }
+
+:where(.css-kghr11).ant-layout-header {
+    padding: 0 20px !important;
+}

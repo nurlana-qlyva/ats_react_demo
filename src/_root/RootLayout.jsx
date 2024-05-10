@@ -21,7 +21,7 @@ const RootLayout = () => {
     } = theme.useToken();
 
     return (
-        <Layout>
+        <Layout style={{height: "100vh", overflow: "hidden"}}>
             <Sider trigger={null} collapsible collapsed={collapsed}>
                 <Sidebar />
             </Sider>
