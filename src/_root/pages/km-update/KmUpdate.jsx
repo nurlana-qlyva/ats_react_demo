@@ -18,91 +18,6 @@ const EditableRow = ({ index, ...props }) => {
     );
 };
 
-const EditableCell = ({
-    title,
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    ...restProps
-}) => {
-    const [editing, setEditing] = useState(false);
-    const [menuVisible, setMenuVisible] = useState(false);
-    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-    const inputRef = useRef(null);
-    const form = useContext(EditableContext);
-
-    const showContextMenu = (e) => {
-        e.preventDefault();
-        setMenuPosition({ x: e.clientX, y: e.clientY });
-        setMenuVisible(true);
-    };
-
-    const hideContextMenu = () => {
-        setMenuVisible(false);
-    };
-
-    useEffect(() => {
-        if (editing) {
-            inputRef.current?.focus();
-        }
-    }, [editing]);
-
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-        });
-    };
-
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-            toggleEdit();
-            handleSave({
-                ...record,
-                ...values,
-            });
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo);
-        }
-    };
-    let childNode = children;
-    if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{
-                    margin: 0,
-                }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{
-                    paddingRight: 24,
-                }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-    return <td {...restProps} onContextMenu={showContextMenu}>
-        <div onMouseLeave={hideContextMenu}>{childNode}</div>
-        <ContextMenu visible={menuVisible} x={menuPosition.x} y={menuPosition.y} />
-    </td>
-
-};
 
 const breadcrumb = [
     {
@@ -115,8 +30,22 @@ const breadcrumb = [
 ]
 
 const KmUpdate = () => {
-    const [dataSource, setDataSource] = useState([]);
+    const [dataSource, setDataSource] = useState([
+        // {
+        //     key: '0',
+        //     name: 'Edward King 0',
+        //     age: '32',
+        //     address: 'London, Park Lane no. 0',
+        // },
+        // {
+        //     key: '1',
+        //     name: 'Edward King 1',
+        //     age: '32',
+        //     address: 'London, Park Lane no. 1',
+        // },
+    ]);
     const [hasValue, setHasValue] = useState(false);
+    const [showContext, setShowContext] = useState(false);
 
     const defaultValues = {
         aracId: "",
@@ -137,6 +66,20 @@ const KmUpdate = () => {
     const { control, handleSubmit, reset, setValue } = methods
 
     const defaultColumns = [
+        // {
+        //     title: 'name',
+        //     dataIndex: 'name',
+        //     width: '30%',
+        //     editable: true,
+        // },
+        // {
+        //     title: 'age',
+        //     dataIndex: 'age',
+        // },
+        // {
+        //     title: 'address',
+        //     dataIndex: 'address',
+        // },
         {
             title: 'Plaka',
             dataIndex: 'plaka',
@@ -178,6 +121,97 @@ const KmUpdate = () => {
             editable: true,
         }
     ];
+
+
+    const EditableCell = ({
+        title,
+        editable,
+        children,
+        dataIndex,
+        record,
+        handleSave,
+        ...restProps
+    }) => {
+        const [editing, setEditing] = useState(false);
+        const inputRef = useRef(null);
+        const form = useContext(EditableContext);
+
+        useEffect(() => {
+            if (editing) {
+                inputRef.current?.focus();
+            }
+        }, [editing]);
+
+        const toggleEdit = () => {
+            setEditing(!editing);
+            form.setFieldsValue({
+                [dataIndex]: record[dataIndex],
+            });
+        };
+
+        const handleContextMenu = (e) => {
+            e.preventDefault();
+            setShowContext(true)
+        }
+
+        const save = async () => {
+            try {
+                const values = await form.validateFields();
+                toggleEdit();
+                handleSave({
+                    ...record,
+                    ...values,
+                });
+            } catch (errInfo) {
+                console.log('Save failed:', errInfo);
+            }
+        };
+        let childNode = children;
+        if (editable) {
+            childNode = editing ? (
+                <Form.Item
+                    style={{
+                        margin: 0,
+                    }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{
+                        paddingRight: 24,
+                    }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        }
+        return <td {...restProps} onContextMenu={handleContextMenu}>
+            {childNode}
+        </td>
+    };
+
+    const handleOutsideClick = (e) => {
+        if (!e.target.closest('.context-menu')) {
+            setShowContext(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleOutsideClick);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, []);
 
     const handleSave = (row) => {
         const newData = [...dataSource];
@@ -225,7 +259,7 @@ const KmUpdate = () => {
             }),
         };
     });
-
+    console.log(showContext)
     return (
         <>
             <div className='content'>
@@ -237,6 +271,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content">
+                {showContext && <ContextMenu visible={showContext} />}
                 <Table
                     components={components}
                     rowClassName={() => 'editable-row'}
