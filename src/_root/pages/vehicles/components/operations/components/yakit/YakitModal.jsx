@@ -1,10 +1,10 @@
 import { Modal, Button, Table, Tabs, message } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import SpecialFields from '../../../../../components/form/SpecialFields';
+import SpecialFields from '../../../../../../components/form/SpecialFields';
 import GeneralInfo from './components/GeneralInfo';
-import FileUpload from '../../../../../components/form/FileUpload';
-import { upload } from '../../../../../../utils/upload';
+import FileUpload from '../../../../../../components/form/FileUpload';
+import { upload } from '../../../../../../../utils/upload';
 
 
 

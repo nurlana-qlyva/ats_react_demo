@@ -1,8 +1,8 @@
 import { Controller } from "react-hook-form"
-import DateInput from "../../../../../../components/form/DateInput"
-import NumberInput from "../../../../../../components/form/NumberInput"
-import SelectInput from "../../../../../../components/form/SelectInput"
-import TextInput from "../../../../../../components/form/TextInput"
+import DateInput from "../../../../../../../components/form/DateInput"
+import NumberInput from "../../../../../../../components/form/NumberInput"
+import SelectInput from "../../../../../../../components/form/SelectInput"
+import TextInput from "../../../../../../../components/form/TextInput"
 import { Checkbox } from "antd"
 
 const GeneralInfo = ({ control }) => {

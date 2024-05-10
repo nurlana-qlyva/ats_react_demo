@@ -134,5 +134,11 @@
 
 :where(.css-kghr11).ant-checkbox-checked .ant-checkbox-inner {
     background-color: $info !important;
-    border-color:  $info !important;
+    border-color: $info !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-layout .ant-layout-sider {
+    width: 260px !important;
+    max-width: 260px !important;
+    min-width: 260px !important;
 }

@@ -218,7 +218,8 @@ const Vehicles = () => {
         setHasValue(false)
     }
 
-    const handleCheckboxChange = (e, aracId) => {
+    const handleCheckboxChange = (e, aracId) => {   
+        console.log(aracId)
         const keys = [...selectedRowKeys];
         if (e.target.checked) {
             keys.push(aracId);
