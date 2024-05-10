@@ -127,3 +127,12 @@
 :where(.css-kghr11).ant-layout-header {
     padding: 0 20px !important;
 }
+
+:where(.css-kghr11).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: $info !important;
+}
+
+:where(.css-kghr11).ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $info !important;
+    border-color:  $info !important;
+}

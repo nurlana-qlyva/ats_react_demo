@@ -379,7 +379,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                         <div className="col-span-12">
                             <Divider />
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-12 flex gap-1 mb-10">
                             <Controller
                                 control={control}
                                 name='hakMahrumiyet'

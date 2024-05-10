@@ -68,6 +68,7 @@ const Vehicles = () => {
             key: 9,
         },
     ];
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const defaultCheckedList = columns.map((item) => item.key);
     const [checkedList, setCheckedList] = useState(defaultCheckedList);
     const [open, setOpen] = useState(false);
@@ -206,6 +207,16 @@ const Vehicles = () => {
         setHasValue(false)
     }
 
+    const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+
+
     const options = columns.map(({ key, title }) => ({
         label: title,
         value: key,
@@ -269,6 +280,7 @@ const Vehicles = () => {
                     loading={loading}
                     size="small"
                     onChange={handleTableChange}
+                    rowSelection={rowSelection}
                 />
             </div>
         </>
