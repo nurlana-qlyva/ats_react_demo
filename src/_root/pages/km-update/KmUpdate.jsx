@@ -5,8 +5,9 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input, Popconfirm, Table } from 'antd';
 import { Controller, useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
-import { KMDeleteService, KMGetService } from "../../../api/service";
+import { KMDeleteService, KMGetService, KMUpdateService } from "../../../api/service";
 import dayjs from "dayjs";
+import { format } from "date-fns";
 
 const breadcrumb = [
     {
@@ -36,6 +37,7 @@ const EditableCell = ({
     dataIndex,
     record,
     handleSave,
+    errorRows, // Pass errorRows as a prop
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -83,7 +85,7 @@ const EditableCell = ({
             </Form.Item>
         ) : (
             <div
-                className="editable-cell-value-wrap"
+                className={`editable-cell-value-wrap`}
                 style={{
                     paddingRight: 24,
                 }}
@@ -97,11 +99,12 @@ const EditableCell = ({
 };
 
 
+
 const KmUpdate = () => {
     const [dataSource, setDataSource] = useState([]);
-    const [hasValue, setHasValue] = useState(false);
     const [showContext, setShowContext] = useState(false);
     const [status, setStatus] = useState(false)
+    const [errorRows, setErrorRows] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -114,7 +117,7 @@ const KmUpdate = () => {
         seferSiraNo: 0,
         yakitSiraNo: 0,
         plaka: "",
-        tarih: "1970-01-01",
+        tarih: new Date(),
         saat: "",
         eskiKm: 0,
         yeniKm: 0,
@@ -216,6 +219,7 @@ const KmUpdate = () => {
                     total: res?.data.total_count,
                 },
             });
+            setStatus(false)
         })
     }, [status, tableParams.pagination.current])
 
@@ -236,16 +240,24 @@ const KmUpdate = () => {
                 ...row,
             });
             setDataSource(newData);
-    
+
             const updatedValue = row;
-    
+
             console.log('Updated value:', updatedValue);
-            
+
+            KMUpdateService(updatedValue).then(res => {
+                if (res?.data.statusCode === 403) {
+                    setErrorRows({...row, error: true});
+                } else if (res?.data.statusCode === 202) {
+                    setStatus(true)
+                }
+            })
+
         } catch (error) {
             console.error('Error saving row:', error);
         }
-    };   
-    
+    };
+
 
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current).then(res => {
@@ -274,6 +286,7 @@ const KmUpdate = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
+                errorRows,
             }),
         };
     });
