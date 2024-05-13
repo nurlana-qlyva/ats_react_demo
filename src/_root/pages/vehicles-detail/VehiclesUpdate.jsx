@@ -316,7 +316,7 @@ const VehiclesUpdate = () => {
     }
 
     VehiclesUpdateSetService(data).then(res => {
-      if (res.data.statusCode === 200) {
+      if (res.data.statusCode === 202) {
         setStatus(true)
       }
     })

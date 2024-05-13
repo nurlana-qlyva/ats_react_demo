@@ -100,3 +100,25 @@ export const RuhsatInfoGetService = (id) => {
 export const RuhsatInfoUpdateService = (data) => {
   return http.post(`/VehicleDetail/UpdateLicenceInfo`, data)
 }
+
+// km 
+export const KMGetService = (page) => {
+  return http.get(`/KmLog/GetKmLogList?page=${page}`)
+}
+
+export const KMGetByIdService = (id, page) => {
+  return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
+}
+
+export const KMDeleteService = (data) => {
+  return http.post(`/KmLog/DeleteKmLog`, data)
+}
+
+export const KMUpdateService = (data) => {
+  return http.post(`/KmLog/UpdateKmLog`, data)
+}
+
+export const KMAddService = (data) => {
+  return http.post(`/KmLog/AddKmLog`, data)
+}
+

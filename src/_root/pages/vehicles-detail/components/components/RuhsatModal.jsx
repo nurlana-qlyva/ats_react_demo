@@ -140,11 +140,9 @@ const RuhsatModal = ({ visible, onClose, id }) => {
             "vergiDaire": values.vergiDaire,
         }
 
-        console.log(data)
-
         RuhsatInfoUpdateService(data).then(res => {
             console.log(res.data)
-            if (res.data.statusCode === 200) {
+            if (res.data.statusCode === 202) {
                 setStatus(true)
             }
         })
