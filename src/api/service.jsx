@@ -122,3 +122,12 @@ export const KMAddService = (data) => {
   return http.post(`/KmLog/AddKmLog`, data)
 }
 
+// yakit
+export const YakitGetService = (page) => {
+  return http.get(`/Fuel/GetFuelList?page=${page}`)
+}
+
+export const YakitGetByIdService = (id, page) => {
+  return http.get(`/Fuel/GetFuelListByVehicleId?vehicleId=${id}&page=${page}`)
+}
+

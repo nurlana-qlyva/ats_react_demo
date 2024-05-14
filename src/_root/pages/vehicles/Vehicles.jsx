@@ -218,8 +218,7 @@ const Vehicles = () => {
         setHasValue(false)
     }
 
-    const handleCheckboxChange = (e, aracId) => {   
-        console.log(aracId)
+    const handleCheckboxChange = (e, aracId) => {
         const keys = [...selectedRowKeys];
         if (e.target.checked) {
             keys.push(aracId);
@@ -282,7 +281,7 @@ const Vehicles = () => {
                         <Filter setVehiclesData={setVehiclesData} control={control} setValue={setValue} handleSearchFilters={handleSearchFilters} clear={clear} hasValue={hasValue} />
                     </div>
                     <div>
-                        <OperationsInfo />
+                        <OperationsInfo ids={selectedRowKeys} />
                     </div>
                 </div>
             </div>

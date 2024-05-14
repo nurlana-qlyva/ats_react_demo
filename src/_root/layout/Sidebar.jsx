@@ -1,8 +1,9 @@
 import {
     PieChartOutlined,
     CarOutlined,
-    FastForwardOutlined 
+    FastForwardOutlined
 } from '@ant-design/icons';
+import { FaGears } from "react-icons/fa6";
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -61,10 +62,36 @@ const items = [
     },
     {
         key: '15',
-        icon: <FastForwardOutlined  />,
+        icon: <FastForwardOutlined />,
         label: (
             <Link to={'/hizli-km-guncelleme'}>Hızlı Km Güncelleme</Link>
         ),
+    },
+    {
+        key: '16',
+        icon: <FaGears />,
+        label: 'Sistem Ayarları',
+        children: [
+            {
+                key: '17',
+                label: (
+                    <Link to={'/ayarlar'}>Ayarlar</Link>
+                ),
+            },
+            {
+                key: '18',
+                label: (
+                    <Link to={`/kullanici-tanimlari`}>Kullanıcı Tanımları</Link>
+                ),
+            },
+            {
+                key: '19',
+                label: (
+                    <Link to={`/kullanici-tanimlari`}>Doküman Yöneticisi</Link>
+
+                ),
+            }
+        ],
     },
 ];
 

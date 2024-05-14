@@ -5,11 +5,12 @@ import SpecialFields from '../../../../../../components/form/SpecialFields';
 import GeneralInfo from './components/GeneralInfo';
 import FileUpload from '../../../../../../components/form/FileUpload';
 import { upload } from '../../../../../../../utils/upload';
+import { YakitGetByIdService } from '../../../../../../../api/service';
 
 
 
-const YakitModal = ({ visible, onClose, id }) => {
-    const [drivers, setDrivers] = useState([])
+const YakitModal = ({ visible, onClose, ids }) => {
+    const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
     const [newModal, setNewModal] = useState(false);
     const [tableParams, setTableParams] = useState({
@@ -21,6 +22,7 @@ const YakitModal = ({ visible, onClose, id }) => {
     const [filesUrl, setFilesUrl] = useState([]);
     const [files, setFiles] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
+    const [vehicleId, setVehicleId] = useState(0)
 
     const [fields, setFields] = useState([
         {
@@ -120,7 +122,7 @@ const YakitModal = ({ visible, onClose, id }) => {
         },
         {
             title: 'Yakıt Tipi',
-            dataIndex: 'yakitTip',
+            dataIndex: 'yktTip',
             key: 4,
         },
         {
@@ -135,17 +137,17 @@ const YakitModal = ({ visible, onClose, id }) => {
         },
         {
             title: 'Son KM.',
-            dataIndex: 'sonKM',
+            dataIndex: 'sonKm',
             key: 7,
         },
         {
             title: 'Alınan KM.',
-            dataIndex: 'alinanKM',
+            dataIndex: 'alinanKm',
             key: 8,
         },
         {
             title: 'Fark KM.',
-            dataIndex: 'farkKM',
+            dataIndex: 'farkKm',
             key: 9,
         },
         {
@@ -189,10 +191,24 @@ const YakitModal = ({ visible, onClose, id }) => {
     })
 
     const { control, handleSubmit, reset, setValue } = methods
-
+    console.log(ids)
+    useEffect(() => setVehicleId(ids), [ids])
     useEffect(() => {
+        ids.map(id => {
+            return YakitGetByIdService(id, tableParams?.pagination.current).then(res => {
+                console.log(res.data)
+                setDataSource(res?.data.km_list)
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res?.data.total_count,
+                    },
+                });
+            })
+        })
 
-    }, [id])
+    }, [vehicleId, tableParams.pagination.current])
 
 
     const handleTableChange = (pagination, filters, sorter) => {
@@ -284,11 +300,14 @@ const YakitModal = ({ visible, onClose, id }) => {
             </Modal>
             <Table
                 columns={columns}
-                dataSource={drivers}
+                dataSource={dataSource}
                 pagination={tableParams.pagination}
                 loading={loading}
                 size="small"
                 onChange={handleTableChange}
+                scroll={{
+                    x: 1500,
+                }}
             />
         </Modal>
     );

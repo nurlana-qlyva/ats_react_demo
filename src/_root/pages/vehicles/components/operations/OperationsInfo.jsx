@@ -6,12 +6,14 @@ import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } fro
 import { useState } from "react";
 import YakitModal from "./components/yakit/YakitModal";
 
-const OperationsInfo = ({ id }) => {
+const OperationsInfo = ({ ids }) => {
     const [selectedItem, setSelectedItem] = useState(null);
 
     const handleMenuClick = (e) => {
         setSelectedItem(e.key);
     };
+
+    console.log(ids)
 
     const items = [
         {
@@ -78,7 +80,7 @@ const OperationsInfo = ({ id }) => {
     const renderModal = () => {
         switch (selectedItem) {
             case '2':
-                return <YakitModal visible={selectedItem === '2'} onClose={handleModalClose} id={id} />;
+                return <YakitModal visible={selectedItem === '2'} onClose={handleModalClose} ids={ids} />;
             default:
                 return null;
         }

@@ -31,6 +31,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control }) => {
     })
   }
 
+  console.log(plaka)
   return (
     <div className='flex flex-col gap-1'>
       <div className="grid gap-1 align-center">
