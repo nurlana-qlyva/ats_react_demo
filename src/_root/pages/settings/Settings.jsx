@@ -44,44 +44,24 @@ const Settings = () => {
     },
     {
       key: 6,
-      label: 'Program Kısayol Tuşları',
-      children: 'content1'
-    },
-    {
-      key: 7,
-      label: 'Yedekleme',
-      children: 'content1'
-    },
-    {
-      key: 8,
       label: 'Sefer Hareketleri',
       children: 'content1'
     },
     {
-      key: 9,
+      key: 6,
       label: 'Lastik Bilgileri',
       children: 'content1'
     },
     {
-      key: 10,
+      key: 8,
       label: 'Yakıt İşlemleri',
       children: 'content1'
     },
     {
-      key: 11,
+      key: 9,
       label: 'Özel Menü',
       children: 'content1'
-    },
-    {
-      key: 12,
-      label: 'Lisans Bilgileri',
-      children: 'content1'
-    },
-    {
-      key: 13,
-      label: 'Belge Yönetimi',
-      children: 'content1'
-    },
+    }
   ]
 
   return (
