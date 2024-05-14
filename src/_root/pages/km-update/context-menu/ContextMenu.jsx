@@ -1,11 +1,11 @@
+import { Button } from "antd";
 
-const ContextMenu = ({ visible}) => {
-    if (!visible) return null;
+const ContextMenu = ({ position, rowData }) => {
 
     const style = {
         position: 'absolute',
-        left: 0,
-        top: '50px',
+        left: position.x - 280,
+        top: position.y - 150,
         border: '1px solid #ccc',
         backgroundColor: '#fff',
         zIndex: 2000,
@@ -15,11 +15,9 @@ const ContextMenu = ({ visible}) => {
 
     return (
         <div style={style} className="context-menu">
-            <ul>
-                <li>Kilometre Güncelleme Geçmişi</li>
-                <li>Güncel Km Düzeltme</li>
-                <li>Km Sıfırlama</li>
-            </ul>
+            <Button>Kilometre Güncelleme Geçmişi: {rowData?.plaka}</Button>
+            <Button>Güncel Km Düzeltme</Button>
+            <Button>Km Sıfırlama</Button>
         </div>
     );
 };

@@ -22,7 +22,7 @@ export function getItemWithExpiration(key) {
     if (currentTime > expirationTime) {
         localStorage.removeItem(key);
         localStorage.removeItem(`${key}_expire`);
-        return null; // Token has expired
+        return null;
     }
 
     return JSON.parse(item);

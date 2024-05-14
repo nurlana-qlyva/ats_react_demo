@@ -20,10 +20,26 @@
     border-radius: 2px;
 }
 
-:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td {
+.km :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td {
     width: 75px !important;
 }
 
 .red-text {
     color: red;
+}
+
+.context-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.context-menu button {
+    border: none;
+    text-align: left;
+}
+
+.context-menu button:hover {
+    background-color: $gray-200 !important;
+    color: $secondary !important;
 }
