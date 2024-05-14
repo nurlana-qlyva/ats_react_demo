@@ -137,11 +137,11 @@
     border-color: $info !important;
 }
 
-aside {
-    width: 260px !important;
-    max-width: 260px !important;
-    min-width: 260px !important;
-}
+// aside {
+//     width: 260px !important;
+//     max-width: 260px !important;
+//     min-width: 260px !important;
+// }
 
 :where(.css-kghr11).ant-spin .ant-spin-dot-item {
     background-color: #04274b !important;
@@ -150,4 +150,20 @@ aside {
 :where(.css-kghr11).ant-checkbox-group,
 .ant-checkbox-group {
     flex-direction: column !important;
+}
+
+
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-tabs>.ant-tabs-nav {
+    background-color: #04274b !important;
+}
+
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab {
+    color: #fff !important;
+}
+
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active,
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
+    color: $secondary !important;
 }
