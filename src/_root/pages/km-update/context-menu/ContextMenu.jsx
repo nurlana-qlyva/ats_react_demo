@@ -5,7 +5,7 @@ const ContextMenu = ({ position, rowData }) => {
     const style = {
         position: 'absolute',
         left: position.x - 280,
-        top: position.y - 150,
+        top: position.y - 230,
         border: '1px solid #ccc',
         backgroundColor: '#fff',
         zIndex: 2000,
