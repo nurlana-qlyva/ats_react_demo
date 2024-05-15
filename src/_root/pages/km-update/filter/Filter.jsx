@@ -41,7 +41,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control }) => {
               showSearch
               allowClear
               optionFilterProp="children"
-              filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input)}
+              filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
               filterSort={(optionA, optionB) =>
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
               }
@@ -55,7 +55,6 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control }) => {
               }}
             />
           </div>
-
         </div>
         <div className="col-span-2">
           <SelectInput control={control} name="aracTip" label="Araç Tipi" />

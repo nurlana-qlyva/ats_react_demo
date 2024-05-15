@@ -103,24 +103,42 @@ export const RuhsatInfoUpdateService = (data) => {
 
 // km 
 export const KMGetService = (page) => {
-  return http.get(`/KmLog/GetKmLogList?page=${page}`)
+  return http.get(`/QuickKmUpdate/GetKmUpdateList?page=${page}`)
 }
 
 export const KMGetByIdService = (id, page) => {
-  return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
+  return http.get(`/QuickKmUpdate/GetKmUpdateByVehicleIdList?vehicleId=${id}&page=${page}`)
 }
 
-export const KMDeleteService = (data) => {
-  return http.post(`/KmLog/DeleteKmLog`, data)
-}
-
-export const KMUpdateService = (data) => {
-  return http.post(`/KmLog/UpdateKmLog`, data)
+export const KMValidateService = (data) => {
+  return http.post(`/KmLog/ValidateKmLogForAdd`, data)
 }
 
 export const KMAddService = (data) => {
   return http.post(`/KmLog/AddKmLog`, data)
 }
+
+// km history
+// export const KMGetService = (page) => {
+//   return http.get(`/KmLog/GetKmLogList?page=${page}`)
+// }
+
+// export const KMGetByIdService = (id, page) => {
+//   return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
+// }
+
+// export const KMDeleteService = (data) => {
+//   return http.post(`/KmLog/DeleteKmLog`, data)
+// }
+
+// export const KMUpdateService = (data) => {
+//   return http.post(`/KmLog/UpdateKmLog`, data)
+// }
+
+// export const KMAddService = (data) => {
+//   return http.post(`/KmLog/AddKmLog`, data)
+// }
+
 
 // yakit
 export const YakitGetService = (page) => {
@@ -130,4 +148,3 @@ export const YakitGetService = (page) => {
 export const YakitGetByIdService = (id, page) => {
   return http.get(`/Fuel/GetFuelListByVehicleId?vehicleId=${id}&page=${page}`)
 }
-

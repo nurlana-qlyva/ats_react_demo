@@ -2,12 +2,11 @@ import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import { HomeOutlined, DeleteOutlined } from "@ant-design/icons"
 import Filter from "./filter/Filter";
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Button, DatePicker, Form, Input, Table } from 'antd';
+import { Button, Form, Input, Table } from 'antd';
 import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
-import { KMDeleteService, KMGetService, KMUpdateService } from "../../../api/service";
+import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
-import { formatDate } from "../../../utils/format";
 
 const breadcrumb = [
     {
@@ -20,7 +19,7 @@ const breadcrumb = [
 ]
 
 const EditableContext = createContext(null);
-const EditableRow = ({ index, ...props }) => {
+const EditableRow = ({ ...props }) => {
     const [form] = Form.useForm();
     return (
         <Form form={form} component={false}>
@@ -30,12 +29,157 @@ const EditableRow = ({ index, ...props }) => {
         </Form>
     );
 };
+const EditableCell = ({
+    title,
+    editable,
+    children,
+    dataIndex,
+    record,
+    handleSave,
+    errorRows,
+    ...restProps
+}) => {
+    const [editing, setEditing] = useState(false);
+    const inputRef = useRef(null);
+    const form = useContext(EditableContext);
+
+    useEffect(() => {
+        if (editing) {
+            inputRef.current?.focus();
+        }
+    }, [editing]);
+
+    const toggleEdit = () => {
+        setEditing(!editing);
+        form.setFieldsValue({
+            [dataIndex]: dataIndex === "kmLogtarih" ? record[dataIndex].split("T")[0] : record[dataIndex],
+        });
+    };
+
+    const save = async () => {
+        try {
+            const values = await form.validateFields();
+            toggleEdit();
+            handleSave({
+                ...record,
+                ...values,
+            });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
+    let childNode = children;
+    if (editable) {
+        childNode = editing ? (
+            <Form.Item
+                style={{ margin: 0 }}
+                name={dataIndex}
+                rules={[{ required: true, message: `${title} is required.` },
+
+                    // ({ getFieldValue }) => ({
+                    //     validator(_, value) {
+                    //         if (errorRows.error && dataIndex === 'guncelKm') { // Assuming 'guncelKm' is the dataIndex for the input you want to validate
+                    //             return Promise.reject('Error message'); // Return a rejection to trigger the red border
+                    //         }
+                    //         return Promise.resolve();
+                    //     },
+                    // }),
+                ]}
+            >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+    let classRow
+    if (!!errorRows) {
+        classRow = errorRows.some(row => row.aracId === record.aracId && row.error) ? 'red-text' : ''
+    }
+
+    return <td {...restProps} className={classRow}>{childNode}</td>;
+};
+
+const defaultColumns = [
+    {
+        title: 'Plaka',
+        dataIndex: 'plaka',
+    },
+    {
+        title: 'Araç Tipi',
+        dataIndex: 'aracTip',
+    },
+    {
+        title: 'Marka',
+        dataIndex: 'marka',
+    },
+    {
+        title: 'Lokasyon',
+        dataIndex: 'lokasyon',
+    },
+    {
+        title: 'Departman',
+        dataIndex: 'departman',
+    },
+    {
+        title: 'Güncel km',
+        dataIndex: 'guncelKm',
+    },
+    {
+        title: 'Yeni km',
+        dataIndex: 'yeniKm',
+        editable: true,
+    },
+    {
+        title: 'Tarih',
+        dataIndex: 'tarih',
+        editable: true,
+        render: (text) => dayjs(text).locale('tr').format('DD MMMM YYYY'),
+    },
+    {
+        title: 'Saat',
+        dataIndex: 'saat',
+        editable: true,
+    },
+];
 
 const KmUpdate = () => {
-    const [dataSource, setDataSource] = useState([]);
+    const [dataSource, setDataSource] = useState([
+        // {
+        //     key: '1',
+        //     plaka: "38 ABT 114",
+        //     aracTip: "Dorse",
+        //     marka: "Binek",
+        //     lokasyon: "Bursa",
+        //     departman: "Merkez",
+        //     eskiKm: 234,
+        //     guncelKm: 200,
+        //     kmLogtarih: "2024-01-01",
+        //     kmLogSaat: "18:00:00"
+        // },
+        // {
+        //     key: '2',
+        //     plaka: "38 ABT 114",
+        //     aracTip: "Dorse",
+        //     marka: "Binek",
+        //     lokasyon: "Bursa",
+        //     departman: "Merkez",
+        //     guncelKm: 234,
+        //     kmLogtarih: "2024-01-01",
+        //     kmLogSaat: "15:40:00"
+        // }
+    ]);
+
     const [showContext, setShowContext] = useState(false);
     const [status, setStatus] = useState(false)
-    const [errorRows, setErrorRows] = useState({});
+    const [errorRows, setErrorRows] = useState([]);
+    const [validatedRows, setValidatedRows] = useState([]);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
     const [selectedRowData, setSelectedRowData] = useState(null);
     const [tableParams, setTableParams] = useState({
@@ -44,87 +188,14 @@ const KmUpdate = () => {
             pageSize: 10,
         },
     });
-
-    const EditableCell = ({
-        title,
-        editable,
-        children,
-        dataIndex,
-        record,
-        handleSave,
-        errorRows,
-        ...restProps
-    }) => {
-        const [editing, setEditing] = useState(false);
-        const inputRef = useRef(null);
-        const form = useContext(EditableContext);
-        useEffect(() => {
-            if (editing) {
-                inputRef.current?.focus();
-            }
-        }, [editing]);
-        const toggleEdit = () => {
-            setEditing(!editing);
-            form.setFieldsValue({
-                [dataIndex]: dataIndex === "tarih" ? record[dataIndex].split("T")[0] : record[dataIndex],
-            });
-        };
-
-        const save = async () => {
-            try {
-                const values = await form.validateFields();
-                toggleEdit();
-                handleSave({
-                    ...record,
-                    ...values,
-                });
-            } catch (errInfo) {
-                console.log('Save failed:', errInfo);
-            }
-        };
-
-        let childNode = children;
-        if (editable) {
-            childNode = editing ? (
-                <Form.Item
-                    style={{
-                        margin: 0,
-                    }}
-                    name={dataIndex}
-                    rules={[
-                        {
-                            required: true,
-                            message: `${title} is required.`,
-                        },
-                    ]}
-                >
-                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-                </Form.Item>
-            ) : (
-                <div
-                    className={`editable-cell-value-wrap`}
-                    style={{
-                        paddingRight: 24,
-                    }}
-                    onClick={toggleEdit}
-                >
-                    {children}
-                </div>
-            );
-        }
-
-        const rowStyle = record?.tarih === errorRows?.tarih && errorRows?.error ? 'red-text' : ''
-
-        return <td {...restProps} className={rowStyle}>{childNode}</td>;
-    };
-
+    const [editedRows, setEditedRows] = useState({});
 
     const defaultValues = {
         kmAracId: 0,
         seferSiraNo: 0,
         yakitSiraNo: 0,
         plaka: "",
-        tarih: new Date(),
+        tarih: "",
         saat: "",
         eskiKm: 0,
         yeniKm: 0,
@@ -140,70 +211,6 @@ const KmUpdate = () => {
 
     const { control, handleSubmit, reset, setValue } = methods
 
-    // const deleteRow = (e) => {
-    //     const data = {
-    //         "siraNo": e.siraNo,
-    //         "kmAracId": e.kmAracId
-    //     }
-
-    //     KMDeleteService(data).then(res => {
-    //         if (res?.data.statusCode === 202) {
-    //             setStatus(true)
-    //         }
-    //     })
-    // }
-
-    const defaultColumns = [
-        {
-            title: 'Plaka',
-            dataIndex: 'plaka',
-        },
-        {
-            title: 'Araç Tipi',
-            dataIndex: 'aracTip',
-        },
-        {
-            title: 'Marka',
-            dataIndex: 'marka',
-        },
-        {
-            title: 'Lokasyon',
-            dataIndex: 'lokasyon',
-        },
-        {
-            title: 'Departman',
-            dataIndex: 'departman',
-        },
-        {
-            title: 'Güncel km',
-            dataIndex: 'eskiKm',
-        },
-        {
-            title: 'Yeni km',
-            dataIndex: 'yeniKm',
-            editable: true,
-        },
-        {
-            title: 'Tarih',
-            dataIndex: 'tarih',
-            editable: true,
-            render: (text) => dayjs(text).locale('tr').format('DD MMMM YYYY'),
-        },
-        {
-            title: 'Saat',
-            dataIndex: 'saat',
-            editable: true,
-        },
-        // {
-        //     title: '',
-        //     dataIndex: 'operation',
-        //     render: (_, record) =>
-        //         dataSource.length >= 1 ? (
-        //             <Button onClick={() => deleteRow(record)}><DeleteOutlined /></Button>
-        //         ) : null,
-        // },
-    ];
-
     const components = {
         body: {
             row: EditableRow,
@@ -213,7 +220,12 @@ const KmUpdate = () => {
 
     useEffect(() => {
         KMGetService(tableParams.pagination.current).then(res => {
-            setDataSource(res?.data.km_list)
+            const modifiedData = res?.data.km_list.map(item => ({
+                ...item,
+                tarih: item.tarih || dayjs(new Date()).format('YYYY-MM-DD'),
+                saat: item.saat || '00:00:00',
+            }));
+            setDataSource(modifiedData)
             setTableParams({
                 ...tableParams,
                 pagination: {
@@ -225,34 +237,64 @@ const KmUpdate = () => {
         })
     }, [status, tableParams.pagination.current])
 
-
     const handleSave = async (row) => {
         try {
             const newData = [...dataSource];
-            const index = newData.findIndex((item) => row.key === item.key);
-            const item = newData[index];
-            newData.splice(index, 1, {
-                ...item,
-                ...row,
-            });
-            setDataSource(newData);
+            const index = newData.findIndex((item) => item.aracId === row.aracId);
+            if (index > -1) {
+                const item = newData[index];
+                newData.splice(index, 1, { ...item, ...row });
+                setDataSource(newData);
 
-            const updatedValue = row;
-
-            KMUpdateService(updatedValue).then(res => {
-                if (res?.data.statusCode === 403) {
-                    setErrorRows({ ...row, error: true });
-                } else if (res?.data.statusCode === 202) {
-                    setStatus(true)
+                const body = {
+                    "siraNo": 0,
+                    "kmAracId": row.aracId,
+                    "seferSiraNo": 0,
+                    "yakitSiraNo": 0,
+                    "plaka": row.plaka,
+                    "tarih": row.tarih,
+                    "saat": row.saat,
+                    "eskiKm": row.guncelKm,
+                    "yeniKm": row.yeniKm,
+                    "fark": 0,
+                    "kaynak": "guncelle",
+                    "dorse": true,
+                    "aciklama": ""
                 }
-            })
 
+                KMValidateService(body).then(res => {
+                    if (res?.data.statusCode === 400) {
+                        if (!errorRows.some(item => item.aracId === row.aracId && item.error)) {
+                            setErrorRows(prevErrorRows => [...prevErrorRows, { ...row, error: true }]);
+                        }
+                    } else if (res?.data.statusCode === 200) {
+                        setErrorRows(prevErrorRows => prevErrorRows.map(item =>
+                            item.aracId === row.aracId ? { ...item, error: false } : item
+                        ));
+                        if (!validatedRows.some(item => item.aracId === row.aracId)) {
+                            setValidatedRows(prevErrorRows => [...prevErrorRows, {
+                                "siraNo": 0,
+                                "kmAracId": row.aracId,
+                                "seferSiraNo": 0,
+                                "yakitSiraNo": 0,
+                                "plaka": row.plaka,
+                                "tarih": row.tarih,
+                                "saat": row.saat,
+                                "eskiKm": row.guncelKm,
+                                "yeniKm": row.yeniKm,
+                                "fark": 0,
+                                "kaynak": "guncelle",
+                                "dorse": true,
+                                "aciklama": ""
+                            }]);
+                        }
+                    }
+                });
+            }
         } catch (error) {
             console.error('Error saving row:', error);
         }
     };
-
-
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current).then(res => {
             setDataSource(res?.data.km_list)
@@ -280,12 +322,8 @@ const KmUpdate = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
-                errorRows,
-            }),
-            onRow: (record) => ({
-                record,
                 errorRows
-            })
+            }),
         };
     });
 
@@ -312,6 +350,18 @@ const KmUpdate = () => {
             document.removeEventListener('click', handleOutsideClick);
         };
     }, [showContext]);
+
+    const addKm = () => {
+        console.log(validatedRows)
+        KMAddService(validatedRows).then(res => console.log(res.data))
+
+    }
+
+    // useEffect(() => {
+    //     const includesCommonItem = dataSource.some(item1 =>
+    //         errorRows.some(item2 => item1.aracId === item2.aracId)
+    //     );
+    // }, [dataSource, errorRows])
 
 
     return (
@@ -341,6 +391,10 @@ const KmUpdate = () => {
                         }
                     }}
                 />
+                <div className="flex justify-end mt-10">
+                    <Button className="primary-btn" onClick={addKm}>Güncelle</Button>
+                </div>
+
                 {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
             </div>
         </div>
