@@ -8,7 +8,7 @@ import DriverSelectInput from "../../../../../../../components/form/DriverSelect
 import MaterialListSelect from "../../../../../../../components/form/MaterialListSelect"
 import { Checkbox } from "antd"
 
-const GeneralInfo = ({ control }) => {
+const GeneralInfoUpdate = ({ control, setValue }) => {
     return (
         <>
             <div className="grid gap-1">
@@ -83,9 +83,9 @@ const GeneralInfo = ({ control }) => {
                         <div className="col-span-6">
                             <NumberInput control={control} name="" label="Tutar" />
                         </div>
-                        {/* <div className="col-span-6">
-                            <NumberInput control={control} name="" label="Kdv Tutar" />
-                        </div> */}
+                        <div className="col-span-6">
+                            <NumberInput control={control} name="" label="Kdv" />
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-4 border p-10">
@@ -117,6 +117,12 @@ const GeneralInfo = ({ control }) => {
                                 render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
+                        <div className="col-span-6">
+                            <TextInput control={control} label="Ortalama Tüketim" />
+                        </div>
+                        <div className="col-span-6">
+                            <TextInput control={control} label="Km. Başına Maliyet" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,4 +130,4 @@ const GeneralInfo = ({ control }) => {
     )
 }
 
-export default GeneralInfo
+export default GeneralInfoUpdate

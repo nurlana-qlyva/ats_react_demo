@@ -38,7 +38,6 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
                         style={{width: "200px"}}
                         placeholder="Arama"
                         allowClear
-                        onSearch={onSearch}
                     />
                     <Avatar
                         style={{ width: "40px", height: "40px" }}

@@ -48,7 +48,7 @@ const Settings = () => {
       children: 'content1'
     },
     {
-      key: 6,
+      key: 7,
       label: 'Lastik Bilgileri',
       children: 'content1'
     },

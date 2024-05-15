@@ -6,6 +6,7 @@ import GeneralInfo from './components/GeneralInfo';
 import FileUpload from '../../../../../../components/form/FileUpload';
 import { upload } from '../../../../../../../utils/upload';
 import { YakitGetByIdService } from '../../../../../../../api/service';
+import GeneralInfoUpdate from './components/GeneralInfoUpdate';
 
 
 
@@ -13,6 +14,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
     const [newModal, setNewModal] = useState(false);
+    const [updateModal, setUpdateModal] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -108,7 +110,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
             title: 'Plaka',
             dataIndex: 'plaka',
             key: 1,
-            // render: (text, record) => <Link to={`/detay/${record.aracId}`}>{text}</Link>
+            render: (text, record) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
         },
         {
             title: 'Tarih',
@@ -191,7 +193,6 @@ const YakitModal = ({ visible, onClose, ids }) => {
     })
 
     const { control, handleSubmit, reset, setValue } = methods
-    console.log(ids)
     useEffect(() => setVehicleId(ids), [ids])
     useEffect(() => {
         ids.map(id => {
@@ -230,6 +231,10 @@ const YakitModal = ({ visible, onClose, ids }) => {
         setNewModal(false)
     }
 
+    const onCloseUpdateModal = () => {
+        setUpdateModal(false)
+    }
+
     const uploadFiles = async () => {
         try {
             setLoadingFiles(true);
@@ -246,6 +251,24 @@ const YakitModal = ({ visible, onClose, ids }) => {
             key: '1',
             label: 'Genel Bilgiler',
             children: <GeneralInfo control={control} setValue={setValue} />,
+        },
+        {
+            key: '2',
+            label: 'Özel Alanlar',
+            children: <SpecialFields form="" control={control} setValue={setValue} fields={fields} setFields={setFields} />,
+        },
+        {
+            key: '3',
+            label: `[${filesUrl.length}] Ekli Belgeler`,
+            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />,
+        },
+    ];
+
+    const itemsUpdate = [
+        {
+            key: '1',
+            label: 'Genel Bilgiler',
+            children: <GeneralInfoUpdate control={control} setValue={setValue} />,
         },
         {
             key: '2',
@@ -297,6 +320,16 @@ const YakitModal = ({ visible, onClose, ids }) => {
                 width={1200}
             >
                 <Tabs defaultActiveKey="1" items={items} />
+            </Modal>
+            <Modal
+                title="Yakıt Bilgisi Güncelle"
+                open={newModal}
+                onCancel={onCloseUpdateModal}
+                maskClosable={false}
+                footer={addModalFooter}
+                width={1200}
+            >
+                <Tabs defaultActiveKey="1" items={itemsUpdate} />
             </Modal>
             <Table
                 columns={columns}

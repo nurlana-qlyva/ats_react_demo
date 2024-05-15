@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Checkbox, Table, Popover, Button, Input } from 'antd';
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import { MenuOutlined, PlusOutlined, HomeOutlined } from "@ant-design/icons"
+import { MenuOutlined, HomeOutlined } from "@ant-design/icons"
 import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from "../../../api/service";
 import AddModal from "./components/add/AddModal";
 import Filter from "./components/filter/Filter";
