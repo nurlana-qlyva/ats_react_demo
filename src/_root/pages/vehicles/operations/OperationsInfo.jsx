@@ -4,7 +4,7 @@ import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from "react-icons/fa6
 import { FaFire, FaWallet, FaCarCrash } from "react-icons/fa";
 import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } from "react-icons/md";
 import { useState } from "react";
-import YakitModal from "./components/yakit/YakitModal";
+import YakitModal from "./yakit/YakitModal";
 
 const OperationsInfo = ({ ids }) => {
     const [selectedItem, setSelectedItem] = useState(null);

@@ -2,10 +2,10 @@ import { Button, Dropdown, Space } from "antd";
 import { DownOutlined, UserOutlined, IdcardOutlined, CarOutlined, ApartmentOutlined, ApiOutlined, BranchesOutlined, CreditCardOutlined, DatabaseOutlined, SolutionOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { PiGearSixBold } from "react-icons/pi";
 import { MdHealthAndSafety } from "react-icons/md";
-import RuhsatModal from "./components/RuhsatModal";
+import RuhsatModal from "./detail-modals/RuhsatModal";
 import { useState } from "react";
-import TeknikModal from "./components/TeknikModal";
-import DriversModal from "./components/DriversModal";
+import TeknikModal from "./detail-modals/TeknikModal";
+import DriversModal from "./detail-modals/DriversModal";
 
 const DetailInfo = ({ id }) => {
     const [selectedItem, setSelectedItem] = useState(null);

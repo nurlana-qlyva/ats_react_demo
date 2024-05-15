@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { FunnelPlotOutlined } from "@ant-design/icons"
 import { Button, Drawer } from 'antd'
-import SelectInput from '../../../../components/form/SelectInput'
-import MarkaSelectInput from '../../../../components/form/MarkaSelectInput'
-import ModelSelectInput from '../../../../components/form/ModelSelectInput'
-import TextInput from '../../../../components/form/TextInput'
-import NumberInput from '../../../../components/form/NumberInput'
-import MaterialListSelect from '../../../../components/form/MaterialListSelect'
+import SelectInput from '../../../components/form/SelectInput'
+import MarkaSelectInput from '../../../components/form/MarkaSelectInput'
+import ModelSelectInput from '../../../components/form/ModelSelectInput'
+import TextInput from '../../../components/form/TextInput'
+import NumberInput from '../../../components/form/NumberInput'
+import MaterialListSelect from '../../../components/form/MaterialListSelect'
 
 const Filter = ({ control, setValue, handleSearchFilters, clear, hasValue }) => {
 
@@ -40,9 +40,6 @@ const Filter = ({ control, setValue, handleSearchFilters, clear, hasValue }) => 
             </Button>
             <Drawer title={title} onClose={onCloseDrawer} open={openDrawer}>
                 <div className="grid gap-1">
-                    <div className="col-span-6 border p-10 align-center">
-                        <TextInput control={control} name="aracId" label="Araç İd" />
-                    </div>
                     <div className="col-span-6 border p-10 align-center">
                         <TextInput control={control} name="plaka" label="Plaka" />
                     </div>

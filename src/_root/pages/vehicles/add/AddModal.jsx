@@ -3,9 +3,9 @@ import { Button, Modal, Tabs } from 'antd'
 import { PlusOutlined } from "@ant-design/icons"
 import GeneralInfo from './components/GeneralInfo';
 import { useForm } from 'react-hook-form';
-import { formatDate } from '../../../../../utils/format';
-import { NewVehicleAddService } from '../../../../../api/service';
-import SpecialFields from '../../../../components/form/SpecialFields';
+import { formatDate } from '../../../../utils/format';
+import { NewVehicleAddService } from '../../../../api/service';
+import SpecialFields from '../../../components/form/SpecialFields';
 
 const AddModal = ({ setStatus, data }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);

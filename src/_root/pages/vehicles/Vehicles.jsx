@@ -3,11 +3,11 @@ import { Checkbox, Table, Popover, Button, Input } from 'antd';
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons"
 import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from "../../../api/service";
-import AddModal from "./components/add/AddModal";
-import Filter from "./components/filter/Filter";
+import AddModal from "./add/AddModal";
+import Filter from "./filter/Filter";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import OperationsInfo from "./components/operations/OperationsInfo";
+import OperationsInfo from "./operations/OperationsInfo";
 
 const breadcrumb = [
     {

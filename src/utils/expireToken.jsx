@@ -1,6 +1,6 @@
 export function setItemWithExpiration(key, value, expirationHours) {
     const today = new Date();
-    today.setHours(23, 59, 59, 999);
+    today.setHours(21, 59, 59, 999);
 
     const expirationTime = today.getTime() + (expirationHours * 60 * 60 * 1000);
 

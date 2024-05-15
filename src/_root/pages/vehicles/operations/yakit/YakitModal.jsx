@@ -1,11 +1,11 @@
 import { Modal, Button, Table, Tabs, message } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import SpecialFields from '../../../../../../components/form/SpecialFields';
+import SpecialFields from '../../../../components/form/SpecialFields';
 import GeneralInfo from './components/GeneralInfo';
-import FileUpload from '../../../../../../components/form/FileUpload';
-import { upload } from '../../../../../../../utils/upload';
-import { YakitGetByIdService } from '../../../../../../../api/service';
+import FileUpload from '../../../../components/form/FileUpload';
+import { upload } from '../../../../../utils/upload';
+import { YakitGetByIdService } from '../../../../../api/service';
 import GeneralInfoUpdate from './components/GeneralInfoUpdate';
 
 
@@ -268,7 +268,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfoUpdate control={control} setValue={setValue} />,
+            children: <GeneralInfoUpdate control={control} />,
         },
         {
             key: '2',
@@ -301,6 +301,17 @@ const YakitModal = ({ visible, onClose, ids }) => {
         ]
     )
 
+    const updateModalFooter = (
+        [
+            <Button key="submit" className="btn primary-btn">
+                Güncelle
+            </Button>,
+            <Button key="back" className="btn cancel-btn" onClick={onCloseUpdateModal}>
+                İptal
+            </Button>
+        ]
+    )
+
     return (
         <Modal
             title="Yakıt Bilgileri Plaka: [16 EG 1231 [BMW - X6]]"
@@ -323,10 +334,10 @@ const YakitModal = ({ visible, onClose, ids }) => {
             </Modal>
             <Modal
                 title="Yakıt Bilgisi Güncelle"
-                open={newModal}
+                open={updateModal}
                 onCancel={onCloseUpdateModal}
                 maskClosable={false}
-                footer={addModalFooter}
+                footer={updateModalFooter}
                 width={1200}
             >
                 <Tabs defaultActiveKey="1" items={itemsUpdate} />

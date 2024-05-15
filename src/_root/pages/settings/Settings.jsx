@@ -1,7 +1,7 @@
 import { HomeOutlined } from "@ant-design/icons"
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb"
 import { Tabs } from "antd"
-import FirmaInfo from "./components/FirmaInfo"
+import FirmaInfo from "./tabs/FirmaInfo"
 
 const breadcrumb = [
   {

@@ -1,14 +1,14 @@
 import { Controller } from "react-hook-form"
-import DateInput from "../../../../../../../components/form/DateInput"
-import NumberInput from "../../../../../../../components/form/NumberInput"
-import SelectInput from "../../../../../../../components/form/SelectInput"
-import TextInput from "../../../../../../../components/form/TextInput"
-import LocationTreeSelect from "../../../../../../../components/form/LocationTreeSelect"
-import DriverSelectInput from "../../../../../../../components/form/DriverSelectInput"
-import MaterialListSelect from "../../../../../../../components/form/MaterialListSelect"
+import DateInput from "../../../../../components/form/DateInput"
+import NumberInput from "../../../../../components/form/NumberInput"
+import SelectInput from "../../../../../components/form/SelectInput"
+import TextInput from "../../../../../components/form/TextInput"
+import LocationTreeSelect from "../../../../../components/form/LocationTreeSelect"
+import DriverSelectInput from "../../../../../components/form/DriverSelectInput"
+import MaterialListSelect from "../../../../../components/form/MaterialListSelect"
 import { Checkbox } from "antd"
 
-const GeneralInfoUpdate = ({ control, setValue }) => {
+const GeneralInfo = ({ control }) => {
     return (
         <>
             <div className="grid gap-1">
@@ -83,9 +83,9 @@ const GeneralInfoUpdate = ({ control, setValue }) => {
                         <div className="col-span-6">
                             <NumberInput control={control} name="" label="Tutar" />
                         </div>
-                        <div className="col-span-6">
-                            <NumberInput control={control} name="" label="Kdv" />
-                        </div>
+                        {/* <div className="col-span-6">
+                            <NumberInput control={control} name="" label="Kdv Tutar" />
+                        </div> */}
                     </div>
                 </div>
                 <div className="col-span-4 border p-10">
@@ -117,12 +117,6 @@ const GeneralInfoUpdate = ({ control, setValue }) => {
                                 render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
-                        <div className="col-span-6">
-                            <TextInput control={control} label="Ortalama Tüketim" />
-                        </div>
-                        <div className="col-span-6">
-                            <TextInput control={control} label="Km. Başına Maliyet" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -130,4 +124,4 @@ const GeneralInfoUpdate = ({ control, setValue }) => {
     )
 }
 
-export default GeneralInfoUpdate
+export default GeneralInfo

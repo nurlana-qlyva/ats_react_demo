@@ -1,12 +1,12 @@
-import TextInput from "../../../../../components/form/TextInput"
-import NumberInput from "../../../../../components/form/NumberInput"
-import SelectInput from "../../../../../components/form/SelectInput"
-import LocationTreeSelect from "../../../../../components/form/LocationTreeSelect"
-import MarkaSelectInput from "../../../../../components/form/MarkaSelectInput"
-import ModelSelectInput from "../../../../../components/form/ModelSelectInput"
-import DriverSelectInput from "../../../../../components/form/DriverSelectInput"
-import MaterialListSelect from "../../../../../components/form/MaterialListSelect"
-import DateInput from "../../../../../components/form/DateInput"
+import TextInput from "../../../../components/form/TextInput"
+import NumberInput from "../../../../components/form/NumberInput"
+import SelectInput from "../../../../components/form/SelectInput"
+import LocationTreeSelect from "../../../../components/form/LocationTreeSelect"
+import MarkaSelectInput from "../../../../components/form/MarkaSelectInput"
+import ModelSelectInput from "../../../../components/form/ModelSelectInput"
+import DriverSelectInput from "../../../../components/form/DriverSelectInput"
+import MaterialListSelect from "../../../../components/form/MaterialListSelect"
+import DateInput from "../../../../components/form/DateInput"
 
 
 const GeneralInfo = ({ control, setValue }) => {
