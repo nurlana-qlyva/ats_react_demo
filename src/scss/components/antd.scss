@@ -168,10 +168,11 @@
 //     color: $secondary !important;
 // }
 
-.settings :where(.css-kghr11).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
-.settings :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+:where(.css-kghr11).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
 :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
 :where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-btn:active,
-:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active {
+:where(.css-dev-only-do-not-override-kghr11).ant-tabs .ant-tabs-tab-remove:active,
+:where(.css-kghr11).ant-tabs .ant-tabs-tab:hover {
     color: $secondary !important;
 }

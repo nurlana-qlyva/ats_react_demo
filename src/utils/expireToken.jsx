@@ -1,11 +1,9 @@
 export function setItemWithExpiration(key, value, expirationHours) {
-    const today = new Date();
-    today.setHours(21, 59, 59, 999);
-
-    const expirationTime = today.getTime() + (expirationHours * 60 * 60 * 1000);
+    const now = new Date();
+    const expirationTime = now.getTime() + expirationHours * 60 * 60 * 1000;
 
     localStorage.setItem(key, JSON.stringify(value));
-    localStorage.setItem(`${key}_expire`, JSON.stringify(expirationTime));
+    localStorage.setItem(`${key}_expire`, expirationTime.toString());
 }
 
 export function getItemWithExpiration(key) {
@@ -16,11 +14,12 @@ export function getItemWithExpiration(key) {
         return null;
     }
 
-    const expirationTime = JSON.parse(itemExpire);
+    const expirationTime = parseInt(itemExpire, 10);
     const currentTime = new Date().getTime();
 
-    console.log(currentTime)
-    console.log(expirationTime)
+    console.log('now: ' + new Date(currentTime));
+    console.log(new Date(expirationTime));
+
     if (currentTime > expirationTime) {
         localStorage.removeItem(key);
         localStorage.removeItem(`${key}_expire`);
