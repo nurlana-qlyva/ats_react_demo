@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
-import { formatDate, formatTime } from "../../../utils/format";
+import { formatDate, formatDateKm, formatTime } from "../../../utils/format";
 
 const breadcrumb = [
     {
@@ -38,6 +38,7 @@ const EditableCell = ({
     handleSave,
     errorRows,
     validatedRows,
+    handleRemoveValidatedRow,
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -69,17 +70,25 @@ const EditableCell = ({
             console.log('Save failed:', errInfo);
         }
     };
+
+    const clearInput = () => {
+        form.setFieldsValue({ [dataIndex]: '' });
+        handleRemoveValidatedRow(record.aracId);
+    };
+
     let childNode = children;
+
     if (editable) {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
                 name={dataIndex}
-            // rules={[
-            //     { required: true, message: `${title} is required.` }
-            // ]}
             >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                <Input ref={inputRef} allowClear onPressEnter={save} onBlur={save} onChange={(e) => {
+                    if (e.target.value === '') {
+                        clearInput();
+                    }
+                }} />
             </Form.Item>
         ) : (
             <div
@@ -324,6 +333,11 @@ const KmUpdate = () => {
         }
     };
 
+    const handleRemoveValidatedRow = (kmAracId) => {
+        const filteredRows = validatedRows.filter(row => row.kmAracId !== kmAracId);
+        setValidatedRows(filteredRows);
+    };
+
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {
             return col;
@@ -337,7 +351,8 @@ const KmUpdate = () => {
                 title: col.title,
                 handleSave,
                 errorRows,
-                validatedRows
+                validatedRows,
+                handleRemoveValidatedRow
             }),
         };
     });
@@ -376,12 +391,25 @@ const KmUpdate = () => {
             }
         })
     }
-
+    console.log(date)
 
     const content = (
         <Space direction="vertical">
-            <DatePicker placeholder="Tarih" onChange={d => setDate({ ...date, tarih: formatDate(d?.$d) })} className="w-full" />
-            <DatePicker picker="time" placeholder="Saat" onChange={t => setDate({ ...date, saat: formatTime(t?.$d) })} className="w-full" />
+            <DatePicker placeholder="Tarih" onChange={d => {
+                if (d) {
+                    setDate({ ...date, tarih: formatDateKm(d?.$d) })
+                } else {
+                    setDate({ ...date, tarih: formatDateKm(new Date()) })
+                }
+
+            }} className="w-full" />
+            <DatePicker picker="time" placeholder="Saat" onChange={t => {
+                if (t) {
+                    setDate({ ...date, saat: formatTime(t?.$d) })
+                } else {
+                    setDate({ ...date, saat: formatTime(new Date()) })
+                }
+            }} className="w-full" />
         </Space>
     )
 
