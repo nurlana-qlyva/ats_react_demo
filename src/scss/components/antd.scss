@@ -194,3 +194,17 @@
 .km .ant-btn {
     height: fit-content !important;
 }
+
+:where(.css-dev-only-do-not-override-kghr11).ant-btn-primary {
+    background-color: $primary !important;
+}
+
+.ant-popconfirm-buttons :where(.css-dev-only-do-not-override-kghr11).ant-btn-default {
+    background-color: $error !important;
+    color: $white !important;
+    border: none !important;
+}
+
+.ant-popconfirm-buttons :where(.css-dev-only-do-not-override-kghr11).ant-btn-default:hover {
+    border: none !important;
+}

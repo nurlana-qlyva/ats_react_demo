@@ -22,7 +22,8 @@
     border-radius: 2px;
 }
 
-.settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:nth-child(7),:nth-child(8),:nth-child(9) {
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:nth-child(7),:nth-child(8),:nth-child(9),
+.editable-row td:nth-child(7),:nth-child(8),:nth-child(9) {
     width: 140px !important;
 }
 
@@ -53,7 +54,7 @@
     color: $secondary !important;
 }
 
-.km-update {
+.km-update:disabled {
     background-color: #5b548b6c !important;
     color: $white !important;
 }

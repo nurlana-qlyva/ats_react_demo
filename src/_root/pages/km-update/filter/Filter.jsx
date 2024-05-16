@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SearchOutlined } from "@ant-design/icons"
 import { IoIosRefresh, IoIosMore } from "react-icons/io";
-import { Button, Popover, Select } from 'antd'
+import { Button, message, Popconfirm, Popover, Select } from 'antd'
 import SelectInput from '../../../components/form/SelectInput';
 import { CustomCodeControlService, KMGetByIdService } from '../../../../api/service';
 
@@ -41,6 +41,14 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content, 
       setIsDisabled(false)
     }
   }, [errorRows, validatedRows])
+
+  const cancel = (e) => {
+    // message.error('Click on No');
+  };
+
+  const confirm = (e) => {
+    addKm()
+  };
 
   return (
     <div className='flex flex-col gap-1'>
@@ -95,7 +103,17 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content, 
           >
             <Button><IoIosMore /></Button>
           </Popover>
-          <Button className="primary-btn km-update" onClick={addKm} disabled={isDisabled}>Güncelle</Button>
+
+          <Popconfirm
+            title="Güncelle"
+            description="Hızlı km verilerini güncellemeye eminmisiniz?"
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="Evet"
+            cancelText="Hayır"
+          >
+            <Button className="primary-btn km-update" disabled={isDisabled}>Güncelle</Button>
+          </Popconfirm>
         </div>
       </div>
     </div>
