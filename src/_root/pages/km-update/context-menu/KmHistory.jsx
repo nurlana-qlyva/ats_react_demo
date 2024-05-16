@@ -1,5 +1,6 @@
 import { Form, Input, Table } from "antd"
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { KMLogListGetByIdService, KMLogListGetService } from "../../../../api/service";
 
 const EditableContext = createContext(null);
 const EditableRow = ({ ...props }) => {
@@ -119,7 +120,7 @@ const defaultColumns = [
     },
 ];
 
-const KmUpdate = () => {
+const KmUpdate = ({ data }) => {
     const [dataSource, setDataSource] = useState([]);
     const [showContext, setShowContext] = useState(false);
     const [status, setStatus] = useState(false)
@@ -132,8 +133,21 @@ const KmUpdate = () => {
         },
     });
 
-    const handleTableChange = (pagination, filters, sorter) => {
+    useEffect(() => {
+        KMLogListGetByIdService(data.aracId, tableParams.pagination.current).then(res => {
+            console.log(res.data)
+            setDataSource(res?.data.km_list)
+            // setTableParams({
+            //     ...tableParams,
+            //     pagination: {
+            //         ...tableParams.pagination,
+            //         total: res?.data.total_count,
+            //     },
+            // });
+        })
+    }, [])
 
+    const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
             pagination,
             filters,

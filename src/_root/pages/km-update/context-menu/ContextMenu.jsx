@@ -41,7 +41,7 @@ const ContextMenu = ({ position, rowData }) => {
                 footer={footer}
                 width={1200}
             >
-                <KmHistory />
+                <KmHistory data={rowData} />
             </Modal>
         </div>
     );
