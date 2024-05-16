@@ -391,7 +391,7 @@ const KmUpdate = () => {
                 <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} content={content} />
             </div>
 
-            <div className="content">
+            <div className="content settings">
                 <Table
                     components={components}
                     rowClassName={() => 'editable-row'}
