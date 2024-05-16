@@ -38,6 +38,7 @@ const EditableCell = ({
     record,
     handleSave,
     errorRows,
+    validatedRows,
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -91,12 +92,17 @@ const EditableCell = ({
             </div>
         );
     }
-    let classRow
-    if (!!errorRows) {
-        classRow = errorRows.some(row => row.kmAracId === record.aracId && row.error) ? 'red-text' : 'bold-text'
+    let error
+    let valid
+    if (errorRows?.length > 0) {
+        error = errorRows.some(row => row.kmAracId === record.aracId && row.error) ? 'error-text' : ''
     }
 
-    return <td {...restProps} className={classRow}>{childNode}</td>;
+    if (validatedRows?.length > 0) {
+        valid = validatedRows.some(row => row.kmAracId === record.aracId) ? 'success-text' : ''
+    }
+
+    return <td {...restProps} className={`${error} ${valid}`}>{childNode}</td>;
 };
 
 const defaultColumns = [
@@ -276,7 +282,7 @@ const KmUpdate = () => {
                                 setErrorRows(prevErrorRows => [...prevErrorRows, { ...body, error: true }]);
                             }
 
-                            const filteredValidatedRows = errorRows.filter(item => item.kmAracId !== row.aracId)
+                            const filteredValidatedRows = validatedRows.filter(item => item.kmAracId !== row.aracId)
                             setValidatedRows(filteredValidatedRows);
                         }
                         else if (res?.data.statusCode === 200) {
@@ -298,9 +304,6 @@ const KmUpdate = () => {
                 } else {
                     const filteredErrorRows = errorRows.filter(item => item.kmAracId !== row.aracId)
                     setErrorRows(filteredErrorRows);
-
-                    const filteredValidatedRows = errorRows.filter(item => item.kmAracId !== row.aracId)
-                    setValidatedRows(filteredValidatedRows);
                 }
             }
         } catch (error) {
@@ -335,7 +338,8 @@ const KmUpdate = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
-                errorRows
+                errorRows,
+                validatedRows
             }),
         };
     });

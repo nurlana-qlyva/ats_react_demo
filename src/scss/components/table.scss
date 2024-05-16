@@ -26,11 +26,14 @@
     width: 75px !important;
 }
 
-.red-text {
-    color: red;
+.error-text {
+    color: $error;
+    font-weight: 600;
+
 }
 
-.bold-text {
+.success-text {
+    color: $success;
     font-weight: 600;
 }
 

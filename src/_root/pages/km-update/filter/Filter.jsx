@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SearchOutlined } from "@ant-design/icons"
 import { IoIosRefresh, IoIosMore } from "react-icons/io";
 import { Button, Popover, Select } from 'antd'
@@ -7,10 +7,10 @@ import { CustomCodeControlService, KMGetByIdService } from '../../../../api/serv
 
 
 const Filter = ({ setDataSource, setTableParams, tableParams, control, content, addKm, errorRows, validatedRows }) => {
-
   const [plaka, setPlaka] = useState(0)
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(true)
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
@@ -33,6 +33,14 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content, 
       });
     })
   }
+
+  useEffect(() => {
+    if (errorRows.length > 0 || validatedRows.length === 0) {
+      setIsDisabled(true)
+    } else if (validatedRows.length > 0 && errorRows.length === 0) {
+      setIsDisabled(false)
+    }
+  }, [errorRows, validatedRows])
 
   return (
     <div className='flex flex-col gap-1'>
@@ -87,7 +95,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content, 
           >
             <Button><IoIosMore /></Button>
           </Popover>
-          <Button className="primary-btn" onClick={addKm} disabled={(errorRows.length === 0) || (validatedRows.length !== 0)}>Güncelle</Button>
+          <Button className="primary-btn" onClick={addKm} disabled={isDisabled}>Güncelle</Button>
         </div>
       </div>
     </div>
