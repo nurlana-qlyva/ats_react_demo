@@ -191,3 +191,7 @@
 .settings .ant-table-row:hover {
     background-color: aliceblue !important;
 }
+
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody>tr>td {
+    padding: 4px 16px !important;
+}

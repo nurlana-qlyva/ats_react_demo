@@ -38,8 +38,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content }
     <div className='flex flex-col gap-1'>
       <div className="grid gap-1 align-center">
         <div className="col-span-2">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="plaka">Plaka</label>
+          <div className="flex flex-col-gap-1">
             <Select
               showSearch
               allowClear
@@ -56,17 +55,19 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content }
               onChange={e => {
                 setPlaka(e)
               }}
+              placeholder="Plaka"
+              className='w-full'
             />
           </div>
         </div>
         <div className="col-span-2">
-          <SelectInput control={control} name="aracTip" label="Araç Tipi" />
+          <SelectInput control={control} name="aracTip" label="" placeholder="Araç Tipi" />
         </div>
         <div className="col-span-2">
-          <SelectInput control={control} name="lokasyon" label="Lokasyon" />
+          <SelectInput control={control} name="lokasyon" label="" placeholder="Lokasyon" />
         </div>
         <div className="col-span-2">
-          <SelectInput control={control} name="departman" label="Departman" />
+          <SelectInput control={control} name="departman" label="" placeholder="Departman" />
         </div>
         <div className="col-span-2 self-end flex gap-1">
           <Button className="primary-btn" onClick={getPlaka}>

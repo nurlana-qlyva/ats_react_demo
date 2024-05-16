@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { CodeControlService } from "../../../api/service";
 
-const SelectInput = ({ control, name, label, selectID, name2, setValue, filter }) => {
+const SelectInput = ({ control, name, label, selectID, name2, setValue, filter, placeholder }) => {
     const [data, setData] = useState([]);
 
     const handleClickSelect = () => {
@@ -50,6 +50,7 @@ const SelectInput = ({ control, name, label, selectID, name2, setValue, filter }
                                 }
                             }
                         }}
+                        placeholder={placeholder}
                     />
                 )}
             />
