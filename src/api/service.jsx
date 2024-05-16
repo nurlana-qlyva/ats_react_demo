@@ -102,8 +102,8 @@ export const RuhsatInfoUpdateService = (data) => {
 }
 
 // km 
-export const KMGetService = (page) => {
-  return http.get(`/QuickKmUpdate/GetKmUpdateList?page=${page}`)
+export const KMGetService = async (page) => {
+  return await http.get(`/QuickKmUpdate/GetKmUpdateList?page=${page}`)
 }
 
 export const KMGetByIdService = (id, page) => {

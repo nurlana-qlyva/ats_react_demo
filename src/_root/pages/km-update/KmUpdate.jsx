@@ -215,26 +215,24 @@ const KmUpdate = () => {
     useEffect(() => {
         KMGetService(tableParams.pagination.current).then(res => {
             const modifiedData = res?.data.km_list.map(item => {
-                const rows= [...validatedRows, ...errorRows]
+                const rows = [...validatedRows, ...errorRows]
                 const validatedRow = rows.find(row => row.kmAracId === item.aracId);
-                if (validatedRow) {
-                    return {
-                        ...item,
-                        tarih: validatedRow.tarih.split("-").reverse().join("."),
-                        saat: validatedRow.saat,
-                        yeniKm: validatedRow.yeniKm,
-                    };
-                } else {
-                    return {
-                        ...item,
-                        tarih: date.tarih,
-                        saat: date.saat,
-                    };
-                }
+                return {
+                    aracId: item.aracId,
+                    aracTip: item.aracTip,
+                    marka: item.marka,
+                    model: item.model,
+                    lokasyon: item.lokasyon,
+                    departman: item.departman,
+                    guncelKm: item.guncelKm,
+                    tarih: validatedRow?.tarih || date.tarih,
+                    saat: validatedRow?.saat || date.saat,
+                    yeniKm: validatedRow?.yeniKm,
+                };
             });
 
             setDataSource(modifiedData)
-            
+
 
             setTableParams({
                 ...tableParams,
@@ -311,8 +309,26 @@ const KmUpdate = () => {
 
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current).then(res => {
-            setDataSource(res?.data.km_list)
+            const modifiedData = res?.data.km_list.map(item => {
+                const rows = [...validatedRows, ...errorRows]
+                const validatedRow = rows.find(row => row.kmAracId === item.aracId);
+                return {
+                    aracId: item.aracId,
+                    aracTip: item.aracTip,
+                    marka: item.marka,
+                    model: item.model,
+                    lokasyon: item.lokasyon,
+                    departman: item.departman,
+                    guncelKm: item.guncelKm,
+                    tarih: validatedRow?.tarih || date.tarih,
+                    saat: validatedRow?.saat || date.saat,
+                    yeniKm: validatedRow?.yeniKm,
+                };
+            });
+
+            setDataSource(modifiedData)
         })
+
         setTableParams({
             pagination,
             filters,
