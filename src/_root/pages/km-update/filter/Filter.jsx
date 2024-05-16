@@ -95,7 +95,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content, 
           >
             <Button><IoIosMore /></Button>
           </Popover>
-          <Button className="primary-btn" onClick={addKm} disabled={isDisabled}>Güncelle</Button>
+          <Button className="primary-btn km-update" onClick={addKm} disabled={isDisabled}>Güncelle</Button>
         </div>
       </div>
     </div>
