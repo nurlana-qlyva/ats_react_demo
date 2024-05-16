@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
-import { formatDate, formatDateKm, formatTime } from "../../../utils/format";
+import { formatDateKm, formatTime } from "../../../utils/format";
 
 const breadcrumb = [
     {
@@ -156,32 +156,7 @@ const defaultColumns = [
 ];
 
 const KmUpdate = () => {
-    const [dataSource, setDataSource] = useState([
-        // {
-        //     key: '1',
-        //     plaka: "38 ABT 114",
-        //     aracTip: "Dorse",
-        //     marka: "Binek",
-        //     lokasyon: "Bursa",
-        //     departman: "Merkez",
-        //     eskiKm: 234,
-        //     guncelKm: 200,
-        //     kmLogtarih: "2024-01-01",
-        //     kmLogSaat: "18:00:00"
-        // },
-        // {
-        //     key: '2',
-        //     plaka: "38 ABT 114",
-        //     aracTip: "Dorse",
-        //     marka: "Binek",
-        //     lokasyon: "Bursa",
-        //     departman: "Merkez",
-        //     guncelKm: 234,
-        //     kmLogtarih: "2024-01-01",
-        //     kmLogSaat: "15:40:00"
-        // }
-    ]);
-
+    const [dataSource, setDataSource] = useState([]);
     const [showContext, setShowContext] = useState(false);
     const [status, setStatus] = useState(false)
     const [errorRows, setErrorRows] = useState([]);
@@ -194,7 +169,6 @@ const KmUpdate = () => {
             pageSize: 10,
         },
     });
-
 
     const [date, setDate] = useState({
         tarih: dayjs(new Date()).format('DD.MM.YYYY'),
@@ -240,12 +214,28 @@ const KmUpdate = () => {
 
     useEffect(() => {
         KMGetService(tableParams.pagination.current).then(res => {
-            const modifiedData = res?.data.km_list.map(item => ({
-                ...item,
-                tarih: item.tarih || date.tarih,
-                saat: item.saat || date.saat,
-            }));
+            const modifiedData = res?.data.km_list.map(item => {
+                const rows= [...validatedRows, ...errorRows]
+                const validatedRow = rows.find(row => row.kmAracId === item.aracId);
+                if (validatedRow) {
+                    return {
+                        ...item,
+                        tarih: validatedRow.tarih.split("-").reverse().join("."),
+                        saat: validatedRow.saat,
+                        yeniKm: validatedRow.yeniKm,
+                    };
+                } else {
+                    return {
+                        ...item,
+                        tarih: date.tarih,
+                        saat: date.saat,
+                    };
+                }
+            });
+
             setDataSource(modifiedData)
+            
+
             setTableParams({
                 ...tableParams,
                 pagination: {
@@ -253,9 +243,10 @@ const KmUpdate = () => {
                     total: res?.data.total_count,
                 },
             });
+
             setStatus(false)
         })
-    }, [status, tableParams.pagination.current, date])
+    }, [status, tableParams.pagination.current, date, validatedRows, errorRows])
 
     const handleSave = async (row) => {
         try {
@@ -391,7 +382,6 @@ const KmUpdate = () => {
             }
         })
     }
-    console.log(date)
 
     const content = (
         <Space direction="vertical">
