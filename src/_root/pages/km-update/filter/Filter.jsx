@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { SearchOutlined } from "@ant-design/icons"
 import { IoIosRefresh, IoIosMore } from "react-icons/io";
-import { Button, Dropdown, Popover, Select } from 'antd'
+import { Button, Popover, Select } from 'antd'
 import SelectInput from '../../../components/form/SelectInput';
 import { CustomCodeControlService, KMGetByIdService } from '../../../../api/service';
 
 
-const Filter = ({ setDataSource, setTableParams, tableParams, control, content }) => {
+const Filter = ({ setDataSource, setTableParams, tableParams, control, content, addKm, errorRows, validatedRows }) => {
 
   const [plaka, setPlaka] = useState(0)
   const [data, setData] = useState([]);
@@ -69,7 +69,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content }
         <div className="col-span-2">
           <SelectInput control={control} name="departman" label="" placeholder="Departman" />
         </div>
-        <div className="col-span-2 self-end flex gap-1">
+        <div className="col-span-2 flex gap-1">
           <Button className="primary-btn" onClick={getPlaka}>
             <SearchOutlined />
           </Button>
@@ -77,7 +77,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content }
             <IoIosRefresh />
           </Button>
         </div>
-        <div className="col-span-2 self-end justify-self">
+        <div className="col-span-2 flex justify-self gap-1">
           <Popover
             placement="bottom"
             content={content}
@@ -87,6 +87,7 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control, content }
           >
             <Button><IoIosMore /></Button>
           </Popover>
+          <Button className="primary-btn" onClick={addKm} disabled={(errorRows.length === 0) || (validatedRows.length !== 0)}>Güncelle</Button>
         </div>
       </div>
     </div>

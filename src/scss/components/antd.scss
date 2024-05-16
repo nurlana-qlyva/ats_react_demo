@@ -177,7 +177,7 @@
     color: $secondary !important;
 }
 
-:where(.css-dev-only-do-not-override-kghr11).ant-btn-default:disabled {
+.km :where(.css-dev-only-do-not-override-kghr11).ant-btn-default:disabled {
     background-color: #5b548b6c !important;
     color: $white !important;
 }
@@ -194,4 +194,8 @@
 
 .settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody>tr>td {
     padding: 4px 16px !important;
+}
+
+.km .ant-btn {
+    height: fit-content !important;
 }

@@ -388,7 +388,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content">
-                <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} content={content} />
+                <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} content={content} addKm={addKm} errorRows={errorRows} validatedRows={validatedRows} />
             </div>
 
             <div className="content settings">
@@ -408,9 +408,7 @@ const KmUpdate = () => {
                         }
                     }}
                 />
-                <div className="flex justify-end mt-10">
-                    <Button className="primary-btn" onClick={addKm} disabled={!!(errorRows.length > 0) || !(validatedRows.length !== 0)}>Güncelle</Button>
-                </div>
+
                 {contextHolder}
 
                 {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
