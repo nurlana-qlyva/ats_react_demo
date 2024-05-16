@@ -119,13 +119,13 @@ export const KMAddService = (data) => {
 }
 
 // km history
-// export const KMGetService = (page) => {
-//   return http.get(`/KmLog/GetKmLogList?page=${page}`)
-// }
+export const KMLogListGetService = (page) => {
+  return http.get(`/KmLog/GetKmLogList?page=${page}`)
+}
 
-// export const KMGetByIdService = (id, page) => {
-//   return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
-// }
+export const KMLogListGetByIdService = (id, page) => {
+  return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
+}
 
 // export const KMDeleteService = (data) => {
 //   return http.post(`/KmLog/DeleteKmLog`, data)

@@ -1,5 +1,6 @@
 import { Button, Modal } from "antd";
 import { useState } from "react";
+import KmHistory from "./KmHistory"
 
 const ContextMenu = ({ position, rowData }) => {
     const [visible, setVisible] = useState(false)
@@ -10,7 +11,7 @@ const ContextMenu = ({ position, rowData }) => {
         top: position.y - 230,
         border: '1px solid #ccc',
         backgroundColor: '#fff',
-        zIndex: 2000,
+        zIndex: 200,
         padding: 20,
         boxShadow: "0px 0px 10px 1px rgba(0,0,0,.2)"
     };
@@ -33,14 +34,14 @@ const ContextMenu = ({ position, rowData }) => {
             <Button>Güncel Km Düzeltme</Button>
             <Button>Km Sıfırlama</Button>
             <Modal
-                title="Yakıt Bilgileri Plaka: [16 EG 1231 [BMW - X6]]"
+                title={`Kilometre Güncelleme Geçmişi: ${rowData?.plaka}`}
                 open={visible}
                 onCancel={onClose}
                 maskClosable={false}
                 footer={footer}
                 width={1200}
             >
-
+                <KmHistory />
             </Modal>
         </div>
     );
