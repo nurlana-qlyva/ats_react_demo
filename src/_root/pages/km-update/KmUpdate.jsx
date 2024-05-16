@@ -2,7 +2,7 @@ import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import { HomeOutlined } from "@ant-design/icons"
 import Filter from "./filter/Filter";
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Button, DatePicker, Form, Input, Menu, message, Space, Table } from 'antd';
+import { DatePicker, Form, Input, message, Space, Table } from 'antd';
 import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
@@ -31,7 +31,6 @@ const EditableRow = ({ ...props }) => {
     );
 };
 const EditableCell = ({
-    title,
     editable,
     children,
     dataIndex,
@@ -221,7 +220,7 @@ const KmUpdate = () => {
         defaultValues: defaultValues
     })
 
-    const { control, handleSubmit, reset, setValue } = methods
+    const { control } = methods
 
     const components = {
         body: {
@@ -264,7 +263,7 @@ const KmUpdate = () => {
                     "seferSiraNo": 0,
                     "yakitSiraNo": 0,
                     "plaka": row.plaka,
-                    "tarih": row.tarih,
+                    "tarih": row.tarih.split(".").reverse().join("-"),
                     "saat": row.saat,
                     "eskiKm": row.guncelKm,
                     "yeniKm": row.yeniKm,
@@ -349,7 +348,7 @@ const KmUpdate = () => {
         }
     };
 
-    const handleContextMenu = (event, record, rowIndex) => {
+    const handleContextMenu = (event, record) => {
         event.preventDefault();
         setContextMenuPosition({ x: event.pageX, y: event.pageY });
         setSelectedRowData(record);

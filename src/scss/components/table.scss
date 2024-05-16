@@ -27,14 +27,14 @@
 }
 
 .error-text {
-    color: $error;
-    font-weight: 600;
+    color: $error !important;
+    font-weight: 600 !important;
 
 }
 
 .success-text {
-    color: $success;
-    font-weight: 600;
+    color: $success !important;
+    font-weight: 600 !important;
 }
 
 .context-menu {
