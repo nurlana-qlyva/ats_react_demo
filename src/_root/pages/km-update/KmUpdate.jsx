@@ -371,6 +371,8 @@ const KmUpdate = () => {
             if (res?.data.statusCode === 200) {
                 success()
                 setStatus(true)
+                setValidatedRows([])
+                setErrorRows([])
             }
         })
     }
