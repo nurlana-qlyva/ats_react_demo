@@ -13,6 +13,7 @@
 .editable-cell-value-wrap {
     padding: 5px 12px;
     cursor: pointer;
+    height: 32px;
 }
 
 .editable-row:hover .editable-cell-value-wrap {
@@ -27,6 +28,10 @@
 
 .red-text {
     color: red;
+}
+
+.bold-text {
+    font-weight: 600;
 }
 
 .context-menu {

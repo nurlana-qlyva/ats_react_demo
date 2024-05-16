@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { SearchOutlined } from "@ant-design/icons"
-import { IoIosRefresh } from "react-icons/io";
-import { Button, Select } from 'antd'
+import { IoIosRefresh, IoIosMore } from "react-icons/io";
+import { Button, Dropdown, Popover, Select } from 'antd'
 import SelectInput from '../../../components/form/SelectInput';
 import { CustomCodeControlService, KMGetByIdService } from '../../../../api/service';
 
 
-const Filter = ({ setDataSource, setTableParams, tableParams, control }) => {
+const Filter = ({ setDataSource, setTableParams, tableParams, control, content }) => {
 
   const [plaka, setPlaka] = useState(0)
-
   const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false)
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
 
   const handleClickSelect = () => {
     CustomCodeControlService("Vehicle/GetVehiclePlates").then(res => {
@@ -72,6 +75,17 @@ const Filter = ({ setDataSource, setTableParams, tableParams, control }) => {
           <Button className="cancel-btn">
             <IoIosRefresh />
           </Button>
+        </div>
+        <div className="col-span-2 self-end justify-self">
+          <Popover
+            placement="bottom"
+            content={content}
+            trigger="click"
+            open={open}
+            onOpenChange={handleOpenChange}
+          >
+            <Button><IoIosMore /></Button>
+          </Popover>
         </div>
       </div>
     </div>

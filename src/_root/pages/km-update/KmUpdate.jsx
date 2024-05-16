@@ -1,12 +1,13 @@
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import { HomeOutlined, DeleteOutlined } from "@ant-design/icons"
+import { HomeOutlined } from "@ant-design/icons"
 import Filter from "./filter/Filter";
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Button, Form, Input, Table } from 'antd';
+import { Button, DatePicker, Form, Input, Menu, message, Space, Table } from 'antd';
 import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
+import { formatDate, formatTime } from "../../../utils/format";
 
 const breadcrumb = [
     {
@@ -74,17 +75,9 @@ const EditableCell = ({
             <Form.Item
                 style={{ margin: 0 }}
                 name={dataIndex}
-                rules={[{ required: true, message: `${title} is required.` },
-
-                    // ({ getFieldValue }) => ({
-                    //     validator(_, value) {
-                    //         if (errorRows.error && dataIndex === 'guncelKm') { // Assuming 'guncelKm' is the dataIndex for the input you want to validate
-                    //             return Promise.reject('Error message'); // Return a rejection to trigger the red border
-                    //         }
-                    //         return Promise.resolve();
-                    //     },
-                    // }),
-                ]}
+            // rules={[
+            //     { required: true, message: `${title} is required.` }
+            // ]}
             >
                 <Input ref={inputRef} onPressEnter={save} onBlur={save} />
             </Form.Item>
@@ -100,7 +93,7 @@ const EditableCell = ({
     }
     let classRow
     if (!!errorRows) {
-        classRow = errorRows.some(row => row.aracId === record.aracId && row.error) ? 'red-text' : ''
+        classRow = errorRows.some(row => row.kmAracId === record.aracId && row.error) ? 'red-text' : 'bold-text'
     }
 
     return <td {...restProps} className={classRow}>{childNode}</td>;
@@ -188,7 +181,21 @@ const KmUpdate = () => {
             pageSize: 10,
         },
     });
-    const [editedRows, setEditedRows] = useState({});
+
+
+    const [date, setDate] = useState({
+        tarih: dayjs(new Date()).format('YYYY-MM-DD'),
+        saat: dayjs(new Date()).format('HH:mm:ss')
+    })
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'Hızlı Km Güncellendi!',
+        });
+    };
 
     const defaultValues = {
         kmAracId: 0,
@@ -222,8 +229,8 @@ const KmUpdate = () => {
         KMGetService(tableParams.pagination.current).then(res => {
             const modifiedData = res?.data.km_list.map(item => ({
                 ...item,
-                tarih: item.tarih || dayjs(new Date()).format('YYYY-MM-DD'),
-                saat: item.saat || '00:00:00',
+                tarih: item.tarih || date.tarih,
+                saat: item.saat || date.saat,
             }));
             setDataSource(modifiedData)
             setTableParams({
@@ -235,7 +242,7 @@ const KmUpdate = () => {
             });
             setStatus(false)
         })
-    }, [status, tableParams.pagination.current])
+    }, [status, tableParams.pagination.current, date])
 
     const handleSave = async (row) => {
         try {
@@ -262,39 +269,45 @@ const KmUpdate = () => {
                     "aciklama": ""
                 }
 
-                KMValidateService(body).then(res => {
-                    if (res?.data.statusCode === 400) {
-                        if (!errorRows.some(item => item.aracId === row.aracId && item.error)) {
-                            setErrorRows(prevErrorRows => [...prevErrorRows, { ...row, error: true }]);
+                if (body.tarih && body.saat && body.yeniKm) {
+                    KMValidateService(body).then(res => {
+                        if (res?.data.statusCode === 400) {
+                            if (!errorRows.some(item => item.kmAracId === body.kmAracId)) {
+                                setErrorRows(prevErrorRows => [...prevErrorRows, { ...body, error: true }]);
+                            }
+
+                            const filteredValidatedRows = errorRows.filter(item => item.kmAracId !== row.aracId)
+                            setValidatedRows(filteredValidatedRows);
                         }
-                    } else if (res?.data.statusCode === 200) {
-                        setErrorRows(prevErrorRows => prevErrorRows.map(item =>
-                            item.aracId === row.aracId ? { ...item, error: false } : item
-                        ));
-                        if (!validatedRows.some(item => item.aracId === row.aracId)) {
-                            setValidatedRows(prevErrorRows => [...prevErrorRows, {
-                                "siraNo": 0,
-                                "kmAracId": row.aracId,
-                                "seferSiraNo": 0,
-                                "yakitSiraNo": 0,
-                                "plaka": row.plaka,
-                                "tarih": row.tarih,
-                                "saat": row.saat,
-                                "eskiKm": row.guncelKm,
-                                "yeniKm": row.yeniKm,
-                                "fark": 0,
-                                "kaynak": "guncelle",
-                                "dorse": true,
-                                "aciklama": ""
-                            }]);
+                        else if (res?.data.statusCode === 200) {
+                            const filteredErrorRows = errorRows.filter(item => item.kmAracId !== row.aracId)
+                            setErrorRows(filteredErrorRows);
+
+                            const existingIndex = validatedRows.findIndex(item => item.kmAracId === body.kmAracId);
+                            if (existingIndex > -1) {
+                                setValidatedRows(prevValidatedRows => {
+                                    const updatedRows = [...prevValidatedRows];
+                                    updatedRows[existingIndex] = { ...updatedRows[existingIndex], yeniKm: body.yeniKm, tarih: body.tarih, saat: body.saat };
+                                    return updatedRows;
+                                });
+                            } else {
+                                setValidatedRows(prevValidatedRows => [...prevValidatedRows, body]);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    const filteredErrorRows = errorRows.filter(item => item.kmAracId !== row.aracId)
+                    setErrorRows(filteredErrorRows);
+
+                    const filteredValidatedRows = errorRows.filter(item => item.kmAracId !== row.aracId)
+                    setValidatedRows(filteredValidatedRows);
+                }
             }
         } catch (error) {
             console.error('Error saving row:', error);
         }
     };
+
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current).then(res => {
             setDataSource(res?.data.km_list)
@@ -352,17 +365,21 @@ const KmUpdate = () => {
     }, [showContext]);
 
     const addKm = () => {
-        console.log(validatedRows)
-        KMAddService(validatedRows).then(res => console.log(res.data))
-
+        KMAddService(validatedRows).then(res => {
+            if (res?.data.statusCode === 200) {
+                success()
+                setStatus(true)
+            }
+        })
     }
 
-    // useEffect(() => {
-    //     const includesCommonItem = dataSource.some(item1 =>
-    //         errorRows.some(item2 => item1.aracId === item2.aracId)
-    //     );
-    // }, [dataSource, errorRows])
 
+    const content = (
+        <Space direction="vertical">
+            <DatePicker onChange={d => setDate({ ...date, tarih: formatDate(d?.$d) })} className="w-full" />
+            <DatePicker picker="time" onChange={t => setDate({ ...date, saat: formatTime(t?.$d) })} className="w-full" />
+        </Space>
+    )
 
     return (
         <div className="km">
@@ -371,7 +388,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content">
-                <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} />
+                <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} content={content} />
             </div>
 
             <div className="content">
@@ -392,8 +409,9 @@ const KmUpdate = () => {
                     }}
                 />
                 <div className="flex justify-end mt-10">
-                    <Button className="primary-btn" onClick={addKm}>Güncelle</Button>
+                    <Button className="primary-btn" onClick={addKm} disabled={!!(errorRows.length > 0) || !(validatedRows.length !== 0)}>Güncelle</Button>
                 </div>
+                {contextHolder}
 
                 {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
             </div>

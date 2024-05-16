@@ -13,8 +13,6 @@ const OperationsInfo = ({ ids }) => {
         setSelectedItem(e.key);
     };
 
-    console.log(ids)
-
     const items = [
         {
             label: 'Bakımlar',

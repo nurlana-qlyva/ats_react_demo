@@ -176,3 +176,16 @@
 :where(.css-kghr11).ant-tabs .ant-tabs-tab:hover {
     color: $secondary !important;
 }
+
+:where(.css-dev-only-do-not-override-kghr11).ant-btn-default:disabled {
+    background-color: #5b548b6c !important;
+    color: $white !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:not(:nth-child(7), :nth-child(8), :nth-child(9)) {
+    background-color: $gray-400 !important;
+}
+
+:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr:hover {
+    background-color: aliceblue !important;
+}
