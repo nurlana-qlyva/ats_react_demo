@@ -139,7 +139,6 @@ const defaultColumns = [
         title: 'Tarih',
         dataIndex: 'tarih',
         editable: true,
-        render: (text) => dayjs(text).locale('tr').format('DD MMMM YYYY'),
     },
     {
         title: 'Saat',
@@ -190,7 +189,7 @@ const KmUpdate = () => {
 
 
     const [date, setDate] = useState({
-        tarih: dayjs(new Date()).format('YYYY-MM-DD'),
+        tarih: dayjs(new Date()).format('DD.MM.YYYY'),
         saat: dayjs(new Date()).format('HH:mm:ss')
     })
 
@@ -380,8 +379,8 @@ const KmUpdate = () => {
 
     const content = (
         <Space direction="vertical">
-            <DatePicker onChange={d => setDate({ ...date, tarih: formatDate(d?.$d) })} className="w-full" />
-            <DatePicker picker="time" onChange={t => setDate({ ...date, saat: formatTime(t?.$d) })} className="w-full" />
+            <DatePicker placeholder="Tarih" onChange={d => setDate({ ...date, tarih: formatDate(d?.$d) })} className="w-full" />
+            <DatePicker picker="time" placeholder="Saat" onChange={t => setDate({ ...date, saat: formatTime(t?.$d) })} className="w-full" />
         </Space>
     )
 
