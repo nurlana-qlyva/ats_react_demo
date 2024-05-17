@@ -145,7 +145,7 @@ const KmUpdate = ({ data }) => {
             //     },
             // });
         })
-    }, [])
+    }, [data, tableParams.pagination])
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -183,7 +183,7 @@ const KmUpdate = ({ data }) => {
     });
 
     return (
-        <div className="km">
+        <div>
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}

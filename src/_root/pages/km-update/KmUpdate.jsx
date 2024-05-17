@@ -450,9 +450,8 @@ const KmUpdate = () => {
                 />
 
                 {contextHolder}
-
-                {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
             </div>
+            {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
         </div>
     )
 }

@@ -178,7 +178,7 @@
 }
 
 .settings .ant-table-row td:not(:nth-child(7), :nth-child(8), :nth-child(9)),
-:where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:not(:nth-child(7), :nth-child(8), :nth-child(9)) {
+.settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:not(:nth-child(7), :nth-child(8), :nth-child(9)) {
     background-color: $gray-400 !important;
 }
 
