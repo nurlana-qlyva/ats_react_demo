@@ -1,14 +1,15 @@
 import { Button, Modal } from "antd";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import KmHistory from "./KmHistory"
 
 const ContextMenu = ({ position, rowData }) => {
     const [visible, setVisible] = useState(false)
+    const modalRef = useRef()
 
     const style = {
         position: 'absolute',
-        left: position.x - 280,
-        top: position.y - 230,
+        left: position.x,
+        top: position.y,
         border: '1px solid #ccc',
         backgroundColor: '#fff',
         zIndex: 200,
@@ -17,8 +18,26 @@ const ContextMenu = ({ position, rowData }) => {
     };
 
     const onClose = () => {
-
+        setVisible(false);
     }
+
+    const handleOutsideClick = (e) => {
+        if (modalRef.current && !modalRef.current.contains(e.target)) {
+            onClose();
+        }
+    };
+
+    useEffect(() => {
+        if (visible) {
+            document.addEventListener('click', handleOutsideClick);
+        } else {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, [visible]);
+
 
     const footer = (
         [
@@ -29,7 +48,7 @@ const ContextMenu = ({ position, rowData }) => {
     )
 
     return (
-        <div style={style} className="context-menu">
+        <div style={style} className="context-menu" ref={modalRef}>
             <Button onClick={() => setVisible(true)}>Kilometre Güncelleme Geçmişi: {rowData?.plaka}</Button>
             <Button>Güncel Km Düzeltme</Button>
             <Button>Km Sıfırlama</Button>
@@ -41,7 +60,9 @@ const ContextMenu = ({ position, rowData }) => {
                 footer={footer}
                 width={1200}
             >
-                <KmHistory data={rowData} />
+                <div onClick={(e) => e.stopPropagation()}>
+                    <KmHistory data={rowData} />
+                </div>
             </Modal>
         </div>
     );

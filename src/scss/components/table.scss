@@ -23,8 +23,8 @@
 }
 
 .settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:nth-child(7),:nth-child(8),:nth-child(9),
-.editable-row td:nth-child(7),:nth-child(8),:nth-child(9) {
-    width: 140px !important;
+.settings .editable-row td:nth-child(7),:nth-child(8),:nth-child(9) {
+    // width: 140px !important;
 }
 
 .error-text {

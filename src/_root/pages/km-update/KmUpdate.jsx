@@ -142,16 +142,19 @@ const defaultColumns = [
         title: 'Yeni km',
         dataIndex: 'yeniKm',
         editable: true,
+        width: '140px'
     },
     {
         title: 'Tarih',
         dataIndex: 'tarih',
         editable: true,
+        width: '140px'
     },
     {
         title: 'Saat',
         dataIndex: 'saat',
         editable: true,
+        width: '140px'
     },
 ];
 

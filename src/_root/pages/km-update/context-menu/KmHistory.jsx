@@ -134,18 +134,17 @@ const KmUpdate = ({ data }) => {
     });
 
     useEffect(() => {
-        KMLogListGetByIdService(data.aracId, tableParams.pagination.current).then(res => {
-            console.log(res.data)
+        KMLogListGetByIdService(data.aracId, tableParams?.pagination.current).then(res => {
             setDataSource(res?.data.km_list)
-            // setTableParams({
-            //     ...tableParams,
-            //     pagination: {
-            //         ...tableParams.pagination,
-            //         total: res?.data.total_count,
-            //     },
-            // });
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
         })
-    }, [data, tableParams.pagination])
+    }, [tableParams?.pagination.current])
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -183,7 +182,7 @@ const KmUpdate = ({ data }) => {
     });
 
     return (
-        <div>
+        <div className="history">
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}
