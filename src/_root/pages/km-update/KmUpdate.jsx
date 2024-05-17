@@ -416,6 +416,41 @@ const KmUpdate = () => {
         })
     }
 
+    const clear = () => {
+        KMGetService(tableParams.pagination.current, null).then(res => {
+            const modifiedData = res?.data.km_list.map(item => {
+                const rows = [...validatedRows, ...errorRows]
+                const validatedRow = rows.find(row => row.kmAracId === item.aracId);
+                return {
+                    aracId: item.aracId,
+                    aracTip: item.aracTip,
+                    marka: item.marka,
+                    model: item.model,
+                    lokasyon: item.lokasyon,
+                    departman: item.departman,
+                    guncelKm: item.guncelKm,
+                    plaka: item.plaka,
+                    tarih: validatedRow?.tarih || date.tarih,
+                    saat: validatedRow?.saat || date.saat,
+                    yeniKm: validatedRow?.yeniKm,
+                };
+            });
+
+            setDataSource(modifiedData)
+
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
+
+            setStatus(false)
+        })
+        setFilter({ plaka: '', aracTip: '', lokasyon: '', departman: '' });
+    }
+
     const content = (
         <Space direction="vertical">
             <DatePicker placeholder="Tarih" onChange={d => {
@@ -443,7 +478,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content">
-                <Filter setDataSource={setDataSource} setTableParams={setTableParams} tableParams={tableParams} content={content} addKm={addKm} errorRows={errorRows} validatedRows={validatedRows} setFilter={setFilter} filter={filter} getData={getData} />
+                <Filter setDataSource={setDataSource} setTableParams={setTableParams} tableParams={tableParams} content={content} addKm={addKm} errorRows={errorRows} validatedRows={validatedRows} setFilter={setFilter} filter={filter} getData={getData} clear={clear} />
             </div>
 
             <div className="content settings">

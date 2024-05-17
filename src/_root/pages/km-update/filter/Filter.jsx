@@ -23,7 +23,7 @@ const convertToFormat = (data, parentId = 0) => {
   return result;
 };
 
-const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, getData }) => {
+const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, getData, clear }) => {
   const [plaka, setPlaka] = useState([])
   const [location, setLocation] = useState([])
   const [code, setCode] = useState([])
@@ -64,7 +64,6 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
   const confirm = (e) => {
     addKm()
   };
-
 
   return (
     <div className='flex flex-col gap-1'>
@@ -158,7 +157,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
           <Button className="primary-btn" onClick={getData}>
             <SearchOutlined />
           </Button>
-          <Button className="cancel-btn">
+          <Button className="cancel-btn" onClick={clear}>
             <IoIosRefresh />
           </Button>
         </div>
