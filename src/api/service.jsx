@@ -135,9 +135,6 @@ export const KMLogListGetByIdService = (id, page) => {
 //   return http.post(`/KmLog/UpdateKmLog`, data)
 // }
 
-// export const KMAddService = (data) => {
-//   return http.post(`/KmLog/AddKmLog`, data)
-// }
 
 
 // yakit

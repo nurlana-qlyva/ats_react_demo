@@ -1,6 +1,6 @@
 import { Form, Input, Table } from "antd"
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { KMLogListGetByIdService, KMLogListGetService } from "../../../../api/service";
+import { KMLogListGetByIdService } from "../../../../api/service";
 
 const EditableContext = createContext(null);
 const EditableRow = ({ ...props }) => {
@@ -108,7 +108,7 @@ const defaultColumns = [
     },
     {
         title: 'Fark km',
-        dataIndex: 'farkKm',
+        dataIndex: 'fark',
     },
     {
         title: 'Tarih',
@@ -122,10 +122,6 @@ const defaultColumns = [
 
 const KmUpdate = ({ data }) => {
     const [dataSource, setDataSource] = useState([]);
-    const [showContext, setShowContext] = useState(false);
-    const [status, setStatus] = useState(false)
-    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
-    const [selectedRowData, setSelectedRowData] = useState(null);
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -135,6 +131,7 @@ const KmUpdate = ({ data }) => {
 
     useEffect(() => {
         KMLogListGetByIdService(data.aracId, tableParams?.pagination.current).then(res => {
+            console.log(res.data)
             setDataSource(res?.data.km_list)
             setTableParams({
                 ...tableParams,
@@ -157,7 +154,6 @@ const KmUpdate = ({ data }) => {
             setDataSource([]);
         }
     };
-
 
     const components = {
         body: {

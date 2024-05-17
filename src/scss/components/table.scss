@@ -22,11 +22,6 @@
     border-radius: 2px;
 }
 
-.settings :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper .ant-table-tbody >tr >td:nth-child(7),:nth-child(8),:nth-child(9),
-.settings .editable-row td:nth-child(7),:nth-child(8),:nth-child(9) {
-    // width: 140px !important;
-}
-
 .error-text {
     color: $error !important;
     font-weight: 600 !important;
