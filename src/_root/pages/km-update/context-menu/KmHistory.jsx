@@ -1,127 +1,16 @@
-import { Form, Input, Table } from "antd"
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Table } from "antd"
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { KMLogListGetByIdService } from "../../../../api/service";
-
-const EditableContext = createContext(null);
-const EditableRow = ({ ...props }) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    );
-};
-const EditableCell = ({
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    handleRemoveValidatedRow,
-    ...restProps
-}) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef(null);
-    const form = useContext(EditableContext);
-
-    useEffect(() => {
-        if (editing) {
-            inputRef.current?.focus();
-        }
-    }, [editing]);
-
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({
-            [dataIndex]: dataIndex === "kmLogtarih" ? record[dataIndex].split("T")[0] : record[dataIndex],
-        });
-    };
-
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-            toggleEdit();
-            handleSave({
-                ...record,
-                ...values,
-            });
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo);
-        }
-    };
-
-    const clearInput = () => {
-        form.setFieldsValue({ [dataIndex]: '' });
-        handleRemoveValidatedRow(record.aracId);
-    };
-
-    let childNode = children;
-
-    if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-            >
-                <Input ref={inputRef} allowClear onPressEnter={save} onBlur={save} onChange={(e) => {
-                    if (e.target.value === '') {
-                        clearInput();
-                    }
-                }} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    return <td {...restProps}>{childNode}</td>;
-};
-
-const defaultColumns = [
-    {
-        title: 'Plaka',
-        dataIndex: 'plaka',
-    },
-    {
-        title: 'Lokasyon',
-        dataIndex: 'lokasyon',
-    },
-    {
-        title: 'Kaynak',
-        dataIndex: 'kaynak',
-    },
-    {
-        title: 'Eski km',
-        dataIndex: 'eskiKm',
-    },
-    {
-        title: 'Yeni km',
-        dataIndex: 'yeniKm',
-    },
-    {
-        title: 'Fark km',
-        dataIndex: 'fark',
-    },
-    {
-        title: 'Tarih',
-        dataIndex: 'tarih',
-    },
-    {
-        title: 'Saat',
-        dataIndex: 'saat',
-    },
-];
+import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService, KMValidateService } from "../../../../api/service";
+import { formatDateKm } from "../../../../utils/format";
 
 const KmUpdate = ({ data }) => {
     const [dataSource, setDataSource] = useState([]);
+    const [status, setStatus] = useState(false)
+    const [updateModal, setUpdateModal] = useState(false)
+    const [updateData, setUpdateData] = useState(null)
+    const [yeniKm, setYeniKm] = useState(0)
+    const [kmStatus, setKmStatus] = useState('black')
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -131,7 +20,6 @@ const KmUpdate = ({ data }) => {
 
     useEffect(() => {
         KMLogListGetByIdService(data.aracId, tableParams?.pagination.current).then(res => {
-            console.log(res.data)
             setDataSource(res?.data.km_list)
             setTableParams({
                 ...tableParams,
@@ -141,7 +29,7 @@ const KmUpdate = ({ data }) => {
                 },
             });
         })
-    }, [tableParams?.pagination.current])
+    }, [tableParams?.pagination.current, status])
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -155,32 +43,180 @@ const KmUpdate = ({ data }) => {
         }
     };
 
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
+    const handleDelete = (data) => {
+        const body = {
+            "siraNo": data?.siraNo,
+            "kmAracId": data?.kmAracId,
+            "seferSiraNo": data?.seferSiraNo,
+            "yakitSiraNo": data?.yakitSiraNo,
+            "plaka": data?.plaka,
+            "tarih": data?.tarih,
+            "saat": data?.saat,
+            "eskiKm": data?.eskiKm,
+            "yeniKm": data?.yeniKm,
+            "fark": data?.fark,
+            "kaynak": data?.kaynak,
+            "dorse": data?.dorse,
+            "aciklama": data?.aciklama
+        }
+
+        KMLogListDeleteService(body).then(res => {
+            if (res?.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        // const newData = dataSource.filter((item) => item.key !== key);
+        // setDataSource(newData);
     };
 
-    const columns = defaultColumns.map((col) => {
-        if (!col.editable) {
-            return col;
+    const handleEdit = () => {
+        const body = {
+            "siraNo": updateData?.siraNo,
+            "kmAracId": updateData?.kmAracId,
+            "seferSiraNo": updateData?.seferSiraNo,
+            "yakitSiraNo": updateData?.yakitSiraNo,
+            "plaka": updateData?.plaka,
+            "tarih": updateData?.tarih.split("T")[0],
+            "saat": updateData?.saat,
+            "eskiKm": updateData?.eskiKm,
+            "yeniKm": updateData?.yeniKm,
+            "fark": updateData?.fark,
+            "kaynak": updateData?.kaynak,
+            "dorse": updateData?.dorse,
+            "aciklama": updateData?.aciklama
         }
+
+        KMLogListUpdateService(body).then(res => {
+            if (res.data.statusCode === 202) {
+                setStatus(!status);
+                onClose();
+            }
+        })
+
+    }
+
+    const openUpdateModal = (data) => {
+        setUpdateModal(true)
+        setUpdateData(data)
+    }
+
+    const onClose = () => {
+        setUpdateModal(false)
+        setUpdateData(null)
+        setKmStatus("black")
+    }
+
+    const validateKm = (value) => {
+        const body = {
+            "siraNo": updateData?.siraNo,
+            "kmAracId": updateData?.kmAracId,
+            "seferSiraNo": updateData?.seferSiraNo,
+            "yakitSiraNo": updateData?.yakitSiraNo,
+            "plaka": updateData?.plaka,
+            "tarih": updateData?.tarih.split("T")[0],
+            "saat": updateData?.saat,
+            "eskiKm": updateData?.eskiKm,
+            "yeniKm": value,
+            "fark": updateData?.fark,
+            "kaynak": updateData?.kaynak,
+            "dorse": updateData?.dorse,
+            "aciklama": updateData?.aciklama
+        };
+        KMLogListValidateService(body).then(res => {
+            if (res?.data.statusCode === 400) {
+                setKmStatus('red');
+            } else if (res?.data.statusCode === 202) {
+                setKmStatus('green');
+            }
+        });
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            validateKm(e.target.value)
+        }
+    };
+
+    const handleBlur = (e) => {
+        validateKm(e.target.value);
+    };
+
+    const defaultColumns = [
+        {
+            title: 'Plaka',
+            dataIndex: 'plaka',
+        },
+        {
+            title: 'Lokasyon',
+            dataIndex: 'lokasyon',
+        },
+        {
+            title: 'Kaynak',
+            dataIndex: 'kaynak',
+        },
+        {
+            title: 'Eski km',
+            dataIndex: 'eskiKm',
+        },
+        {
+            title: 'Yeni km',
+            dataIndex: 'yeniKm',
+        },
+        {
+            title: 'Fark km',
+            dataIndex: 'fark',
+        },
+        {
+            title: 'Tarih',
+            dataIndex: 'tarih',
+            render: text => text.split("T")[0].split("-").reverse().join(".")
+        },
+        {
+            title: 'Saat',
+            dataIndex: 'saat',
+        },
+        {
+            title: '',
+            dataIndex: 'delete',
+            render: (_, record) =>
+                dataSource.length >= 1 ? (
+                    <Popconfirm title="Silmeye eminmisiniz?" onConfirm={() => handleDelete(record)}>
+                        <DeleteOutlined style={{ color: "#dc3545" }} />
+                    </Popconfirm>
+                ) : null,
+        },
+        {
+            title: '',
+            dataIndex: 'edit',
+            render: (_, record) =>
+                dataSource.length >= 1 ? (
+                    <Button onClick={() => openUpdateModal(record)} style={{ border: "none", color: "#5B548B" }}>
+                        <EditOutlined />
+                    </Button>
+                ) : null,
+        },
+    ];
+
+    const columns = defaultColumns.map((col) => {
         return {
             ...col,
-            onCell: (record) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-            }),
         };
     });
+
+    const footer = (
+        [
+            <Button key="submit" className="btn primary-btn km-update" onClick={handleEdit} disabled={kmStatus !== "green"}>
+                Güncelle
+            </Button>,
+            <Button key="back" className="btn cancel-btn" onClick={onClose}>
+                Kapat
+            </Button>
+        ]
+    )
 
     return (
         <div className="history">
             <Table
-                components={components}
                 rowClassName={() => 'editable-row'}
                 pagination={tableParams.pagination}
                 dataSource={dataSource}
@@ -188,6 +224,47 @@ const KmUpdate = ({ data }) => {
                 size="small"
                 onChange={handleTableChange}
             />
+            <Modal
+                title={'Kilometre Güncelleme Geçmişi Düzelt'}
+                open={updateModal}
+                onCancel={onClose}
+                maskClosable={false}
+                footer={footer}
+                width={500}
+            >
+                <div className="grid gap-1">
+                    <div className="col-span-6">
+                        <Input className="w-full" placeholder="Tarih" disabled value={updateData?.tarih.split("T")[0].split("-").reverse().join(".")} />
+                    </div>
+                    <div className="col-span-6">
+                        <Input className="w-full" placeholder="Saat" disabled value={updateData?.saat} />
+                    </div>
+                    <div className="col-span-6">
+                        <Input placeholder="Eski Km" disabled value={updateData?.eskiKm} />
+                    </div>
+                    <div className="col-span-6">
+                        <InputNumber
+                            allowClear
+                            style={{ borderColor: kmStatus }}
+                            placeholder="Yeni Km"
+                            className="w-full"
+                            value={updateData?.yeniKm}
+                            onKeyDown={handleKeyDown}
+                            onChange={e => {
+                                if (e !== null) {
+                                    setUpdateData({ ...updateData, yeniKm: e })
+                                } else {
+                                    setKmStatus('black')
+                                }
+                            }}
+                            onBlur={handleBlur}
+                        />
+                    </div>
+                    <div className="col-span-6">
+                        <Input placeholder="Fark Km" disabled value={updateData?.fark} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

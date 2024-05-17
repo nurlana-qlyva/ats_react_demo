@@ -3,7 +3,6 @@ import { HomeOutlined } from "@ant-design/icons"
 import Filter from "./filter/Filter";
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { DatePicker, Form, Input, message, Space, Table } from 'antd';
-import { useForm } from "react-hook-form";
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
@@ -178,6 +177,8 @@ const KmUpdate = () => {
         saat: dayjs(new Date()).format('HH:mm:ss')
     })
 
+    const [filter, setFilter] = useState(null)
+
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
@@ -187,27 +188,6 @@ const KmUpdate = () => {
         });
     };
 
-    const defaultValues = {
-        kmAracId: 0,
-        seferSiraNo: 0,
-        yakitSiraNo: 0,
-        plaka: "",
-        tarih: "",
-        saat: "",
-        eskiKm: 0,
-        yeniKm: 0,
-        fark: 0,
-        kaynak: "",
-        dorse: false,
-        aciklama: "",
-    }
-
-    const methods = useForm({
-        defaultValues: defaultValues
-    })
-
-    const { control } = methods
-
     const components = {
         body: {
             row: EditableRow,
@@ -216,7 +196,7 @@ const KmUpdate = () => {
     };
 
     useEffect(() => {
-        KMGetService(tableParams.pagination.current).then(res => {
+        KMGetService(tableParams.pagination.current, filter).then(res => {
             const modifiedData = res?.data.km_list.map(item => {
                 const rows = [...validatedRows, ...errorRows]
                 const validatedRow = rows.find(row => row.kmAracId === item.aracId);
@@ -236,7 +216,6 @@ const KmUpdate = () => {
             });
 
             setDataSource(modifiedData)
-
 
             setTableParams({
                 ...tableParams,
@@ -258,7 +237,6 @@ const KmUpdate = () => {
                 const item = newData[index];
                 newData.splice(index, 1, { ...item, ...row });
                 setDataSource(newData);
-
                 const body = {
                     "siraNo": 0,
                     "kmAracId": row.aracId,
@@ -312,7 +290,7 @@ const KmUpdate = () => {
     };
 
     const handleTableChange = (pagination, filters, sorter) => {
-        KMGetService(pagination.current).then(res => {
+        KMGetService(pagination.current, filter).then(res => {
             const modifiedData = res?.data.km_list.map(item => {
                 const rows = [...validatedRows, ...errorRows]
                 const validatedRow = rows.find(row => row.kmAracId === item.aracId);
@@ -404,6 +382,40 @@ const KmUpdate = () => {
         })
     }
 
+    const getData = () => {
+        KMGetService(tableParams.pagination.current, filter).then(res => {
+            const modifiedData = res?.data.km_list.map(item => {
+                const rows = [...validatedRows, ...errorRows]
+                const validatedRow = rows.find(row => row.kmAracId === item.aracId);
+                return {
+                    aracId: item.aracId,
+                    aracTip: item.aracTip,
+                    marka: item.marka,
+                    model: item.model,
+                    lokasyon: item.lokasyon,
+                    departman: item.departman,
+                    guncelKm: item.guncelKm,
+                    plaka: item.plaka,
+                    tarih: validatedRow?.tarih || date.tarih,
+                    saat: validatedRow?.saat || date.saat,
+                    yeniKm: validatedRow?.yeniKm,
+                };
+            });
+
+            setDataSource(modifiedData)
+
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
+
+            setStatus(false)
+        })
+    }
+
     const content = (
         <Space direction="vertical">
             <DatePicker placeholder="Tarih" onChange={d => {
@@ -431,7 +443,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content">
-                <Filter setDataSource={setDataSource} control={control} setTableParams={setTableParams} tableParams={tableParams} content={content} addKm={addKm} errorRows={errorRows} validatedRows={validatedRows} />
+                <Filter setDataSource={setDataSource} setTableParams={setTableParams} tableParams={tableParams} content={content} addKm={addKm} errorRows={errorRows} validatedRows={validatedRows} setFilter={setFilter} filter={filter} getData={getData} />
             </div>
 
             <div className="content settings">

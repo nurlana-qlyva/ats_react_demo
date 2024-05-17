@@ -102,12 +102,8 @@ export const RuhsatInfoUpdateService = (data) => {
 }
 
 // km 
-export const KMGetService = async (page) => {
-  return await http.get(`/QuickKmUpdate/GetKmUpdateList?page=${page}`)
-}
-
-export const KMGetByIdService = (id, page) => {
-  return http.get(`/QuickKmUpdate/GetKmUpdateByVehicleIdList?vehicleId=${id}&page=${page}`)
+export const KMGetService = async (page, data) => {
+  return await http.post(`/QuickKmUpdate/GetKmUpdateList?page=${page}`, data)
 }
 
 export const KMValidateService = (data) => {
@@ -127,15 +123,17 @@ export const KMLogListGetByIdService = (id, page) => {
   return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
 }
 
-// export const KMDeleteService = (data) => {
-//   return http.post(`/KmLog/DeleteKmLog`, data)
-// }
+export const KMLogListDeleteService = (data) => {
+  return http.post(`/KmLog/DeleteKmLog`, data)
+}
 
-// export const KMUpdateService = (data) => {
-//   return http.post(`/KmLog/UpdateKmLog`, data)
-// }
+export const KMLogListValidateService = (data) => {
+  return http.post(`/KmLog/ValidateKmLogForUpdate`, data)
+}
 
-
+export const KMLogListUpdateService = (data) => {
+  return http.post(`/KmLog/UpdateKmLog`, data)
+}
 
 // yakit
 export const YakitGetService = (page) => {
