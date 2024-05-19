@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService, KMValidateService } from "../../../../api/service";
 import { formatDateKm } from "../../../../utils/format";
 
-const KmUpdate = ({ data }) => {
+const KmUpdate = ({ data, setTable }) => {
     const [dataSource, setDataSource] = useState([]);
     const [status, setStatus] = useState(false)
     const [updateModal, setUpdateModal] = useState(false)
@@ -44,55 +44,55 @@ const KmUpdate = ({ data }) => {
     };
 
     const handleDelete = (data) => {
-        const body = {
-            "siraNo": data?.siraNo,
-            "kmAracId": data?.kmAracId,
-            "seferSiraNo": data?.seferSiraNo,
-            "yakitSiraNo": data?.yakitSiraNo,
-            "plaka": data?.plaka,
-            "tarih": data?.tarih,
-            "saat": data?.saat,
-            "eskiKm": data?.eskiKm,
-            "yeniKm": data?.yeniKm,
-            "fark": data?.fark,
-            "kaynak": data?.kaynak,
-            "dorse": data?.dorse,
-            "aciklama": data?.aciklama
-        }
+        const body = { ...data }
 
         KMLogListDeleteService(body).then(res => {
             if (res?.data.statusCode === 202) {
                 setStatus(true)
+                setTable(true)
             }
         })
-        // const newData = dataSource.filter((item) => item.key !== key);
-        // setDataSource(newData);
+
+        setStatus(false)
+        setTable(false)
     };
 
-    const handleEdit = () => {
+    const validateKm = async () => {
+        const body = { ...updateData };
+
+        try {
+            const res = await KMLogListValidateService(body);
+            if (res?.data.statusCode === 400) {
+                setKmStatus('red');
+                return false;
+            } else if (res?.data.statusCode === 202) {
+                setKmStatus('green');
+                return true;
+            }
+        } catch (error) {
+            console.error('Validation failed', error);
+            setKmStatus('red');
+            return false;
+        }
+    }
+
+    const handleEdit = async () => {
         const body = {
-            "siraNo": updateData?.siraNo,
-            "kmAracId": updateData?.kmAracId,
-            "seferSiraNo": updateData?.seferSiraNo,
-            "yakitSiraNo": updateData?.yakitSiraNo,
-            "plaka": updateData?.plaka,
-            "tarih": updateData?.tarih.split("T")[0],
-            "saat": updateData?.saat,
-            "eskiKm": updateData?.eskiKm,
-            "yeniKm": updateData?.yeniKm,
-            "fark": updateData?.fark,
-            "kaynak": updateData?.kaynak,
-            "dorse": updateData?.dorse,
-            "aciklama": updateData?.aciklama
+            ...updateData, "tarih": updateData?.tarih.split("T")[0],
         }
 
-        KMLogListUpdateService(body).then(res => {
-            if (res.data.statusCode === 202) {
-                setStatus(!status);
-                onClose();
-            }
-        })
+        const response = await validateKm()
 
+        if (response) {
+            KMLogListUpdateService(body).then(res => {
+                if (res.data.statusCode === 202) {
+                    setStatus(true);
+                    onClose();
+
+                }
+            })
+            setStatus(false)
+        }
     }
 
     const openUpdateModal = (data) => {
@@ -105,41 +105,6 @@ const KmUpdate = ({ data }) => {
         setUpdateData(null)
         setKmStatus("black")
     }
-
-    const validateKm = (value) => {
-        const body = {
-            "siraNo": updateData?.siraNo,
-            "kmAracId": updateData?.kmAracId,
-            "seferSiraNo": updateData?.seferSiraNo,
-            "yakitSiraNo": updateData?.yakitSiraNo,
-            "plaka": updateData?.plaka,
-            "tarih": updateData?.tarih.split("T")[0],
-            "saat": updateData?.saat,
-            "eskiKm": updateData?.eskiKm,
-            "yeniKm": value,
-            "fark": updateData?.fark,
-            "kaynak": updateData?.kaynak,
-            "dorse": updateData?.dorse,
-            "aciklama": updateData?.aciklama
-        };
-        KMLogListValidateService(body).then(res => {
-            if (res?.data.statusCode === 400) {
-                setKmStatus('red');
-            } else if (res?.data.statusCode === 202) {
-                setKmStatus('green');
-            }
-        });
-    }
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            validateKm(e.target.value)
-        }
-    };
-
-    const handleBlur = (e) => {
-        validateKm(e.target.value);
-    };
 
     const defaultColumns = [
         {
@@ -205,7 +170,7 @@ const KmUpdate = ({ data }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn primary-btn km-update" onClick={handleEdit} disabled={kmStatus !== "green"}>
+            <Button key="submit" className="btn primary-btn km-update" onClick={handleEdit}>
                 Güncelle
             </Button>,
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
@@ -249,7 +214,6 @@ const KmUpdate = ({ data }) => {
                             placeholder="Yeni Km"
                             className="w-full"
                             value={updateData?.yeniKm}
-                            onKeyDown={handleKeyDown}
                             onChange={e => {
                                 if (e !== null) {
                                     setUpdateData({ ...updateData, yeniKm: e })
@@ -257,7 +221,6 @@ const KmUpdate = ({ data }) => {
                                     setKmStatus('black')
                                 }
                             }}
-                            onBlur={handleBlur}
                         />
                     </div>
                     <div className="col-span-6">

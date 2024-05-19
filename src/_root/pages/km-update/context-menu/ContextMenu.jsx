@@ -2,7 +2,7 @@ import { Button, Modal } from "antd";
 import { useEffect, useRef, useState } from "react";
 import KmHistory from "./KmHistory"
 
-const ContextMenu = ({ position, rowData }) => {
+const ContextMenu = ({ position, rowData, setStatus }) => {
     const [visible, setVisible] = useState(false)
     const modalRef = useRef()
 
@@ -61,7 +61,7 @@ const ContextMenu = ({ position, rowData }) => {
                 width={1200}
             >
                 <div onClick={(e) => e.stopPropagation()}>
-                    <KmHistory data={rowData} />
+                    <KmHistory data={rowData} setTable={setStatus} />
                 </div>
             </Modal>
         </div>
