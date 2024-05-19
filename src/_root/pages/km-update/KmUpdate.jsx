@@ -53,7 +53,7 @@ const EditableCell = ({
     const toggleEdit = () => {
         setEditing(!editing);
         form.setFieldsValue({
-            [dataIndex]: dataIndex === "kmLogtarih" ? record[dataIndex].split("T")[0] : record[dataIndex],
+            [dataIndex]: record[dataIndex],
         });
     };
 
@@ -227,7 +227,7 @@ const KmUpdate = () => {
 
             setStatus(false)
         })
-    }, [status, tableParams.pagination.current, date, validatedRows, errorRows])
+    }, [status, tableParams.pagination.current])
 
     const handleSave = async (row) => {
         try {
@@ -372,6 +372,7 @@ const KmUpdate = () => {
     }, [showContext]);
 
     const addKm = () => {
+        console.log(validatedRows)
         KMAddService(validatedRows).then(res => {
             if (res?.data.statusCode === 200) {
                 success()
