@@ -220,9 +220,6 @@ const EditableCell = ({
     return <td {...restProps} className={`${error} ${valid}`}>{childNode}</td>;
 };
 
-
-
-
 const defaultColumns = [
     {
         title: 'Plaka',
@@ -339,7 +336,7 @@ const KmUpdate = () => {
 
             setStatus(false)
         })
-    }, [status, tableParams.pagination.current])
+    }, [status, tableParams.pagination.current, date])
 
     const handleSave = async (row) => {
         try {
@@ -500,7 +497,6 @@ const KmUpdate = () => {
     }, [showContext]);
 
     const addKm = () => {
-        console.log(validatedRows)
         KMAddService(validatedRows).then(res => {
             if (res?.data.statusCode === 200) {
                 success()
@@ -579,22 +575,19 @@ const KmUpdate = () => {
         })
         setFilter({ plaka: '', aracTip: '', lokasyon: '', departman: '' });
     }
+    console.log(date)
 
     const content = (
         <Space direction="vertical">
             <DatePicker placeholder="Tarih" onChange={d => {
                 if (d) {
-                    setDate({ ...date, tarih: formatDateKm(d?.$d) })
-                } else {
-                    setDate({ ...date, tarih: formatDateKm(new Date()) })
+                    setDate({ ...date, tarih: dayjs(d).format('DD.MM.YYYY') })
                 }
 
             }} className="w-full" />
             <DatePicker picker="time" placeholder="Saat" onChange={t => {
                 if (t) {
-                    setDate({ ...date, saat: formatTime(t?.$d) })
-                } else {
-                    setDate({ ...date, saat: formatTime(new Date()) })
+                    setDate({ ...date, saat: dayjs(t).format('HH:mm:ss')})
                 }
             }} className="w-full" />
         </Space>
