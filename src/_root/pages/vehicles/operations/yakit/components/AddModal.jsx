@@ -5,7 +5,7 @@ import SpecialFields from '../../../../../components/form/SpecialFields';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
-const AddModal = () => {
+const AddModal = ({ ids }) => {
     const [openModal, setopenModal] = useState(false);
     const [fields, setFields] = useState([
         {

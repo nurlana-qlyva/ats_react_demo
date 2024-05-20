@@ -25,6 +25,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
     const [files, setFiles] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [vehicleId, setVehicleId] = useState(0)
+    const [plaka, setPlaka] = useState("")
 
     const [fields, setFields] = useState([
         {
@@ -198,6 +199,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
         ids.map(id => {
             return YakitGetByIdService(id, tableParams?.pagination.current).then(res => {
                 setDataSource(res?.data.fuel_list)
+                setPlaka(res?.data.plaka)
                 setValue('tarih', res?.data.tarih)
                 setValue('sonAlinanKm', res?.data.sonAlinanKm)
                 setTableParams({
@@ -282,14 +284,14 @@ const YakitModal = ({ visible, onClose, ids }) => {
 
     return (
         <Modal
-            title={`Yakıt Bilgileri Plaka: ${dataSource?.plaka}`}
+            title={`Yakıt Bilgileri Plaka: ${plaka}`}
             open={visible}
             onCancel={onClose}
             maskClosable={false}
             footer={footer}
             width={1200}
         >
-            <AddModal />
+            <AddModal ids={ids} />
             <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
