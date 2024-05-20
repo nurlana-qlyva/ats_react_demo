@@ -1,9 +1,10 @@
 import { Button, Modal, Tabs } from 'antd'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import GeneralInfo from './GeneralInfo';
 import SpecialFields from '../../../../../components/form/SpecialFields';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
+
 
 const AddModal = ({ ids }) => {
     const [openModal, setopenModal] = useState(false);
@@ -172,7 +173,7 @@ const AddModal = ({ ids }) => {
         <>
             <Button className='mb-10 primary-btn' onClick={() => setopenModal(true)}>Yenisini Ekle</Button>
             <Modal
-                title="Yakıt Bilgisi Ekle"
+                title="Yeni Yakıt Girişi"
                 open={openModal}
                 onCancel={onCloseModal}
                 maskClosable={false}
