@@ -44,6 +44,7 @@ const EditableCell = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef(null);
     const [openDatePicker, setOpenDatePicker] = useState(false);
+    const [openTimePicker, setOpenTimePicker] = useState(false);
     const form = useContext(EditableContext);
 
     useEffect(() => {
@@ -57,16 +58,17 @@ const EditableCell = ({
         setEditing(!editing);
         if (dataIndex === 'tarih') {
             setOpenDatePicker(true);
+        } else if (dataIndex === 'saat') {
+            setOpenTimePicker(true);
         }
         form.setFieldsValue({
-            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : record[dataIndex],
+            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm:ss") : record[dataIndex],
         });
     };
 
     const save = async () => {
         try {
             const values = await form.validateFields();
-            console.log(values)
             toggleEdit();
             handleSave({
                 ...record,
@@ -74,7 +76,9 @@ const EditableCell = ({
                 [dataIndex]:
                     dataIndex === 'tarih' && values[dataIndex]
                         ? dayjs(values[dataIndex], 'DD.MM.YYYY')
-                        : values[dataIndex],
+                        : dataIndex === 'saat' && values[dataIndex]
+                            ? dayjs(values[dataIndex]).format('HH:mm:ss')
+                            : values[dataIndex],
             });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
@@ -88,6 +92,18 @@ const EditableCell = ({
             save()
         } catch (error) {
             console.error('Error parsing date:', error);
+        }
+    };
+
+    const handleTimePickerChange = async (time) => {
+        try {
+            if (time) {
+                form.setFieldsValue({ [dataIndex]: time });
+                setOpenTimePicker(false);
+                save();
+            }
+        } catch (error) {
+            console.error('Error parsing time:', error);
         }
     };
 
@@ -170,12 +186,9 @@ const EditableCell = ({
                         name={dataIndex}
                     >
                         <TimePicker
-                            format="HH:mm:ss"
-                            ref={inputRef}
-                            onChange={(time) => {
-                                form.setFieldsValue({ [dataIndex]: time ? dayjs(time).format('HH:mm:ss') : '' });
-                            }}
-                            onBlur={save}
+                            open={openTimePicker}
+                            onOpenChange={(status) => setOpenTimePicker(status)}
+                            onChange={handleTimePickerChange}
                         />
                     </Form.Item>
                 ) : (
@@ -275,6 +288,7 @@ const KmUpdate = () => {
         saat: dayjs(new Date()).format('HH:mm:ss')
     })
 
+
     const [filter, setFilter] = useState(null)
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -308,7 +322,7 @@ const KmUpdate = () => {
                     guncelKm: item.guncelKm,
                     plaka: item.plaka,
                     tarih: date.tarih || validatedRow?.tarih,
-                    saat: validatedRow?.saat || date.saat,
+                    saat: date.saat || validatedRow?.saat,
                     yeniKm: validatedRow?.yeniKm,
                 };
             });
@@ -326,7 +340,6 @@ const KmUpdate = () => {
             setStatus(false)
         })
     }, [status, tableParams.pagination.current])
-    console.log(validatedRows)
 
     const handleSave = async (row) => {
         try {
@@ -336,7 +349,6 @@ const KmUpdate = () => {
                 const item = newData[index];
                 newData.splice(index, 1, { ...item, ...row });
                 setDataSource(newData);
-
                 function formatDate(row) {
                     const dateString = row.tarih;
 
