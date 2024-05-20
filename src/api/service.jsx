@@ -143,3 +143,8 @@ export const YakitGetService = (page) => {
 export const YakitGetByIdService = (id, page) => {
   return http.get(`/Fuel/GetFuelListByVehicleId?vehicleId=${id}&page=${page}`)
 }
+
+export const YakitAddService = (data) => {
+  return http.get(`/Fuel/AddFuel`, data)
+}
+

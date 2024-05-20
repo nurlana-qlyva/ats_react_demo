@@ -44,7 +44,7 @@ const GeneralInfoUpdate = ({ control }) => {
                 <div className="col-span-4 border p-10">
                     <div className="grid gap-1">
                         <div className="col-span-6">
-                            <NumberInput control={control} name="" label="Son Alınan Km" />
+                            <NumberInput control={control} name="sonAlinanKm" label="Son Alınan Km" />
                         </div>
                         <div className="col-span-6">
                             <NumberInput control={control} name="" label="Yakıtın Alındığı Km" />

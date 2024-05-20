@@ -7,13 +7,13 @@ import FileUpload from '../../../../components/form/FileUpload';
 import { upload } from '../../../../../utils/upload';
 import { YakitGetByIdService } from '../../../../../api/service';
 import GeneralInfoUpdate from './components/GeneralInfoUpdate';
+import AddModal from './components/AddModal';
 
 
 
 const YakitModal = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
-    const [newModal, setNewModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -124,7 +124,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
         },
         {
             title: 'Yakıt Tipi',
-            dataIndex: 'yktTip',
+            dataIndex: 'yakitTip',
             key: 4,
         },
         {
@@ -139,7 +139,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
         },
         {
             title: 'Son KM.',
-            dataIndex: 'sonKm',
+            dataIndex: 'sonAlinanKm',
             key: 7,
         },
         {
@@ -174,7 +174,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
         },
         {
             title: 'Sürücü Adı',
-            dataIndex: 'surucu',
+            dataIndex: 'surucuAdi',
             key: 15,
         },
         {
@@ -185,7 +185,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
     ];
 
     const defaultValues = {
-
+        tarih: ''
     }
 
     const methods = useForm({
@@ -197,8 +197,9 @@ const YakitModal = ({ visible, onClose, ids }) => {
     useEffect(() => {
         ids.map(id => {
             return YakitGetByIdService(id, tableParams?.pagination.current).then(res => {
-                console.log(res.data)
-                setDataSource(res?.data.km_list)
+                setDataSource(res?.data.fuel_list)
+                setValue('tarih', res?.data.tarih)
+                setValue('sonAlinanKm', res?.data.sonAlinanKm)
                 setTableParams({
                     ...tableParams,
                     pagination: {
@@ -223,13 +224,9 @@ const YakitModal = ({ visible, onClose, ids }) => {
         });
 
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            setDrivers([]);
+            // setDrivers([]);
         }
     };
-
-    const onCloseAddModal = () => {
-        setNewModal(false)
-    }
 
     const onCloseUpdateModal = () => {
         setUpdateModal(false)
@@ -246,29 +243,11 @@ const YakitModal = ({ visible, onClose, ids }) => {
         }
     }
 
-    const items = [
-        {
-            key: '1',
-            label: 'Genel Bilgiler',
-            children: <GeneralInfo control={control} setValue={setValue} />,
-        },
-        {
-            key: '2',
-            label: 'Özel Alanlar',
-            children: <SpecialFields form="" control={control} setValue={setValue} fields={fields} setFields={setFields} />,
-        },
-        {
-            key: '3',
-            label: `[${filesUrl.length}] Ekli Belgeler`,
-            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />,
-        },
-    ];
-
     const itemsUpdate = [
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfoUpdate control={control} />,
+            children: <GeneralInfoUpdate control={control} setValue={setValue} />,
         },
         {
             key: '2',
@@ -290,17 +269,6 @@ const YakitModal = ({ visible, onClose, ids }) => {
         ]
     )
 
-    const addModalFooter = (
-        [
-            <Button key="submit" className="btn primary-btn">
-                Kaydet
-            </Button>,
-            <Button key="back" className="btn cancel-btn" onClick={onCloseAddModal}>
-                İptal
-            </Button>
-        ]
-    )
-
     const updateModalFooter = (
         [
             <Button key="submit" className="btn primary-btn">
@@ -314,24 +282,14 @@ const YakitModal = ({ visible, onClose, ids }) => {
 
     return (
         <Modal
-            title="Yakıt Bilgileri Plaka: [16 EG 1231 [BMW - X6]]"
+            title={`Yakıt Bilgileri Plaka: ${dataSource?.plaka}`}
             open={visible}
             onCancel={onClose}
             maskClosable={false}
             footer={footer}
             width={1200}
         >
-            <Button className='mb-10 primary-btn' onClick={() => setNewModal(true)}>Yenisini Ekle</Button>
-            <Modal
-                title="Yakıt Bilgisi Ekle"
-                open={newModal}
-                onCancel={onCloseAddModal}
-                maskClosable={false}
-                footer={addModalFooter}
-                width={1200}
-            >
-                <Tabs defaultActiveKey="1" items={items} />
-            </Modal>
+            <AddModal />
             <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}

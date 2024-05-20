@@ -30,7 +30,7 @@ const GeneralInfo = ({ control, setValue }) => {
                             />
                         </div>
                         <div className="col-span-3">
-                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" setValue={setValue} name2="aracCinsId" />
+                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" setValue={setValue} name2="aracCinsId" selectID="107" />
                             <Controller
                                 name="aracCinsId"
                                 control={control}

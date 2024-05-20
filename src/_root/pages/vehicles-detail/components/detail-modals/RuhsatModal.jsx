@@ -105,7 +105,6 @@ const RuhsatModal = ({ visible, onClose, id }) => {
     }, [id, status])
 
     const onSumbit = handleSubmit((values) => {
-        console.log(values)
         const data = {
             "dtyAracId": +id,
             "ilSehirId": values.ilSehirId,
@@ -214,7 +213,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <TextInput control={control} name="aracSinifi" label="Araç Sınıfı" />
                         </div>
                         <div className="col-span-3">
-                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" name2="" setValue={setValue} />
+                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" name2="" setValue={setValue} selectID="107" />
                             <Controller
                                 name=''
                                 control={control}
@@ -313,7 +312,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="taksiMetre"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -321,7 +320,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="yukNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -329,7 +328,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="tokograf"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -355,7 +354,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="resmi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -363,7 +362,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="yolcuNakli"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-6 flex flex-col">
@@ -371,7 +370,7 @@ const RuhsatModal = ({ visible, onClose, id }) => {
                             <Controller
                                 name="hususi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value}/>}
+                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
                         <div className="col-span-12">

@@ -6,7 +6,6 @@ import { DatePicker, Form, Input, message, Space, Table, TimePicker } from 'antd
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
-import { formatDateKm, formatTime } from "../../../utils/format";
 
 const breadcrumb = [
     {
@@ -285,7 +284,6 @@ const KmUpdate = () => {
         saat: dayjs(new Date()).format('HH:mm:ss')
     })
 
-
     const [filter, setFilter] = useState(null)
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -506,8 +504,6 @@ const KmUpdate = () => {
             }
         })
     }
-
-    console.log(status)
 
     const getData = () => {
         KMGetService(tableParams.pagination.current, filter).then(res => {
