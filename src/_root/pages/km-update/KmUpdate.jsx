@@ -507,6 +507,8 @@ const KmUpdate = () => {
         })
     }
 
+    console.log(status)
+
     const getData = () => {
         KMGetService(tableParams.pagination.current, filter).then(res => {
             const modifiedData = res?.data.km_list.map(item => {
@@ -575,7 +577,6 @@ const KmUpdate = () => {
         })
         setFilter({ plaka: '', aracTip: '', lokasyon: '', departman: '' });
     }
-    console.log(date)
 
     const content = (
         <Space direction="vertical">
@@ -623,7 +624,7 @@ const KmUpdate = () => {
 
                 {contextHolder}
             </div>
-            {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} />}
+            {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} setStatus={setStatus} />}
         </div>
     )
 }

@@ -1,15 +1,13 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Table } from "antd"
+import { Button, Input, InputNumber, Modal, Popconfirm, Table } from "antd"
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService, KMValidateService } from "../../../../api/service";
-import { formatDateKm } from "../../../../utils/format";
+import { useEffect, useState } from "react";
+import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from "../../../../api/service";
 
 const KmUpdate = ({ data, setTable }) => {
     const [dataSource, setDataSource] = useState([]);
     const [status, setStatus] = useState(false)
     const [updateModal, setUpdateModal] = useState(false)
     const [updateData, setUpdateData] = useState(null)
-    const [yeniKm, setYeniKm] = useState(0)
     const [kmStatus, setKmStatus] = useState('black')
     const [tableParams, setTableParams] = useState({
         pagination: {
