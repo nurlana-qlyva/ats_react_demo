@@ -30,6 +30,41 @@ const EditableRow = ({ ...props }) => {
     );
 };
 
+const MyComponent = () => {
+    const [editing, setEditing] = useState(false);
+    const [dateValue, setDateValue] = useState(null); // State to store the selected date
+
+    const handleDateChange = (date) => {
+        setDateValue(date); // Update the state with the selected date
+        setEditing(false); // Close the DatePicker after selecting a date
+    };
+
+    const toggleEdit = () => {
+        setEditing(!editing);
+    };
+
+    return (
+        <div>
+            {editing ? (
+                <DatePicker
+                    open // Keeps the DatePicker open until explicitly closed
+                    format="DD.MM.YYYY"
+                    value={dateValue} // Set the DatePicker value from state
+                    onChange={handleDateChange} // Handle date selection
+                    style={{ width: '100%' }}
+                />
+            ) : (
+                <div
+                    onClick={toggleEdit}
+                    style={{ border: '1px solid #d9d9d9', borderRadius: 4, padding: 5, cursor: 'pointer' }}
+                >
+                    {dateValue ? dayjs(dateValue).format('DD.MM.YYYY') : 'Select Date'}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const EditableCell = ({
     editable,
     children,
@@ -52,11 +87,24 @@ const EditableCell = ({
         }
     }, [editing]);
 
+    
+    const handleDatePickerChange = (date, dateString) => {
+        console.log(date)
+        try {
+            // Ensure date is a valid Date or Moment.js object
+            const formattedDate = dayjs(dateString, 'DD.MM.YYYY');
+            form.setFieldsValue({ [dataIndex]: formattedDate });
+            setOpenDatePicker(false); // Close DatePicker after selecting a date
+        } catch (error) {
+            console.error('Error parsing date:', error);
+            // Handle the error (e.g., display a message to the user)
+        }
+    };
 
     const toggleEdit = () => {
         setEditing(!editing);
         if (dataIndex === 'tarih') {
-            setOpenDatePicker(true);
+            setOpenDatePicker(true); // Open DatePicker when editing starts
         }
         form.setFieldsValue({
             [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : record[dataIndex],
@@ -66,28 +114,18 @@ const EditableCell = ({
     const save = async () => {
         try {
             const values = await form.validateFields();
-            console.log(values)
             toggleEdit();
+            console.log(values)
             handleSave({
                 ...record,
                 ...values,
                 [dataIndex]:
                     dataIndex === 'tarih' && values[dataIndex]
-                        ? dayjs(values[dataIndex], 'DD.MM.YYYY')
+                        ? dayjs(values[dataIndex]).format('DD.MM.YYYY')
                         : values[dataIndex],
             });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
-        }
-    };
-
-    const handleDatePickerChange = async (date) => {
-        try {
-            form.setFieldsValue({ [dataIndex]: date });
-            setOpenDatePicker(false);
-            save()
-        } catch (error) {
-            console.error('Error parsing date:', error);
         }
     };
 
@@ -124,22 +162,6 @@ const EditableCell = ({
                 break;
 
             case 'tarih':
-                function formatDate(row) {
-                    const dateString = row.tarih;
-
-                    const ddMMyyyyRegex = /^\d{2}\.\d{2}\.\d{4}$/;
-
-                    let formattedDate;
-
-                    if (ddMMyyyyRegex.test(dateString)) {
-                        formattedDate = dateString;
-                    } else {
-                        formattedDate = dayjs(dateString).format('DD.MM.YYYY');
-                    }
-
-                    return formattedDate;
-                }
-
                 childNode = editing ? (
                     <Form.Item
                         style={{ margin: 0 }}
@@ -158,7 +180,7 @@ const EditableCell = ({
                         style={{ paddingRight: 24 }}
                         onClick={toggleEdit}
                     >
-                        {formatDate(record)}
+                        {children}
                     </div>
                 );
                 break;
@@ -307,7 +329,7 @@ const KmUpdate = () => {
                     departman: item.departman,
                     guncelKm: item.guncelKm,
                     plaka: item.plaka,
-                    tarih: date.tarih || validatedRow?.tarih,
+                    tarih: validatedRow?.tarih || date.tarih,
                     saat: validatedRow?.saat || date.saat,
                     yeniKm: validatedRow?.yeniKm,
                 };
@@ -326,7 +348,6 @@ const KmUpdate = () => {
             setStatus(false)
         })
     }, [status, tableParams.pagination.current])
-    console.log(validatedRows)
 
     const handleSave = async (row) => {
         try {
@@ -336,30 +357,16 @@ const KmUpdate = () => {
                 const item = newData[index];
                 newData.splice(index, 1, { ...item, ...row });
                 setDataSource(newData);
+                console.log(row)
 
-                function formatDate(row) {
-                    const dateString = row.tarih;
-
-                    const ddMMyyyyRegex = /^\d{2}\.\d{2}\.\d{4}$/;
-
-                    let formattedDate;
-
-                    if (ddMMyyyyRegex.test(dateString)) {
-                        formattedDate = dayjs(dateString, 'DD.MM.YYYY').format('YYYY-MM-DD');
-                    } else {
-                        formattedDate = dayjs(dateString).format('YYYY-MM-DD');
-                    }
-
-                    return formattedDate;
-                }
-
+                console.log(row)
                 const body = {
                     "siraNo": 0,
                     "kmAracId": row.aracId,
                     "seferSiraNo": 0,
                     "yakitSiraNo": 0,
                     "plaka": row.plaka,
-                    "tarih": formatDate(row),
+                    "tarih": row.tarih.split(".").reverse().join("-"),
                     "saat": row.saat,
                     "eskiKm": row.guncelKm,
                     "yeniKm": row.yeniKm,
