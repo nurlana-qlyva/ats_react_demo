@@ -101,64 +101,56 @@ const GeneralInfo = ({ control, setValue }) => {
                                 render={({ field }) => <Checkbox {...field} checked={field.value} />}
                             />
                         </div>
-                    </div>
-                </div>
-                <div className="col-span-8 border p-10">
-                    <div className="grid gap-1">
-                        {/* <div className="col-span-6">
-                            <DriverSelectInput control={control} />
-                        </div> */}
-                        <div className="col-span-3">
+                        <div className="col-span-6">
                             <MaterialListSelect control={control} name="yakitTipId" label="Yakıt Tipi" type="YAKIT" />
                         </div>
-                        <div className="col-span-12 mt-20">
-                            <div className="grid">
-                                <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                                    <p>02.05.2024</p>
-                                    <div>
-                                        <img src="/images/kirmizi.svg" alt="" style={{ width: "50%" }} />
-                                    </div>
-                                    <p>12.500</p>
-                                    <p>33 Lt.</p>
-                                    <p>7,25 Lt.Km..</p>
-                                </div>
-                                <div className="col-span-1 self-center">
-                                    <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                                    <p>02.05.2024</p>
-                                    <div><img src="/images/kirmizi.svg" alt="" style={{ width: "50%" }} /></div>
-                                    <p>12.500</p>
-                                    <p>33 Lt.</p>
-                                    <p>7,25 Lt.Km..</p>
-                                </div>
-                                <div className="col-span-1 self-center">
-                                    <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                                    <p>02.05.2024</p>
-                                    <div><img src="/images/Mor.svg" alt="" style={{ width: "50%" }} /></div>
-                                    <p>12.500</p>
-                                    <p>33 Lt.</p>
-                                    <p>7,25 Lt.Km..</p>
-                                </div>
-                                <div className="col-span-1 self-center">
-                                    <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-span-2 self-center mt-14" style={{ textAlign: 'center' }}>
-                                    <div><img src="/images/Araba.svg" alt="" style={{ width: "80%" }} /></div>
-                                </div>
+                    </div>
+                </div>
+                <div className="col-span-4 border p-10">
+                    <div className="grid">
+                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
+                            <p style={{fontSize: "10px"}}>02.05.2024</p>
+                            <div>
+                                <img src="/images/kirmizi.svg" alt="" style={{ width: "50%" }} />
                             </div>
+                            <p style={{fontSize: "10px"}}>12.500</p>
+                            <p style={{fontSize: "10px"}}>33 Lt.</p>
+                            <p style={{fontSize: "10px"}}>7,25 Lt.Km..</p>
                         </div>
-                        {/* <div className="col-span-6">
+                        <div className="col-span-1 mt-20">
+                            <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
+                        </div>
+                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
+                            <p style={{fontSize: "10px"}}>02.05.2024</p>
+                            <div><img src="/images/kirmizi.svg" alt="" style={{ width: "50%" }} /></div>
+                            <p style={{fontSize: "10px"}}>12.500</p>
+                            <p style={{fontSize: "10px"}}>33 Lt.</p>
+                            <p style={{fontSize: "10px"}}>7,25 Lt.Km..</p>
+                        </div>
+                        <div className="col-span-1 mt-20">
+                            <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
+                        </div>
+                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
+                            <p style={{fontSize: "10px"}}>02.05.2024</p>
+                            <div><img src="/images/Mor.svg" alt="" style={{ width: "50%" }} /></div>
+                            <p style={{fontSize: "10px"}}>12.500</p>
+                            <p style={{fontSize: "10px"}}>33 Lt.</p>
+                            <p style={{fontSize: "10px"}}>7,25 Lt.Km..</p>
+                        </div>
+                        <div className="col-span-1 mt-20">
+                            <img src="/images/yol.svg" alt="" style={{ width: "100%" }} />
+                        </div>
+                        <div className="col-span-2 mt-20" style={{ textAlign: 'center' }}>
+                            <div><img src="/images/Araba.svg" alt="" style={{ width: "80%" }} /></div>
+                        </div>
+                    </div>
+                </div>
+                {/* <div className="col-span-6">
                             <TextInput control={control} name="faturaNo" label="Evrak No" />
                         </div>
                         <div className="col-span-6">
                             <DateInput control={control} name="faturaTarih" label="Evrak Tarihi" />
                         </div> */}
-                    </div>
-                </div>
-
             </div>
         </>
     )
