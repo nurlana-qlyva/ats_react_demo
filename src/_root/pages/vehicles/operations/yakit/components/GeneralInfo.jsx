@@ -3,17 +3,116 @@ import DateInput from "../../../../../components/form/DateInput"
 import NumberInput from "../../../../../components/form/NumberInput"
 import SelectInput from "../../../../../components/form/SelectInput"
 import MaterialListSelect from "../../../../../components/form/MaterialListSelect"
-import { Checkbox, Input } from "antd"
+import { Button, Checkbox, Input, InputNumber, message, Modal } from "antd"
 import DriverSelectInput from "../../../../../components/form/DriverSelectInput"
 import { ArrowUpOutlined } from '@ant-design/icons';
-import { LuArrowUpRightFromCircle } from "react-icons/lu";
+import { useEffect, useState } from "react"
+import { KMValidateService } from "../../../../../../api/service"
 
-const GeneralInfo = ({ control, setValue }) => {
+const GeneralInfo = ({ control, data }) => {
+    const [alinanKm, setAlinanKm] = useState(0)
+    const [fark, setFark] = useState(0)
+    const [miktar, setMiktar] = useState(0)
+    const [full, setFull] = useState(false)
+    const [tuketim, setTuketim] = useState(0)
+    const [open, setOpen] = useState(false)
+    const [response, setResponse] = useState('normal')
+
+
+    // ortalama tuketim hesaplama
+    useEffect(() => {
+        const frk = alinanKm - data.sonAlinanKm
+
+        if (frk === 0) {
+            setFark(0);
+            return;
+        }
+
+        if (full) {
+            if (frk > 0) {
+                const tktm = (miktar / frk).toFixed(2);
+                setTuketim(tktm);
+            } else {
+                setTuketim(0);
+            }
+        } else {
+            if (!data.fullDepo) {
+                if (fark > 0) {
+                    const tktm = (data.miktar / fark).toFixed(2);
+                    setTuketim(tktm);
+                } else {
+                    setTuketim(0);
+                }
+            } else {
+                if (depo === 0) {
+                    message
+                }
+
+                const depo = 60;
+                const tktm = (depo / fark).toFixed(2);
+                setTuketim(tktm);
+            }
+        }
+    }, [full, miktar])
+
+    const handleDepoHacmi = () => {
+        setOpen(true)
+    }
+
+    const onClose = () => {
+        setOpen(false)
+    }
+
+    const handleValidateKm = () => {
+        const body = {
+            "siraNo": 0,
+            "kmAracId": data.aracId,
+            "seferSiraNo": 0,
+            "yakitSiraNo": 0,
+            "plaka": data.plaka,
+            "tarih": data.tarih,
+            "saat": data.saat,
+            "eskiKm": data.sonAlinanKm,
+            "yeniKm": alinanKm,
+            "fark": 0,
+            "kaynak": "yakit",
+            "dorse": true,
+            "aciklama": ""
+        }
+        if (alinanKm) {
+            KMValidateService(body).then(res => {
+                if (res?.data.statusCode === 400) {
+                    setResponse('error')
+                } else if (res?.data.statusCode === 200) {
+                    setResponse('success')
+                }
+            })
+        } else {
+            setResponse('normal')
+        }
+
+    }
+
+
+    const footer = (
+        [
+            <Button key="submit" className="btn primary-btn">
+                Kaydet
+            </Button>,
+            <Button key="back" className="btn cancel-btn" onClick={onClose}>
+                İptal
+            </Button>
+        ]
+    )
+
     return (
         <>
             <div className="grid gap-4 border p-10">
                 <div className="col-span-6">
                     <div className="grid gap-1">
+                        <div className="col-span-12">
+                            <SelectInput control={control} name="" label="Plaka" />
+                        </div>
                         <div className="col-span-6">
                             <DateInput control={control} name="tarih" label="Tarih" />
                         </div>
@@ -23,9 +122,6 @@ const GeneralInfo = ({ control, setValue }) => {
                         <div className="col-span-12">
                             <DriverSelectInput control={control} />
                         </div>
-                        {/* <div className="col-span-6">
-                            <LocationTreeSelect control={control} />
-                        </div> */}
                     </div>
                 </div>
                 <div className="col-span-6">
@@ -44,15 +140,6 @@ const GeneralInfo = ({ control, setValue }) => {
                         <div className="col-span-6">
                             <SelectInput control={control} name="yakitTanki" label="Yakıt Tankı" />
                         </div>
-                        {/* <div className="col-span-6 flex flex-col">
-                            <label htmlFor="ozelKullanim">Kullanım</label>
-                            <Controller
-                                name="ozelKullanim"
-                                control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
-                            />
-                        </div> */}
-
                     </div>
                 </div>
 
@@ -61,21 +148,55 @@ const GeneralInfo = ({ control, setValue }) => {
                 <div className="col-span-6">
                     <div className="grid gap-1">
                         <div className="col-span-6">
-                            <NumberInput control={control} name="alinanKm" label="Yakıtın Alındığı Km" />
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="sonAlinanKm" > Son Alınan Km</label>
+                                <InputNumber className="w-full" value={data.sonAlinanKm} readOnly />
+                            </div>
                         </div>
                         <div className="col-span-6">
-                            <NumberInput control={control} name="sonAlinanKm" label="Son Alınan Km" />
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="alinanKm" > Yakıtın Alındığı Km</label>
+                                <Controller
+                                    name="alinanKm"
+                                    control={control}
+                                    render={({ field }) => <InputNumber className="w-full" style={response === 'error' ? { borderColor: "#f00" } : response === "success" ? { borderColor: "#0f0" } : { color: '#000' }} onPressEnter={handleValidateKm} {...field} onChange={e => {
+                                        field.onChange(e)
+                                        setAlinanKm(e)
+                                        if (e) {
+                                            setFark(e - data.sonAlinanKm)
+                                        } else {
+                                            setFark(0)
+                                        }
+                                    }} />}
+                                />
+                            </div>
                         </div>
-                        <div className="col-span-3">
-                            <NumberInput control={control} name="farkKm" label="Fark Km" />
+
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="farkKm" > Fark Km</label>
+                                <InputNumber className="w-full" value={fark} readOnly />
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div className="col-span-6">
                     <div className="grid gap-1">
                         <div className="col-span-6">
-                            <NumberInput control={control} name="miktar" label="Miktar (lt)" />
+                            <div className="flex flex-col gap-1">
+                                <div className="flex align-center justify-between">
+                                    <label htmlFor="miktar" >Miktar (lt)</label>
+                                    <Button className="depo" onClick={handleDepoHacmi}>Depo Hacmi: 0</Button>
+                                </div>
+                                <Controller
+                                    name="miktar"
+                                    control={control}
+                                    render={({ field }) => <InputNumber className="w-full"  {...field} onChange={(e => {
+                                        field.onChange(e)
+                                        setMiktar(e)
+                                    })} />}
+                                />
+                            </div>
                         </div>
                         <div className="col-span-6">
                             <div className="grid">
@@ -84,12 +205,15 @@ const GeneralInfo = ({ control, setValue }) => {
                                     <Controller
                                         control={control}
                                         name="fullDepo"
-                                        render={({ field }) => <Checkbox {...field} />}
+                                        render={({ field }) => <Checkbox {...field} onChange={e => {
+                                            field.onChange(e.target.checked)
+                                            setFull(e.target.checked)
+                                        }} />}
                                     />
                                 </div>
                                 <div className="col-span-6">
                                     <p>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></p>
-                                    <Input />
+                                    <Input value={tuketim} readOnly />
                                 </div>
                             </div>
 
@@ -102,8 +226,6 @@ const GeneralInfo = ({ control, setValue }) => {
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div className="grid gap-1 border p-10 mt-10">
                 <div className="col-span-12">
@@ -150,6 +272,16 @@ const GeneralInfo = ({ control, setValue }) => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                open={open}
+                maskClosable={false}
+                title="Depo Hacmi Girişi"
+                footer={footer}
+                onCancel={onClose}
+            >
+                <Input />
+            </Modal>
         </>
     )
 }

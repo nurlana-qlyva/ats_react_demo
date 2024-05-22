@@ -1,6 +1,7 @@
-import { Select } from "antd"
 import { useState } from "react";
 import { Controller } from "react-hook-form";
+import PropTypes from 'prop-types'
+import { Select } from "antd"
 import { CustomCodeControlService } from "../../../api/service";
 
 const IlSelect = ({ control, name, label, setValue, name2 }) => {
@@ -47,6 +48,14 @@ const IlSelect = ({ control, name, label, setValue, name2 }) => {
             />
         </div>
     )
+}
+
+IlSelect.propTypes ={
+    control: PropTypes.func,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
 }
 
 export default IlSelect

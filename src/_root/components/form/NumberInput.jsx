@@ -1,5 +1,6 @@
-import { InputNumber } from "antd"
 import { Controller } from "react-hook-form"
+import PropTypes from 'prop-types'
+import { InputNumber } from "antd"
 
 const NumberInput = ({ control, name, label, color, setValue }) => {
     return (
@@ -17,6 +18,15 @@ const NumberInput = ({ control, name, label, color, setValue }) => {
             />
         </div>
     )
+}
+
+NumberInput.propTypes ={
+    control: PropTypes.func,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    color: PropTypes.string,
 }
 
 export default NumberInput

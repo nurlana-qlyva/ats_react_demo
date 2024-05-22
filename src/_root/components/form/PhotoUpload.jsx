@@ -1,7 +1,8 @@
-import { Spin, Upload, message, Image } from "antd";
-import { InboxOutlined, UserOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import { PhotoDownloadService } from "../../../api/service";
+import { useState, useEffect } from "react"
+import PropTypes from 'prop-types'
+import { Spin, Upload, message, Image } from "antd"
+import { InboxOutlined, UserOutlined } from "@ant-design/icons"
+import { PhotoDownloadService } from "../../../api/service"
 
 const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
     const [imagesArr, setImagesArr] = useState([]);
@@ -95,5 +96,11 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
         </div>
     );
 };
+
+PhotoUpload.propTypes ={
+    imageUrls: PropTypes.array,
+    setImages: PropTypes.func,
+    loadingImages: PropTypes.array,
+}
 
 export default PhotoUpload;

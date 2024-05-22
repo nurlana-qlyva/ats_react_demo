@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { TreeSelect } from 'antd';
-import { CarryOutOutlined } from '@ant-design/icons';
-import { Controller } from 'react-hook-form';
-import { CustomCodeControlService } from '../../../api/service';
+import { Controller } from 'react-hook-form'
+import PropTypes from 'prop-types'
+import { TreeSelect } from 'antd'
+import { CarryOutOutlined } from '@ant-design/icons'
+import { CustomCodeControlService } from '../../../api/service'
 
 const convertToFormat = (data, parentId = 0) => {
     const result = [];
@@ -65,6 +66,13 @@ const LocationTreeSelect = ({ control, setValue, name2 }) => {
         </div>
 
     );
+}
+
+LocationTreeSelect.propTypes ={
+    control: PropTypes.func,
+    label: PropTypes.string,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
 }
 
 export default LocationTreeSelect

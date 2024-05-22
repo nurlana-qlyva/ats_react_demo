@@ -1,6 +1,9 @@
-import { Select } from "antd"
 import { useState } from "react";
 import { Controller } from "react-hook-form";
+import PropTypes from 'prop-types';
+// antd
+import { Select } from "antd"
+// service
 import { CustomCodeControlService } from "../../../api/service";
 
 
@@ -54,6 +57,12 @@ const CompanySelectInput = ({ control, setValue, name2 }) => {
             />
         </div>
     )
+}
+
+CompanySelectInput.propTypes ={
+    control: PropTypes.func,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
 }
 
 export default CompanySelectInput

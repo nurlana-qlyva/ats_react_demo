@@ -53,4 +53,6 @@
     background-color: #5b548b6c !important;
     color: $white !important;
 }
-
+.undraggable-checkbox {
+    pointer-events: none; /* Disable pointer events to prevent dragging */
+}

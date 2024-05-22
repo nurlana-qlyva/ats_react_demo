@@ -1,13 +1,31 @@
-import { useEffect, useState } from "react"
-import { Checkbox, Table, Popover, Button, Input } from 'antd';
-import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import { MenuOutlined, HomeOutlined } from "@ant-design/icons"
+import { createContext, useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom";
+import {
+    closestCenter,
+    DndContext,
+    DragOverlay,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import {
+    arrayMove,
+    horizontalListSortingStrategy,
+    SortableContext,
+    useSortable,
+} from '@dnd-kit/sortable';
+// antd
+import { Checkbox, Table, Popover, Button, Input, Spin } from 'antd';
+import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons"
+// services
 import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from "../../../api/service";
+// components
+import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import AddModal from "./add/AddModal";
 import Filter from "./filter/Filter";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import OperationsInfo from "./operations/OperationsInfo";
+
 
 const breadcrumb = [
     {
@@ -19,19 +37,71 @@ const breadcrumb = [
     },
 ]
 
+const DragIndexContext = createContext({
+    active: -1,
+    over: -1,
+});
+const dragActiveStyle = (dragState, id) => {
+    const { active, over, direction } = dragState;
+    // drag active style
+    let style = {};
+    if (active && active === id) {
+        style = {
+            backgroundColor: 'gray',
+            opacity: 0.5,
+        };
+    }
+    // dragover dashed style
+    else if (over && id === over && active !== over) {
+        style =
+            direction === 'right'
+                ? {
+                    borderRight: '1px dashed gray',
+                }
+                : {
+                    borderLeft: '1px dashed gray',
+                };
+    }
+    return style;
+};
+const TableBodyCell = (props) => {
+    const dragState = useContext(DragIndexContext);
+    return (
+        <td
+            {...props}
+            style={{
+                ...props.style,
+                ...dragActiveStyle(dragState, props.id),
+            }}
+        />
+    );
+};
+const TableHeaderCell = (props) => {
+    const dragState = useContext(DragIndexContext);
+    const { attributes, listeners, setNodeRef, isDragging } = useSortable({
+        id: props.id,
+    });
+    const style = {
+        ...props.style,
+        cursor: 'move',
+        ...(isDragging
+            ? {
+                position: 'relative',
+                zIndex: 9999,
+                userSelect: 'none',
+            }
+            : {}),
+        ...dragActiveStyle(dragState, props.id),
+    };
+    return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
+};
 
 const Vehicles = () => {
-    const columns = [
-        {
-            title: "",
-            key: "selection",
-            render: (text, record) => (
-                <Checkbox
-                    onChange={(e) => handleCheckboxChange(e, record.aracId)}
-                    checked={selectedRowKeys.includes(record.aracId)}
-                />
-            ),
-        },
+    const [dragIndex, setDragIndex] = useState({
+        active: -1,
+        over: -1,
+    });
+    const baseColumns = [
         {
             title: 'Araç İD',
             dataIndex: 'aracId',
@@ -64,6 +134,11 @@ const Vehicles = () => {
             key: 6,
         },
         {
+            title: 'Güncel Km',
+            dataIndex: 'guncelKm',
+            key: 6,
+        },
+        {
             title: 'Renk',
             dataIndex: 'renk',
             key: 7,
@@ -79,6 +154,19 @@ const Vehicles = () => {
             key: 9,
         },
     ];
+
+    const [columns, setColumns] = useState(() =>
+        baseColumns.map((column, i) => ({
+            ...column,
+            key: `${i}`,
+            onHeaderCell: () => ({
+                id: `${i}`,
+            }),
+            onCell: () => ({
+                id: `${i}`,
+            }),
+        })),
+    );
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const defaultCheckedList = columns.map((item) => item.key);
     const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -87,7 +175,6 @@ const Vehicles = () => {
     const [vehiclesData, setVehiclesData] = useState([])
     const [count, setCount] = useState(0)
     const [loading, setLoading] = useState(false);
-    const [hasValue, setHasValue] = useState(false);
     const [search, setSearch] = useState("");
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -96,28 +183,42 @@ const Vehicles = () => {
         },
     });
 
-    const defaultValues = {
-        aracId: "",
-        plaka: "",
-        model: "",
-        marka: "",
-        aracTip: "",
-        grup: "",
-        renk: "",
-        yil: "",
-        yakitTip: "",
-    }
-
-    const methods = useForm({
-        defaultValues: defaultValues
-    })
-
-    const { control, handleSubmit, reset, setValue } = methods
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                // https://docs.dndkit.com/api-documentation/sensors/pointer#activation-constraints
+                distance: 1,
+            },
+        }),
+    );
+    const onDragEnd = ({ active, over }) => {
+        if (active.id !== over?.id) {
+            setColumns((prevState) => {
+                const activeIndex = prevState.findIndex((i) => i.key === active?.id);
+                const overIndex = prevState.findIndex((i) => i.key === over?.id);
+                return arrayMove(prevState, activeIndex, overIndex);
+            });
+        }
+        setDragIndex({
+            active: -1,
+            over: -1,
+        });
+    };
+    const onDragOver = ({ active, over }) => {
+        const activeIndex = columns.findIndex((i) => i.key === active.id);
+        const overIndex = columns.findIndex((i) => i.key === over?.id);
+        setDragIndex({
+            active: active.id,
+            over: over?.id,
+            direction: overIndex > activeIndex ? 'right' : 'left',
+        });
+    };
 
     const handleOpenChange = (newOpen) => {
         setOpen(newOpen);
     };
 
+    // get data
     useEffect(() => {
         setLoading(true);
         if (search.length >= 3) {
@@ -150,6 +251,7 @@ const Vehicles = () => {
     }, [search])
 
     useEffect(() => {
+        setLoading(true)
         if (status) {
             VehiclesReadForSearchService("").then(res => {
                 setLoading(false);
@@ -167,8 +269,10 @@ const Vehicles = () => {
     }, [status])
 
     const handleTableChange = (pagination, filters, sorter) => {
+        setLoading(true)
         VehiclesReadForPageService(search, pagination.current).then(res => {
             setVehiclesData(res.data.vehicleList)
+            setLoading(false)
         })
         setTableParams({
             pagination,
@@ -181,24 +285,8 @@ const Vehicles = () => {
         }
     };
 
-    const handleSearchFilters = handleSubmit((values) => {
-        if (!values.aracId && !values.aracTip && !values.model && !values.marka && !values.plaka && !values.yakitTip && !values.grup && !values.renk && !values.yil) {
-            setHasValue(false)
-        } else {
-            setHasValue(true)
-        }
-
-        const data = {
-            aracId: +values.aracId,
-            plaka: values.plaka,
-            model: values.modelFilter,
-            marka: values.markaFilter,
-            aracTip: values.aracTipFilter,
-            grup: values.grupFilter,
-            renk: values.renkFilter,
-            yil: +values.yil,
-            yakitTip: values.yakitFilter,
-        }
+    const filter = (data) => {
+        setLoading(true)
 
         VehiclesReadForFilterService(search, data).then(res => {
             setVehiclesData(res?.data.vehicleList)
@@ -210,27 +298,25 @@ const Vehicles = () => {
                 },
             });
             setCount(res?.data.vehicleCount)
+            setLoading(false)
         })
-    })
-
-    const clear = () => {
-        reset();
-        setHasValue(false)
     }
 
-    const handleCheckboxChange = (e, aracId) => {
-        const keys = [...selectedRowKeys];
-        if (e.target.checked) {
-            keys.push(aracId);
-        } else {
-            const index = keys.indexOf(aracId);
-            if (index !== -1) {
-                keys.splice(index, 1);
-            }
-        }
-        setSelectedRowKeys(keys);
-    };
-
+    const clear = () => {
+        setLoading(true)
+        VehiclesReadForSearchService("").then(res => {
+            setLoading(false);
+            setVehiclesData(res?.data.vehicleList)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.vehicleCount,
+                },
+            });
+            setCount(res?.data.vehicleCount)
+        })
+    }
 
     const options = columns.map(({ key, title }) => ({
         label: title,
@@ -260,6 +346,23 @@ const Vehicles = () => {
 
     return (
         <>
+            {loading && (
+                <div className="loading-spin">
+                    <div>
+                        <Spin
+                            indicator={
+                                <LoadingOutlined
+                                    style={{
+                                        fontSize: 100,
+                                    }}
+                                    spin
+                                />
+                            }
+                        />
+                    </div>
+                </div>
+            )}
+
             <div className="content">
                 <BreadcrumbComp items={breadcrumb} />
             </div>
@@ -278,7 +381,7 @@ const Vehicles = () => {
                         </Popover>
                         <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
                         <AddModal setStatus={setStatus} data={vehiclesData} />
-                        <Filter setVehiclesData={setVehiclesData} control={control} setValue={setValue} handleSearchFilters={handleSearchFilters} clear={clear} hasValue={hasValue} />
+                        <Filter filter={filter} clearFilters={clear} />
                     </div>
                     <div>
                         <OperationsInfo ids={selectedRowKeys} />
@@ -288,14 +391,56 @@ const Vehicles = () => {
 
             <div className="content">
                 <p className="count">[ {count} kayıt ]</p>
-                <Table
-                    columns={newColumns}
-                    dataSource={vehiclesData}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    size="small"
-                    onChange={handleTableChange}
-                />
+                <DndContext
+                    sensors={sensors}
+                    modifiers={[restrictToHorizontalAxis]}
+                    onDragEnd={onDragEnd}
+                    onDragOver={onDragOver}
+                    collisionDetection={closestCenter}
+                >
+                    <SortableContext items={columns.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+                        <DragIndexContext.Provider value={dragIndex}>
+                            <Table
+                                rowKey={(record) => record.aracId}
+                                columns={newColumns}
+                                dataSource={vehiclesData}
+                                pagination={tableParams.pagination}
+                                loading={loading}
+                                size="small"
+                                onChange={handleTableChange}
+                                rowSelection={{
+                                    selectedRowKeys: selectedRowKeys,
+                                    onChange: (selectedRowKeys, selectedRows) => {
+                                        setSelectedRowKeys(selectedRowKeys);
+                                    },
+                                    onSelectAll: (selected, selectedRows, changeRows) => {
+                                        const keys = changeRows.map((row) => row.aracId);
+                                        setSelectedRowKeys(selected ? keys : []);
+                                    },
+                                }}
+                                components={{
+                                    header: {
+                                        cell: TableHeaderCell,
+                                    },
+                                    body: {
+                                        cell: TableBodyCell,
+                                    },
+                                }}
+                            />
+                        </DragIndexContext.Provider>
+                    </SortableContext>
+                    <DragOverlay>
+                        <th
+                            style={{
+                                backgroundColor: 'gray',
+                                padding: 16,
+                            }}
+                        >
+                            {columns[columns.findIndex((i) => i.key === dragIndex.active)]?.title}
+                        </th>
+                    </DragOverlay>
+                </DndContext>
+
             </div>
         </>
     )

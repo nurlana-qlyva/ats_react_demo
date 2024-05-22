@@ -1,4 +1,4 @@
-import { Modal, Button, Table, Tabs, message } from 'antd';
+import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import SpecialFields from '../../../../components/form/SpecialFields';
@@ -25,6 +25,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [vehicleId, setVehicleId] = useState(0)
     const [plaka, setPlaka] = useState("")
+    const [selectedRow, setSelectedRow] = useState([]);
 
     const [fields, setFields] = useState([
         {
@@ -107,6 +108,16 @@ const YakitModal = ({ visible, onClose, ids }) => {
 
     const columns = [
         {
+            title: "",
+            key: "selection",
+            render: (text, record) => (
+                <Checkbox
+                    onChange={(e) => handleCheckboxChange(e, record)}
+                // checked={selectedRowKeys.includes(record.aracId)}
+                />
+            ),
+        },
+        {
             title: 'Plaka',
             dataIndex: 'plaka',
             key: 1,
@@ -183,6 +194,12 @@ const YakitModal = ({ visible, onClose, ids }) => {
             key: 16,
         }
     ];
+
+    const handleCheckboxChange = (e, record) => {
+        if (e.target.checked) {
+            setSelectedRow(record);
+        }
+    };
 
     const defaultValues = {
         tarih: ''
@@ -290,7 +307,7 @@ const YakitModal = ({ visible, onClose, ids }) => {
             footer={footer}
             width={1200}
         >
-            <AddModal ids={ids} />
+            <AddModal ids={ids} data={selectedRow} />
             <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}

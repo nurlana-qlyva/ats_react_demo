@@ -1,9 +1,10 @@
 import { Button, Input, InputNumber, Modal, Popconfirm, Table } from "antd"
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { useEffect, useState } from "react";
-import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from "../../../../api/service";
+import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from "../../../api/service";
 
-const KmUpdate = ({ data, setTable }) => {
+
+const KmHistory = (data, setDataStatus) => {
     const [dataSource, setDataSource] = useState([]);
     const [status, setStatus] = useState(false)
     const [updateModal, setUpdateModal] = useState(false)
@@ -17,7 +18,7 @@ const KmUpdate = ({ data, setTable }) => {
     });
 
     useEffect(() => {
-        KMLogListGetByIdService(data.aracId, tableParams?.pagination.current).then(res => {
+        KMLogListGetByIdService(data?.data.aracId, tableParams?.pagination.current).then(res => {
             setDataSource(res?.data.km_list)
             setTableParams({
                 ...tableParams,
@@ -47,12 +48,10 @@ const KmUpdate = ({ data, setTable }) => {
         KMLogListDeleteService(body).then(res => {
             if (res?.data.statusCode === 202) {
                 setStatus(true)
-                setTable(true)
             }
         })
 
         setStatus(false)
-        setTable(false)
     };
 
     const validateKm = async () => {
@@ -86,7 +85,7 @@ const KmUpdate = ({ data, setTable }) => {
                 if (res.data.statusCode === 202) {
                     setStatus(true);
                     onClose();
-
+                    setDataStatus(true)
                 }
             })
             setStatus(false)
@@ -102,22 +101,6 @@ const KmUpdate = ({ data, setTable }) => {
         setUpdateModal(false)
         setUpdateData(null)
         setKmStatus("black")
-    }
-
-    const handleSearch = e => {
-        if (e.target.value >= 3) {
-            KMLogListGetByIdService(data.aracId, tableParams?.pagination.current, e.target.value).then(res => {
-                setDataSource(res?.data.km_list)
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.total_count,
-                    },
-                });
-            })
-        }
-
     }
 
     const defaultColumns = [
@@ -194,13 +177,7 @@ const KmUpdate = ({ data, setTable }) => {
     )
 
     return (
-        <div className="history">
-            <div className="grid mb-10">
-                <div className="col-span-3">
-                    <Input placeholder="Arama" onChange={handleSearch} />
-                </div>
-            </div>
-
+        <div>
             <Table
                 rowClassName={() => 'editable-row'}
                 pagination={tableParams.pagination}
@@ -252,4 +229,4 @@ const KmUpdate = ({ data, setTable }) => {
     )
 }
 
-export default KmUpdate
+export default KmHistory

@@ -1,7 +1,8 @@
+import { useState } from "react"
+import { Controller } from "react-hook-form"
 import { Select } from "antd"
-import { useState } from "react";
-import { Controller } from "react-hook-form";
-import { CustomCodeControlService } from "../../../api/service";
+import PropTypes from 'prop-types'
+import { CustomCodeControlService } from "../../../api/service"
 
 
 const ModelSelectInput = ({ control, setValue, name2 }) => {
@@ -56,6 +57,12 @@ const ModelSelectInput = ({ control, setValue, name2 }) => {
             />
         </div>
     )
+}
+
+ModelSelectInput.propTypes ={
+    control: PropTypes.func,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
 }
 
 export default ModelSelectInput

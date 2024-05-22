@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 
-const AddModal = ({ ids }) => {
+const AddModal = ({ ids, data }) => {
     const [openModal, setopenModal] = useState(false);
     const [fields, setFields] = useState([
         {
@@ -149,7 +149,7 @@ const AddModal = ({ ids }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo control={control} setValue={setValue} />,
+            children: <GeneralInfo control={control} setValue={setValue} data={data}/>,
         },
         {
             key: '2',

@@ -1,8 +1,8 @@
-import { Select } from "antd"
 import { useState } from "react";
 import { Controller } from "react-hook-form";
+import PropTypes from 'prop-types'
+import { Select } from "antd"
 import { CustomCodeControlService } from "../../../api/service";
-
 
 const DriverSelectInput = ({ control, setValue, name2 }) => {
     const [data, setData] = useState([]);
@@ -48,6 +48,12 @@ const DriverSelectInput = ({ control, setValue, name2 }) => {
             />
         </div>
     )
+}
+
+DriverSelectInput.propTypes ={
+    control: PropTypes.func,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
 }
 
 export default DriverSelectInput

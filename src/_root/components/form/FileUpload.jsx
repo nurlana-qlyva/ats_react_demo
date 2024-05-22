@@ -1,7 +1,8 @@
-import { Button, Spin, Upload, message } from "antd";
-import { InboxOutlined, FileOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import { FileDownloadService } from "../../../api/service";
+import { useState, useEffect } from "react"
+import PropTypes from 'prop-types'
+import { Button, Spin, Upload, message } from "antd"
+import { InboxOutlined, FileOutlined } from "@ant-design/icons"
+import { FileDownloadService } from "../../../api/service"
 
 const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
     const [filesArr, setFilesArr] = useState([]);
@@ -28,7 +29,6 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
             link.href = window.URL.createObjectURL(res.data);
             link.download = file.dosyaAd;
             link.click();
-
             window.URL.revokeObjectURL(link.href);
         }).catch(err => {
             console.error("Error downloading file:", err);
@@ -37,7 +37,6 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
 
     return (
         <div>
-            {/* Your loading spinner or message */}
             {loadingFiles ? (
                 <Spin />
             ) : (
@@ -86,5 +85,11 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
         </div>
     );
 };
+
+FileUpload.propTypes ={
+    filesUrl: PropTypes.array,
+    loadingFiles: PropTypes.bool,
+    setFiles: PropTypes.func,
+}
 
 export default FileUpload;

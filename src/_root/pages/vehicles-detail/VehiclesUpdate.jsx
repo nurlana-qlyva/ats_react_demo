@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
-import { HomeOutlined } from "@ant-design/icons"
+import { HomeOutlined, LoadingOutlined } from "@ant-design/icons"
 import { useEffect, useState } from "react"
-import { Button, Input, message, Tabs } from "antd"
+import { Button, Input, message, Modal, Spin, Tabs } from "antd"
 import { Controller, useForm } from "react-hook-form"
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb"
 import SelectInput from "../../components/form/SelectInput"
@@ -21,6 +21,7 @@ import { formatDate } from "../../../utils/format"
 import DetailInfo from "./components/DetailInfo"
 import NumberInput from "../../components/form/NumberInput"
 import { upload } from "../../../utils/upload"
+import KmHistory from "../../components/table/KmHistory"
 
 const breadcrumb = [
   {
@@ -39,12 +40,15 @@ const breadcrumb = [
 const VehiclesUpdate = () => {
   const [vehiclesData, setVehiclesData] = useState([])
   const [status, setStatus] = useState(false)
+  const [dataStatus, setDataStatus] = useState(false)
   const [imageUrls, setImageUrls] = useState([]);
   const [filesUrl, setFilesUrl] = useState([]);
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
   const [loadingImages, setLoadingImages] = useState(false);
   const [loadingFiles, setLoadingFiles] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [kmHistryModal, setKmHistryModal] = useState(false)
 
   const [fields, setFields] = useState([
     {
@@ -216,8 +220,10 @@ const VehiclesUpdate = () => {
   ];
 
   useEffect(() => {
+    setLoading(true)
     VehiclesUpdateReadService(id).then(res => {
       setVehiclesData(res.data)
+      setLoading(false)
       setValue("plaka", res?.data.plaka)
       setValue("guncelKm", res?.data.guncelKm ? res?.data.guncelKm : null)
       setValue("aracTip", res?.data.aracTip)
@@ -269,7 +275,10 @@ const VehiclesUpdate = () => {
 
     PhotoReadService(id, "Arac").then(res => setImageUrls(res.data))
     FileReadService(id, "Arac").then(res => setFilesUrl(res.data))
-  }, [id, status])
+    
+  }, [id, status, dataStatus])
+
+  console.log(dataStatus)
 
   const onChange = (key) => {
     // console.log(key);
@@ -314,10 +323,11 @@ const VehiclesUpdate = () => {
       "ozelAlan11": values.ozelAlan11,
       "ozelAlan12": values.ozelAlan12,
     }
-
+    setLoading(true)
     VehiclesUpdateSetService(data).then(res => {
       if (res.data.statusCode === 202) {
         setStatus(true)
+        setLoading(false)
       }
     })
 
@@ -325,9 +335,38 @@ const VehiclesUpdate = () => {
     uploadFiles()
   })
 
+  const getKmHistory = () => {
+    setKmHistryModal(true)
+  }
+
+  const footer = (
+    [
+      <Button key="back" className="btn cancel-btn" onClick={() => setKmHistryModal(false)}>
+        Kapat
+      </Button>
+    ]
+  )
+
 
   return (
     <>
+      {loading && (
+        <div className="loading-spin">
+          <div>
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{
+                    fontSize: 100,
+                  }}
+                  spin
+                />
+              }
+            />
+          </div>
+        </div>
+      )}
+
       <div className="content">
         <BreadcrumbComp items={breadcrumb} />
       </div>
@@ -365,7 +404,14 @@ const VehiclesUpdate = () => {
                 />
               </div>
               <div className="col-span-4">
-                <NumberInput control={control} name="guncelKm" label="Güncel Km." setValue={setValue} />
+                <div className="grid gap-1">
+                  <div className="col-span-10">
+                    <NumberInput control={control} name="guncelKm" label="Güncel Km." setValue={setValue} />
+                  </div>
+                  <div className="col-span-2 self-end">
+                    <Button onClick={getKmHistory}>...</Button>
+                  </div>
+                </div>
               </div>
               <div className="col-span-4">
                 <LocationTreeSelect control={control} name2="lokasyonId" setValue={setValue} />
@@ -449,10 +495,22 @@ const VehiclesUpdate = () => {
           </div>
         </div>
       </div>
+
       <div className="content relative">
         <DetailInfo id={id} />
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </div>
+
+      <Modal
+        title={`Kilometre Güncelleme Geçmişi: ${vehiclesData?.plaka}`}
+        open={kmHistryModal}
+        onCancel={() => setKmHistryModal(false)}
+        maskClosable={false}
+        footer={footer}
+        width={1200}
+      >
+        <KmHistory data={vehiclesData} setDataStatus={setDataStatus} />
+      </Modal>
     </>
   )
 }

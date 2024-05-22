@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { Breadcrumb } from 'antd';
 
 const BreadcrumbComp = ({ items }) => {
@@ -6,6 +7,10 @@ const BreadcrumbComp = ({ items }) => {
             items={items}
         />
     )
+}
+
+BreadcrumbComp.propTypes ={
+    items: PropTypes.array
 }
 
 export default BreadcrumbComp

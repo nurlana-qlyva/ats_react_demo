@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import TextInput from "../../../../components/form/TextInput"
 import NumberInput from "../../../../components/form/NumberInput"
 import SelectInput from "../../../../components/form/SelectInput"
@@ -27,7 +28,7 @@ const GeneralInfo = ({ control, setValue }) => {
                     </div>
                 </div>
                 <div className="col-span-4 p-10">
-                    <LocationTreeSelect control={control} />
+                    <LocationTreeSelect control={control} setValue={setValue} />
                 </div>
             </div>
             <div className="grid grid-cols-12 gap-1 mt-10">
@@ -44,25 +45,25 @@ const GeneralInfo = ({ control, setValue }) => {
                             <ModelSelectInput control={control} setValue={setValue} />
                         </div>
                         <div className="col-span-4">
-                            <SelectInput control={control} name="aracGrup" label="Araç Grup" selectID="101" />
+                            <SelectInput control={control} name="aracGrup" label="Araç Grup" selectID="101" setValue={setValue}/>
                         </div>
                         <div className="col-span-4">
-                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" selectID="107" />
+                            <SelectInput control={control} name="aracCinsi" label="Araç Cinsi" selectID="107" setValue={setValue} />
                         </div>
                         <div className="col-span-4">
-                            <SelectInput control={control} name="renk" label="Renk" selectID="111" />
+                            <SelectInput control={control} name="renk" label="Renk" selectID="111" setValue={setValue}/>
                         </div>
                         <div className="col-span-4">
                             <TextInput control={control} name="mulkiyet" label="Mülkiyet" />
                         </div>
                         <div className="col-span-4">
-                            <SelectInput control={control} name="departman" label="Departman" selectID="200" />
+                            <SelectInput control={control} name="departman" label="Departman" selectID="200" setValue={setValue} />
                         </div>
                         <div className="col-span-4">
-                            <DriverSelectInput control={control} />
+                            <DriverSelectInput control={control} setValue={setValue} />
                         </div>
                         <div className="col-span-4">
-                            <MaterialListSelect control={control} name="yakitTipi" label="Yakıt Tipi" type="YAKIT" />
+                            <MaterialListSelect control={control} name="yakitTipi" label="Yakıt Tipi" type="YAKIT" setValue={setValue} />
                         </div>
                     </div>
                 </div>
@@ -86,6 +87,11 @@ const GeneralInfo = ({ control, setValue }) => {
             </div>
         </>
     )
+}
+
+GeneralInfo.propTypes ={
+    control: PropTypes.func,
+    setValue: PropTypes.func,
 }
 
 export default GeneralInfo

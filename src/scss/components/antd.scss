@@ -208,3 +208,7 @@
 .ant-popconfirm-buttons :where(.css-dev-only-do-not-override-kghr11).ant-btn-default:hover {
     border: none !important;
 }
+
+.ant-table-cell.ant-table-selection-column {
+    z-index: 1000 !important;
+}

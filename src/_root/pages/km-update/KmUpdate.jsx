@@ -1,8 +1,8 @@
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import { HomeOutlined } from "@ant-design/icons"
+import { HomeOutlined, LoadingOutlined } from "@ant-design/icons"
 import Filter from "./filter/Filter";
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { DatePicker, Form, Input, message, Space, Table, TimePicker } from 'antd';
+import { DatePicker, Form, Input, message, Space, Spin, Table, TimePicker } from 'antd';
 import ContextMenu from "./context-menu/ContextMenu";
 import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
 import dayjs from "dayjs";
@@ -111,6 +111,7 @@ const EditableCell = ({
         handleRemoveValidatedRow(record.aracId);
     };
 
+
     let childNode = children;
 
     if (editable) {
@@ -122,6 +123,10 @@ const EditableCell = ({
                         name={dataIndex}
                     >
                         <Input ref={inputRef} allowClear onPressEnter={save} onBlur={save} onChange={(e) => {
+                            if (e.target.value < 0 || /^[A-Za-z]*$/.test(e.target.value)) {
+                                clearInput();
+                            }
+
                             if (e.target.value === '') {
                                 clearInput();
                             }
@@ -279,6 +284,7 @@ const KmUpdate = () => {
         },
     });
 
+    const [loading, setLoading] = useState(false)
     const [date, setDate] = useState({
         tarih: dayjs(new Date()).format('DD.MM.YYYY'),
         saat: dayjs(new Date()).format('HH:mm:ss')
@@ -303,6 +309,7 @@ const KmUpdate = () => {
     };
 
     useEffect(() => {
+        setLoading(true)
         KMGetService(tableParams.pagination.current, filter).then(res => {
             const modifiedData = res?.data.km_list.map(item => {
                 const rows = [...validatedRows, ...errorRows]
@@ -333,6 +340,7 @@ const KmUpdate = () => {
             });
 
             setStatus(false)
+            setLoading(false)
         })
     }, [status, tableParams.pagination.current, date])
 
@@ -584,7 +592,7 @@ const KmUpdate = () => {
             }} className="w-full" />
             <DatePicker picker="time" placeholder="Saat" onChange={t => {
                 if (t) {
-                    setDate({ ...date, saat: dayjs(t).format('HH:mm:ss')})
+                    setDate({ ...date, saat: dayjs(t).format('HH:mm:ss') })
                 }
             }} className="w-full" />
         </Space>
@@ -592,6 +600,22 @@ const KmUpdate = () => {
 
     return (
         <div className="km">
+            {loading && (
+                <div className="loading-spin">
+                    <div>
+                        <Spin
+                            indicator={
+                                <LoadingOutlined
+                                    style={{
+                                        fontSize: 100,
+                                    }}
+                                    spin
+                                />
+                            }
+                        />
+                    </div>
+                </div>
+            )}
             <div className='content'>
                 <BreadcrumbComp items={breadcrumb} />
             </div>
@@ -601,6 +625,7 @@ const KmUpdate = () => {
             </div>
 
             <div className="content settings">
+                <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
                 <Table
                     components={components}
                     rowClassName={() => 'editable-row'}

@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import PropTypes from 'prop-types'
 import { Button, Modal, Tabs } from 'antd'
 import { PlusOutlined } from "@ant-design/icons"
-import GeneralInfo from './components/GeneralInfo';
-import { useForm } from 'react-hook-form';
-import { formatDate } from '../../../../utils/format';
-import { NewVehicleAddService } from '../../../../api/service';
-import SpecialFields from '../../../components/form/SpecialFields';
+import GeneralInfo from './components/GeneralInfo'
+import SpecialFields from '../../../components/form/SpecialFields'
+import { formatDate } from '../../../../utils/format'
+import { NewVehicleAddService } from '../../../../api/service'
 
 const AddModal = ({ setStatus, data }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -166,7 +167,7 @@ const AddModal = ({ setStatus, data }) => {
         setIsModalOpen(false);
     };
 
-    const onChange = (key) => {
+    const onChange = () => {
         // console.log(key);
     };
 
@@ -189,6 +190,11 @@ const AddModal = ({ setStatus, data }) => {
             </Modal>
         </div>
     )
+}
+
+AddModal.propTypes ={
+    setStatus: PropTypes.func,
+    data: PropTypes.array,
 }
 
 export default AddModal

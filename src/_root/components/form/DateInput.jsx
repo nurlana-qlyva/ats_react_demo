@@ -1,7 +1,8 @@
+import { Controller } from "react-hook-form"
+import PropTypes from 'prop-types'
 import { DatePicker } from "antd"
 import dayjs from "dayjs"
 import "dayjs/locale/tr"
-import { Controller } from "react-hook-form"
 
 dayjs.locale("tr")
 
@@ -21,6 +22,14 @@ const DateInput = ({ control, name, label, disabled, type }) => {
             />
         </div>
     )
+}
+
+DateInput.propTypes ={
+    control: PropTypes.func,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    type: PropTypes.string,
+    disabled: PropTypes.bool,
 }
 
 export default DateInput

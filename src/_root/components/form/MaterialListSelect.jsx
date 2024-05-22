@@ -1,7 +1,8 @@
+import { useState } from "react"
+import { Controller } from "react-hook-form"
+import PropTypes from 'prop-types'
 import { Select } from "antd"
-import { useState } from "react";
-import { Controller } from "react-hook-form";
-import { MaterialListSelectService } from "../../../api/service";
+import { MaterialListSelectService } from "../../../api/service"
 
 const MaterialListSelect = ({ control, name, label, type, setValue, name2 }) => {
     const [data, setData] = useState([]);
@@ -53,6 +54,15 @@ const MaterialListSelect = ({ control, name, label, type, setValue, name2 }) => 
             />
         </div>
     )
+}
+
+MaterialListSelect.propTypes ={
+    control: PropTypes.func,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    setValue: PropTypes.func,
+    name2: PropTypes.string,
+    type: PropTypes.string
 }
 
 export default MaterialListSelect

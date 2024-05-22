@@ -119,8 +119,8 @@ export const KMLogListGetService = (page) => {
   return http.get(`/KmLog/GetKmLogList?page=${page}`)
 }
 
-export const KMLogListGetByIdService = (id, page) => {
-  return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`)
+export const KMLogListGetByIdService = (id, page, param) => {
+  return http.get(`/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}&parametre=${param}`)
 }
 
 export const KMLogListDeleteService = (data) => {
