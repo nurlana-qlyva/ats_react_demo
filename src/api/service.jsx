@@ -94,11 +94,15 @@ export const SpecialFieldsUpdateService = (form, topic, field) => {
 
 // Ruhsat
 export const RuhsatInfoGetService = (id) => {
-  return http.get(`/VehicleDetail/GetLicenceInfo?vehicleId=${id}`)
+  return http.get(`/VehicleDetail/GetVehicleDetailsInfo?vehicleId=${id}`)
 }
 
 export const RuhsatInfoUpdateService = (data) => {
-  return http.post(`/VehicleDetail/UpdateLicenceInfo`, data)
+  return http.post(`/VehicleDetail/UpdateVehicleDetailsInfo`, data)
+}
+
+export const DetailInfoUpdateService = (data) => {
+  return http.post(`/VehicleDetail/UpdateVehicleDetailsInfo`, data)
 }
 
 // km 
@@ -148,3 +152,7 @@ export const YakitAddService = (data) => {
   return http.get(`/Fuel/AddFuel`, data)
 }
 
+
+export const DepoHacmiUpdateService = (data) => {
+  return http.post(`/`, data)
+}

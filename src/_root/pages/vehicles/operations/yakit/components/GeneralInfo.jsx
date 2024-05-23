@@ -7,7 +7,7 @@ import { Button, Checkbox, Input, InputNumber, message, Modal } from "antd"
 import DriverSelectInput from "../../../../../components/form/DriverSelectInput"
 import { ArrowUpOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react"
-import { KMValidateService } from "../../../../../../api/service"
+import { DetailInfoUpdateService, KMValidateService } from "../../../../../../api/service"
 
 const GeneralInfo = ({ control, data }) => {
     const [alinanKm, setAlinanKm] = useState(0)
@@ -17,6 +17,7 @@ const GeneralInfo = ({ control, data }) => {
     const [tuketim, setTuketim] = useState(0)
     const [open, setOpen] = useState(false)
     const [response, setResponse] = useState('normal')
+    const [yakitHacmi, setYakitHacmi] = useState('normal')
 
 
     // ortalama tuketim hesaplama
@@ -93,10 +94,19 @@ const GeneralInfo = ({ control, data }) => {
 
     }
 
+    const updateDepoHacmi = () => {
+        const body = {
+            dtyAracId: data.aracId,
+            yakitHacmi: yakitHacmi
+        }
+
+        DetailInfoUpdateService(body).then(res => console.log(res.data))
+    }
+
 
     const footer = (
         [
-            <Button key="submit" className="btn primary-btn">
+            <Button key="submit" className="btn primary-btn" onClick={updateDepoHacmi}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
@@ -186,7 +196,7 @@ const GeneralInfo = ({ control, data }) => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-center justify-between">
                                     <label htmlFor="miktar" >Miktar (lt)</label>
-                                    <Button className="depo" onClick={handleDepoHacmi}>Depo Hacmi: 0</Button>
+                                    <Button className="depo" onClick={handleDepoHacmi}>Depo Hacmi: {data?.yakitHacmi}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
@@ -280,7 +290,7 @@ const GeneralInfo = ({ control, data }) => {
                 footer={footer}
                 onCancel={onClose}
             >
-                <Input />
+                <Input onChange={e => setYakitHacmi(e.target.value)} />
             </Modal>
         </>
     )
