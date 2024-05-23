@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Controller } from "react-hook-form"
 import { Input, InputNumber } from "antd"
 import { SpecialFieldsReadService, SpecialFieldsUpdateService } from "../../../api/service"

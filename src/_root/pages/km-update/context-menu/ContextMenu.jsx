@@ -1,9 +1,14 @@
-import { Button, Modal } from "antd";
+import { Button, Input, Modal } from "antd";
 import { useEffect, useRef, useState } from "react";
 import KmHistory from "./KmHistory"
+import dayjs from "dayjs";
+import { KMEditService, KMResetService } from "../../../../api/service";
 
 const ContextMenu = ({ position, rowData, setStatus }) => {
     const [visible, setVisible] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+    const [yeniKm, setYeniKm] = useState(false)
     const modalRef = useRef()
 
     const style = {
@@ -27,6 +32,32 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
         }
     };
 
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    }
+
+    const resetKm = () => {
+        const body = {
+            kmAracId: rowData.aracId,
+            plaka: rowData.plaka,
+            tarih: dayjs(rowData.tarih, "DD.MM.YYYY").format("YYYY-MM-DD"),
+            saat: rowData.saat,
+            kaynak: "SIFIRLAMA",
+            seferSiraNo: 0,
+            yakitSiraNo: 0,
+            aciklama: ""
+        }
+        KMResetService(body).then(res => {
+            if (res?.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        setIsModalOpen(false);
+        setStatus(false)
+
+    }
+
+
     useEffect(() => {
         if (visible) {
             document.addEventListener('click', handleOutsideClick);
@@ -38,6 +69,10 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
         };
     }, [visible]);
 
+    const handleReset = () => {
+        setIsModalOpen(true)
+    }
+
 
     const footer = (
         [
@@ -47,11 +82,55 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
         ]
     )
 
+    const resetFooter = (
+        [
+            <Button key="submit" className="btn primary-btn km-update" onClick={resetKm}>
+                Sıfırla
+            </Button>,
+            <Button key="back" className="btn cancel-btn" onClick={onClose}>
+                Kapat
+            </Button>
+        ]
+    )
+
+    const updateKm = () => {
+        const body = {
+            kmAracId: rowData.aracId,
+            plaka: rowData.plaka,
+            tarih: dayjs(rowData.tarih, "DD.MM.YYYY").format("YYYY-MM-DD"),
+            saat: rowData.saat,
+            kaynak: "DÜZELTME",
+            seferSiraNo: 0,
+            yakitSiraNo: 0,
+            aciklama: "",
+            eskiKm: rowData.eskiKm,
+            yeniKm: yeniKm
+        }
+
+        KMEditService(body).then(res => {
+            if (res?.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        setIsUpdateModalOpen(false)
+        setStatus(false)
+    }
+
+    const updateFooter = (
+        [
+            <Button key="submit" className="btn primary-btn km-update" onClick={updateKm}>
+                Düzenle
+            </Button>,
+            <Button key="back" className="btn cancel-btn" onClick={onClose}>
+                Kapat
+            </Button>
+        ]
+    )
     return (
         <div style={style} className="context-menu" ref={modalRef}>
             <Button onClick={() => setVisible(true)}>Kilometre Güncelleme Geçmişi: {rowData?.plaka}</Button>
-            <Button>Güncel Km Düzeltme</Button>
-            <Button>Km Sıfırlama</Button>
+            <Button onClick={() => setIsUpdateModalOpen(true)}>Güncel Km Düzeltme</Button>
+            <Button onClick={handleReset}>Km Sıfırlama</Button>
             <Modal
                 title={`Kilometre Güncelleme Geçmişi: ${rowData?.plaka}`}
                 open={visible}
@@ -62,6 +141,22 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
             >
                 <div onClick={(e) => e.stopPropagation()}>
                     <KmHistory data={rowData} setTable={setStatus} />
+                </div>
+            </Modal>
+
+            <Modal title="Güncel Km Sıfırlamaya Eminmisiniz?" footer={resetFooter} open={isModalOpen} onCancel={handleCancel}>
+            </Modal>
+
+            <Modal title="Güncel Km Düzenle" footer={updateFooter} open={isUpdateModalOpen} onCancel={() => setIsUpdateModalOpen(false)} maskClosable={false} onClick={(e) => e.stopPropagation()}>
+                <div className="flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
+                    <div>
+                        <label htmlFor="">Güncel Km</label>
+                        <Input value={rowData.eskiKm} disabled />
+                    </div>
+                    <div>
+                        <label htmlFor="">Yeni Km</label>
+                        <Input onChange={(e) => setYeniKm(e.target.value)}/>
+                    </div>
                 </div>
             </Modal>
         </div>

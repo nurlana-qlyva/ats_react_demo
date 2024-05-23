@@ -118,6 +118,14 @@ export const KMAddService = (data) => {
   return http.post(`/KmLog/AddKmLog`, data)
 }
 
+export const KMResetService = (data) => {
+  return http.post(`/KmLog/ResetKmLog`, data)
+}
+
+export const KMEditService = (data) => {
+  return http.post(`/KmLog/EditKmLog`, data)
+}
+
 // km history
 export const KMLogListGetService = (page) => {
   return http.get(`/KmLog/GetKmLogList?page=${page}`)

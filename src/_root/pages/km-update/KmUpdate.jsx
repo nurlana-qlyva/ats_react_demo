@@ -38,6 +38,7 @@ const EditableCell = ({
     errorRows,
     validatedRows,
     handleRemoveValidatedRow,
+    handleKeyDown,
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -130,7 +131,9 @@ const EditableCell = ({
                             if (e.target.value === '') {
                                 clearInput();
                             }
-                        }} />
+                        }} 
+                        onKeyDown={(e) => handleKeyDown(e, dataIndex, record.key)}
+                        />
                     </Form.Item>
                 ) : (
                     <div
@@ -191,6 +194,7 @@ const EditableCell = ({
                     >
                         <TimePicker
                             open={openTimePicker}
+                            format="HH:mm"
                             onOpenChange={(status) => setOpenTimePicker(status)}
                             onChange={handleTimePickerChange}
                         />
@@ -287,7 +291,7 @@ const KmUpdate = () => {
     const [loading, setLoading] = useState(false)
     const [date, setDate] = useState({
         tarih: dayjs(new Date()).format('DD.MM.YYYY'),
-        saat: dayjs(new Date()).format('HH:mm:ss')
+        saat: dayjs(new Date()).format('HH:mm')
     })
 
     const [filter, setFilter] = useState(null)
@@ -326,6 +330,7 @@ const KmUpdate = () => {
                     tarih: date.tarih || validatedRow?.tarih,
                     saat: date.saat || validatedRow?.saat,
                     yeniKm: validatedRow?.yeniKm,
+                    eskiKm: item.eskiKm
                 };
             });
 
@@ -418,7 +423,20 @@ const KmUpdate = () => {
         } catch (error) {
             console.error('Error saving row:', error);
         }
-    };
+    }
+
+    const handleKeyDown = (e, dataIndex, key) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+            const currentRowIndex = dataSource.findIndex((item) => item.key === key);
+            const nextRow = dataSource[currentRowIndex + 1];
+            if (nextRow && nextRow[dataIndex] !== undefined) {
+                document
+                    .querySelector(`.editable - cell - ${dataIndex} - ${nextRow.key}`)
+                    .click();
+            }
+        }
+    }
 
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current, filter).then(res => {
@@ -473,7 +491,8 @@ const KmUpdate = () => {
                 handleSave,
                 errorRows,
                 validatedRows,
-                handleRemoveValidatedRow
+                handleRemoveValidatedRow,
+                handleKeyDown
             }),
         };
     });
@@ -490,6 +509,7 @@ const KmUpdate = () => {
         setSelectedRowData(record);
         setShowContext(true);
     };
+
 
     useEffect(() => {
         if (showContext) {
@@ -546,7 +566,6 @@ const KmUpdate = () => {
             setStatus(false)
         })
     }
-
     const clear = () => {
         KMGetService(tableParams.pagination.current, null).then(res => {
             const modifiedData = res?.data.km_list.map(item => {

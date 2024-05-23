@@ -225,9 +225,6 @@ const KmUpdate = ({ data, setTable }) => {
                         <Input className="w-full" placeholder="Saat" disabled value={updateData?.saat} />
                     </div>
                     <div className="col-span-6">
-                        <Input placeholder="Eski Km" disabled value={updateData?.eskiKm} />
-                    </div>
-                    <div className="col-span-6">
                         <InputNumber
                             allowClear
                             style={{ borderColor: kmStatus }}
@@ -242,9 +239,6 @@ const KmUpdate = ({ data, setTable }) => {
                                 }
                             }}
                         />
-                    </div>
-                    <div className="col-span-6">
-                        <Input placeholder="Fark Km" disabled value={updateData?.fark} />
                     </div>
                 </div>
             </Modal>
