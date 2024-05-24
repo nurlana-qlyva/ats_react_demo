@@ -151,7 +151,7 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
                 <div className="flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
                     <div>
                         <label htmlFor="">Güncel Km</label>
-                        <Input value={rowData.eskiKm} disabled />
+                        <Input value={rowData.guncelKm} disabled />
                     </div>
                     <div>
                         <label htmlFor="">Yeni Km</label>
