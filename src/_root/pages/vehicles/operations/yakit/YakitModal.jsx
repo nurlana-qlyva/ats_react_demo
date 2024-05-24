@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import SpecialFields from '../../../../components/form/SpecialFields';
 import FileUpload from '../../../../components/form/FileUpload';
 import { upload } from '../../../../../utils/upload';
-import { YakitGetByIdService } from '../../../../../api/service';
+import { YakitGetByIdService, YakitHistoryGetService } from '../../../../../api/service';
 import GeneralInfoUpdate from './components/GeneralInfoUpdate';
 import AddModal from './components/AddModal';
 
@@ -229,6 +229,10 @@ const YakitModal = ({ visible, onClose, ids }) => {
         })
 
     }, [vehicleId, tableParams.pagination.current])
+
+    useEffect(() => {
+        YakitHistoryGetService(vehicleId).then(res => console.log(res.data))
+    }, [vehicleId])
 
 
     const handleTableChange = (pagination, filters, sorter) => {

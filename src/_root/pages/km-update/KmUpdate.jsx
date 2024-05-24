@@ -389,7 +389,7 @@ const KmUpdate = () => {
                     "eskiKm": row.guncelKm,
                     "yeniKm": row.yeniKm,
                     "fark": 0,
-                    "kaynak": "guncelle",
+                    "kaynak": "GÜNCELLEME",
                     "dorse": true,
                     "aciklama": ""
                 }

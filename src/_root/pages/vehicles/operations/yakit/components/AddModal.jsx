@@ -1,9 +1,10 @@
 import { Button, Modal, Tabs } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import GeneralInfo from './GeneralInfo';
 import SpecialFields from '../../../../../components/form/SpecialFields';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
+import { YakitHistoryGetService } from '../../../../../../api/service';
 
 
 const AddModal = ({ ids, data }) => {
@@ -108,6 +109,9 @@ const AddModal = ({ ids, data }) => {
     })
 
     const { control, handleSubmit, reset, setValue } = methods
+    console.log(data)
+
+
 
     const onCloseModal = () => {
         setopenModal(false)
@@ -149,7 +153,7 @@ const AddModal = ({ ids, data }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo control={control} setValue={setValue} data={data}/>,
+            children: <GeneralInfo control={control} setValue={setValue} data={data} />,
         },
         {
             key: '2',
