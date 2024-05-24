@@ -62,7 +62,7 @@ const EditableCell = ({
             setOpenTimePicker(true);
         }
         form.setFieldsValue({
-            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm:ss") : record[dataIndex],
+            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm") : record[dataIndex],
         });
     };
 
@@ -75,9 +75,13 @@ const EditableCell = ({
                 ...values,
                 [dataIndex]:
                     dataIndex === 'tarih' && values[dataIndex]
-                        ? dayjs(values[dataIndex], 'DD.MM.YYYY')
+                        ? dayjs(values[dataIndex]).isValid()
+                            ? dayjs(values[dataIndex]).format('DD.MM.YYYY')
+                            : ''
                         : dataIndex === 'saat' && values[dataIndex]
-                            ? dayjs(values[dataIndex]).format('HH:mm:ss')
+                            ? dayjs(values[dataIndex]).isValid()
+                                ? dayjs(values[dataIndex]).format('HH:mm')
+                                : ''
                             : values[dataIndex],
             });
         } catch (errInfo) {
@@ -87,9 +91,9 @@ const EditableCell = ({
 
     const handleDatePickerChange = async (date) => {
         try {
-            form.setFieldsValue({ [dataIndex]: date });
+            form.setFieldsValue({ [dataIndex]: date ? date : '' });
             setOpenDatePicker(false);
-            save()
+            save();
         } catch (error) {
             console.error('Error parsing date:', error);
         }
@@ -112,7 +116,6 @@ const EditableCell = ({
         handleRemoveValidatedRow(record.aracId);
     };
 
-
     let childNode = children;
 
     if (editable) {
@@ -122,6 +125,7 @@ const EditableCell = ({
                     <Form.Item
                         style={{ margin: 0 }}
                         name={dataIndex}
+                        className={`editable-cell-${dataIndex}-${record?.aracId}`}
                     >
                         <Input ref={inputRef} allowClear onPressEnter={save} onBlur={save} onChange={(e) => {
                             if (e.target.value < 0 || /^[A-Za-z]*$/.test(e.target.value)) {
@@ -131,13 +135,13 @@ const EditableCell = ({
                             if (e.target.value === '') {
                                 clearInput();
                             }
-                        }} 
-                        onKeyDown={(e) => handleKeyDown(e, dataIndex, record.key)}
+                        }}
+                            onKeyDown={(e) => handleKeyDown(e, dataIndex, record.aracId)}
                         />
                     </Form.Item>
                 ) : (
                     <div
-                        className="editable-cell-value-wrap"
+                        className={`editable-cell-value-wrap`}
                         style={{ paddingRight: 24 }}
                         onClick={toggleEdit}
                     >
@@ -169,6 +173,7 @@ const EditableCell = ({
                         name={dataIndex}
                     >
                         <DatePicker
+                            allowClear={false}
                             format="DD.MM.YYYY"
                             open={openDatePicker}
                             onOpenChange={(status) => setOpenDatePicker(status)}
@@ -225,7 +230,7 @@ const EditableCell = ({
         valid = validatedRows.some(row => row.kmAracId === record.aracId) ? 'success-text' : '';
     }
 
-    return <td {...restProps} className={`${error} ${valid}`}>{childNode}</td>;
+    return <td {...restProps} data-index={record?.aracId} className={`${error} ${valid}`}>{childNode}</td>;
 };
 
 const defaultColumns = [
@@ -428,15 +433,19 @@ const KmUpdate = () => {
     const handleKeyDown = (e, dataIndex, key) => {
         if (e.key === "Tab") {
             e.preventDefault();
-            const currentRowIndex = dataSource.findIndex((item) => item.key === key);
-            const nextRow = dataSource[currentRowIndex + 1];
-            if (nextRow && nextRow[dataIndex] !== undefined) {
-                document
-                    .querySelector(`.editable - cell - ${dataIndex} - ${nextRow.key}`)
-                    .click();
+            const currentRowIndex = dataSource.findIndex((item) => item.aracId === key);
+            console.log(currentRowIndex)
+            let nextRowIndex = e.shiftKey ? currentRowIndex - 1 : currentRowIndex + 1;
+
+            if (nextRowIndex >= 0 && nextRowIndex < dataSource.length) {
+                const nextCell = document.querySelector(`td[data-index="${key - 1}"] .editable-cell-value-wrap`);
+
+                if (nextCell) {
+                    nextCell.click();
+                }
             }
         }
-    }
+    };
 
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current, filter).then(res => {
