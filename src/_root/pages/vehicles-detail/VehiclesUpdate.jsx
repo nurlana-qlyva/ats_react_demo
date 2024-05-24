@@ -302,7 +302,7 @@ const VehiclesUpdate = () => {
       "egzosTarih": values?.egzosTarih ? formatDate(values?.egzosTarih.$d) : "1970-01-01",
       "vergiTarih": values?.vergiTarih ? formatDate(values?.vergiTarih.$d) : "1970-01-01",
       "sozlesmeTarih": values?.sozlesmeTarih ? formatDate(values?.sozlesmeTarih.$d) : "1970-01-01",
-      "yakitId": values.yakitId,
+      "yakitTipId": values.yakitId,
       "tts": values.tts,
       "durumKodId": values.durumKodId,
       "aktif": true,

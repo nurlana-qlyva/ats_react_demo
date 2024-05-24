@@ -163,7 +163,3 @@ export const YakitAddService = (data) => {
 export const YakitHistoryGetService = (id) => {
   return http.get(`/Fuel/GetLastThreeFuelRecord?vehicleId=${id}`)
 }
-
-export const DepoHacmiUpdateService = (data) => {
-  return http.post(`/`, data)
-}

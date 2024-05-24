@@ -113,7 +113,6 @@ const YakitModal = ({ visible, onClose, ids }) => {
             render: (text, record) => (
                 <Checkbox
                     onChange={(e) => handleCheckboxChange(e, record)}
-                // checked={selectedRowKeys.includes(record.aracId)}
                 />
             ),
         },

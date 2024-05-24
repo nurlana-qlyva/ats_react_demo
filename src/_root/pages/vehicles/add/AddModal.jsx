@@ -151,7 +151,7 @@ const AddModal = ({ setStatus, data }) => {
             "egzosTarih": formatDate(value?.egzozEmisyon.$d) || "",
             "vergiTarih": formatDate(value?.vergiTarih.$d) || "",
             "sozlesmeTarih": formatDate(value?.sozlesmeTarih.$d) || "",
-            "yakitId": value?.yakitTipi || 0,
+            "yakitTipId": value?.yakitTipi || 0,
         }
 
         NewVehicleAddService(data).then(res => {

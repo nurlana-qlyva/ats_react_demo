@@ -2,6 +2,7 @@ import { Controller } from "react-hook-form"
 import DateInput from "../../../../../components/form/DateInput"
 import NumberInput from "../../../../../components/form/NumberInput"
 import SelectInput from "../../../../../components/form/SelectInput"
+import TextInput from "../../../../../components/form/TextInput"
 import MaterialListSelect from "../../../../../components/form/MaterialListSelect"
 import { Button, Checkbox, Input, InputNumber, message, Modal } from "antd"
 import DriverSelectInput from "../../../../../components/form/DriverSelectInput"
@@ -9,7 +10,7 @@ import { ArrowUpOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react"
 import { DetailInfoUpdateService, KMValidateService } from "../../../../../../api/service"
 
-const GeneralInfo = ({ control, data }) => {
+const GeneralInfo = ({ control, data, setValue }) => {
     const [alinanKm, setAlinanKm] = useState(0)
     const [fark, setFark] = useState(0)
     const [miktar, setMiktar] = useState(0)
@@ -19,7 +20,7 @@ const GeneralInfo = ({ control, data }) => {
     const [response, setResponse] = useState('normal')
     const [yakitHacmi, setYakitHacmi] = useState('normal')
 
-
+console.log(data)
     // ortalama tuketim hesaplama
     useEffect(() => {
         const frk = alinanKm - data.sonAlinanKm
@@ -120,8 +121,12 @@ const GeneralInfo = ({ control, data }) => {
             <div className="grid gap-4 border p-10">
                 <div className="col-span-6">
                     <div className="grid gap-1">
-                        <div className="col-span-12">
-                            <SelectInput control={control} name="" label="Plaka" />
+                        <div className="col-span-6">
+                            <label htmlFor="">Plaka</label>
+                            <Input control={control} name="plaka" label="Plaka" value={data.plaka}/>
+                        </div>
+                        <div className="col-span-6">
+                            <DriverSelectInput control={control}/>
                         </div>
                         <div className="col-span-6">
                             <DateInput control={control} name="tarih" label="Tarih" />
@@ -129,9 +134,7 @@ const GeneralInfo = ({ control, data }) => {
                         <div className="col-span-6">
                             <DateInput control={control} name="saat" label="Saat" type="time" />
                         </div>
-                        <div className="col-span-12">
-                            <DriverSelectInput control={control} />
-                        </div>
+                        
                     </div>
                 </div>
                 <div className="col-span-6">

@@ -103,7 +103,7 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
             seferSiraNo: 0,
             yakitSiraNo: 0,
             aciklama: "",
-            eskiKm: rowData.eskiKm,
+            eskiKm: rowData.guncelKm,
             yeniKm: yeniKm
         }
 

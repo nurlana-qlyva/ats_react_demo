@@ -90,7 +90,7 @@ const AddModal = ({ ids, data }) => {
 
     const defaultValues = {
         "aracId": 0,
-        "plaka": "",
+        "plaka": '',
         "tarih": null,
         "saat": "",
         "alinanKm": 0,
@@ -109,9 +109,6 @@ const AddModal = ({ ids, data }) => {
     })
 
     const { control, handleSubmit, reset, setValue } = methods
-    console.log(data)
-
-
 
     const onCloseModal = () => {
         setopenModal(false)

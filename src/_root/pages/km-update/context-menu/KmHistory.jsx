@@ -157,12 +157,16 @@ const KmUpdate = ({ data, setTable }) => {
         {
             title: '',
             dataIndex: 'delete',
-            render: (_, record) =>
-                dataSource.length >= 1 ? (
+            render: (_, record) => {
+                console.log(record)
+                return record.kaynak === "DÜZELTME" || record.kaynak === "SIFIRLAMA" ? dataSource.length >= 1 ? (
+                    <Button disabled style={{border: "none", background: "transparent", padding: 0}}><DeleteOutlined style={{ color: "#dc3545" }} /></Button>
+                ) : null : dataSource.length >= 1 ? (
                     <Popconfirm title="Silmeye eminmisiniz?" onConfirm={() => handleDelete(record)}>
                         <DeleteOutlined style={{ color: "#dc3545" }} />
                     </Popconfirm>
-                ) : null,
+                ) : null
+            },
         },
         {
             title: '',

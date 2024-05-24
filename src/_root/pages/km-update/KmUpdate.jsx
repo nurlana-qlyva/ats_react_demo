@@ -538,6 +538,7 @@ const KmUpdate = () => {
                 setStatus(true)
                 setValidatedRows([])
                 setErrorRows([])
+                window.location.reload()
             }
         })
     }
