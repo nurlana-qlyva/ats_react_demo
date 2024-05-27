@@ -1,14 +1,13 @@
+import PropTypes from 'prop-types';
+import { Input, Avatar, Button, Layout } from 'antd'
 import {
     HomeOutlined,
     AntDesignOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined
-} from '@ant-design/icons';
-import { Input, Avatar, Button, Layout } from 'antd';
+} from '@ant-design/icons'
 
-const { Header } = Layout;
-
-const onSearch = (value, _e, info) => console.log(info?.source, value);
+const { Header } = Layout
 
 const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
     return (
@@ -19,7 +18,7 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
             }}
         >
             <div className="flex justify-between align-center gap-1 header">
-                <div className='flex gap-1 justify-between align-baseline'>
+                <div className="flex gap-1 justify-between align-baseline">
                     <Button
                         type="text"
                         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -32,15 +31,14 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
                     />
                     <HomeOutlined />
                 </div>
-                <div className='flex gap-1 justify-between align-center'>
+                <div className="flex gap-1 justify-between align-center">
                     <Input
-                        className='search-input'
-                        style={{width: "200px"}}
+                        className="search-input"
                         placeholder="Arama"
                         allowClear
                     />
                     <Avatar
-                        style={{ width: "40px", height: "40px" }}
+                        className="header-avatar"
                         icon={<AntDesignOutlined />}
                     />
                 </div>
@@ -48,5 +46,12 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
         </Header>
     )
 }
+
+HeaderComp.propTypes = {
+    collapsed: PropTypes.bool,
+    colorBgContainer: PropTypes.string,
+    setCollapsed: PropTypes.func,
+}
+
 
 export default HeaderComp

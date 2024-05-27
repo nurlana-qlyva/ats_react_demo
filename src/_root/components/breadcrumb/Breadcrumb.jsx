@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Breadcrumb } from 'antd';
+import { Breadcrumb } from 'antd'
 
 const BreadcrumbComp = ({ items }) => {
     return (

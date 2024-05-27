@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { SearchOutlined, CarryOutOutlined } from "@ant-design/icons"
-import { IoIosRefresh, IoIosMore } from "react-icons/io";
+import { SearchOutlined, CarryOutOutlined } from '@ant-design/icons'
+import { IoIosRefresh, IoIosMore } from 'react-icons/io'
 import { Button, Popconfirm, Popover, Select, TreeSelect } from 'antd'
-import { CodeControlService, CustomCodeControlService } from '../../../../api/service';
+import { CodeControlService, CustomCodeControlService } from '../../../../api/service'
 
 const convertToFormat = (data, parentId = 0) => {
-  const result = [];
+  const result = []
 
   data.forEach(item => {
     if (item.anaLokasyonId === parentId) {
@@ -21,7 +21,7 @@ const convertToFormat = (data, parentId = 0) => {
   });
 
   return result;
-};
+}
 
 const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, getData, clear }) => {
   const [plaka, setPlaka] = useState([])
@@ -32,7 +32,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
-  };
+  }
 
   const handleClickPlaka = () => {
     CustomCodeControlService("Vehicle/GetVehiclePlates").then(res => {
@@ -154,10 +154,10 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
           />
         </div>
         <div className="col-span-2 flex gap-1">
-          <Button className="primary-btn" onClick={getData}>
+          <Button className="btn primary-btn" onClick={getData}>
             <SearchOutlined />
           </Button>
-          <Button className="cancel-btn" onClick={clear}>
+          <Button className="btn cancel-btn" onClick={clear}>
             <IoIosRefresh />
           </Button>
         </div>
@@ -180,7 +180,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
             okText="Evet"
             cancelText="Hayır"
           >
-            <Button className="primary-btn km-update" disabled={isDisabled}>Güncelle</Button>
+            <Button className="btn primary-btn km-update" disabled={isDisabled}>Güncelle</Button>
           </Popconfirm>
         </div>
       </div>

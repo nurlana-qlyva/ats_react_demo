@@ -1,9 +1,0 @@
-@mixin btn ($bg, $color) {
-    background-color: $bg;
-    color: $color;
-}
-
-@mixin border ($color, $radius) {
-    border: 1px solid $color;
-    border-radius: $radius;
-}

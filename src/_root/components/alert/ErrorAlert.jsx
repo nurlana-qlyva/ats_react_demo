@@ -1,4 +1,4 @@
-import { Alert } from 'antd';
+import { Alert } from 'antd'
 
 const ErrorAlert = () => {
     return (

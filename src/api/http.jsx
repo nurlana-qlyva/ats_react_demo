@@ -1,25 +1,25 @@
-import axios from "axios";
-import { getItemWithExpiration } from "../utils/expireToken";
+import axios from 'axios'
+import { getItemWithExpiration } from '../utils/expireToken'
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
   headers: {
     "Content-type": "application/json",
   },
-});
+})
 
 http.interceptors.request.use(async (config) => {
-  const token = await getItemWithExpiration("token");
+  const token = await getItemWithExpiration("token")
 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`
   }
 
-  return config;
+  return config
 });
 
 http.interceptors.response.use((response) => {
-  return response;
+  return response
 });
 
-export default http;
+export default http

@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
+import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
-import { PlusOutlined } from "@ant-design/icons"
-import GeneralInfo from './components/GeneralInfo'
-import SpecialFields from '../../../components/form/SpecialFields'
-import { formatDate } from '../../../../utils/format'
+import { PlusOutlined } from '@ant-design/icons'
 import { NewVehicleAddService } from '../../../../api/service'
+import GeneralInfo from './GeneralInfo'
+import PersonalFields from '../../../components/form/PersonalFields'
 
-const AddModal = ({ setStatus, data }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+const AddModal = ({ setStatus }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -91,92 +91,109 @@ const AddModal = ({ setStatus, data }) => {
 
     const defaultValues = {
         plaka: "",
-        aracTipi: null,
+        aracTipId: null,
         guncelKm: "",
-        marka: null,
-        model: null,
-        modelYili: "",
-        aracGrup: null,
+        markaId: null,
+        modelId: null,
+        yil: "",
+        aracGrubuId: null,
         aracCinsi: null,
-        renk: null,
-        lokasyon: null,
+        aracRenkId: null,
+        lokasyonId: null,
         mulkiyet: "",
-        departman: null,
-        surucu: null,
-        yakitTipi: null,
+        departmanId: null,
+        surucuId: null,
+        yakitId: null,
         muayeneTarih: "",
         sozlesmeTarih: "",
-        egzozEmisyon: "",
+        egzosTarih: "",
         vergiTarih: "",
+        ozelAlan1: "",
+        ozelAlan2: "",
+        ozelAlan3: "",
+        ozelAlan4: "",
+        ozelAlan5: "",
+        ozelAlan6: "",
+        ozelAlan7: "",
+        ozelAlan8: "",
+        ozelAlanKodId9: null,
+        ozelAlanKodId10: null,
+        ozelAlan11: null,
+        ozelAlan12: null,
     }
 
     const methods = useForm({
         defaultValues: defaultValues
     })
 
-    const { control, handleSubmit, reset, setValue } = methods
+    const { handleSubmit, reset } = methods
 
+
+    const handleOk = handleSubmit(async (value) => {
+        const data = {
+            "plaka": value.plaka,
+            "yil": value.yil || 0,
+            "markaId": value.markaId || 0,
+            "modelId": value.modelId || 0,
+            "aracGrubuId": value.aracGrubuId || 0,
+            "aracRenkId": value.aracRenkId || 0,
+            "lokasyonId": value.lokasyonId || 0,
+            "departmanId": value.departmanId || 0,
+            "surucuId": value.surucuId || 0,
+            "aracTipId": value.aracTipId || 0,
+            "guncelKm": value.guncelKm || 0,
+            "muayeneTarih": value.muayeneTarih ? dayjs(value.muayeneTarih).format("YYYY-MM-DD") : null,
+            "egzosTarih": value.egzosTarih ? dayjs(value.egzosTarih).format("YYYY-MM-DD") : null,
+            "vergiTarih": value.vergiTarih ? dayjs(value.vergiTarih).format("YYYY-MM-DD") : null,
+            "sozlesmeTarih": value.sozlesmeTarih ? dayjs(value.sozlesmeTarih).format("YYYY-MM-DD") : null,
+            "yakitTipId": value.yakitTipId || 0,
+            ozelAlan1: value.ozelAlan1 || "",
+            ozelAlan2: value.ozelAlan2 || "",
+            ozelAlan3: value.ozelAlan3 || "",
+            ozelAlan4: value.ozelAlan4 || "",
+            ozelAlan5: value.ozelAlan5 || "",
+            ozelAlan6: value.ozelAlan6 || "",
+            ozelAlan7: value.ozelAlan7 || "",
+            ozelAlan8: value.ozelAlan8 || "",
+            ozelAlanKodId9: value.ozelAlanKodId9 || 0,
+            ozelAlanKodId10: value.ozelAlanKodId10 || 0,
+            ozelAlan11: value.ozelAlan11 || 0,
+            ozelAlan12: value.ozelAlan12 || 0,
+        }
+        NewVehicleAddService(data).then(res => {
+            if (res?.data.statusCode === 201) {
+                setIsModalOpen(false)
+                setStatus(true)
+                reset()
+            }
+        })
+    })
+
+    const personalProps = {
+        form: "Arac",
+        fields,
+        setFields
+    }
 
     const items = [
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo control={control} setValue={setValue} />,
+            children: <GeneralInfo />,
         },
         {
             key: '2',
             label: 'Özel Alanlar',
-            children: <SpecialFields form="Arac" control={control} data={data} fields={fields} setFields={setFields} />,
+            children: <PersonalFields personalProps={personalProps} />
         },
-    ];
-
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleOk = handleSubmit(async (value) => {
-        const data = {
-            "plaka": value.plaka,
-            "yil": value.modelYili,
-            "markaId": value.marka || 0,
-            "modelId": value.model || 0,
-            "aracGrubuId": value.aracGrub || 0,
-            "aracRenkId": value.renk || 0,
-            "lokasyonId": +value.lokasyon,
-            "departmanId": value.departman || 0,
-            "surucuId": value.surucu || 0,
-            "aracTipId": value.aracTipi || 0,
-            "guncelKm": value.guncelKm,
-            "muayeneTarih": formatDate(value?.muayeneTarih.$d) || "",
-            "egzosTarih": formatDate(value?.egzozEmisyon.$d) || "",
-            "vergiTarih": formatDate(value?.vergiTarih.$d) || "",
-            "sozlesmeTarih": formatDate(value?.sozlesmeTarih.$d) || "",
-            "yakitTipId": value?.yakitTipi || 0,
-        }
-
-        NewVehicleAddService(data).then(res => {
-            if (res?.data.statusCode === 201) {
-                setIsModalOpen(false);
-                setStatus(true)
-                reset();
-            }
-        })
-    })
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const onChange = () => {
-        // console.log(key);
-    };
+    ]
 
     const footer = (
         [
-            <Button key="submit" className="btn primary-btn" onClick={handleOk}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={handleOk}>
                 Kaydet
             </Button>,
-            <Button key="back" className="btn cancel-btn" onClick={handleCancel}>
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => setIsModalOpen(false)}>
                 İptal
             </Button>
         ]
@@ -184,15 +201,19 @@ const AddModal = ({ setStatus, data }) => {
 
     return (
         <div>
-            <Button className="primary-btn" onClick={showModal}><PlusOutlined /> Ekle</Button>
-            <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} maskClosable={false} footer={footer} width={1000}>
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+            <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}><PlusOutlined /> Ekle</Button>
+            <Modal open={isModalOpen} onOk={handleOk} onCancel={() => setIsModalOpen(false)} maskClosable={false} footer={footer} width={1200}>
+                <FormProvider {...methods}>
+                    <form>
+                        <Tabs defaultActiveKey="1" items={items} />
+                    </form>
+                </FormProvider>
             </Modal>
         </div>
     )
 }
 
-AddModal.propTypes ={
+AddModal.propTypes = {
     setStatus: PropTypes.func,
     data: PropTypes.array,
 }

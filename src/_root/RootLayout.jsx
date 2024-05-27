@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Layout, theme } from 'antd';
-import HeaderComp from './layout/Header';
-import FooterComp from './layout/Footer';
-import { Outlet, useNavigate } from 'react-router-dom';
-import Sidebar from './layout/Sidebar';
-import { getItemWithExpiration } from '../utils/expireToken';
-const { Sider, Content } = Layout;
+import { useEffect, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { Layout, theme } from 'antd'
+import { getItemWithExpiration } from '../utils/expireToken'
+import HeaderComp from './layout/Header'
+import FooterComp from './layout/Footer'
+import Sidebar from './layout/Sidebar'
+
+const { Sider, Content } = Layout
 
 const RootLayout = () => {
-
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(false)
     const {
         token: { colorBgContainer },
-    } = theme.useToken();
+    } = theme.useToken()
 
     const navigate = useNavigate()
 

@@ -1,11 +1,11 @@
-import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import { HomeOutlined, LoadingOutlined } from "@ant-design/icons"
-import Filter from "./filter/Filter";
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { DatePicker, Form, Input, message, Space, Spin, Table, TimePicker } from 'antd';
-import ContextMenu from "./context-menu/ContextMenu";
-import { KMAddService, KMGetService, KMValidateService } from "../../../api/service";
-import dayjs from "dayjs";
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import dayjs from 'dayjs'
+import { HomeOutlined, LoadingOutlined } from '@ant-design/icons'
+import { DatePicker, Form, Input, message, Space, Spin, Table, TimePicker } from 'antd'
+import { KMAddService, KMGetService, KMValidateService } from '../../../api/service'
+import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
+import Filter from './filter/Filter'
+import ContextMenu from './context-menu/ContextMenu'
 
 const breadcrumb = [
     {
@@ -17,18 +17,17 @@ const breadcrumb = [
     },
 ]
 
-const EditableContext = createContext(null);
+const EditableContext = createContext(null)
 const EditableRow = ({ ...props }) => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm()
     return (
         <Form form={form} component={false}>
             <EditableContext.Provider value={form}>
                 <tr {...props} />
             </EditableContext.Provider>
         </Form>
-    );
-};
-
+    )
+}
 const EditableCell = ({
     editable,
     children,
@@ -53,7 +52,6 @@ const EditableCell = ({
         }
     }, [editing]);
 
-
     const toggleEdit = () => {
         setEditing(!editing);
         if (dataIndex === 'tarih') {
@@ -63,8 +61,8 @@ const EditableCell = ({
         }
         form.setFieldsValue({
             [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm") : record[dataIndex],
-        });
-    };
+        })
+    }
 
     const save = async () => {
         try {
@@ -87,17 +85,17 @@ const EditableCell = ({
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
-    };
+    }
 
     const handleDatePickerChange = async (date) => {
         try {
-            form.setFieldsValue({ [dataIndex]: date ? date : '' });
+            form.setFieldsValue({ [dataIndex]: date ? date : '' })
             setOpenDatePicker(false);
             save();
         } catch (error) {
-            console.error('Error parsing date:', error);
+            console.error('Error parsing date:', error)
         }
-    };
+    }
 
     const handleTimePickerChange = async (time) => {
         try {
@@ -113,10 +111,10 @@ const EditableCell = ({
 
     const clearInput = () => {
         form.setFieldsValue({ [dataIndex]: '' });
-        handleRemoveValidatedRow(record.aracId);
-    };
+        handleRemoveValidatedRow(record.aracId)
+    }
 
-    let childNode = children;
+    let childNode = children
 
     if (editable) {
         switch (dataIndex) {
@@ -164,7 +162,7 @@ const EditableCell = ({
                         formattedDate = dayjs(dateString).format('DD.MM.YYYY');
                     }
 
-                    return formattedDate;
+                    return formattedDate
                 }
 
                 childNode = editing ? (
@@ -231,7 +229,7 @@ const EditableCell = ({
     }
 
     return <td {...restProps} data-index={record?.aracId} className={`${error} ${valid}`}>{childNode}</td>;
-};
+}
 
 const defaultColumns = [
     {
@@ -276,32 +274,30 @@ const defaultColumns = [
         editable: true,
         width: '140px'
     },
-];
+]
 
 const KmUpdate = () => {
-    const [dataSource, setDataSource] = useState([]);
-    const [showContext, setShowContext] = useState(false);
+    const [dataSource, setDataSource] = useState([])
+    const [showContext, setShowContext] = useState(false)
     const [status, setStatus] = useState(false)
-    const [errorRows, setErrorRows] = useState([]);
-    const [validatedRows, setValidatedRows] = useState([]);
-    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
-    const [selectedRowData, setSelectedRowData] = useState(null);
+    const [errorRows, setErrorRows] = useState([])
+    const [validatedRows, setValidatedRows] = useState([])
+    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
+    const [selectedRowData, setSelectedRowData] = useState(null)
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
             pageSize: 10,
         },
-    });
-
+    })
     const [loading, setLoading] = useState(false)
     const [date, setDate] = useState({
         tarih: dayjs(new Date()).format('DD.MM.YYYY'),
         saat: dayjs(new Date()).format('HH:mm')
     })
-
     const [filter, setFilter] = useState(null)
 
-    const [messageApi, contextHolder] = message.useMessage();
+    const [messageApi, contextHolder] = message.useMessage()
 
     const success = () => {
         messageApi.open({
@@ -315,7 +311,7 @@ const KmUpdate = () => {
             row: EditableRow,
             cell: EditableCell,
         },
-    };
+    }
 
     useEffect(() => {
         setLoading(true)
@@ -445,7 +441,7 @@ const KmUpdate = () => {
                 }
             }
         }
-    };
+    }
 
     const handleTableChange = (pagination, filters, sorter) => {
         KMGetService(pagination.current, filter).then(res => {
@@ -479,12 +475,12 @@ const KmUpdate = () => {
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
             setDataSource([]);
         }
-    };
+    }
 
     const handleRemoveValidatedRow = (kmAracId) => {
         const filteredRows = validatedRows.filter(row => row.kmAracId !== kmAracId);
         setValidatedRows(filteredRows);
-    };
+    }
 
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {
@@ -504,21 +500,20 @@ const KmUpdate = () => {
                 handleKeyDown
             }),
         };
-    });
+    })
 
     const handleOutsideClick = (e) => {
         if (!e.target.closest('.context-menu')) {
             setShowContext(false);
         }
-    };
+    }
 
     const handleContextMenu = (event, record) => {
         event.preventDefault();
         setContextMenuPosition({ x: event.pageX, y: event.pageY });
         setSelectedRowData(record);
         setShowContext(true);
-    };
-
+    }
 
     useEffect(() => {
         if (showContext) {
@@ -628,7 +623,7 @@ const KmUpdate = () => {
     )
 
     return (
-        <div className="km">
+        <div className='km'>
             {loading && (
                 <div className="loading-spin">
                     <div>
@@ -645,6 +640,7 @@ const KmUpdate = () => {
                     </div>
                 </div>
             )}
+
             <div className='content'>
                 <BreadcrumbComp items={breadcrumb} />
             </div>
@@ -674,8 +670,9 @@ const KmUpdate = () => {
 
                 {contextHolder}
             </div>
+
             {showContext && <ContextMenu position={contextMenuPosition} rowData={selectedRowData} setStatus={setStatus} />}
-        </div>
+        </div >
     )
 }
 

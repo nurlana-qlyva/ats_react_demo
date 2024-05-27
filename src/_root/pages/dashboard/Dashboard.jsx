@@ -1,6 +1,6 @@
-import LineChartComp from "./compoenents/LineChartComp"
-import BarChartComp from "./compoenents/BarChartComp"
-import PieChartComp from "./compoenents/PieChartComp"
+import LineChartComp from './charts/LineChartComp'
+import BarChartComp from './charts/BarChartComp'
+import PieChartComp from './charts/PieChartComp'
 
 const Dashboard = () => {
 
@@ -27,8 +27,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   )
 }

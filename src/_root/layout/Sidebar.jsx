@@ -1,11 +1,11 @@
+import { Link } from 'react-router-dom'
+import { Menu } from 'antd'
 import {
     PieChartOutlined,
     CarOutlined,
     FastForwardOutlined
-} from '@ant-design/icons';
-import { FaGears } from "react-icons/fa6";
-import { Menu } from 'antd';
-import { Link } from 'react-router-dom';
+} from '@ant-design/icons'
+import { FaGears } from 'react-icons/fa6'
 
 const items = [
     {
@@ -96,12 +96,11 @@ const items = [
 ];
 
 const Sidebar = () => {
-
     return (
         <>
-            <div className="flex justify-center w-full py-20" style={{ textAlign: "center" }}>
+            <div className="flex justify-center w-full py-20 text-center">
                 <Link to="/">
-                    <img src="/images/logo_white.png" alt="" className='sidebar-logo' />
+                    <img src="/images/logo_white.png" alt="ats logo" className='sidebar-logo' />
                 </Link>
             </div>
             <Menu

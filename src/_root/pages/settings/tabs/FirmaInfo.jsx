@@ -1,7 +1,6 @@
-import { useForm } from "react-hook-form"
-import TextInput from "../../../components/form/TextInput"
-import TextArea from "antd/es/input/TextArea"
-import { Button } from "antd"
+import { Button, Input } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
+import { Controller, useForm } from 'react-hook-form'
 
 const FirmaInfo = () => {
     const defaultValues = {
@@ -26,62 +25,255 @@ const FirmaInfo = () => {
     const { control, handleSubmit, reset, setValue } = methods
 
     return (
-        <div>
-            <div className="grid gap-1">
-                <div className="col-span-2" style={{ textAlign: 'center' }}>
-                    <img src="/images/ats_login_image.jpg" alt="" style={{ width: "100%" }} />
-                </div>
-                <div className="col-span-10">
-                    <div className="grid gap-1 p-10">
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="Firma Ünvanı" />
+        <div className='grid gap-1'>
+            <div className="col-span-2" style={{ textAlign: 'center' }}>
+                <img src="/images/ats_login_image.jpg" alt="" style={{ width: "100%" }} />
+            </div>
+            <div className="col-span-10">
+                <div className="grid gap-1 p-10">
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>Firma Ünvanı</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="Adres 1" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>Adres 1</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="Adres 2" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>Adres 2</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="Şehir" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>Şehir</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="İlçe" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>İlçe</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="PK" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>PK</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="col-span-3">
-                            <TextInput control={control} name='' label="Ülke" />
+                    </div>
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-1">
+                            <label>Ülke</label>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
                     </div>
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Telefon" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Telefon</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Fax" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Fax</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Web" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Web</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Email" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Email</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Vergi Dairesi" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Vergi Dairesi</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-2">
-                    <TextInput control={control} name='' label="Vergi Numarası" />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Vergi Numarası</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="col-span-12">
-                    <label htmlFor="">Açıklama</label>
-                    <TextArea />
+            </div>
+            <div className="col-span-2">
+                <div className="flex flex-col gap-1">
+                    <label>Açıklama</label>
+                    <Controller
+                        name=""
+                        control={control}
+                        render={({ field }) => (
+                            <TextArea
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value)
+                                }}
+                            />
+                        )}
+                    />
                 </div>
-                <div className="justify-end flex gap-1 col-span-12 mt-10">
-                    <Button className="primary-btn">Kaydet</Button>
-                    <Button className="cancel-btn">İptal</Button>
-                </div>
+            </div>
+            <div className="justify-end flex gap-1 col-span-12 mt-10">
+                <Button className="btn btn-min primary-btn">Kaydet</Button>
+                <Button className="btn btn-min cancel-btn">İptal</Button>
             </div>
         </div>
     )

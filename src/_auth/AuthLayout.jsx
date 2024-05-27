@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { LoginUserService } from '../api/service';
-// components
-import { Button, Input, Spin } from 'antd';
-import ErrorAlert from '../_root/components/alert/ErrorAlert';
-import SuccessAlert from '../_root/components/alert/SuccessAlert';
-import { setItemWithExpiration } from '../utils/expireToken';
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { LoginUserService } from '../api/service'
+import { setItemWithExpiration } from '../utils/expireToken'
+import { Button, Input, Spin } from 'antd'
+import ErrorAlert from '../_root/components/alert/ErrorAlert'
+import SuccessAlert from '../_root/components/alert/SuccessAlert'
+
 
 const AuthLayout = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +20,7 @@ const AuthLayout = () => {
             username: "",
             password: ""
         }
-    });
+    })
 
     const onSubmit = async (data) => {
         setIsLoading(true)
@@ -30,7 +30,7 @@ const AuthLayout = () => {
         }
 
         try {
-            const response = await LoginUserService(body);
+            const response = await LoginUserService(body)
             if (response?.data.accessToken) {
                 setIsSuccess(true)
                 setItemWithExpiration("token", response?.data.accessToken, 24)
@@ -41,7 +41,7 @@ const AuthLayout = () => {
         } finally {
             setIsLoading(false)
         }
-    };
+    }
 
     return (
         <div className="login">
@@ -50,8 +50,8 @@ const AuthLayout = () => {
             {isError && <ErrorAlert />}
 
             <div className="grid h-full">
-                <div className="col-span-6 p-10 card-login">
-                    <img src="/images/ats_pro_logo.png" alt="ats logo" className='login-logo self-center' />
+                <div className="col-span-6 p-10 login-card">
+                    <img src="/images/ats_pro_logo.png" alt="ats logo" className='login-logo-img self-center' />
                     <div>
                         <div className='mt-20'>
                             <Controller
@@ -72,12 +72,12 @@ const AuthLayout = () => {
                             {errors.password && <span className='text-red-500'>{errors.password.message}</span>}
                         </div>
                         <div className='flex justify-end mb-10'>
-                            <Link to={''} className='forget-link'>Forgot Password?</Link>
+                            <Link to={''} className='login-forget-link'>Forgot Password?</Link>
                         </div>
                         <Button type="submit" onClick={handleSubmit(onSubmit)} className='login-btn btn mt-6'>{isLoading ? <Spin className='text-white' /> : "Giriş"}</Button>
                     </div>
                 </div>
-                <div className='image col-span-6' />
+                <div className='login-bg-image col-span-6' />
             </div>
         </div>
     );

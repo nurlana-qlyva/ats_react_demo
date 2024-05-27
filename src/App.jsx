@@ -1,35 +1,35 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import AuthLayout from './_auth/AuthLayout';
-import RootLayout from './_root/RootLayout';
-import Dashboard from './_root/pages/dashboard/Dashboard';
-import Vehicles from './_root/pages/vehicles/Vehicles';
-import VehiclesUpdate from './_root/pages/vehicles-detail/VehiclesUpdate';
-import { getItemWithExpiration } from './utils/expireToken';
-import KmUpdate from './_root/pages/km-update/KmUpdate';
-import Settings from './_root/pages/settings/Settings';
+import { useEffect, useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import { getItemWithExpiration } from './utils/expireToken'
+import AuthLayout from './_auth/AuthLayout'
+import RootLayout from './_root/RootLayout'
+import Dashboard from './_root/pages/dashboard/Dashboard'
+import Vehicles from './_root/pages/vehicles/Vehicles'
+import DetailUpdate from './_root/pages/vehicles-detail/DetailUpdate'
+import KmUpdate from './_root/pages/km-update/KmUpdate'
+import Settings from './_root/pages/settings/Settings'
 
-const AppRouter = () => {
-  const [hasToken, setHasToken] = useState(false);
-  const navigate = useNavigate();
+const App = () => {
+  const [hasToken, setHasToken] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const token = getItemWithExpiration("token");
+    const token = getItemWithExpiration('token')
 
     if (token) {
-      setHasToken(false);
+      setHasToken(false)
     } else {
-      setHasToken(true);
-      navigate('/login');
+      setHasToken(true)
+      navigate('/login')
     }
-  }, [navigate]);
+  }, [navigate])
 
   return (
     <Routes>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="/araclar" element={<Vehicles />} />
-        <Route path="/detay/:id" element={<VehiclesUpdate />} />
+        <Route path="/detay/:id" element={<DetailUpdate />} />
         <Route path="/hizli-km-guncelleme" element={<KmUpdate />} />
         <Route path="/ayarlar" element={<Settings />} />
       </Route>
@@ -40,4 +40,4 @@ const AppRouter = () => {
   );
 };
 
-export default AppRouter;
+export default App

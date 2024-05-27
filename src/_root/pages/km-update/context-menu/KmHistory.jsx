@@ -1,7 +1,8 @@
-import { Button, Input, InputNumber, Modal, Popconfirm, Table } from "antd"
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import { useEffect, useState } from "react";
-import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from "../../../../api/service";
+import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { Button, Input, InputNumber, Modal, Popconfirm, Table } from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from '../../../../api/service'
 
 const KmUpdate = ({ data, setTable }) => {
     const [dataSource, setDataSource] = useState([]);
@@ -158,7 +159,6 @@ const KmUpdate = ({ data, setTable }) => {
             title: '',
             dataIndex: 'delete',
             render: (_, record) => {
-                console.log(record)
                 return record.kaynak === "DÜZELTME" || record.kaynak === "SIFIRLAMA" ? dataSource.length >= 1 ? (
                     <Button disabled style={{border: "none", background: "transparent", padding: 0}}><DeleteOutlined style={{ color: "#dc3545" }} /></Button>
                 ) : null : dataSource.length >= 1 ? (
@@ -248,6 +248,11 @@ const KmUpdate = ({ data, setTable }) => {
             </Modal>
         </div>
     )
+}
+
+KmUpdate.propTypes = {
+    data: PropTypes.array,
+    setTable: PropTypes.func
 }
 
 export default KmUpdate

@@ -1,17 +1,18 @@
-import { Button, Dropdown, Space } from "antd";
-import { DownOutlined } from '@ant-design/icons';
-import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from "react-icons/fa6";
-import { FaFire, FaWallet, FaCarCrash } from "react-icons/fa";
-import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } from "react-icons/md";
-import { useState } from "react";
-import YakitModal from "./yakit/YakitModal";
+import { useState } from 'react'
+import PropTypes from 'prop-types'
+import { Button, Dropdown, Space } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from 'react-icons/fa6'
+import { FaFire, FaWallet, FaCarCrash } from 'react-icons/fa'
+import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } from 'react-icons/md'
+import Yakit from './yakit/Yakit'
 
 const OperationsInfo = ({ ids }) => {
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null)
 
     const handleMenuClick = (e) => {
-        setSelectedItem(e.key);
-    };
+        setSelectedItem(e.key)
+    }
 
     const items = [
         {
@@ -64,30 +65,26 @@ const OperationsInfo = ({ ids }) => {
             key: '10',
             icon: <MdSettingsInputComponent className="text-info" />,
         }
-    ];
+    ]
 
     const menuProps = {
         items,
         onClick: handleMenuClick,
-    };
-
-    const handleModalClose = () => {
-        setSelectedItem(null);
-    };
+    }
 
     const renderModal = () => {
         switch (selectedItem) {
             case '2':
-                return <YakitModal visible={selectedItem === '2'} onClose={handleModalClose} ids={ids} />;
+                return <Yakit visible={selectedItem === '2'} onClose={() => setSelectedItem(null)} ids={ids} />;
             default:
                 return null;
         }
-    };
+    }
 
     return (
         <>
             <Dropdown menu={menuProps}>
-                <Button className="operations-btn">
+                <Button className="btn operations-btn">
                     <Space>
                         İşlemler
                         <DownOutlined />
@@ -97,6 +94,10 @@ const OperationsInfo = ({ ids }) => {
             {selectedItem && renderModal()}
         </>
     )
+}
+
+OperationsInfo.propTypes = {
+    ids: PropTypes.array
 }
 
 export default OperationsInfo

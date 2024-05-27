@@ -1,7 +1,7 @@
-import { HomeOutlined } from "@ant-design/icons"
-import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb"
-import { Tabs } from "antd"
-import FirmaInfo from "./tabs/FirmaInfo"
+import { HomeOutlined } from '@ant-design/icons'
+import { Tabs } from 'antd'
+import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
+import FirmaInfo from './tabs/FirmaInfo'
 
 const breadcrumb = [
   {
@@ -12,8 +12,6 @@ const breadcrumb = [
     title: 'Ayarlar',
   },
 ]
-
-
 
 const Settings = () => {
   const items = [

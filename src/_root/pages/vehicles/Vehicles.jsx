@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { Link } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
     closestCenter,
     DndContext,
@@ -7,24 +7,21 @@ import {
     PointerSensor,
     useSensor,
     useSensors,
-} from '@dnd-kit/core';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+} from '@dnd-kit/core'
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 import {
     arrayMove,
     horizontalListSortingStrategy,
     SortableContext,
     useSortable,
-} from '@dnd-kit/sortable';
-// antd
-import { Checkbox, Table, Popover, Button, Input, Spin } from 'antd';
-import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons"
-// services
-import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from "../../../api/service";
-// components
-import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-import AddModal from "./add/AddModal";
-import Filter from "./filter/Filter";
-import OperationsInfo from "./operations/OperationsInfo";
+} from '@dnd-kit/sortable'
+import { Checkbox, Table, Popover, Button, Input, Spin } from 'antd'
+import { MenuOutlined, HomeOutlined, LoadingOutlined } from '@ant-design/icons'
+import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
+import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
+import AddModal from './add/AddModal'
+import Filter from './filter/Filter'
+import OperationsInfo from './operations/OperationsInfo'
 
 
 const breadcrumb = [
@@ -40,18 +37,16 @@ const breadcrumb = [
 const DragIndexContext = createContext({
     active: -1,
     over: -1,
-});
+})
 const dragActiveStyle = (dragState, id) => {
-    const { active, over, direction } = dragState;
-    // drag active style
-    let style = {};
+    const { active, over, direction } = dragState
+    let style = {}
     if (active && active === id) {
         style = {
             backgroundColor: 'gray',
             opacity: 0.5,
         };
     }
-    // dragover dashed style
     else if (over && id === over && active !== over) {
         style =
             direction === 'right'
@@ -63,7 +58,7 @@ const dragActiveStyle = (dragState, id) => {
                 };
     }
     return style;
-};
+}
 const TableBodyCell = (props) => {
     const dragState = useContext(DragIndexContext);
     return (
@@ -75,7 +70,7 @@ const TableBodyCell = (props) => {
             }}
         />
     );
-};
+}
 const TableHeaderCell = (props) => {
     const dragState = useContext(DragIndexContext);
     const { attributes, listeners, setNodeRef, isDragging } = useSortable({
@@ -94,13 +89,25 @@ const TableHeaderCell = (props) => {
         ...dragActiveStyle(dragState, props.id),
     };
     return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
-};
+}
 
 const Vehicles = () => {
+    const [vehiclesData, setVehiclesData] = useState([])
+    const [tableParams, setTableParams] = useState({
+        pagination: {
+            current: 1,
+            pageSize: 10,
+        },
+    })
+    const [loading, setLoading] = useState(false)
     const [dragIndex, setDragIndex] = useState({
         active: -1,
         over: -1,
-    });
+    })
+    const [search, setSearch] = useState("")
+    const [status, setStatus] = useState(false)
+    const [openRowHeader, setOpenRowHeader] = useState(false)
+
     const baseColumns = [
         {
             title: 'Araç İD',
@@ -153,7 +160,7 @@ const Vehicles = () => {
             dataIndex: 'yakitTip',
             key: 9,
         },
-    ];
+    ]
 
     const [columns, setColumns] = useState(() =>
         baseColumns.map((column, i) => ({
@@ -166,31 +173,18 @@ const Vehicles = () => {
                 id: `${i}`,
             }),
         })),
-    );
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const defaultCheckedList = columns.map((item) => item.key);
-    const [checkedList, setCheckedList] = useState(defaultCheckedList);
-    const [open, setOpen] = useState(false);
-    const [status, setStatus] = useState(false);
-    const [vehiclesData, setVehiclesData] = useState([])
-    const [count, setCount] = useState(0)
-    const [loading, setLoading] = useState(false);
-    const [search, setSearch] = useState("");
-    const [tableParams, setTableParams] = useState({
-        pagination: {
-            current: 1,
-            pageSize: 10,
-        },
-    });
+    )
+    const [selectedRowKeys, setSelectedRowKeys] = useState([])
+    const defaultCheckedList = columns.map((item) => item.key)
+    const [checkedList, setCheckedList] = useState(defaultCheckedList)
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                // https://docs.dndkit.com/api-documentation/sensors/pointer#activation-constraints
                 distance: 1,
             },
         }),
-    );
+    )
     const onDragEnd = ({ active, over }) => {
         if (active.id !== over?.id) {
             setColumns((prevState) => {
@@ -203,7 +197,7 @@ const Vehicles = () => {
             active: -1,
             over: -1,
         });
-    };
+    }
     const onDragOver = ({ active, over }) => {
         const activeIndex = columns.findIndex((i) => i.key === active.id);
         const overIndex = columns.findIndex((i) => i.key === over?.id);
@@ -212,13 +206,8 @@ const Vehicles = () => {
             over: over?.id,
             direction: overIndex > activeIndex ? 'right' : 'left',
         });
-    };
+    }
 
-    const handleOpenChange = (newOpen) => {
-        setOpen(newOpen);
-    };
-
-    // get data
     useEffect(() => {
         setLoading(true);
         if (search.length >= 3) {
@@ -232,7 +221,6 @@ const Vehicles = () => {
                         total: res?.data.vehicleCount,
                     },
                 });
-                setCount(res?.data.vehicleCount)
             })
         } else {
             VehiclesReadForSearchService("").then(res => {
@@ -245,7 +233,6 @@ const Vehicles = () => {
                         total: res?.data.vehicleCount,
                     },
                 });
-                setCount(res?.data.vehicleCount)
             })
         }
     }, [search])
@@ -263,7 +250,6 @@ const Vehicles = () => {
                         total: res?.data.vehicleCount,
                     },
                 });
-                setCount(res?.data.vehicleCount)
             })
         }
     }, [status])
@@ -283,7 +269,11 @@ const Vehicles = () => {
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
             setVehiclesData([]);
         }
-    };
+    }
+
+    const handleOpenChange = (newOpen) => {
+        setOpenRowHeader(newOpen);
+    }
 
     const filter = (data) => {
         setLoading(true)
@@ -297,7 +287,6 @@ const Vehicles = () => {
                     total: res?.data.vehicleCount,
                 },
             });
-            setCount(res?.data.vehicleCount)
             setLoading(false)
         })
     }
@@ -314,14 +303,8 @@ const Vehicles = () => {
                     total: res?.data.vehicleCount,
                 },
             });
-            setCount(res?.data.vehicleCount)
         })
     }
-
-    const options = columns.map(({ key, title }) => ({
-        label: title,
-        value: key,
-    }));
 
     const newColumns = columns.map(col => (
         {
@@ -329,6 +312,11 @@ const Vehicles = () => {
             hidden: !checkedList.includes(col.key),
         }
     ))
+
+    const options = columns.map(({ key, title }) => ({
+        label: title,
+        value: key,
+    }))
 
     const content = (
         <>
@@ -374,10 +362,10 @@ const Vehicles = () => {
                             content={content}
                             placement="bottom"
                             trigger="click"
-                            open={open}
+                            open={openRowHeader}
                             onOpenChange={handleOpenChange}
                         >
-                            <Button className="primary-btn"><MenuOutlined /></Button>
+                            <Button className="btn primary-btn"><MenuOutlined /></Button>
                         </Popover>
                         <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
                         <AddModal setStatus={setStatus} data={vehiclesData} />
@@ -390,7 +378,7 @@ const Vehicles = () => {
             </div>
 
             <div className="content">
-                <p className="count">[ {count} kayıt ]</p>
+                <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
                 <DndContext
                     sensors={sensors}
                     modifiers={[restrictToHorizontalAxis]}
@@ -410,7 +398,7 @@ const Vehicles = () => {
                                 onChange={handleTableChange}
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
-                                    onChange: (selectedRowKeys, selectedRows) => {
+                                    onChange: (selectedRowKeys) => {
                                         setSelectedRowKeys(selectedRowKeys);
                                     },
                                     onSelectAll: (selected, selectedRows, changeRows) => {
@@ -440,7 +428,6 @@ const Vehicles = () => {
                         </th>
                     </DragOverlay>
                 </DndContext>
-
             </div>
         </>
     )
