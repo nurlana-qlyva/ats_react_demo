@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
 import { YakitGetByIdService } from '../../../../../api/service'
+import { upload } from '../../../../../utils/upload'
 import AddModal from './add/AddModal'
+import GeneralInfo from './update/GeneralInfo'
+import PersonalFields from '../../../../components/form/PersonalFields'
+import PhotoUpload from '../../../../components/upload/PhotoUpload'
+import FileUpload from '../../../../components/upload/FileUpload'
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
@@ -15,6 +20,15 @@ const Yakit = ({ visible, onClose, ids }) => {
         },
     })
     const [vehicleIds, setVehicleIds] = useState(0)
+    const [updateModal, setUpdateModal] = useState(false)
+    // file
+    const [filesUrl, setFilesUrl] = useState([])
+    const [files, setFiles] = useState([])
+    const [loadingFiles, setLoadingFiles] = useState(false)
+    // photo
+    const [imageUrls, setImageUrls] = useState([])
+    const [loadingImages, setLoadingImages] = useState(false)
+    const [images, setImages] = useState([])
 
     const defaultValues = {
         aracId: 0
@@ -57,7 +71,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             title: 'Plaka',
             dataIndex: 'plaka',
             key: 1,
-            // render: (text, record) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
+            render: (text, record) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
         },
         {
             title: 'Tarih',
@@ -157,6 +171,148 @@ const Yakit = ({ visible, onClose, ids }) => {
         ]
     )
 
+    const [fields, setFields] = useState([
+        {
+            label: "ozelAlan1",
+            key: "OZELALAN_1",
+            value: "Özel Alan 1",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan2",
+            key: "OZELALAN_2",
+            value: "Özel Alan 2",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan3",
+            key: "OZELALAN_3",
+            value: "Özel Alan 3",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan4",
+            key: "OZELALAN_4",
+            value: "Özel Alan 4",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan5",
+            key: "OZELALAN_5",
+            value: "Özel Alan 5",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan6",
+            key: "OZELALAN_6",
+            value: "Özel Alan 6",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan7",
+            key: "OZELALAN_7",
+            value: "Özel Alan 7",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan8",
+            key: "OZELALAN_8",
+            value: "Özel Alan 8",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan9",
+            key: "OZELALAN_9",
+            value: "Özel Alan 9",
+            type: 'select',
+            code: 867,
+            name2: "ozelAlanKodId9"
+        },
+        {
+            label: "ozelAlan10",
+            key: "OZELALAN_10",
+            value: "Özel Alan 10",
+            type: 'select',
+            code: 868,
+            name2: "ozelAlanKodId10"
+        },
+        {
+            label: "ozelAlan11",
+            key: "OZELALAN_11",
+            value: "Özel Alan 11",
+            type: 'number'
+        },
+        {
+            label: "ozelAlan12",
+            key: "OZELALAN_12",
+            value: "Özel Alan 12",
+            type: 'number'
+        },
+    ])
+
+    const personalProps = {
+        form: "",
+        fields,
+        setFields
+    }
+
+    const uploadImages = () => {
+        try {
+            setLoadingImages(true);
+            // const data = upload(id, "Arac", images)
+            // setImageUrls([...imageUrls, data.imageUrl]);
+        } catch (error) {
+            message.error("Resim yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingImages(false);
+        }
+    }
+
+    const uploadFiles = () => {
+        try {
+            setLoadingFiles(true);
+            // upload(id, "Arac", files)
+        } catch (error) {
+            message.error("Dosya yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingFiles(false);
+        }
+    }
+
+    const itemsUpdate = [
+        {
+            key: '1',
+            label: 'Genel Bilgiler',
+            children: <GeneralInfo />,
+        },
+        {
+            key: '2',
+            label: 'Özel Alanlar',
+            children: <PersonalFields personalProps={personalProps} />
+        },
+        {
+            key: '3',
+            label: `[${imageUrls.length}] Resimler`,
+            children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
+        },
+        {
+            key: '4',
+            label: `[${filesUrl.length}] Ekli Belgeler`,
+            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
+        },
+    ]
+
+    const updateModalFooter = (
+        [
+            <Button key="submit" className="btn btn-min primary-btn">
+                Güncelle
+            </Button>,
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => setUpdateModal(false)}>
+                İptal
+            </Button>
+        ]
+    )
+
     return (
         <Modal
             title={`Yakıt Bilgileri Plaka: []`}
@@ -167,16 +323,18 @@ const Yakit = ({ visible, onClose, ids }) => {
             width={1200}
         >
             <AddModal data={selectedRow} />
-            {/* <Modal
+            <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
-                onCancel={onCloseUpdateModal}
+                onCancel={() => setUpdateModal(false)}
                 maskClosable={false}
                 footer={updateModalFooter}
                 width={1200}
             >
-                <Tabs defaultActiveKey="1" items={itemsUpdate} />
-            </Modal> */}
+                <FormProvider {...methods}>
+                    <Tabs defaultActiveKey="1" items={itemsUpdate} />
+                </FormProvider>
+            </Modal>
             <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
             <Table
                 columns={columns}

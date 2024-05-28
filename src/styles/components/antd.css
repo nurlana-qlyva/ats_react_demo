@@ -135,7 +135,7 @@
 } */
 
 .ant-layout-header {
-  padding: 0 20px !important;
+  padding: 10px 20px;
 }
 
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
@@ -145,10 +145,6 @@
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: var(--info) !important;
   border-color: var(--info) !important;
-}
-
-.ant-spin .ant-spin-dot-item {
-  background-color: var(--third) !important;
 }
 
 .ant-checkbox-group,
@@ -211,4 +207,18 @@
   top: 50%;
   opacity: 1;
   left: 50%;
+}
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within,
+.ant-input-outlined:hover,
+.ant-picker-outlined:focus,
+.ant-picker-outlined:focus-within,
+.ant-picker-outlined:hover {
+  border-color: #d9d9d9;
+  box-shadow: 0 0 0 2px rgb(246, 151, 14, .3);
+}
+
+.ant-layout-header {
+  height: unset;
 }

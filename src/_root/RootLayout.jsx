@@ -33,7 +33,7 @@ const RootLayout = () => {
                 <HeaderComp colorBgContainer={colorBgContainer} setCollapsed={setCollapsed} collapsed={collapsed} />
                 <Content
                     style={{
-                        padding: 20,
+                        padding: "10px 20px",
                         minHeight: 280,
                         overflow: "auto"
                     }}

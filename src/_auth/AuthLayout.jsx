@@ -57,19 +57,19 @@ const AuthLayout = () => {
                             <Controller
                                 name='username'
                                 control={control}
-                                rules={{ required: 'Username is required' }}
+                                rules={{ required: 'Kullanıcı adı girilmemişdir.' }}
                                 render={({ field }) => <Input {...field} placeholder='Kullanıcı adı' className={errors.username ? 'border-red-500' : null} />}
                             />
-                            {errors.username && <span className='text-danger'>{errors.username.message}</span>}
+                            {errors.username && <span className='error-message'>{errors.username.message}</span>}
                         </div>
                         <div className='mt-20 mb-10'>
                             <Controller
                                 name='password'
                                 control={control}
-                                rules={{ required: 'Password is required' }}
+                                rules={{ required: 'Şifre girilmemişdir.' }}
                                 render={({ field }) => <Input {...field} placeholder='Şifre' type='password' className={errors.username ? 'border-red-500' : null} />}
                             />
-                            {errors.password && <span className='text-red-500'>{errors.password.message}</span>}
+                            {errors.password && <span className='error-message'>{errors.password.message}</span>}
                         </div>
                         <div className='flex justify-end mb-10'>
                             <Link to={''} className='login-forget-link'>Forgot Password?</Link>

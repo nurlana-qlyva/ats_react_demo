@@ -193,7 +193,6 @@ const GeneralInfo = ({ data }) => {
                                 />
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div className="col-span-6">

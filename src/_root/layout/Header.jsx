@@ -13,7 +13,6 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
     return (
         <Header
             style={{
-                padding: 0,
                 background: colorBgContainer,
             }}
         >

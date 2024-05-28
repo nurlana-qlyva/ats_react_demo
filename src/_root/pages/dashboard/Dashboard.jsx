@@ -10,7 +10,7 @@ const Dashboard = () => {
         Dashboard
       </div>
 
-      <div className="grid gap-1">
+      <div className="grid gap-2">
         <div className="col-span-4">
           <div className="content bg-dark">
             <LineChartComp />
