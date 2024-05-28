@@ -44,13 +44,12 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
                     {filesArr.map((file, i) => {
                         return (
                             <div key={i} className="mb-10">
-                                <Button className="file-btn" onClick={() => downloadFile(file)}> <FileOutlined /> {file.dosyaAd}</Button>
+                                <Button className="btn btn-min file-btn" onClick={() => downloadFile(file)}> <FileOutlined /> {file.dosyaAd}</Button>
                             </div>
                         );
                     })}
                 </div>
             )}
-
 
             <Upload.Dragger
                 accept=".txt,.doc,.docs, .pdf, .xlsx"

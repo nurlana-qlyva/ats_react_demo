@@ -6,7 +6,7 @@ import { HomeOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, Input, InputNumber, message, Modal, Spin, Tabs } from 'antd'
 import dayjs from 'dayjs'
 import { FileReadService, PhotoReadService, VehiclesUpdateReadService, VehiclesUpdateSetService } from '../../../api/service'
-import { upload } from '../../../utils/upload'
+import { uploadFile, uploadPhoto } from '../../../utils/upload'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import VehicleType from '../../components/form/VehicleType'
 import Location from '../../components/form/Location'
@@ -230,7 +230,7 @@ const DetailUpdate = () => {
     const uploadImages = () => {
         try {
             setLoadingImages(true);
-            const data = upload(id, "Arac", images)
+            const data = uploadPhoto(id, "Arac", images)
             setImageUrls([...imageUrls, data.imageUrl]);
         } catch (error) {
             message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -242,7 +242,7 @@ const DetailUpdate = () => {
     const uploadFiles = () => {
         try {
             setLoadingFiles(true);
-            upload(id, "Arac", files)
+            uploadFile(id, "Arac", files)
         } catch (error) {
             message.error("Dosya yüklenemedi. Yeniden deneyin.");
         } finally {

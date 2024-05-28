@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
 import { YakitGetByIdService } from '../../../../../api/service'
-import { upload } from '../../../../../utils/upload'
+import { uploadPhoto, uploadFile } from '../../../../../utils/upload'
 import AddModal from './add/AddModal'
 import GeneralInfo from './update/GeneralInfo'
 import PersonalFields from '../../../../components/form/PersonalFields'
@@ -107,7 +107,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             key: 6,
             render: (text, record) => <div className=''>
                 <span>{text} </span>
-                <span style={{ fontSize: '12px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
+                <span style={{ fontSize: '14px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
             </div>
         },
         {
