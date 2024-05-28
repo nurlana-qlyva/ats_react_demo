@@ -72,14 +72,14 @@
 
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
 .ant-tabs .ant-tabs-tab:hover {
-  color: var(--secondary) !important;
+  color: var(--secondary);
 }
 
 .ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
 .ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
 .ant-tabs .ant-tabs-tab-btn:active,
 .ant-tabs .ant-tabs-tab-remove:active {
-  color: var(--black) !important;
+  color: var(--black);
 }
 
 .ant-drawer-content-wrapper {
@@ -139,7 +139,7 @@
 }
 
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: var(--info) !important;
+  color: var(--info);
 }
 
 .ant-checkbox-checked .ant-checkbox-inner {
@@ -158,7 +158,7 @@
 .ant-tabs .ant-tabs-tab-btn:active,
 .ant-tabs .ant-tabs-tab-remove:active,
 .ant-tabs .ant-tabs-tab:hover {
-  color: var(--secondary) !important;
+  color: var(--secondary);
 }
 
 .settings .ant-table-row td:not(:nth-child(7), :nth-child(8), :nth-child(9)),
@@ -215,12 +215,15 @@
 .ant-picker-outlined:focus,
 .ant-picker-outlined:focus-within,
 .ant-picker-outlined:hover,
-.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector,
+.ant-select-outlined:not(.ant-select-disabled):not(
+    .ant-select-customize-input
+  ):not(.ant-pagination-size-changer):hover
+  .ant-select-selector,
 .ant-input-number:hover,
 .ant-input-number:focus,
 .ant-input-number:focus-within {
   border-color: #d9d9d9;
-  box-shadow: 0 0 0 2px rgb(246, 151, 14, .3); 
+  box-shadow: 0 0 0 2px rgb(246, 151, 14, 0.3);
 }
 
 .ant-layout-header {
@@ -242,4 +245,9 @@
 
 .ant-divider-horizontal {
   margin: 8px 0;
+}
+
+.inner-tab .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+.inner-tab .ant-tabs .ant-tabs-tab:hover {
+  color: var(--info);
 }
