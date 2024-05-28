@@ -8,6 +8,7 @@ import GeneralInfo from './update/GeneralInfo'
 import PersonalFields from '../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../components/upload/FileUpload'
+import dayjs from 'dayjs'
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
@@ -77,6 +78,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             title: 'Tarih',
             dataIndex: 'tarih',
             key: 2,
+            render: (text, record) => dayjs(text).format("DD.MM.YYYY")
         },
         // {
         //     title: 'Saat',
