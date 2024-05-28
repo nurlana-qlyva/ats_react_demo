@@ -486,7 +486,7 @@ const GeneralInfo = () => {
                 <div className="col-span-12">
                     <h3 className="sub-title">Maliyetler</h3>
                     <div className="grid gap-1 mt-10">
-                        <div className="col-span-3">
+                        <div className="col-span-2">
                             <div className="flex flex-col gap-1">
                                 <label>İşçilik Ücreti</label>
                                 <Controller
@@ -502,7 +502,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-3">
+                        <div className="col-span-2">
                             <div className="flex flex-col gap-1">
                                 <label>Mlz. Ücreti</label>
                                 <Controller
@@ -518,7 +518,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-3">
+                        <div className="col-span-2">
                             <div className="flex flex-col gap-1">
                                 <label>Diğer</label>
                                 <Controller
@@ -534,7 +534,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-3">
+                        <div className="col-span-2">
                             <div className="flex flex-col gap-1">
                                 <label>KDV</label>
                                 <Controller
@@ -550,10 +550,8 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-12">
-                            <Divider />
-                        </div>
-                        <div className="col-span-3">
+                        <div className="col-span-2"></div>
+                        <div className="col-span-2">
                             <div className="flex flex-col gap-1">
                                 <label>Toplam</label>
                                 <Controller
