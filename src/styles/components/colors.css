@@ -14,6 +14,10 @@
   color: var(--error);
 }
 
+.text-white {
+  color: var(--white);
+}
+
 .bg-secondary {
   background-color: var(--secondary);
 }
@@ -32,4 +36,12 @@
 
 .bg-light {
   background-color: var(--gray-300);
+}
+
+.bg-success {
+  background-color: var(--success);
+}
+
+.bg-error {
+  background-color: var(--error);
 }

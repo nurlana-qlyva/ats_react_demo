@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
-import { Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, Radio, TimePicker } from 'antd'
+import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, Radio, TimePicker } from 'antd'
 import ServisType from '../../../../../components/form/ServisType'
 import Driver from '../../../../../components/form/Driver'
+import Location from '../../../../../components/form/Location'
 
 dayjs.locale('tr')
 
@@ -15,6 +16,63 @@ const GeneralInfo = () => {
     return (
         <>
             <div className="grid gap-1">
+                <div className="col-span-6"></div>
+                <div className="col-span-6 p-20">
+                    <div className="grid gap-1">
+                        <div className="col-span-3">
+                            <Button className='w-full bg-success text-white'>Aktiv</Button>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Checkbox
+                                        {...field}
+                                        style={{ display: 'none' }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="col-span-3">
+                            <Button className='w-full bg-secondary text-white'>Devam Ediyor</Button>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Checkbox
+                                        {...field}
+                                        style={{ display: 'none' }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="col-span-3">
+                            <Button className='w-full bg-error text-white'>Durduruldu</Button>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Checkbox
+                                        {...field}
+                                        style={{ display: 'none' }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="col-span-3">
+                            <Button className='w-full bg-info text-white'>Tamamlandı</Button>
+                            <Controller
+                                name=""
+                                control={control}
+                                render={({ field }) => (
+                                    <Checkbox
+                                        {...field}
+                                        style={{ display: 'none' }}
+                                    />
+                                )}
+                            />
+                        </div>
+                    </div>
+                </div>
                 <div className="col-span-6 p-20">
                     <div className="grid gap-1">
                         <div className="col-span-6">
@@ -241,22 +299,6 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Fatura Tarihi</label>
-                                <Controller
-                                    name=""
-                                    control={control}
-                                    render={({ field }) => (
-                                        <ConfigProvider locale={tr_TR}>
-                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
-                                                field.onChange(e)
-                                            }} />
-                                        </ConfigProvider>
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-6">
-                            <div className="flex flex-col gap-1">
                                 <label>Fatura No</label>
                                 <Controller
                                     name=""
@@ -274,17 +316,16 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Hasar No</label>
+                                <label>Fatura Tarihi</label>
                                 <Controller
                                     name=""
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
+                                        <ConfigProvider locale={tr_TR}>
+                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
+                                                field.onChange(e)
+                                            }} />
+                                        </ConfigProvider>
                                     )}
                                 />
                             </div>
@@ -306,7 +347,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-12">
+                        <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>Onay No</label>
                                 <Controller
@@ -318,6 +359,31 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="lokasyonId">Lokasyon</label>
+                                <Controller
+                                    name="lokasyonId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Location field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Masraf Merkezi</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <ServisType field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+
                         <div className="col-span-12">
                             <Divider />
                         </div>
@@ -408,6 +474,97 @@ const GeneralInfo = () => {
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+                <div className="col-span-12">
+                    <Divider />
+                </div>
+                <div className="col-span-12">
+                    <h3 className="sub-title">Maliyetler</h3>
+                    <div className="grid gap-1 mt-10">
+                        <div className="col-span-3">
+                            <div className="flex flex-col gap-1">
+                                <label>İşçilik Ücreti</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-3">
+                            <div className="flex flex-col gap-1">
+                                <label>Mlz. Ücreti</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-3">
+                            <div className="flex flex-col gap-1">
+                                <label>Diğer</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-3">
+                            <div className="flex flex-col gap-1">
+                                <label>KDV</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-12">
+                            <Divider />
+                        </div>
+                        <div className="col-span-3">
+                            <div className="flex flex-col gap-1">
+                                <label>Toplam</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
