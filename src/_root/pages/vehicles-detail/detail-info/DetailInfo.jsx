@@ -12,62 +12,62 @@ const DetailInfo = ({ id }) => {
         {
             label: 'Ruhsat Bilgileri',
             key: '1',
-            icon: <IdcardOutlined />,
+            icon: <IdcardOutlined className="text-info" />,
         },
         {
             label: 'Teknik Bilgiler',
             key: '2',
-            icon: <BranchesOutlined />,
+            icon: <BranchesOutlined className="text-info" />,
         },
         {
             label: 'Araç Sürücüler',
             key: '3',
-            icon: <UserOutlined />,
+            icon: <UserOutlined className="text-info" />,
         },
         {
             label: 'Ekspertiz Bilgileri',
             key: '4',
-            icon: <CarOutlined />,
+            icon: <CarOutlined className="text-info" />,
         },
         {
             label: 'Üst Yapı Bilgileri',
             key: '5',
-            icon: <ApartmentOutlined />,
+            icon: <ApartmentOutlined className="text-info" />,
         },
         {
             label: 'Aksesuarlar',
             key: '6',
-            icon: <ApiOutlined />,
+            icon: <ApiOutlined className="text-info" />,
         },
         {
             label: 'Satınalma & Kiralama Bilgileri',
             key: '7',
-            icon: <CreditCardOutlined />,
+            icon: <CreditCardOutlined className="text-info" />,
         },
         {
             label: 'Garanti Bilgileri',
             key: '8',
-            icon: <MdHealthAndSafety />,
+            icon: <MdHealthAndSafety className="text-info" />,
         },
         {
             label: 'Taşıt Kartı ve Yetki Bilgileri',
             key: '9',
-            icon: <SolutionOutlined />,
+            icon: <SolutionOutlined className="text-info" />,
         },
         {
             label: 'Kapasite Bilgileri',
             key: '10',
-            icon: <DatabaseOutlined />,
+            icon: <DatabaseOutlined className="text-info" />,
         },
         {
             label: 'Lastik Bilgisi',
             key: '11',
-            icon: <PiGearSixBold />,
+            icon: <PiGearSixBold className="text-info" />,
         },
         {
             label: ' Araç Satış Bilgileri',
             key: '12',
-            icon: <ShoppingCartOutlined />,
+            icon: <ShoppingCartOutlined className="text-info" />,
         },
     ]
 
@@ -79,7 +79,7 @@ const DetailInfo = ({ id }) => {
     const renderModal = () => {
         switch (selectedItem) {
             case '1':
-            return <Ruhsat visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} id={id} />;
+                return <Ruhsat visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} id={id} />;
             // case '2':
             // // return <TeknikModal visible={selectedItem === '2'} onClose={() => setSelectedItem(null)} id={id} />;
             // case '3':

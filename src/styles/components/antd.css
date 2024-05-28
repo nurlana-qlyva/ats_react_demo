@@ -214,11 +214,21 @@
 .ant-input-outlined:hover,
 .ant-picker-outlined:focus,
 .ant-picker-outlined:focus-within,
-.ant-picker-outlined:hover {
+.ant-picker-outlined:hover,
+.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
   border-color: #d9d9d9;
   box-shadow: 0 0 0 2px rgb(246, 151, 14, .3);
 }
 
 .ant-layout-header {
   height: unset;
+}
+
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  color: var(--info);
+  border-color: var(--info);
+}
+
+.ant-checkbox-indeterminate .ant-checkbox-inner:after {
+  background-color: var(--info);
 }
