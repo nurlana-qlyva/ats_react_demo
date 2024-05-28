@@ -251,3 +251,9 @@
 .inner-tab .ant-tabs .ant-tabs-tab:hover {
   color: var(--info);
 }
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  border-color: var(--info);
+  background-color: var(--info);
+}
+

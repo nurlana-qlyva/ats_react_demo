@@ -6,6 +6,7 @@ import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from 'react-icons/fa6
 import { FaFire, FaWallet, FaCarCrash } from 'react-icons/fa'
 import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } from 'react-icons/md'
 import Yakit from './yakit/Yakit'
+import Bakim from './bakim/Bakim'
 
 const OperationsInfo = ({ ids }) => {
     const [selectedItem, setSelectedItem] = useState(null)
@@ -74,6 +75,8 @@ const OperationsInfo = ({ ids }) => {
 
     const renderModal = () => {
         switch (selectedItem) {
+            case '1':
+                return <Bakim visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} ids={ids} />;
             case '2':
                 return <Yakit visible={selectedItem === '2'} onClose={() => setSelectedItem(null)} ids={ids} />;
             default:
