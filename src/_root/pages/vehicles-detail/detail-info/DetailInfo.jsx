@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import { DownOutlined, UserOutlined, IdcardOutlined, CarOutlined, ApartmentOutlined, ApiOutlined, BranchesOutlined, CreditCardOutlined, DatabaseOutlined, SolutionOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import { PiGearSixBold } from 'react-icons/pi'
 import { MdHealthAndSafety } from 'react-icons/md'
@@ -102,6 +103,10 @@ const DetailInfo = ({ id }) => {
             {selectedItem && renderModal()}
         </>
     )
+}
+
+DetailInfo.propTypes = {
+    id: PropTypes.number
 }
 
 export default DetailInfo

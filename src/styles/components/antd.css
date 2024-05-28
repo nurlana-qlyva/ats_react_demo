@@ -215,7 +215,10 @@
 .ant-picker-outlined:focus,
 .ant-picker-outlined:focus-within,
 .ant-picker-outlined:hover,
-.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
+.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector,
+.ant-input-number:hover,
+.ant-input-number:focus,
+.ant-input-number:focus-within {
   border-color: #d9d9d9;
   box-shadow: 0 0 0 2px rgb(246, 151, 14, .3);
 }
@@ -231,4 +234,8 @@
 
 .ant-checkbox-indeterminate .ant-checkbox-inner:after {
   background-color: var(--info);
+}
+
+.ant-input-number .ant-input-number-handler-wrap {
+  display: none;
 }
