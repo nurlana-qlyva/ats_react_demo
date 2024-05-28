@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
-import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, Radio, TimePicker } from 'antd'
+import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, Popover, Radio, TimePicker } from 'antd'
 import ServisType from '../../../../../components/form/ServisType'
 import Driver from '../../../../../components/form/Driver'
 import Location from '../../../../../components/form/Location'
@@ -11,68 +11,57 @@ dayjs.locale('tr')
 
 const GeneralInfo = () => {
     const [value, setValue] = useState('servis')
+    const [open, setOpen] = useState(false)
     const { control } = useFormContext()
+
+    const content = (
+        <div className="flex flex-col gap-1">
+            <div className="flex gap-2">
+                <Controller
+                    name=""
+                    control={control}
+                    render={({ field }) => (
+                        <Checkbox {...field} />
+                    )}
+                />
+                <label>Tamamlandı</label>
+            </div>
+            <div className="flex gap-2">
+                <Controller
+                    name=""
+                    control={control}
+                    render={({ field }) => (
+                        <Checkbox {...field} />
+                    )}
+                />
+                <label>Yapılamadı</label>
+            </div>
+            <div className="flex gap-2">
+                <Controller
+                    name=""
+                    control={control}
+                    render={({ field }) => (
+                        <Checkbox {...field} />
+                    )}
+                />
+                <label>Tekrarlanacak</label>
+            </div>
+            <div className="flex gap-2">
+                <Controller
+                    name=""
+                    control={control}
+                    render={({ field }) => (
+                        <Checkbox {...field} />
+                    )}
+                />
+                <label>Garanti kapsamında</label>
+            </div>
+        </div>
+    )
 
     return (
         <>
             <div className="grid gap-1">
-                <div className="col-span-6"></div>
-                <div className="col-span-6 p-20">
-                    <div className="grid gap-1">
-                        <div className="col-span-3">
-                            <Button className='w-full bg-success text-white'>Aktiv</Button>
-                            <Controller
-                                name=""
-                                control={control}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        {...field}
-                                        style={{ display: 'none' }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-3">
-                            <Button className='w-full bg-secondary text-white'>Devam Ediyor</Button>
-                            <Controller
-                                name=""
-                                control={control}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        {...field}
-                                        style={{ display: 'none' }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-3">
-                            <Button className='w-full bg-error text-white'>Durduruldu</Button>
-                            <Controller
-                                name=""
-                                control={control}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        {...field}
-                                        style={{ display: 'none' }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-3">
-                            <Button className='w-full bg-info text-white'>Tamamlandı</Button>
-                            <Controller
-                                name=""
-                                control={control}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        {...field}
-                                        style={{ display: 'none' }}
-                                    />
-                                )}
-                            />
-                        </div>
-                    </div>
-                </div>
                 <div className="col-span-6 p-20">
                     <div className="grid gap-1">
                         <div className="col-span-6">
@@ -285,6 +274,71 @@ const GeneralInfo = () => {
                 </div>
                 <div className="col-span-6 p-20">
                     <div className="grid gap-1">
+                        <div className="col-span-12" style={{ marginTop: "26px" }}>
+                            <div className="grid gap-1">
+                                <div className="col-span-3">
+                                    <Button className='w-full bg-success text-white'>Aktiv</Button>
+                                    <Controller
+                                        name=""
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                {...field}
+                                                style={{ display: 'none' }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                <div className="col-span-3">
+                                    <Button className='w-full bg-secondary text-white'>Devam Ediyor</Button>
+                                    <Controller
+                                        name=""
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                {...field}
+                                                style={{ display: 'none' }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                <div className="col-span-3">
+                                    <Button className='w-full bg-error text-white'>Durduruldu</Button>
+                                    <Controller
+                                        name=""
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                {...field}
+                                                style={{ display: 'none' }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                <div className="col-span-3">
+                                    <Popover
+                                        content={content}
+                                        trigger="click"
+                                        placement="bottom"
+                                        open={open}
+                                        onOpenChange={newOpen => setOpen(newOpen)}
+                                    >
+                                        <Button className='w-full bg-info text-white'>Tamamlandı</Button>
+                                    </Popover>
+
+                                    <Controller
+                                        name=""
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                {...field}
+                                                style={{ display: 'none' }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
                                 <label>Servis Nedeni</label>
@@ -359,6 +413,9 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
+                        <div className="col-span-12">
+                            <Divider />
+                        </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="lokasyonId">Lokasyon</label>
@@ -383,63 +440,10 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
-
                         <div className="col-span-12">
                             <Divider />
                         </div>
-
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Tamamlandı</label>
-                                <Controller
-                                    name=""
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox {...field} />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Yapılamadı</label>
-                                <Controller
-                                    name=""
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox {...field} />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Tekrarlanacak</label>
-                                <Controller
-                                    name=""
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox {...field} />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Garanti kapsamında</label>
-                                <Controller
-                                    name=""
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox {...field} />
-                                    )}
-                                />
-                            </div>
-                        </div>
                         <div className="col-span-12">
-                            <Divider />
-                        </div>
-                        <div className="col-span-12 mt-10">
                             <Radio.Group onChange={e => setValue(e.target.value)} value={value}>
                                 <Radio value="servis">Yetkili Servis</Radio>
                                 <Radio value="departman">Bakım Departmanı</Radio>
