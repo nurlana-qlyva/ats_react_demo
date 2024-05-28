@@ -78,50 +78,67 @@ const Yakit = ({ visible, onClose, ids }) => {
             dataIndex: 'tarih',
             key: 2,
         },
-        {
-            title: 'Saat',
-            dataIndex: 'saat',
-            key: 3,
-        },
+        // {
+        //     title: 'Saat',
+        //     dataIndex: 'saat',
+        //     key: 3,
+        // },
         {
             title: 'Yakıt Tipi',
             dataIndex: 'yakitTip',
-            key: 4,
-        },
-        {
-            title: 'Miktar',
-            dataIndex: 'miktar',
-            key: 5,
-        },
-        {
-            title: 'Tutar',
-            dataIndex: 'tutar',
-            key: 6,
-        },
-        {
-            title: 'Son KM.',
-            dataIndex: 'sonAlinanKm',
-            key: 7,
+            key: 3,
         },
         {
             title: 'Alınan KM.',
             dataIndex: 'alinanKm',
+            key: 4,
+        },
+        {
+            title: 'Kullanım',
+            dataIndex: 'ozelKullanim',
+            key: 5,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
+        },
+        {
+            title: 'Miktar',
+            dataIndex: 'miktar',
+            key: 6,
+            render: (text, record) => <div className=''>
+                <span>{text} </span>
+                <span style={{ fontSize: '12px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
+            </div>
+        },
+        {
+            title: 'Tutar',
+            dataIndex: 'tutar',
+            key: 7,
+        },
+        {
+            title: 'Ortalama Tüketim',
+            dataIndex: 'tuketim',
             key: 8,
         },
         {
-            title: 'Fark KM.',
-            dataIndex: 'farkKm',
+            title: 'Km Başına Maliyet',
+            dataIndex: '',
             key: 9,
         },
         {
-            title: 'Tüketim',
+            title: 'Full Depo',
             dataIndex: 'tuketim',
             key: 10,
+            render: (text, record) => <Checkbox checked={record.fullDepo} readOnly />
         },
         {
-            title: 'İstasyon',
-            dataIndex: 'istasyon',
+            title: 'Stoktan Kullanım',
+            dataIndex: 'stokKullanimi',
             key: 11,
+            render: (text, record) => <Checkbox checked={record.stokKullanimi} readOnly />
+        },
+        {
+            title: 'Sürücü',
+            dataIndex: 'surucuAdi',
+            key: 12,
         },
         {
             title: 'Lokasyon',
@@ -129,19 +146,14 @@ const Yakit = ({ visible, onClose, ids }) => {
             key: 13,
         },
         {
-            title: 'Fatura No',
-            dataIndex: 'faturaNo',
+            title: 'İstasyon',
+            dataIndex: 'istasyon',
             key: 14,
-        },
-        {
-            title: 'Sürücü Adı',
-            dataIndex: 'surucuAdi',
-            key: 15,
         },
         {
             title: 'Açıklama',
             dataIndex: 'aciklama',
-            key: 16,
+            key: 15,
         }
     ]
 

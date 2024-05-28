@@ -220,7 +220,7 @@
 .ant-input-number:focus,
 .ant-input-number:focus-within {
   border-color: #d9d9d9;
-  box-shadow: 0 0 0 2px rgb(246, 151, 14, .3);
+  box-shadow: 0 0 0 2px rgb(246, 151, 14, .3); 
 }
 
 .ant-layout-header {

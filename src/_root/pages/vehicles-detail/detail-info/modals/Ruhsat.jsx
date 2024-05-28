@@ -65,7 +65,6 @@ const Ruhsat = ({ visible, onClose, id }) => {
 
     useEffect(() => {
         DetailInfoGetService(id).then(res => {
-            console.log(res.data)
             setValue("aciklama", res?.data.aciklama)
             setValue("aracCinsi", res?.data.aracCinsi ? res?.data.aracCinsi : "")
             setValue("aracSinifi", res?.data.aracSinifi)
@@ -116,8 +115,8 @@ const Ruhsat = ({ visible, onClose, id }) => {
             "ruhsatSahibiKodId": values.ruhsatSahibiKodId,
             "ilce": values.ilce,
             "tescilNo": values.tescilNo,
-            "tescilTarih": values?.tescilTarih ,
-            "trafikciktarih": values?.trafikciktarih ,
+            "tescilTarih": values?.tescilTarih,
+            "trafikciktarih": values?.trafikciktarih,
             "istiapHaddi": values.istiapHaddi,
             "romok": values.romok,
             "taksiMetre": values.taksiMetre,
@@ -145,19 +144,19 @@ const Ruhsat = ({ visible, onClose, id }) => {
         }
 
         DetailInfoUpdateService(data).then(res => {
-            console.log(res.data)
             if (res.data.statusCode === 202) {
                 setStatus(true)
+                onClose()
             }
         })
     })
 
     const footer = (
         [
-            <Button key="submit" className="btn primary-btn">
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSumbit}>
                 Kaydet
             </Button>,
-            <Button key="back" className="btn cancel-btn" onClick={onClose}>
+            <Button key="back" className="btn btn-min cancel-btn" onClick={onClose}>
                 İptal
             </Button>
         ]
@@ -656,9 +655,16 @@ const Ruhsat = ({ visible, onClose, id }) => {
                                     control={control}
                                     render={({ field }) => (
                                         <ConfigProvider locale={tr_TR}>
-                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
-                                                field.onChange(e)
-                                            }} />
+                                            <DatePicker
+                                                {...field}
+                                                placeholder=""
+                                                disabled={!hakMahrumiyetChecked}
+                                                locale={dayjs.locale("tr")}
+                                                format="DD.MM.YYYY"
+                                                onChange={e => {
+                                                    field.onChange(e)
+                                                }}
+                                            />
                                         </ConfigProvider>
                                     )}
                                 />
