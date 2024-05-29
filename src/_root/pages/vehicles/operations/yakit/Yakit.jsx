@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
 import { YakitGetByIdService } from '../../../../../api/service'
@@ -9,6 +9,7 @@ import PersonalFields from '../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../components/upload/FileUpload'
 import dayjs from 'dayjs'
+import { PlakaContext } from '../../../../../context/plakaSlice'
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
@@ -31,6 +32,8 @@ const Yakit = ({ visible, onClose, ids }) => {
     const [loadingImages, setLoadingImages] = useState(false)
     const [images, setImages] = useState([])
 
+    const { plaka, setPlaka } = useContext(PlakaContext)
+
     const defaultValues = {
         aracId: 0
     }
@@ -43,31 +46,28 @@ const Yakit = ({ visible, onClose, ids }) => {
 
     useEffect(() => setVehicleIds(ids), [ids])
     useEffect(() => {
-        ids.map(id => {
-            return YakitGetByIdService(id, tableParams?.pagination.current).then(res => {
-                setDataSource(res?.data.fuel_list)
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.total_count,
-                    },
-                });
+        const body = ids
+        let newPlakaEntries = []
+        YakitGetByIdService(body, tableParams?.pagination.current).then(res => {
+            res.data.fuel_list.map(vehicle => {
+                if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
+                    !newPlakaEntries.some(item => item.id === vehicle.aracId)) {
+                    newPlakaEntries.push({ id: vehicle.aracId, plaka: vehicle.plaka });
+                }
             })
+            setPlaka(newPlakaEntries)
+            setDataSource(res?.data.fuel_list)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
         })
-
     }, [vehicleIds, tableParams.pagination.current])
 
     const columns = [
-        {
-            title: "",
-            key: "selection",
-            render: (text, record) => (
-                <Checkbox
-                    onChange={(e) => handleCheckboxChange(e, record)}
-                />
-            ),
-        },
         {
             title: 'Plaka',
             dataIndex: 'plaka',
@@ -158,12 +158,6 @@ const Yakit = ({ visible, onClose, ids }) => {
             key: 15,
         }
     ]
-
-    const handleCheckboxChange = (e, record) => {
-        if (e.target.checked) {
-            setSelectedRow(record)
-        }
-    }
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -327,9 +321,11 @@ const Yakit = ({ visible, onClose, ids }) => {
         ]
     )
 
+    const plakaData = plaka.map(item => item.plaka).join(', ')
+
     return (
         <Modal
-            title={`Yakıt Bilgileri Plaka: []`}
+            title={`Yakıt Bilgileri Plaka: [${plakaData}]`}
             open={visible}
             onCancel={onClose}
             maskClosable={false}

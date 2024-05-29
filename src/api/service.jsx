@@ -147,8 +147,14 @@ export const YakitGetService = (page) => {
   return http.get(`/Fuel/GetFuelList?page=${page}`)
 }
 
-export const YakitGetByIdService = async (id, page) => {
-  return await http.get(`/Fuel/GetFuelListByVehicleId?vehicleId=${id}&page=${page}`)
+// get list
+export const YakitGetByIdService = async (data, page) => {
+  return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}`, data)
+}
+
+// get data for one vehicle
+export const YakitDataGetByIdService = async (id) => {
+  return await http.get(`/Fuel/GetFuelCardContentById?vehicleId=${id}`)
 }
 
 export const YakitAddService = (data) => {

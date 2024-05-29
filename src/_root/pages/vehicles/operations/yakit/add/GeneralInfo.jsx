@@ -1,18 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Input, InputNumber, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined } from '@ant-design/icons'
+import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { DetailInfoUpdateService, KMValidateService, YakitHistoryGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import FuelTank from '../../../../../components/form/FuelTank'
+import Plaka from '../../../../../components/form/Plaka'
 
 dayjs.locale('tr')
 
-const GeneralInfo = ({ data }) => {
+const GeneralInfo = () => {
+    const { control, setValue } = useFormContext()
+    const { data } = useContext(PlakaContext)
+
     const [alinanKm, setAlinanKm] = useState(0)
     const [fark, setFark] = useState(0)
     const [miktar, setMiktar] = useState(0)
@@ -20,11 +25,9 @@ const GeneralInfo = ({ data }) => {
     const [tuketim, setTuketim] = useState(0)
     const [open, setOpen] = useState(false)
     const [response, setResponse] = useState('normal')
-    const [yakitHacmi, setYakitHacmi] = useState(data.yakitHacmi)
     const [tutar, setTutar] = useState(0)
     const [history, setHistory] = useState(0)
-
-    const { control, setValue } = useFormContext()
+    const [yakitHacmi, setYakitHacmi] = useState(data.yakitHacmi)
 
     useEffect(() => {
         const frk = alinanKm - data.sonAlinanKm
@@ -61,17 +64,17 @@ const GeneralInfo = ({ data }) => {
     }, [full, miktar])
 
     useEffect(() => {
-        setValue("plaka", data.plaka)
         setValue("surucuId", data.surucuId)
         setValue("tarih", dayjs(data.tarih))
         setValue("saat", dayjs(data.saat, 'HH:mm'))
         setValue("sonAlinanKm", data.sonAlinanKm)
         setValue("litreFiyat", data.litreFiyat)
-        setValue("tuketim", tuketim)
-        setValue("farkKm", fark)
+        setValue("yakitHacmi", data.yakitHacmi)
+        setValue("yakitTip", data.yakitTip)
+        setValue("yakitTipId", data.yakitTipId)
 
         YakitHistoryGetService(data.aracId).then(res => setHistory(res.data))
-    }, [tuketim, fark])
+    }, [tuketim, fark, data])
 
     const updateDepoHacmi = () => {
         const body = {
@@ -117,7 +120,7 @@ const GeneralInfo = ({ data }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={updateDepoHacmi}>
+            <Button key="submit" className="btn btn-min primary-btn">
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
@@ -141,12 +144,7 @@ const GeneralInfo = ({ data }) => {
                                     name="plaka"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
+                                        <Plaka field={field} />
                                     )}
                                 />
                             </div>
@@ -199,7 +197,7 @@ const GeneralInfo = ({ data }) => {
                     <div className="grid gap-1">
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yakitId">Yakıt Tipi</label>
+                                <label>Yakıt Tipi</label>
                                 <Controller
                                     name="yakitTipId"
                                     control={control}
@@ -210,11 +208,11 @@ const GeneralInfo = ({ data }) => {
                             </div>
                         </div>
                         <div className="col-span-6 flex flex-col">
-                            <label htmlFor="stokKullanimi">Stoktan Kullanım</label>
+                            <label>Stoktan Kullanım</label>
                             <Controller
                                 name="stokKullanimi"
                                 control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value} />}
+                                render={({ field }) => <Checkbox {...field} onChange={e => field.onChange(e.target.checked)} />}
                             />
                         </div>
                         <div className="col-span-6">
@@ -301,7 +299,7 @@ const GeneralInfo = ({ data }) => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline justify-between">
                                     <label htmlFor="miktar" >Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {yakitHacmi} {data?.birim === "LITRE" && "lt"}</Button>
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: </Button>
                                 </div>
                                 <Controller
                                     name="miktar"
