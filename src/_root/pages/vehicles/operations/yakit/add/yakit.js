@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import dayjs from 'dayjs'
 import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
-import { PlakaContext } from '../../../../../context/plakaSlice'
 import { YakitGetByIdService } from '../../../../../api/service'
 import { uploadPhoto, uploadFile } from '../../../../../utils/upload'
 import AddModal from './add/AddModal'
@@ -10,6 +8,8 @@ import GeneralInfo from './update/GeneralInfo'
 import PersonalFields from '../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../components/upload/FileUpload'
+import dayjs from 'dayjs'
+import { PlakaContext } from '../../../../../context/plakaSlice'
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
@@ -20,6 +20,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             pageSize: 10,
         },
     })
+    const [vehicleIds, setVehicleIds] = useState(0)
     const [updateModal, setUpdateModal] = useState(false)
     // file
     const [filesUrl, setFilesUrl] = useState([])
@@ -32,9 +33,21 @@ const Yakit = ({ visible, onClose, ids }) => {
 
     const { plaka, setPlaka } = useContext(PlakaContext)
 
+    const defaultValues = {
+        aracId: 0
+    }
+
+    const methods = useForm({
+        defaultValues: defaultValues
+    })
+
+    const { control, handleSubmit, reset, setValue } = methods
+
+    useEffect(() => setVehicleIds(ids), [ids])
     useEffect(() => {
+        const body = ids
         let newPlakaEntries = []
-        YakitGetByIdService(ids, tableParams?.pagination.current).then(res => {
+        YakitGetByIdService(body, tableParams?.pagination.current).then(res => {
             res.data.fuel_list.map(vehicle => {
                 if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
                     !newPlakaEntries.some(item => item.id === vehicle.aracId)) {
@@ -51,7 +64,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 },
             });
         })
-    }, [tableParams.pagination.current])
+    }, [vehicleIds, tableParams.pagination.current])
 
     const columns = [
         {
@@ -66,6 +79,11 @@ const Yakit = ({ visible, onClose, ids }) => {
             key: 2,
             render: (text, record) => dayjs(text).format("DD.MM.YYYY")
         },
+        // {
+        //     title: 'Saat',
+        //     dataIndex: 'saat',
+        //     key: 3,
+        // },
         {
             title: 'Yakıt Tipi',
             dataIndex: 'yakitTip',
@@ -140,7 +158,6 @@ const Yakit = ({ visible, onClose, ids }) => {
         }
     ]
 
-
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
             pagination,
@@ -161,6 +178,148 @@ const Yakit = ({ visible, onClose, ids }) => {
         ]
     )
 
+    const [fields, setFields] = useState([
+        {
+            label: "ozelAlan1",
+            key: "OZELALAN_1",
+            value: "Özel Alan 1",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan2",
+            key: "OZELALAN_2",
+            value: "Özel Alan 2",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan3",
+            key: "OZELALAN_3",
+            value: "Özel Alan 3",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan4",
+            key: "OZELALAN_4",
+            value: "Özel Alan 4",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan5",
+            key: "OZELALAN_5",
+            value: "Özel Alan 5",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan6",
+            key: "OZELALAN_6",
+            value: "Özel Alan 6",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan7",
+            key: "OZELALAN_7",
+            value: "Özel Alan 7",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan8",
+            key: "OZELALAN_8",
+            value: "Özel Alan 8",
+            type: 'text'
+        },
+        {
+            label: "ozelAlan9",
+            key: "OZELALAN_9",
+            value: "Özel Alan 9",
+            type: 'select',
+            code: 867,
+            name2: "ozelAlanKodId9"
+        },
+        {
+            label: "ozelAlan10",
+            key: "OZELALAN_10",
+            value: "Özel Alan 10",
+            type: 'select',
+            code: 868,
+            name2: "ozelAlanKodId10"
+        },
+        {
+            label: "ozelAlan11",
+            key: "OZELALAN_11",
+            value: "Özel Alan 11",
+            type: 'number'
+        },
+        {
+            label: "ozelAlan12",
+            key: "OZELALAN_12",
+            value: "Özel Alan 12",
+            type: 'number'
+        },
+    ])
+
+    const personalProps = {
+        form: "",
+        fields,
+        setFields
+    }
+
+    const uploadImages = () => {
+        try {
+            setLoadingImages(true);
+            // const data = upload(id, "YAKIT", images)
+            // setImageUrls([...imageUrls, data.imageUrl]);
+        } catch (error) {
+            message.error("Resim yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingImages(false);
+        }
+    }
+
+    const uploadFiles = () => {
+        try {
+            setLoadingFiles(true);
+            // upload(id, "YAKIT", files)
+        } catch (error) {
+            message.error("Dosya yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingFiles(false);
+        }
+    }
+
+    const itemsUpdate = [
+        {
+            key: '1',
+            label: 'Genel Bilgiler',
+            children: <GeneralInfo />,
+        },
+        {
+            key: '2',
+            label: 'Özel Alanlar',
+            children: <PersonalFields personalProps={personalProps} />
+        },
+        {
+            key: '3',
+            label: `[${imageUrls.length}] Resimler`,
+            children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
+        },
+        {
+            key: '4',
+            label: `[${filesUrl.length}] Ekli Belgeler`,
+            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
+        },
+    ]
+
+    const updateModalFooter = (
+        [
+            <Button key="submit" className="btn btn-min primary-btn">
+                Güncelle
+            </Button>,
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => setUpdateModal(false)}>
+                İptal
+            </Button>
+        ]
+    )
+
     const plakaData = plaka.map(item => item.plaka).join(', ')
 
     return (
@@ -173,7 +332,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             width={1200}
         >
             <AddModal />
-            {/* <Modal
+            <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
                 onCancel={() => setUpdateModal(false)}
@@ -184,7 +343,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 <FormProvider {...methods}>
                     <Tabs defaultActiveKey="1" items={itemsUpdate} />
                 </FormProvider>
-            </Modal> */}
+            </Modal>
             <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
             <Table
                 columns={columns}

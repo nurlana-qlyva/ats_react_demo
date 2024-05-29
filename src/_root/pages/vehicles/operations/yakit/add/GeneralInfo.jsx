@@ -6,6 +6,7 @@ import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Input, InputNumber, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
+import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
 import { DetailInfoUpdateService, KMValidateService, YakitHistoryGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
@@ -15,107 +16,76 @@ import Plaka from '../../../../../components/form/Plaka'
 dayjs.locale('tr')
 
 const GeneralInfo = () => {
-    const { control, setValue } = useFormContext()
+    const { control, setValue, watch } = useFormContext()
     const { data } = useContext(PlakaContext)
-
-    const [alinanKm, setAlinanKm] = useState(0)
-    const [fark, setFark] = useState(0)
-    const [miktar, setMiktar] = useState(0)
-    const [full, setFull] = useState(false)
-    const [tuketim, setTuketim] = useState(0)
+    const { setId } = useContext(FuelTankContext)
     const [open, setOpen] = useState(false)
-    const [response, setResponse] = useState('normal')
-    const [tutar, setTutar] = useState(0)
-    const [history, setHistory] = useState(0)
-    const [yakitHacmi, setYakitHacmi] = useState(data.yakitHacmi)
 
     useEffect(() => {
-        const frk = alinanKm - data.sonAlinanKm
+        setValue("surucuId", data.surucuId)
+        setValue("tarih", dayjs(new Date()))
+        setValue("saat", dayjs(new Date()))
+        setValue("sonAlinanKm", data.sonAlinanKm)
+        setValue("litreFiyat", data.litreFiyat)
+        setValue("yakitHacmi", data.yakitHacmi)
+        setValue("yakitTip", data.yakitTip)
+        setValue("yakitTipId", data.yakitTipId)
+        setValue("yakitTanki", data.yakitTanki)
+        setId(data.yakitTipId)
+        setValue("plaka", data.plaka)
+        setValue("birim", data.birim)
+    }, [data])
 
-        if (frk === 0) {
-            setFark(0);
-            return;
-        }
-
-        if (full) {
-            if (frk > 0) {
-                const tktm = (miktar / frk).toFixed(2);
-                setTuketim(tktm);
+    useEffect(() => {
+        if (watch("fullDepo")) {
+            if (watch("farkKm") > 0) {
+                const tktm = (watch("miktar") / watch("farkKm")).toFixed(2);
+                setValue("tuketim", tktm)
             } else {
-                setTuketim(0);
+                setValue("tuketim", 0)
             }
         } else {
-            if (!data.fullDepo) {
-                if (fark > 0) {
-                    const tktm = (data.miktar / fark).toFixed(2);
-                    setTuketim(tktm);
+            if (!watch("fullDepo")) {
+                if (watch("farkKm") > 0) {
+                    const tktm = (data.miktar / watch("farkKm")).toFixed(2);
+                    setValue("tuketim", tktm)
                 } else {
-                    setTuketim(0);
+                    setValue("tuketim", 0)
                 }
             } else {
                 if (data.yakitHacmi === 0) {
                     console.log(1)
                 }
 
-                const tktm = (data.yakitHacmi / fark).toFixed(2);
-                setTuketim(tktm);
+                const tktm = (watch("yakitHacmi") / watch("farkKm")).toFixed(2);
+                setValue("tuketim", tktm)
             }
         }
-    }, [full, miktar])
+    }, [])
 
-    useEffect(() => {
-        setValue("surucuId", data.surucuId)
-        setValue("tarih", dayjs(data.tarih))
-        setValue("saat", dayjs(data.saat, 'HH:mm'))
-        setValue("sonAlinanKm", data.sonAlinanKm)
-        setValue("litreFiyat", data.litreFiyat)
-        setValue("yakitHacmi", data.yakitHacmi)
-        setValue("yakitTip", data.yakitTip)
-        setValue("yakitTipId", data.yakitTipId)
-
-        YakitHistoryGetService(data.aracId).then(res => setHistory(res.data))
-    }, [tuketim, fark, data])
-
-    const updateDepoHacmi = () => {
-        const body = {
-            dtyAracId: data.aracId,
-            yakitHacmi: yakitHacmi
-        }
-
-        DetailInfoUpdateService(body).then(res => {
-            if (res?.data.statusCode === 202) {
-                setOpen(false)
-            }
-        })
+    const handlePressAlinanKm = e => {
+        const fark = +e.target.value - watch("sonAlinanKm")
+        setValue("farkKm", fark)
     }
 
-    const handleValidateKm = () => {
-        const body = {
-            "siraNo": 0,
-            "kmAracId": data.aracId,
-            "seferSiraNo": 0,
-            "yakitSiraNo": 0,
-            "plaka": data.plaka,
-            "tarih": data.tarih,
-            "saat": data.saat,
-            "eskiKm": data.sonAlinanKm,
-            "yeniKm": alinanKm,
-            "fark": 0,
-            "kaynak": "YAKIT",
-            "dorse": true,
-            "aciklama": ""
-        }
-        if (alinanKm) {
-            KMValidateService(body).then(res => {
-                if (res?.data.statusCode === 400) {
-                    setResponse('error')
-                } else if (res?.data.statusCode === 200) {
-                    setResponse('success')
-                }
-            })
-        } else {
-            setResponse('normal')
-        }
+    const handlePressFarkKm = e => {
+        const alinanKm = watch("sonAlinanKm") + +e.target.value
+        setValue("alinanKm", alinanKm)
+    }
+
+    const handlePressMiktar = e => {
+        const tutar = +e.target.value * watch("litreFiyat")
+        setValue("tutar", tutar)
+    }
+
+    const handlePressTutar = e => {
+        const miktar = +e.target.value / watch("litreFiyat")
+        setValue("miktar", Math.round(miktar))
+    }
+
+    const handlePressLitreFiyat = e => {
+        const miktar = watch("tutar") / +e.target.value
+        setValue("miktar", Math.round(miktar))
     }
 
     const footer = (
@@ -125,7 +95,6 @@ const GeneralInfo = () => {
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setOpen(false)
-                setMiktar(0)
             }}>
                 İptal
             </Button>
@@ -217,7 +186,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tankı</label>
+                                <label>Yakıt Tankı -- ?</label>
                                 <Controller
                                     name="yakitTanki"
                                     control={control}
@@ -241,8 +210,9 @@ const GeneralInfo = () => {
                                     name="sonAlinanKm"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
+                                        <InputNumber
                                             {...field}
+                                            className='w-full'
                                             readOnly
                                         />
                                     )}
@@ -258,17 +228,12 @@ const GeneralInfo = () => {
                                     render={({ field }) => (
                                         <InputNumber
                                             className="w-full"
-                                            style={response === 'error' ? { borderColor: "#f00" } : response === "success" ? { borderColor: "#0f0" } : { color: '#000' }}
+                                            // style={response === 'error' ? { borderColor: "#f00" } : response === "success" ? { borderColor: "#0f0" } : { color: '#000' }}
                                             {...field}
-                                            onPressEnter={handleValidateKm}
+                                            // onPressEnter={handleValidateKm}
+                                            onPressEnter={handlePressAlinanKm}
                                             onChange={e => {
                                                 field.onChange(e)
-                                                setAlinanKm(e)
-                                                if (e) {
-                                                    setFark(e - data.sonAlinanKm)
-                                                } else {
-                                                    setFark(0)
-                                                }
                                             }}
                                         />
                                     )}
@@ -282,10 +247,13 @@ const GeneralInfo = () => {
                                     name="farkKm"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
+                                        <InputNumber
                                             {...field}
-                                            value={fark}
-                                            readOnly
+                                            className='w-full'
+                                            onPressEnter={handlePressFarkKm}
+                                            onChange={e => {
+                                                field.onChange(e)
+                                            }}
                                         />
                                     )}
                                 />
@@ -299,16 +267,19 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline justify-between">
                                     <label htmlFor="miktar" >Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: </Button>
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
                                     control={control}
-                                    render={({ field }) => <InputNumber className="w-full"  {...field} onChange={(e => {
-                                        field.onChange(e)
-                                        setMiktar(e)
-                                        setTutar(e * data.litreFiyat)
-                                    })} />}
+                                    render={({ field }) => <InputNumber
+                                        className="w-full"
+                                        {...field}
+                                        onPressEnter={handlePressMiktar}
+                                        onChange={(e => {
+                                            field.onChange(e)
+                                        })}
+                                    />}
                                 />
                             </div>
                         </div>
@@ -321,7 +292,6 @@ const GeneralInfo = () => {
                                         name="fullDepo"
                                         render={({ field }) => <Checkbox {...field} onChange={e => {
                                             field.onChange(e.target.checked)
-                                            setFull(e.target.checked)
                                         }} />}
                                     />
                                 </div>
@@ -334,7 +304,6 @@ const GeneralInfo = () => {
                                             render={({ field }) => (
                                                 <Input
                                                     {...field}
-                                                    value={tuketim}
                                                     readOnly
                                                 />
                                             )}
@@ -351,9 +320,11 @@ const GeneralInfo = () => {
                                     name="litreFiyat"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
+                                        <InputNumber
                                             {...field}
-                                            readOnly
+                                            className='w-full'
+                                            onPressEnter={handlePressLitreFiyat}
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -366,60 +337,15 @@ const GeneralInfo = () => {
                                     name="tutar"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
+                                        <InputNumber
                                             {...field}
-                                            value={tutar}
-                                            readOnly
+                                            className='w-full'
+                                            onPressEnter={handlePressTutar}
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="grid gap-1 border p-10 mt-10">
-                <div className="col-span-12">
-                    <div className="grid">
-                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                            <p style={{ fontSize: "14px" }}>{dayjs(history[2]?.tarih).format("DD.MM.YYYY")}</p>
-                            <div>
-                                <img src="/images/kirmizi.svg" alt="" style={{ width: "20%" }} />
-
-                            </div>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt.</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: 'center' }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{history[1]?.farkKm} km</p>
-                        </div>
-                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                            <p style={{ fontSize: "14px" }}>{dayjs(history[1]?.tarih).format("DD.MM.YYYY")}</p>
-                            <div><img src="/images/kirmizi.svg" alt="" style={{ width: "20%" }} /></div>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: 'center' }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{history[0]?.farkKm} km</p>
-                        </div>
-                        <div className="col-span-2 flex flex-col" style={{ textAlign: 'center' }}>
-                            <p style={{ fontSize: "14px" }}>{dayjs(history[0]?.tarih).format("DD.MM.YYYY")}</p>
-                            <div><img src="/images/Mor.svg" alt="" style={{ width: "20%" }} /></div>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: 'center' }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{fark} km</p>
-                        </div>
-                        <div className="col-span-2 mt-20" style={{ textAlign: 'center' }}>
-                            <div><img src="/images/Araba.svg" alt="" style={{ width: "40%" }} /></div>
                         </div>
                     </div>
                 </div>
@@ -432,14 +358,21 @@ const GeneralInfo = () => {
                 footer={footer}
                 onCancel={() => setOpen(false)}
             >
-                <Input onChange={e => setYakitHacmi(e.target.value)} />
+                <Controller
+                    name="yakitHacmi"
+                    control={control}
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                        />
+                    )}
+                />
             </Modal>
+
         </>
     )
 }
 
-GeneralInfo.propTypes = {
-    data: PropTypes.object
-}
-
 export default GeneralInfo
+

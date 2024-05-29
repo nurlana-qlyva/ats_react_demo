@@ -103,7 +103,7 @@ const AddModal = ({ setStatus }) => {
         mulkiyet: "",
         departmanId: null,
         surucuId: null,
-        yakitId: null,
+        yakitTipId: null,
         muayeneTarih: "",
         sozlesmeTarih: "",
         egzosTarih: "",
@@ -130,6 +130,15 @@ const AddModal = ({ setStatus }) => {
 
 
     const handleOk = handleSubmit(async (value) => {
+        const kmLog = value.guncelKm ? {
+            "plaka": value.plaka,
+            "tarih": dayjs(new Date()).format("YYYY-MM-DD"),
+            "saat": dayjs(new Date()).format("HH:mm"),
+            "yeniKm": value.guncelKm,
+            "dorse": false,
+            "lokasyonId": value.lokasyonId
+        } : null
+
         const data = {
             "plaka": value.plaka,
             "yil": value.yil || 0,
@@ -147,6 +156,7 @@ const AddModal = ({ setStatus }) => {
             "vergiTarih": value.vergiTarih ? dayjs(value.vergiTarih).format("YYYY-MM-DD") : null,
             "sozlesmeTarih": value.sozlesmeTarih ? dayjs(value.sozlesmeTarih).format("YYYY-MM-DD") : null,
             "yakitTipId": value.yakitTipId || 0,
+            kmLog: kmLog,
             ozelAlan1: value.ozelAlan1 || "",
             ozelAlan2: value.ozelAlan2 || "",
             ozelAlan3: value.ozelAlan3 || "",

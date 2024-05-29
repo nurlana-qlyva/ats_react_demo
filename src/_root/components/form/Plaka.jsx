@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { PlakaContext } from '../../../context/plakaSlice'
 import { YakitDataGetByIdService } from '../../../api/service'
@@ -7,6 +6,12 @@ import { Select } from 'antd'
 
 const Plaka = ({ field }) => {
     const { plaka, setData } = useContext(PlakaContext)
+
+    useEffect(() => {
+        if (plaka.length === 1) {
+            YakitDataGetByIdService(plaka[0].id).then(res => setData(res.data))
+        }
+     }, [])
 
     const handleChange = (e) => {
         YakitDataGetByIdService(e).then(res => setData(res.data))
@@ -30,6 +35,7 @@ const Plaka = ({ field }) => {
                 field.onChange(e)
                 handleChange(e)
             }}
+            disabled={plaka.length === 1}
         />
     )
 }

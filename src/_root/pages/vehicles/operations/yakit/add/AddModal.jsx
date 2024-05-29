@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
+import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { YakitAddService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
-const AddModal = ({ data }) => {
+const AddModal = () => {
     const [openModal, setopenModal] = useState(false)
+    const { data } = useContext(PlakaContext)
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -89,19 +90,21 @@ const AddModal = ({ data }) => {
     ])
 
     const defaultValues = {
-        "aracId": 0,
-        "plaka": '',
-        "tarih": null,
-        "saat": "",
-        "alinanKm": 0,
-        "miktar": 0,
+        sonAlinanKm: data.sonAlinanKm,
+        plaka: data.plaka,
+        yakitTipId: data.yakitTipId,
+        yakitTanki: data.yakitTanki,
+        surucuId: data.surucuId,
+        litreFiyat: data.litreFiyat,
+        yakitHacmi: data.yakitHacmi,
+        "tarih": dayjs(new Date()),
+        "saat": dayjs(new Date()),
+        "alinanKm": null,
+        "farkKm": null,
+        "miktar": null,
         "fullDepo": false,
-        "ozelKullanim": false,
-        "stokKullanimi": false,
-        "litreFiyat": 0,
-        "tutar": 0,
-        "yakitTanki": 0,
-        "yakitTipId": 0,
+        "tutar": null,
+        "tuketim": null
     }
 
     const methods = useForm({
@@ -127,19 +130,19 @@ const AddModal = ({ data }) => {
             "stokKullanimi": values.stokKullanimi,
             "litreFiyat": values.litreFiyat,
             "tutar": values.tutar,
-            birim: data.birim,
+            // birim: data.birim,
             "ozelKullanim": false,
             "kmLog": {
-                "kmAracId": data.aracId,
+                // "kmAracId": data.aracId,
                 "plaka": values.tuketim,
                 "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
                 "saat": dayjs(values.saat).format("HH:mm:ss"),
-                "eskiKm": data.sonAlinanKm,
+                // "eskiKm": data.sonAlinanKm,
                 "yeniKm": values.alinanKm,
                 "kaynak": "YAKIT",
                 "dorse": true,
-                lokasyon: data.lokasyon,
-                lokasyonId: data.lokasyonId
+                // lokasyon: data.lokasyon,
+                // lokasyonId: data.lokasyonId
             },
             "yakitTanki": values.yakitTanki,
             ozelAlan1: values.ozelAlan1 || "",
@@ -156,18 +159,16 @@ const AddModal = ({ data }) => {
             ozelAlan12: values.ozelAlan12 || 0,
         }
 
-        YakitAddService(body).then(res => {
-            if (res?.data.statusCode === 200) {
-                setopenModal(false)
-                reset()
-            }
-        })
-
-
+        // YakitAddService(body).then(res => {
+        //     if (res?.data.statusCode === 200) {
+        //         setopenModal(false)
+        //         reset()
+        //     }
+        // })
     })
 
     const personalProps = {
-        form: "",
+        form: "YAKIT",
         fields,
         setFields
     }
@@ -176,7 +177,7 @@ const AddModal = ({ data }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo data={data} />,
+            children: <GeneralInfo />,
         },
         {
             key: '2',
@@ -190,7 +191,28 @@ const AddModal = ({ data }) => {
             <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
                 Kaydet
             </Button>,
-            <Button key="back" className="btn btn-min cancel-btn" onClick={() => setopenModal(false)}>
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
+                setopenModal(false)
+                reset(
+                    {
+                        sonAlinanKm: data.sonAlinanKm,
+                        plaka: data.plaka,
+                        yakitTipId: data.yakitTipId,
+                        yakitTanki: data.yakitTanki,
+                        surucuId: data.surucuId,
+                        litreFiyat: data.litreFiyat,
+                        yakitHacmi: data.yakitHacmi,
+                        "tarih": dayjs(new Date()),
+                        "saat": dayjs(new Date()),
+                        "alinanKm": null,
+                        "farkKm": null,
+                        "miktar": null,
+                        "fullDepo": false,
+                        "tutar": null,
+                        "tuketim": null
+                    }
+                )
+            }}>
                 İptal
             </Button>
         ]
@@ -215,10 +237,6 @@ const AddModal = ({ data }) => {
             </Modal>
         </>
     )
-}
-
-AddModal.propTypes = {
-    data: PropTypes.object
 }
 
 export default AddModal
