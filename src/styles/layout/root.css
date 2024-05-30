@@ -92,3 +92,7 @@
 .login .ant-spin-spinning {
   position: static;
 }
+
+.detail-tuketim p{
+  margin: 8px 0;
+}

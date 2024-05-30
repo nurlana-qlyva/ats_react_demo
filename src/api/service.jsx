@@ -157,6 +157,10 @@ export const YakitDataGetByIdService = async (id) => {
   return await http.get(`/Fuel/GetFuelCardContentById?vehicleId=${id}`)
 }
 
+export const YakitDataGetByDateService = async (data) => {
+  return await http.post(`/Fuel/GetKmRangeBeforeDate`, data)
+}
+
 export const YakitAddService = (data) => {
   return http.post(`/Fuel/AddFuel`, data)
 }

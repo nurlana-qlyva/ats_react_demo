@@ -158,50 +158,9 @@ const GeneralInfo = () => {
       <div className="grid gap-1 border p-10 mt-10">
         <div className="col-span-12">
           <div className="grid">
-            <div
-              className="col-span-2 flex flex-col"
-              style={{ textAlign: "center" }}
-            >
-              <p style={{ fontSize: "14px" }}>
-                {dayjs(history[2]?.tarih).format("DD.MM.YYYY")}
-              </p>
-              <div>
-                <img
-                  src="/images/kirmizi.svg"
-                  alt=""
-                  style={{ width: "20%" }}
-                />
-              </div>
-              <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
-              <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt.</p>
-              <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
-            </div>
-            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-              <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-              <p>{history[1]?.farkKm} km</p>
-            </div>
-            <div
-              className="col-span-2 flex flex-col"
-              style={{ textAlign: "center" }}
-            >
-              <p style={{ fontSize: "14px" }}>
-                {dayjs(history[1]?.tarih).format("DD.MM.YYYY")}
-              </p>
-              <div>
-                <img
-                  src="/images/kirmizi.svg"
-                  alt=""
-                  style={{ width: "20%" }}
-                />
-              </div>
-              <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
-              <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.</p>
-              <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
-            </div>
-            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-              <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-              <p>{history[0]?.farkKm} km</p>
-            </div>
+      
+         
+      
             <div
               className="col-span-2 flex flex-col"
               style={{ textAlign: "center" }}

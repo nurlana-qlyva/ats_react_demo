@@ -3,11 +3,11 @@ import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
-import { Button, Checkbox, ConfigProvider, DatePicker, Input, InputNumber, Modal, TimePicker } from 'antd'
-import { ArrowUpOutlined } from '@ant-design/icons'
+import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
+import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
-import { DetailInfoUpdateService, KMValidateService, YakitHistoryGetService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, KMValidateService, YakitDataGetByDateService, YakitHistoryGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import FuelTank from '../../../../../components/form/FuelTank'
@@ -19,7 +19,10 @@ const GeneralInfo = () => {
     const { control, setValue, watch } = useFormContext()
     const { data } = useContext(PlakaContext)
     const { setId } = useContext(FuelTankContext)
+    const [messageApi, contextHolder] = message.useMessage()
     const [open, setOpen] = useState(false)
+    const [openDetail, setOpenDetail] = useState(false)
+    const [history, setHistory] = useState(0)
 
     useEffect(() => {
         setValue("surucuId", data.surucuId)
@@ -34,34 +37,50 @@ const GeneralInfo = () => {
         setId(data.yakitTipId)
         setValue("plaka", data.plaka)
         setValue("birim", data.birim)
+        setValue("depoYakitMiktar", data.depoYakitMiktar)
+
+        YakitHistoryGetService(data.aracId).then((res) => setHistory(res.data));
+
     }, [data])
 
     useEffect(() => {
-        if (watch("fullDepo")) {
-            if (watch("farkKm") > 0) {
-                const tktm = (watch("miktar") / watch("farkKm")).toFixed(2);
-                setValue("tuketim", tktm)
-            } else {
-                setValue("tuketim", 0)
+        const fullDepo = watch("fullDepo");
+        const farkKm = watch("farkKm");
+        const miktar = watch("miktar");
+        const yakitHacmi = watch("yakitHacmi");
+
+        let tktm = 0;
+
+        if (fullDepo) {
+            if (farkKm > 0) {
+                tktm = (miktar / farkKm).toFixed(2);
             }
         } else {
-            if (!watch("fullDepo")) {
-                if (watch("farkKm") > 0) {
-                    const tktm = (data.miktar / watch("farkKm")).toFixed(2);
-                    setValue("tuketim", tktm)
-                } else {
-                    setValue("tuketim", 0)
+            if (data.fullDepo) {
+                if (farkKm > 0) {
+                    tktm = (data.miktar / farkKm).toFixed(2);
                 }
             } else {
-                if (data.yakitHacmi === 0) {
-                    console.log(1)
-                }
-
-                const tktm = (watch("yakitHacmi") / watch("farkKm")).toFixed(2);
-                setValue("tuketim", tktm)
+                if (miktar > 0) tktm = (yakitHacmi / farkKm).toFixed(2);
             }
         }
-    }, [])
+        setValue("tuketim", tktm);
+    })
+
+    useEffect(() => {
+        if (watch("tuketim") === "0.00") {
+            message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!");
+        }
+    }, [watch("tuketim")])
+
+    const fetchData = () => {
+        const body = {
+            aracId: data.aracId,
+            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+            saat: dayjs(watch("saat")).format("HH:mm")
+        }
+        YakitDataGetByDateService(body).then(res => setValue("sonAlinanKm", res.data))
+    }
 
     const handlePressAlinanKm = e => {
         const fark = +e.target.value - watch("sonAlinanKm")
@@ -101,8 +120,20 @@ const GeneralInfo = () => {
         ]
     )
 
+    const detailModalFooter = (
+        [
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
+                setOpenDetail(false)
+            }}>
+                Kapat
+            </Button>
+        ]
+    )
+
     return (
         <>
+            {contextHolder}
+
             <div className="grid gap-4 border p-10">
                 <div className="col-span-6">
                     <div className="grid gap-1">
@@ -138,9 +169,16 @@ const GeneralInfo = () => {
                                     control={control}
                                     render={({ field }) => (
                                         <ConfigProvider locale={tr_TR}>
-                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
-                                                field.onChange(e)
-                                            }} />
+                                            <DatePicker
+                                                {...field}
+                                                placeholder=""
+                                                locale={dayjs.locale("tr")}
+                                                format="DD.MM.YYYY"
+                                                onBlur={fetchData}
+                                                onChange={e => {
+                                                    field.onChange(e)
+                                                }}
+                                            />
                                         </ConfigProvider>
                                     )}
                                 />
@@ -153,9 +191,15 @@ const GeneralInfo = () => {
                                     name="saat"
                                     control={control}
                                     render={({ field }) => (
-                                        <TimePicker {...field} placeholder="" format="HH:mm" onChange={e => {
-                                            field.onChange(e)
-                                        }} />
+                                        <TimePicker
+                                            {...field}
+                                            placeholder=""
+                                            format="HH:mm"
+                                            onBlur={fetchData}
+                                            onChange={e => {
+                                                field.onChange(e)
+                                            }}
+                                        />
                                     )}
                                 />
                             </div>
@@ -259,6 +303,16 @@ const GeneralInfo = () => {
                                 />
                             </div>
                         </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>KM Log&apos;a Yazma</label>
+                                <Controller
+                                    name="engelle"
+                                    control={control}
+                                    render={({ field }) => <Checkbox {...field} />}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-6">
@@ -285,7 +339,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="grid">
-                                <div className="col-span-6 flex flex-col">
+                                <div className="col-span-4 flex flex-col">
                                     <label htmlFor="">Full Depo</label>
                                     <Controller
                                         control={control}
@@ -295,20 +349,28 @@ const GeneralInfo = () => {
                                         }} />}
                                     />
                                 </div>
-                                <div className="col-span-6">
-                                    <div className="flex flex-col gap-1">
-                                        <label>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
-                                        <Controller
-                                            name="tuketim"
-                                            control={control}
-                                            render={({ field }) => (
-                                                <Input
-                                                    {...field}
-                                                    readOnly
+                                <div className="col-span-8">
+                                    <div className="grid gap-1">
+                                        <div className="col-span-10">
+                                            <div className="flex flex-col gap-1">
+                                                <label>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
+                                                <Controller
+                                                    name="tuketim"
+                                                    control={control}
+                                                    render={({ field }) => (
+                                                        <Input
+                                                            {...field}
+                                                            readOnly
+                                                        />
+                                                    )}
                                                 />
-                                            )}
-                                        />
+                                            </div>
+                                        </div>
+                                        <div className="col-span-2 self-end">
+                                            <Button className='w-full text-center' style={{ padding: "4px" }} onClick={() => setOpenDetail(true)}>...</Button>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -370,6 +432,144 @@ const GeneralInfo = () => {
                 />
             </Modal>
 
+            <Modal
+                open={openDetail}
+                maskClosable={false}
+                title="Ortalama Yakıt Tüketimi"
+                footer={detailModalFooter}
+                onCancel={() => setOpenDetail(false)}
+            >
+                <div className="grid detail-tuketim">
+                    <div className="col-span-5">
+                        <p>Araç depo hacmi:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{watch("yakitHacmi")} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Bir önceki yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.miktar} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Depoda bulunan yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <div className='text-info'>
+                            <Controller
+                                name="depoYakitMiktar"
+                                control={control}
+                                render={({ field }) => (
+                                    <InputNumber
+                                        {...field}
+                                        onChange={e => field.onChange(e)}
+                                    />
+                                )}
+                            />
+                            &nbsp; lt (Depo {data.fullDepo ? "fullendi" : "fullenmedi"})
+                        </div>
+                    </div>
+                    <div className="col-span-12">
+                        <Divider />
+                    </div>
+                    <div className="col-span-5">
+                        <p>Harcanan yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.miktar - data.depoYakitMiktar} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Gidilen yol:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.farkKm} km</p>
+                    </div>
+                    <div className="col-span-12">
+                        <Divider />
+                    </div>
+                    <div className="col-span-5">
+                        <p>Yakıt Tüketimi:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.tuketim} lt/km</p>
+                    </div>
+                </div>
+            </Modal>
+
+            <div className="grid gap-1 border p-10 mt-10">
+                <div className="col-span-12">
+                    <div className="grid">
+                        <div
+                            className="col-span-2 flex flex-col"
+                            style={{ textAlign: "center" }}
+                        >
+                            <p style={{ fontSize: "14px" }}>
+                                {dayjs(history[2]?.tarih).format("DD.MM.YYYY")}
+                            </p>
+                            <div>
+                                <img
+                                    src="/images/kirmizi.svg"
+                                    alt=""
+                                    style={{ width: "20%" }}
+                                />
+                            </div>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
+                        </div>
+                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                            <p>{history[2]?.farkKm} km</p>
+                        </div>
+                        <div
+                            className="col-span-2 flex flex-col"
+                            style={{ textAlign: "center" }}
+                        >
+                            <p style={{ fontSize: "14px" }}>
+                                {dayjs(history[1]?.tarih).format("DD.MM.YYYY")}
+                            </p>
+                            <div>
+                                <img
+                                    src="/images/kirmizi.svg"
+                                    alt=""
+                                    style={{ width: "20%" }}
+                                />
+                            </div>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
+                        </div>
+                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                            <p>{history[1]?.farkKm} km</p>
+                        </div>
+                        <div
+                            className="col-span-2 flex flex-col"
+                            style={{ textAlign: "center" }}
+                        >
+                            <p style={{ fontSize: "14px" }}>
+                                {dayjs(watch("tarih")).format("DD.MM.YYYY")}
+                            </p>
+                            <div>
+                                <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
+                            </div>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
+                        </div>
+                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                            <p>{history[0]?.farkKm} km</p>
+                        </div>
+                        <div className="col-span-2 mt-20" style={{ textAlign: "center" }}>
+                            <div>
+                                <img src="/images/Araba.svg" alt="" style={{ width: "40%" }} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

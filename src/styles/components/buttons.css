@@ -19,6 +19,16 @@
   background-color: var(--primary);
 }
 
+.primary-btn:hover {
+  background-color: var(--dark-purple);
+  color: var(--white);
+}
+
+.primary-btn:disabled {
+  background-color: var(--gray-500);
+  color: var(--white);
+}
+
 .secondary-btn {
   background-color: var(--secondary);
 }
@@ -33,37 +43,32 @@
   background-color: var(--info);
 }
 
-.primary-btn:hover {
-  background-color: var(--dark-purple) !important;
-  color: var(--white) !important;
-}
-
 .info-btn:hover,
 .file-btn:hover,
 .detail-info:hover,
 .operations-btn:hover {
-  background-color: var(--dark-blue) !important;
-  color: var(--white) !important;
+  background-color: var(--dark-blue) ;
+  color: var(--white);
 }
 
 .cancel-btn:hover {
-  background-color: var(--gray-900) !important;
-  color: var(--white) !important;
+  background-color: var(--gray-900) ;
+  color: var(--white);
 }
 
 .detail-info {
   position: absolute;
   top: 26px;
   right: 20px;
-  z-index: 1000 !important;
+  z-index: 1000;
   background-color: var(--info);
   color: var(--white);
   border: none;
 }
 
 .depo {
-  border: none !important;
-  padding: 0 !important;
-  color: #f00 !important;
-  height: auto !important;
+  border: none;
+  padding: 0;
+  color: #f00;
+  height: auto;
 }

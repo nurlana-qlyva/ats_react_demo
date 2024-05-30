@@ -188,7 +188,7 @@ const AddModal = () => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled>
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
