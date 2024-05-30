@@ -6,6 +6,7 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined
 } from '@ant-design/icons'
+import LanguageSelector from '../components/lang/LanguageSelector';
 
 const { Header } = Layout
 
@@ -29,6 +30,7 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
                         }}
                     />
                     <HomeOutlined />
+                    <LanguageSelector />
                 </div>
                 <div className="flex gap-1 justify-between align-center">
                     <Input

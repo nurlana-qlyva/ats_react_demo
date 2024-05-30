@@ -4,13 +4,13 @@ import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
-import { PlakaContext } from '../../../../../../context/plakaSlice'
-import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
-import { DetailInfoUpdateService, KMValidateService, YakitDataGetByDateService, YakitHistoryGetService } from '../../../../../../api/service'
-import Driver from '../../../../../components/form/Driver'
-import FuelType from '../../../../../components/form/FuelType'
-import FuelTank from '../../../../../components/form/FuelTank'
-import Plaka from '../../../../../components/form/Plaka'
+import { PlakaContext } from '../../../../context/plakaSlice'
+import { FuelTankContext } from '../../../../context/fuelTankSlice'
+import Plaka from '../../../components/form/Plaka'
+import Driver from '../../../components/form/Driver'
+import FuelType from '../../../components/form/FuelType'
+import FuelTank from '../../../components/form/FuelTank'
+
 
 dayjs.locale('tr')
 
@@ -37,10 +37,8 @@ const GeneralInfo = () => {
         setValue("plaka", data.plaka)
         setValue("birim", data.birim)
         setValue("depoYakitMiktar", data.depoYakitMiktar)
-
-        YakitHistoryGetService(data.aracId).then((res) => setHistory(res.data));
-
     }, [data])
+
 
     useEffect(() => {
         const fullDepo = watch("fullDepo");
@@ -71,6 +69,7 @@ const GeneralInfo = () => {
             message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!");
         }
     }, [watch("tuketim")])
+
 
     const fetchData = () => {
         const body = {
@@ -514,7 +513,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
@@ -536,7 +535,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
@@ -554,7 +553,7 @@ const GeneralInfo = () => {
                                 <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[0]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
@@ -574,4 +573,3 @@ const GeneralInfo = () => {
 }
 
 export default GeneralInfo
-

@@ -28,7 +28,9 @@ const items = [
             },
             {
                 key: '6',
-                label: 'Yakıt İşlemleri',
+                label: (
+                    <Link to={'/yakit'}>Yakıt İşlemleri</Link>
+                )
             },
             {
                 key: '7',

@@ -1,0 +1,27 @@
+{
+    "aracId": "Araç İD",
+    "aracPlaka": "Araç Plaka",
+    "aracTip": "Araç Tip",
+    "marka": "Marka",
+    "model": "Model",
+    "grup": "Grup",
+    "guncelKm": "Güncel Km",
+    "renk": "Renk",
+    "yil": "Üretim Yılı",
+    "yakitTip": "Yakıt Tipi",
+
+    
+    "surucu": "Sürücü",
+    "date": "Tarih",
+    "time": "Saat",
+    "fuelType": "Yakıt Tipi",
+    "tank": "Tank",
+    "lastKm": "Son Km",
+    "receivedKm": "Alınan Km",
+    "differenceKm": "Fark Km",
+    "amount": "Miktar (lt)",
+    "pricePerLitre": "Litre Fiyatı",
+    "total": "Tutar",
+    "fullTank": "Full Depo",
+    "fuelConsumption": "Yakıt Tüketimi"
+}

@@ -8,6 +8,7 @@ import Vehicles from './_root/pages/vehicles/Vehicles'
 import DetailUpdate from './_root/pages/vehicles-detail/DetailUpdate'
 import KmUpdate from './_root/pages/km-update/KmUpdate'
 import Settings from './_root/pages/settings/Settings'
+import Yakit from './_root/pages/yakit/Yakit'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/detay/:id" element={<DetailUpdate />} />
         <Route path="/hizli-km-guncelleme" element={<KmUpdate />} />
         <Route path="/ayarlar" element={<Settings />} />
+        <Route path="/yakit" element={<Yakit />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

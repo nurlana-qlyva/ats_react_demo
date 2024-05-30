@@ -111,9 +111,22 @@ const AddModal = () => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset } = methods
+    const { handleSubmit, reset, watch } = methods
 
     const onSubmit = handleSubmit((values) => {
+        const kmLog = watch("engelle") ? null : {
+            "kmAracId": data.aracId,
+            "plaka": values.tuketim,
+            "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
+            "saat": dayjs(values.saat).format("HH:mm:ss"),
+            "eskiKm": data.sonAlinanKm,
+            "yeniKm": values.alinanKm,
+            "kaynak": "YAKIT",
+            "dorse": true,
+            lokasyon: data.lokasyon,
+            lokasyonId: data.lokasyonId
+        }
+
         const body = {
             "aracId": data.aracId,
             "plaka": values.plaka,
@@ -130,20 +143,9 @@ const AddModal = () => {
             "stokKullanimi": values.stokKullanimi,
             "litreFiyat": values.litreFiyat,
             "tutar": values.tutar,
-            // birim: data.birim,
+            birim: data.birim,
             "ozelKullanim": false,
-            "kmLog": {
-                // "kmAracId": data.aracId,
-                "plaka": values.tuketim,
-                "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
-                "saat": dayjs(values.saat).format("HH:mm:ss"),
-                // "eskiKm": data.sonAlinanKm,
-                "yeniKm": values.alinanKm,
-                "kaynak": "YAKIT",
-                "dorse": true,
-                // lokasyon: data.lokasyon,
-                // lokasyonId: data.lokasyonId
-            },
+            "kmLog": kmLog,
             "yakitTanki": values.yakitTanki,
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",

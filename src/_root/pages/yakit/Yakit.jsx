@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { FormProvider, useForm } from 'react-hook-form'
+import dayjs from 'dayjs'
 import {
     closestCenter,
     DndContext,
@@ -15,15 +16,12 @@ import {
     SortableContext,
     useSortable,
 } from '@dnd-kit/sortable'
-import { Checkbox, Table, Popover, Button, Input, Spin } from 'antd'
-import { MenuOutlined, HomeOutlined, LoadingOutlined } from '@ant-design/icons'
-import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
+import { HomeOutlined, MenuOutlined } from '@ant-design/icons'
+import { Modal, Button, Table, Tabs, message, Checkbox, Popover, Input } from 'antd'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
+import { YakitGetService } from '../../../api/service'
 import AddModal from './add/AddModal'
-import Filter from './filter/Filter'
-import OperationsInfo from './operations/OperationsInfo'
-import { withNamespaces } from 'react-i18next'
-import i18n from '../../../utils/i18n'
+import { PlakaContext } from '../../../context/plakaSlice'
 
 const breadcrumb = [
     {
@@ -31,7 +29,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: 'Araçlar',
+        title: 'Yakıt İşlemleri',
     },
 ]
 
@@ -92,8 +90,8 @@ const TableHeaderCell = (props) => {
     return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 }
 
-const Vehicles = ({ t }) => {
-    const [vehiclesData, setVehiclesData] = useState([])
+const Yakit = () => {
+    const [dataSource, setDataSource] = useState([])
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -101,66 +99,128 @@ const Vehicles = ({ t }) => {
         },
     })
     const [loading, setLoading] = useState(false)
+    const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const [dragIndex, setDragIndex] = useState({
         active: -1,
         over: -1,
     })
-    const [search, setSearch] = useState("")
-    const [status, setStatus] = useState(false)
     const [openRowHeader, setOpenRowHeader] = useState(false)
+    const [status, setStatus] = useState(false)
+    const { setPlaka } = useContext(PlakaContext)
+
+    useEffect(() => {
+        setLoading(true)
+        YakitGetService(tableParams?.pagination.current).then(res => {
+            setDataSource(res?.data.fuel_list)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            })
+            setLoading(false)
+        })
+    }, [tableParams?.pagination.current])
+
+    useEffect(() => setPlaka(selectedRowKeys), [selectedRowKeys])
+
+    const handleTableChange = (pagination, filters, sorter) => {
+        setTableParams({
+            pagination,
+            filters,
+            ...sorter,
+        });
+
+        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+            console.log(1)
+        }
+    }
 
     const baseColumns = [
         {
-            title: t('aracId'),
-            dataIndex: 'aracId',
-            key: 1,
-            render: (text, record) => <Link to={`/detay/${record.aracId}`}>{text}</Link>
-        },
-        {
-            title: t('aracPlaka'),
+            title: 'Plaka',
             dataIndex: 'plaka',
-            key: 2,
+            key: 1,
         },
         {
-            title: t('aracTip'),
-            dataIndex: 'aracTip',
+            title: 'Tarih',
+            dataIndex: 'tarih',
+            key: 2,
+            render: (text, record) => dayjs(text).format("DD.MM.YYYY")
+        },
+        {
+            title: 'Yakıt Tipi',
+            dataIndex: 'yakitTip',
             key: 3,
         },
         {
-            title: t('marka'),
-            dataIndex: 'marka',
+            title: 'Alınan KM.',
+            dataIndex: 'alinanKm',
             key: 4,
         },
         {
-            title: t('model'),
-            dataIndex: 'model',
+            title: 'Kullanım',
+            dataIndex: 'ozelKullanim',
             key: 5,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
         },
         {
-            title: t('grup'),
-            dataIndex: 'grup',
+            title: 'Miktar',
+            dataIndex: 'miktar',
             key: 6,
+            render: (text, record) => <div className=''>
+                <span>{text} </span>
+                <span style={{ fontSize: '14px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
+            </div>
         },
         {
-            title: t('guncelKm'),
-            dataIndex: 'guncelKm',
-            key: 6,
-        },
-        {
-            title: t('renk'),
-            dataIndex: 'renk',
+            title: 'Tutar',
+            dataIndex: 'tutar',
             key: 7,
         },
         {
-            title: t('yil'),
-            dataIndex: 'yil',
+            title: 'Ortalama Tüketim',
+            dataIndex: 'tuketim',
             key: 8,
         },
         {
-            title: t('yakitTip'),
-            dataIndex: 'yakitTip',
+            title: 'Km Başına Maliyet',
+            dataIndex: '',
             key: 9,
         },
+        {
+            title: 'Full Depo',
+            dataIndex: 'tuketim',
+            key: 10,
+            render: (text, record) => <Checkbox checked={record.fullDepo} readOnly />
+        },
+        {
+            title: 'Stoktan Kullanım',
+            dataIndex: 'stokKullanimi',
+            key: 11,
+            render: (text, record) => <Checkbox checked={record.stokKullanimi} readOnly />
+        },
+        {
+            title: 'Sürücü',
+            dataIndex: 'surucuAdi',
+            key: 12,
+        },
+        {
+            title: 'Lokasyon',
+            dataIndex: 'lokasyon',
+            key: 13,
+        },
+        {
+            title: 'İstasyon',
+            dataIndex: 'istasyon',
+            key: 14,
+        },
+        {
+            title: 'Açıklama',
+            dataIndex: 'aciklama',
+            key: 15,
+        }
     ]
 
     const [columns, setColumns] = useState(() =>
@@ -175,7 +235,6 @@ const Vehicles = ({ t }) => {
             }),
         })),
     )
-    const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
 
@@ -209,102 +268,8 @@ const Vehicles = ({ t }) => {
         });
     }
 
-    useEffect(() => {
-        setLoading(true);
-        if (search.length >= 3) {
-            VehiclesReadForSearchService(search).then(res => {
-                setLoading(false);
-                setVehiclesData(res?.data.vehicleList)
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.vehicleCount,
-                    },
-                });
-            })
-        } else {
-            VehiclesReadForSearchService("").then(res => {
-                setLoading(false);
-                setVehiclesData(res?.data.vehicleList)
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.vehicleCount,
-                    },
-                });
-            })
-        }
-    }, [search])
-
-    useEffect(() => {
-        setLoading(true)
-        if (status) {
-            VehiclesReadForSearchService("").then(res => {
-                setLoading(false);
-                setVehiclesData(res?.data.vehicleList)
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.vehicleCount,
-                    },
-                });
-            })
-        }
-    }, [status])
-
-    const handleTableChange = (pagination, filters, sorter) => {
-        setLoading(true)
-        VehiclesReadForPageService(search, pagination.current).then(res => {
-            setVehiclesData(res.data.vehicleList)
-            setLoading(false)
-        })
-        setTableParams({
-            pagination,
-            filters,
-            ...sorter,
-        });
-
-        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            setVehiclesData([]);
-        }
-    }
-
     const handleOpenChange = (newOpen) => {
         setOpenRowHeader(newOpen);
-    }
-
-    const filter = (data) => {
-        setLoading(true)
-
-        VehiclesReadForFilterService(search, data).then(res => {
-            setVehiclesData(res?.data.vehicleList)
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams.pagination,
-                    total: res?.data.vehicleCount,
-                },
-            });
-            setLoading(false)
-        })
-    }
-
-    const clear = () => {
-        setLoading(true)
-        VehiclesReadForSearchService("").then(res => {
-            setLoading(false);
-            setVehiclesData(res?.data.vehicleList)
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams.pagination,
-                    total: res?.data.vehicleCount,
-                },
-            });
-        })
     }
 
     const newColumns = columns.map(col => (
@@ -332,7 +297,6 @@ const Vehicles = ({ t }) => {
             />
         </>
     )
-
     return (
         <>
             <div className="content">
@@ -351,12 +315,10 @@ const Vehicles = ({ t }) => {
                         >
                             <Button className="btn primary-btn"><MenuOutlined /></Button>
                         </Popover>
-                        <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
-                        <AddModal setStatus={setStatus} data={vehiclesData} />
-                        <Filter filter={filter} clearFilters={clear} />
-                    </div>
-                    <div>
-                        <OperationsInfo ids={selectedRowKeys} />
+                        {/* <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} /> */}
+                        <Input placeholder="Arama" />
+                        <AddModal />
+                        {/* <Filter filter={filter} clearFilters={clear} /> */}
                     </div>
                 </div>
             </div>
@@ -375,27 +337,23 @@ const Vehicles = ({ t }) => {
                             <Table
                                 rowKey={(record) => record.aracId}
                                 columns={newColumns}
-                                dataSource={vehiclesData}
+                                dataSource={dataSource}
                                 pagination={tableParams.pagination}
                                 loading={loading}
                                 size="small"
                                 onChange={handleTableChange}
+                                scroll={{
+                                    x: 1500,
+                                }}
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
-                                    onChange: (selectedRowKeys) => {
+                                    onChange: (selectedRowKeys, keys) => {
+                                        console.log(keys)
                                         setSelectedRowKeys(selectedRowKeys);
                                     },
                                     onSelectAll: (selected, selectedRows, changeRows) => {
                                         const keys = changeRows.map((row) => row.aracId);
                                         setSelectedRowKeys(selected ? keys : []);
-                                    },
-                                }}
-                                components={{
-                                    header: {
-                                        cell: TableHeaderCell,
-                                    },
-                                    body: {
-                                        cell: TableBodyCell,
                                     },
                                 }}
                             />
@@ -413,8 +371,9 @@ const Vehicles = ({ t }) => {
                     </DragOverlay>
                 </DndContext>
             </div>
+
         </>
     )
 }
 
-export default withNamespaces()(Vehicles)
+export default Yakit

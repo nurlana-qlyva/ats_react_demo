@@ -6,6 +6,7 @@ import { Select } from 'antd'
 
 const Plaka = ({ field }) => {
     const { plaka, setData } = useContext(PlakaContext)
+    console.log(plaka)
 
     useEffect(() => {
         if (plaka.length === 1) {
