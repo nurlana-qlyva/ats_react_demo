@@ -9,19 +9,7 @@
     "renk": "Renk",
     "yil": "Üretim Yılı",
     "yakitTip": "Yakıt Tipi",
+    "kayit": "kayıt",
+    "ekle": "Ekle"
 
-    
-    "surucu": "Sürücü",
-    "date": "Tarih",
-    "time": "Saat",
-    "fuelType": "Yakıt Tipi",
-    "tank": "Tank",
-    "lastKm": "Son Km",
-    "receivedKm": "Alınan Km",
-    "differenceKm": "Fark Km",
-    "amount": "Miktar (lt)",
-    "pricePerLitre": "Litre Fiyatı",
-    "total": "Tutar",
-    "fullTank": "Full Depo",
-    "fuelConsumption": "Yakıt Tüketimi"
 }

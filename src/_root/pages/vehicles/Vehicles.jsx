@@ -23,7 +23,6 @@ import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
 import OperationsInfo from './operations/OperationsInfo'
 import { withNamespaces } from 'react-i18next'
-import i18n from '../../../utils/i18n'
 
 const breadcrumb = [
     {
@@ -362,7 +361,7 @@ const Vehicles = ({ t }) => {
             </div>
 
             <div className="content">
-                <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
+                <p className="count">[ {tableParams?.pagination.total} {t('kayit')} ]</p>
                 <DndContext
                     sensors={sensors}
                     modifiers={[restrictToHorizontalAxis]}

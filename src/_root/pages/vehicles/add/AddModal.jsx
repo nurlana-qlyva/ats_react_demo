@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
+import { withNamespaces } from 'react-i18next'
 import { Button, Modal, Tabs } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { NewVehicleAddService } from '../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../components/form/PersonalFields'
 
-const AddModal = ({ setStatus }) => {
+const AddModal = ({ setStatus, t }) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [fields, setFields] = useState([
         {
@@ -211,7 +212,7 @@ const AddModal = ({ setStatus }) => {
 
     return (
         <div>
-            <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}><PlusOutlined /> Ekle</Button>
+            <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}><PlusOutlined /> {t('ekle')}</Button>
             <Modal open={isModalOpen} onOk={handleOk} onCancel={() => setIsModalOpen(false)} maskClosable={false} footer={footer} width={1200}>
                 <FormProvider {...methods}>
                     <form>
@@ -228,4 +229,4 @@ AddModal.propTypes = {
     data: PropTypes.array,
 }
 
-export default AddModal
+export default withNamespaces()(AddModal)

@@ -9,19 +9,6 @@
     "renk": "Color",
     "yil": "Year of Production",
     "yakitTip": "Fuel Type",
-
-
-    "driver": "Driver",
-    "date": "Date",
-    "time": "Time",
-    "fuelType": "Fuel Type",
-    "tank": "Tank",
-    "lastKm": "Last Km",
-    "receivedKm": "Received Km",
-    "differenceKm": "Difference Km",
-    "amount": "Amount (lt)",
-    "pricePerLitre": "Price per Litre",
-    "total": "Total",
-    "fullTank": "Full Tank",
-    "fuelConsumption": "Fuel Consumption"
+    "kayit": "records",
+    "ekle": "Add"
 }

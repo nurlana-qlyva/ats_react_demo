@@ -1,0 +1,14 @@
+{
+    "aracId": "Avtomobil İD",
+    "aracPlaka": "Avtomobil Nömrəsi",
+    "aracTip": "Avtomobil Növü",
+    "marka": "Brend",
+    "model": "Model",
+    "grup": "Qrup",
+    "guncelKm": "Hazırkı Km",
+    "renk": "Rəng",
+    "yil": "İstehsal İli",
+    "yakitTip": "Yanacaq Növü",
+    "kayit": "qeyd",
+    "ekle": "Yeni"
+}

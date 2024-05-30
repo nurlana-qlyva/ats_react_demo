@@ -13,6 +13,7 @@ const LanguageSelector = () => {
             <Button onClick={() => changeLanguage('en')}>en</Button>
             <Button onClick={() => changeLanguage('tr')}>tr</Button>
             <Button onClick={() => changeLanguage('ru')}>ru</Button>
+            <Button onClick={() => changeLanguage('az')}>az</Button>
         </>
     );
 };
