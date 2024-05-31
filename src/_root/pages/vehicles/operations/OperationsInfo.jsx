@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { withNamespaces } from 'react-i18next'
 import { Button, Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from 'react-icons/fa6'
@@ -8,7 +9,7 @@ import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } fro
 import Yakit from './yakit/Yakit'
 import Bakim from './bakim/Bakim'
 
-const OperationsInfo = ({ ids }) => {
+const OperationsInfo = ({ ids, t }) => {
     const [selectedItem, setSelectedItem] = useState(null)
 
     const handleMenuClick = (e) => {
@@ -17,52 +18,52 @@ const OperationsInfo = ({ ids }) => {
 
     const items = [
         {
-            label: 'Bakımlar',
+            label: t('bakimlar'),
             key: '1',
             icon: <FaWrench className="text-info" />,
         },
         {
-            label: 'Yakıtlar',
+            label: t('yakitlar'),
             key: '2',
             icon: <FaFire className="text-info" />,
         },
         {
-            label: 'Görevler',
+            label: t('gorevler'),
             key: '3',
             icon: <MdFormatListBulleted className="text-info" />,
         },
         {
-            label: 'Harcamalar',
+            label: t('harcamalar'),
             key: '4',
             icon: <FaWallet className="text-info" />,
         },
         {
-            label: 'Kazalar',
+            label: t('kazalar'),
             key: '5',
             icon: <FaCarCrash className="text-info" />,
         },
         {
-            label: 'Cezalar',
+            label: t('cezalar'),
             key: '6',
             icon: <FaBuildingShield className="text-info" />,
         },
         {
-            label: 'Sigortalar',
+            label: t('sigortalar'),
             key: '7',
             icon: <MdHealthAndSafety className="text-info" />,
         },
         {
-            label: 'Lastikler',
+            label: t('lastikler'),
             key: '8',
             icon: <FaGear className="text-info" />,
         },
         {
-            label: 'KM Takibi',
+            label: t('kmTakibi'),
             key: '9',
             icon: <FaTruckFast className="text-info" />,
         },
         {
-            label: 'Parçalar',
+            label: t('parcalar'),
             key: '10',
             icon: <MdSettingsInputComponent className="text-info" />,
         }
@@ -89,7 +90,7 @@ const OperationsInfo = ({ ids }) => {
             <Dropdown menu={menuProps}>
                 <Button className="btn operations-btn">
                     <Space>
-                        İşlemler
+                        {t("islemler")}
                         <DownOutlined />
                     </Space>
                 </Button>
@@ -103,4 +104,4 @@ OperationsInfo.propTypes = {
     ids: PropTypes.array
 }
 
-export default OperationsInfo
+export default withNamespaces()(OperationsInfo)

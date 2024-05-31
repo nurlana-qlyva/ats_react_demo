@@ -6,7 +6,7 @@ import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumb
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
-import { DetailInfoUpdateService, KMValidateService, YakitDataGetByDateService, YakitHistoryGetService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, KMValidateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import FuelTank from '../../../../../components/form/FuelTank'
@@ -14,7 +14,7 @@ import Plaka from '../../../../../components/form/Plaka'
 
 dayjs.locale('tr')
 
-const GeneralInfo = () => {
+const GeneralInfo = ({ setIsValid }) => {
     const { control, setValue, watch } = useFormContext()
     const { data } = useContext(PlakaContext)
     const { setId } = useContext(FuelTankContext)
@@ -22,6 +22,7 @@ const GeneralInfo = () => {
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [history, setHistory] = useState(0)
+    const [response, setResponse] = useState("normal")
 
     useEffect(() => {
         setValue("surucuId", data.surucuId)
@@ -38,7 +39,7 @@ const GeneralInfo = () => {
         setValue("birim", data.birim)
         setValue("depoYakitMiktar", data.depoYakitMiktar)
 
-        YakitHistoryGetService(data.aracId).then((res) => setHistory(res.data));
+        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data));
 
     }, [data])
 
@@ -64,7 +65,7 @@ const GeneralInfo = () => {
             }
         }
         setValue("tuketim", tktm);
-    })
+    }, [watch("fullDepo"), watch("farkKm"), watch("miktar"), watch("yakitHacmi")])
 
     useEffect(() => {
         if (watch("tuketim") === "0.00") {
@@ -79,11 +80,41 @@ const GeneralInfo = () => {
             saat: dayjs(watch("saat")).format("HH:mm")
         }
         YakitDataGetByDateService(body).then(res => setValue("sonAlinanKm", res.data))
+        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data))
+    }
+
+    const validateLog = () => {
+        const body = {
+            aracId: data.aracId,
+            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+            saat: dayjs(watch("saat")).format("HH:mm"),
+            sonAlinanKm: watch("alinanKm"),
+            "kmLog": {
+                "kmAracId": data.aracId,
+                "plaka": data.plaka,
+                "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
+                "saat": dayjs(watch("saat")).format("HH:mm"),
+                "yeniKm": watch("alinanKm"),
+                "dorse": false,
+                "kaynak": "YAKIT",
+                "lokasyonId": data.lokasyonId
+            }
+        }
+
+        YakitKmLogValidateService(body).then(res => {
+            if (res?.data.statusCode === 400) {
+                setResponse("error");
+            } else if (res?.data.statusCode === 200) {
+                setResponse("success");
+                setIsValid(true)
+            }
+        })
     }
 
     const handlePressAlinanKm = e => {
         const fark = +e.target.value - watch("sonAlinanKm")
         setValue("farkKm", fark)
+        validateLog()
     }
 
     const handlePressFarkKm = e => {
@@ -173,7 +204,10 @@ const GeneralInfo = () => {
                                                 placeholder=""
                                                 locale={dayjs.locale("tr")}
                                                 format="DD.MM.YYYY"
-                                                onBlur={fetchData}
+                                                onBlur={() => {
+                                                    fetchData()
+                                                    validateLog()
+                                                }}
                                                 onChange={e => {
                                                     field.onChange(e)
                                                 }}
@@ -194,7 +228,10 @@ const GeneralInfo = () => {
                                             {...field}
                                             placeholder=""
                                             format="HH:mm"
-                                            onBlur={fetchData}
+                                            onBlur={() => {
+                                                fetchData()
+                                                validateLog()
+                                            }}
                                             onChange={e => {
                                                 field.onChange(e)
                                             }}
@@ -271,10 +308,10 @@ const GeneralInfo = () => {
                                     render={({ field }) => (
                                         <InputNumber
                                             className="w-full"
-                                            // style={response === 'error' ? { borderColor: "#f00" } : response === "success" ? { borderColor: "#0f0" } : { color: '#000' }}
+                                            style={response === 'error' ? { borderColor: "#dc3545" } : response === "success" ? { borderColor: "#23b545" } : { color: '#000' }}
                                             {...field}
-                                            // onPressEnter={handleValidateKm}
                                             onPressEnter={handlePressAlinanKm}
+                                            onBlur={handlePressAlinanKm}
                                             onChange={e => {
                                                 field.onChange(e)
                                             }}
@@ -294,6 +331,7 @@ const GeneralInfo = () => {
                                             {...field}
                                             className='w-full'
                                             onPressEnter={handlePressFarkKm}
+                                            onBlur={handlePressFarkKm}
                                             onChange={e => {
                                                 field.onChange(e)
                                             }}
@@ -329,6 +367,7 @@ const GeneralInfo = () => {
                                         className="w-full"
                                         {...field}
                                         onPressEnter={handlePressMiktar}
+                                        onBlur={handlePressMiktar}
                                         onChange={(e => {
                                             field.onChange(e)
                                         })}
@@ -385,6 +424,7 @@ const GeneralInfo = () => {
                                             {...field}
                                             className='w-full'
                                             onPressEnter={handlePressLitreFiyat}
+                                            onBLur={handlePressLitreFiyat}
                                             onChange={e => field.onChange(e)}
                                         />
                                     )}
@@ -402,6 +442,7 @@ const GeneralInfo = () => {
                                             {...field}
                                             className='w-full'
                                             onPressEnter={handlePressTutar}
+                                            onBLur={handlePressTutar}
                                             onChange={e => field.onChange(e)}
                                         />
                                     )}
@@ -514,7 +555,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
@@ -536,7 +577,7 @@ const GeneralInfo = () => {
                                 />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
@@ -548,13 +589,13 @@ const GeneralInfo = () => {
                             style={{ textAlign: "center" }}
                         >
                             <p style={{ fontSize: "14px" }}>
-                                {dayjs(watch("tarih")).format("DD.MM.YYYY")}
+                                {dayjs(history[0]?.tarih).format("DD.MM.YYYY")}
                             </p>
                             <div>
                                 <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
                             </div>
                             <p style={{ fontSize: "14px" }}>{history[0]?.alinanKm}</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger'/>}</p>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
                         </div>
                         <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>

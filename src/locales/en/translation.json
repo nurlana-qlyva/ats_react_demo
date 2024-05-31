@@ -1,4 +1,7 @@
 {
+    "orjinYazilim": "Orjin Software",
+    "araclar": "Vehicles",
+    "aracDetayKarti": "Vehicle Detail Card",
     "aracId": "Vehicle ID",
     "aracPlaka": "Vehicle Registration Plate",
     "aracTip": "Vehicle Type",
@@ -11,5 +14,19 @@
     "yakitTip": "Fuel Type",
     "kayit": "records",
     "ekle": "Add",
-    "filtre": "Filters"
+    "filtre": "Filters",
+    "islemler": "Transactions",
+    "bakimlar": "Maintenances",
+    "yakitlar": "Fuels",
+    "gorevler": "Tasks",
+    "harcamalar": "Expenses",
+    "kazalar": "Accidents",
+    "cezalar": "Penalties",
+    "sigortalar": "Fuses",
+    "lastikler": "Tires",
+    "kmTakibi": "KM Tracking",
+    "parcalar": "Parts",
+    "sayfa": "page",
+    "guncelle": "Update",
+    "iptal": "İptal"
 }

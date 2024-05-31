@@ -14,6 +14,7 @@ import FileUpload from '../../../../components/upload/FileUpload'
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
+    const [status, setStatus] = useState(false)
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -51,7 +52,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 },
             });
         })
-    }, [tableParams.pagination.current])
+    }, [tableParams.pagination.current, status])
 
     const columns = [
         {
@@ -140,7 +141,6 @@ const Yakit = ({ visible, onClose, ids }) => {
         }
     ]
 
-
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
             pagination,
@@ -172,7 +172,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             footer={footer}
             width={1200}
         >
-            <AddModal />
+            <AddModal setStatus={setStatus} />
             {/* <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}

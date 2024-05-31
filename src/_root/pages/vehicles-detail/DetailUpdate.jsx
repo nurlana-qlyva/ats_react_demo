@@ -21,6 +21,7 @@ import PersonalFields from '../../components/form/PersonalFields'
 import FileUpload from '../../components/upload/FileUpload'
 import PhotoUpload from '../../components/upload/PhotoUpload'
 import KmLog from '../../components/table/KmLog'
+import { t } from 'i18next'
 
 const breadcrumb = [
     {
@@ -29,10 +30,10 @@ const breadcrumb = [
     },
     {
         href: '/araclar',
-        title: 'Araçlar',
+        title: t('araclar'),
     },
     {
-        title: 'ARAÇ DETAY KARTI'
+        title: t('aracDetayKarti')
     }
 ]
 
@@ -375,7 +376,7 @@ const DetailUpdate = () => {
                         <div className="col-span-9">
                             <div className="grid p-10 gap-1">
                                 <div className="col-span-12 flex gap-1 justify-end">
-                                    <Button className="btn btn-min primary-btn" onClick={onSubmit}>Güncelle</Button>
+                                    <Button className="btn btn-min primary-btn" onClick={onSubmit}>{t('guncelle')}</Button>
                                     <Button className="btn btn-min cancel-btn">İptal</Button>
                                 </div>
                                 <div className="col-span-4">

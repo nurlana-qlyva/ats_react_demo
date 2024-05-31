@@ -6,13 +6,12 @@ import { Select } from 'antd'
 
 const Plaka = ({ field }) => {
     const { plaka, setData } = useContext(PlakaContext)
-    console.log(plaka)
 
     useEffect(() => {
         if (plaka.length === 1) {
             YakitDataGetByIdService(plaka[0].id).then(res => setData(res.data))
         }
-     }, [])
+    }, [])
 
     const handleChange = (e) => {
         YakitDataGetByIdService(e).then(res => setData(res.data))

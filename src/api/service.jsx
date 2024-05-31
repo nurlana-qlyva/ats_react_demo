@@ -165,12 +165,16 @@ export const YakitAddService = (data) => {
   return http.post(`/Fuel/AddFuel`, data)
 }
 
-export const YakitHistoryGetService = (id) => {
-  return http.get(`/Fuel/GetLastThreeFuelRecord?vehicleId=${id}`)
+export const YakitHistoryGetService = (id, date, time) => {
+  return http.get(`/Fuel/GetLastThreeFuelRecord?vehicleId=${id}&date=${date}&time=${time}`)
 }
 
 export const YakitTankGetService = (id, type) => {
   return http.get(`/WareHouse/GetWareHouseList?tip=${type}&id=${id}`)
+}
+
+export const YakitKmLogValidateService = (data) => {
+  return http.post(`/Fuel/ValidateFuelInfoInsertion`, data)
 }
 
 

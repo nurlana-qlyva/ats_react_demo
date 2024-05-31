@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { withNamespaces } from 'react-i18next'
 import {
     closestCenter,
     DndContext,
@@ -22,7 +23,7 @@ import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
 import OperationsInfo from './operations/OperationsInfo'
-import { withNamespaces } from 'react-i18next'
+import { t } from 'i18next'
 
 const breadcrumb = [
     {
@@ -30,7 +31,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: 'Araçlar',
+        title: t('araclar'),
     },
 ]
 
@@ -375,7 +376,12 @@ const Vehicles = ({ t }) => {
                                 rowKey={(record) => record.aracId}
                                 columns={newColumns}
                                 dataSource={vehiclesData}
-                                pagination={tableParams.pagination}
+                                pagination={{
+                                    ...tableParams.pagination,
+                                    locale: {
+                                        items_per_page: `/ ${t('sayfa')}`,
+                                    },
+                                }}
                                 loading={loading}
                                 size="small"
                                 onChange={handleTableChange}

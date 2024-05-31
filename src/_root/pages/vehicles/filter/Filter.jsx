@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
+import { withNamespaces } from 'react-i18next'
 import { Button, Drawer, Input, InputNumber } from 'antd'
 import { FunnelPlotOutlined } from '@ant-design/icons'
 import VehicleType from '../../../components/form/VehicleType'
@@ -10,7 +11,7 @@ import VehicleGroup from '../../../components/form/VehicleGroup'
 import Renk from '../../../components/form/Renk'
 import FuelType from '../../../components/form/FuelType'
 
-const Filter = ({ filter, clearFilters }) => {
+const Filter = ({ filter, clearFilters, t }) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [hasValue, setHasValue] = useState(false)
 
@@ -58,7 +59,7 @@ const Filter = ({ filter, clearFilters }) => {
 
     const title = (
         <div className='flex justify-between align-center'>
-            <p><FunnelPlotOutlined /> Filtreler</p>
+            <p><FunnelPlotOutlined /> {t('filtre')}</p>
             <div className='flex gap-1'>
                 <Button className='btn btn-min cancel-btn' onClick={() => {
                     clear()
@@ -76,7 +77,7 @@ const Filter = ({ filter, clearFilters }) => {
         <>
             <Button className="btn primary-btn" onClick={() => setOpenDrawer(true)}>
                 {hasValue && <div className='filter-icon' />}
-                <FunnelPlotOutlined /> Filtreler
+                <FunnelPlotOutlined /> {t('filtre')}
             </Button>
             <Drawer title={title} onClose={() => setOpenDrawer(false)} open={openDrawer}>
                 <FormProvider {...methods}>
@@ -203,4 +204,4 @@ Filter.propTypes = {
     clearFilters: PropTypes.func,
 }
 
-export default Filter
+export default withNamespaces()(Filter)

@@ -3,12 +3,13 @@ import { FormProvider, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
-import { YakitAddService } from '../../../../../../api/service'
+import { YakitAddService, YakitKmLogValidateService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
-const AddModal = () => {
+const AddModal = ({ setStatus }) => {
     const [openModal, setopenModal] = useState(false)
+    const [isValid, setIsValid] = useState(false)
     const { data } = useContext(PlakaContext)
     const [fields, setFields] = useState([
         {
@@ -111,10 +112,10 @@ const AddModal = () => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset, watch } = methods
+    const { handleSubmit, reset } = methods
 
     const onSubmit = handleSubmit((values) => {
-        const kmLog = watch("engelle") ? null : {
+        const kmLog = {
             "kmAracId": data.aracId,
             "plaka": values.tuketim,
             "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
@@ -159,14 +160,17 @@ const AddModal = () => {
             ozelAlanKodId10: values.ozelAlanKodId10 || 0,
             ozelAlan11: values.ozelAlan11 || 0,
             ozelAlan12: values.ozelAlan12 || 0,
+            hasToInsertKmLog: values.engelle
         }
 
-        // YakitAddService(body).then(res => {
-        //     if (res?.data.statusCode === 200) {
-        //         setopenModal(false)
-        //         reset()
-        //     }
-        // })
+        YakitAddService(body).then(res => {
+            if (res?.data.statusCode === 200) {
+                setStatus(true)
+                setopenModal(false)
+                reset()
+            }
+        })
+        setStatus(false)
     })
 
     const personalProps = {
@@ -179,7 +183,7 @@ const AddModal = () => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo />,
+            children: <GeneralInfo setIsValid={setIsValid} />,
         },
         {
             key: '2',
@@ -190,7 +194,7 @@ const AddModal = () => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={!isValid}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {

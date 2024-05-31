@@ -1,7 +1,10 @@
 {
+    "orjinYazilim": "Orjin Yazılım",
+    "araclar": "Araçlar",
+    "aracDetayKarti": "ARAÇ DETAY KARTI",
     "aracId": "Araç İD",
     "aracPlaka": "Araç Plaka",
-    "aracTip": "Araç Tip",
+    "aracTip": "Araç Tip", 
     "marka": "Marka",
     "model": "Model",
     "grup": "Grup",
@@ -11,5 +14,20 @@
     "yakitTip": "Yakıt Tipi",
     "kayit": "kayıt",
     "ekle": "Ekle",
-    "filtre": "Filtreler"
+    "filtre": "Filtreler",
+    "islemler": "İşlemler",
+    "bakimlar": "Bakımlar",
+    "yakitlar": "Yakıtlar",
+    "gorevler": "Görevler",
+    "harcamalar": "Harcamalar",
+    "kazalar": "Kazalar",
+    "cezalar": "Cezalar",
+    "sigortalar": "Sigortalar",
+    "lastikler": "Lastikler",
+    "kmTakibi": "KM Takibi",
+    "parcalar": "Parçalar",
+    "sayfa": "sayfa",
+    "guncelle": "Güncelle",
+    "iptal": "İptal"
+
 }
