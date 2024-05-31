@@ -14,7 +14,7 @@ import Plaka from '../../../../../components/form/Plaka'
 
 dayjs.locale('tr')
 
-const GeneralInfo = ({ setIsValid }) => {
+const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const { control, setValue, watch } = useFormContext()
     const { data } = useContext(PlakaContext)
     const { setId } = useContext(FuelTankContext)
@@ -22,7 +22,6 @@ const GeneralInfo = ({ setIsValid }) => {
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [history, setHistory] = useState(0)
-    const [response, setResponse] = useState("normal")
 
     useEffect(() => {
         setValue("surucuId", data.surucuId)
@@ -104,14 +103,20 @@ const GeneralInfo = ({ setIsValid }) => {
         YakitKmLogValidateService(body).then(res => {
             if (res?.data.statusCode === 400) {
                 setResponse("error");
-                // if (res?.data.message) {
-
-                // }
+                if (res?.data.message === " Invalid Km range for both KmLog and FuelKm !") {
+                    message.error("Alınan Km Yakıt ve Km Log-a girilemez!")
+                } else if (res?.data.message === " Invalid FuelKm Range !") {
+                    message.error("Alınan Km Yakıt Log-a girilemez!")
+                }else if (res?.data.message === " Invalid KmLog Range !") {
+                    message.error("Alınan Km Km Log-a girilemez!")
+                }
             } else if (res?.data.statusCode === 200) {
                 setResponse("success");
                 setIsValid(true)
             }
         })
+
+        setIsValid(false)
     }
 
     const handlePressAlinanKm = e => {
@@ -123,6 +128,7 @@ const GeneralInfo = ({ setIsValid }) => {
     const handlePressFarkKm = e => {
         const alinanKm = watch("sonAlinanKm") + +e.target.value
         setValue("alinanKm", alinanKm)
+        validateLog()
     }
 
     const handlePressMiktar = e => {

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
@@ -10,6 +10,7 @@ import PersonalFields from '../../../../../components/form/PersonalFields'
 const AddModal = ({ setStatus }) => {
     const [openModal, setopenModal] = useState(false)
     const [isValid, setIsValid] = useState(false)
+    const [response, setResponse] = useState("normal")
     const { data } = useContext(PlakaContext)
     const [fields, setFields] = useState([
         {
@@ -112,12 +113,12 @@ const AddModal = ({ setStatus }) => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset } = methods
+    const { handleSubmit, reset, watch } = methods
 
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
             "kmAracId": data.aracId,
-            "plaka": values.tuketim,
+            "plaka": values.plaka,
             "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
             "saat": dayjs(values.saat).format("HH:mm:ss"),
             "eskiKm": data.sonAlinanKm,
@@ -139,11 +140,11 @@ const AddModal = ({ setStatus }) => {
             "farkKm": values.farkKm,
             "tuketim": values.tuketim,
             "alinanKm": values.alinanKm,
-            "miktar": values.miktar,
+            "miktar": values.miktar ? values.miktar : 0.00,
             "fullDepo": values.fullDepo,
             "stokKullanimi": values.stokKullanimi,
             "litreFiyat": values.litreFiyat,
-            "tutar": values.tutar,
+            "tutar": values.tutar ? values.tutar : 0,
             birim: data.birim,
             "ozelKullanim": false,
             "kmLog": kmLog,
@@ -166,12 +167,17 @@ const AddModal = ({ setStatus }) => {
         YakitAddService(body).then(res => {
             if (res?.data.statusCode === 200) {
                 setStatus(true)
+                setResponse("normal")
                 setopenModal(false)
                 reset()
             }
         })
         setStatus(false)
     })
+
+    useEffect(() => {
+        if (watch("engelle")) setIsValid(false)
+    }, [watch("engelle")])
 
     const personalProps = {
         form: "YAKIT",
@@ -183,7 +189,7 @@ const AddModal = ({ setStatus }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo setIsValid={setIsValid} />,
+            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
         },
         {
             key: '2',
