@@ -137,9 +137,22 @@ const GeneralInfo = ({ setIsValid }) => {
         setValue("miktar", Math.round(miktar))
     }
 
+    const updateDepoHacmi = () => {
+        const body = {
+            dtyAracId: data.aracId,
+            yakitHacmi: watch("yakitHacmi")
+        };
+
+        DetailInfoUpdateService(body).then((res) => {
+            if (res?.data.statusCode === 202) {
+                setOpen(false);
+            }
+        })
+    }
+
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn">
+            <Button key="submit" className="btn btn-min primary-btn" onClick={updateDepoHacmi}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
