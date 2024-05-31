@@ -6,7 +6,7 @@ import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumb
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
-import { DetailInfoUpdateService, KMValidateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import FuelTank from '../../../../../components/form/FuelTank'
@@ -104,6 +104,9 @@ const GeneralInfo = ({ setIsValid }) => {
         YakitKmLogValidateService(body).then(res => {
             if (res?.data.statusCode === 400) {
                 setResponse("error");
+                // if (res?.data.message) {
+
+                // }
             } else if (res?.data.statusCode === 200) {
                 setResponse("success");
                 setIsValid(true)

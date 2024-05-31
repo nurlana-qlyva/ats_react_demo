@@ -74,7 +74,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         },
         {
             title: 'Alınan KM.',
-            dataIndex: 'alinanKm',
+            dataIndex: 'sonAlinanKm',
             key: 4,
         },
         {
