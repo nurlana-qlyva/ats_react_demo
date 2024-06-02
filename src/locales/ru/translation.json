@@ -26,7 +26,10 @@
     "kmTakibi": "Отслеживание км",
     "parcalar": "Части",
     "sayfa": "страница",
-    "guncelle": "Обновлять"
+    "guncelle": "Обновлять",
+    "iptal": "Отмена",
+    "kaydet": "Cохранять",
+    "genelBilgiler": "Общая Информация"
 
 
 }

@@ -189,7 +189,7 @@ const AddModal = ({ setStatus, t }) => {
     const items = [
         {
             key: '1',
-            label: 'Genel Bilgiler',
+            label: t('genelBilgiler'),
             children: <GeneralInfo />,
         },
         {
@@ -202,10 +202,10 @@ const AddModal = ({ setStatus, t }) => {
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={handleOk}>
-                Kaydet
+                {t('kaydet')}
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => setIsModalOpen(false)}>
-                İptal
+                {t('iptal')}
             </Button>
         ]
     )

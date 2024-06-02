@@ -126,7 +126,8 @@ const AddModal = ({ setStatus }) => {
             "kaynak": "YAKIT",
             "dorse": true,
             lokasyon: data.lokasyon,
-            lokasyonId: data.lokasyonId
+            lokasyonId: data.lokasyonId,
+            aciklama: ""
         }
 
         const body = {
@@ -161,15 +162,15 @@ const AddModal = ({ setStatus }) => {
             ozelAlanKodId10: values.ozelAlanKodId10 || 0,
             ozelAlan11: values.ozelAlan11 || 0,
             ozelAlan12: values.ozelAlan12 || 0,
-            hasToInsertKmLog: values.engelle
+            hasToInsertKmLog: values.engelle ? values.engelle : false
         }
 
         YakitAddService(body).then(res => {
             if (res?.data.statusCode === 200) {
                 setStatus(true)
                 setResponse("normal")
-                setopenModal(false)
-                reset()
+                // setopenModal(false)
+                // reset()
             }
         })
         setStatus(false)
@@ -205,25 +206,26 @@ const AddModal = ({ setStatus }) => {
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setopenModal(false)
-                reset(
-                    {
-                        sonAlinanKm: data.sonAlinanKm,
-                        plaka: data.plaka,
-                        yakitTipId: data.yakitTipId,
-                        yakitTanki: data.yakitTanki,
-                        surucuId: data.surucuId,
-                        litreFiyat: data.litreFiyat,
-                        yakitHacmi: data.yakitHacmi,
-                        "tarih": dayjs(new Date()),
-                        "saat": dayjs(new Date()),
-                        "alinanKm": null,
-                        "farkKm": null,
-                        "miktar": null,
-                        "fullDepo": false,
-                        "tutar": null,
-                        "tuketim": null
-                    }
-                )
+                // reset(
+                //     {
+                //         sonAlinanKm: data.sonAlinanKm,
+                //         plaka: data.plaka,
+                //         yakitTipId: data.yakitTipId,
+                //         yakitTanki: data.yakitTanki,
+                //         surucuId: data.surucuId,
+                //         litreFiyat: data.litreFiyat,
+                //         yakitHacmi: data.yakitHacmi,
+                //         "tarih": dayjs(new Date()),
+                //         "saat": dayjs(new Date()),
+                //         "alinanKm": null,
+                //         "farkKm": null,
+                //         "miktar": null,
+                //         "fullDepo": false,
+                //         "tutar": null,
+                //         "tuketim": null
+                //     }
+                // )
+                setResponse("normal")
             }}>
                 İptal
             </Button>

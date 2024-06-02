@@ -28,5 +28,7 @@
     "parcalar": "Parts",
     "sayfa": "page",
     "guncelle": "Update",
-    "iptal": "İptal"
+    "iptal": "Cancel",
+    "kaydet": "Save",
+    "genelBilgiler": "General Information"
 }

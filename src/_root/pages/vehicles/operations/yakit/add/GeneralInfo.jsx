@@ -576,7 +576,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     style={{ width: "20%" }}
                                 />
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[2]?.sonAlinanKm} km</p>
                             <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
                         </div>
@@ -598,7 +598,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     style={{ width: "20%" }}
                                 />
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[1]?.sonAlinanKm} km</p>
                             <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
                         </div>
@@ -616,7 +616,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div>
                                 <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.alinanKm}</p>
+                            <p style={{ fontSize: "14px" }}>{history[0]?.sonAlinanKm} km</p>
                             <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
                             <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
                         </div>
