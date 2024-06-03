@@ -126,7 +126,6 @@ const UpdateModal = ({updateModal, setUpdateModal}) => {
 
     return (
         <>
-            <Button className='btn mb-10 primary-btn' onClick={() => setUpdateModal(true)}>Yenisini Ekle</Button>
             <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
