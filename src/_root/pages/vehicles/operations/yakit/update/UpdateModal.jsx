@@ -7,7 +7,6 @@ import PersonalFields from '../../../../../components/form/PersonalFields'
 import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
-import { YakitUpdateDataGetService } from '../../../../../../api/service'
 
 const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
     // file
