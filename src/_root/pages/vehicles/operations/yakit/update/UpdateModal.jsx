@@ -1,10 +1,21 @@
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Button, Modal, Tabs } from 'antd'
+import { Button, message, Modal, Tabs } from 'antd'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
+import { uploadPhoto } from '../../../../../../utils/upload'
+import PhotoUpload from '../../../../../components/upload/PhotoUpload'
+import FileUpload from '../../../../../components/upload/FileUpload'
 
-const UpdateModal = ({updateModal, setUpdateModal}) => {
+const UpdateModal = ({ updateModal, setUpdateModal }) => {
+    // file
+    const [filesUrl, setFilesUrl] = useState([])
+    const [files, setFiles] = useState([])
+    const [loadingFiles, setLoadingFiles] = useState(false)
+    // photo
+    const [imageUrls, setImageUrls] = useState([])
+    const [loadingImages, setLoadingImages] = useState(false)
+    const [images, setImages] = useState([])
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -92,6 +103,29 @@ const UpdateModal = ({updateModal, setUpdateModal}) => {
 
     const { handleSubmit, reset, watch } = methods
 
+    const uploadImages = () => {
+        try {
+            setLoadingImages(true);
+            // const data = uploadPhoto(id, "Yakit", images)
+            // setImageUrls([...imageUrls, data.imageUrl]);
+        } catch (error) {
+            message.error("Resim yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingImages(false);
+        }
+    }
+
+    const uploadFiles = () => {
+        try {
+            setLoadingFiles(true);
+            // uploadFile(id, "Yakit", files)
+        } catch (error) {
+            message.error("Dosya yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingFiles(false);
+        }
+    }
+
     const personalProps = {
         form: "YAKIT",
         fields,
@@ -108,6 +142,16 @@ const UpdateModal = ({updateModal, setUpdateModal}) => {
             key: '2',
             label: 'Özel Alanlar',
             children: <PersonalFields personalProps={personalProps} />
+        },
+        {
+            key: '3',
+            label: `[${imageUrls.length}] Resimler`,
+            children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
+        },
+        {
+            key: '4',
+            label: `[${filesUrl.length}] Ekli Belgeler`,
+            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
         }
     ]
 

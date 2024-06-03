@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { withNamespaces } from 'react-i18next'
+import PropTypes from 'prop-types'
+import { t } from 'i18next'
 import {
     closestCenter,
     DndContext,
@@ -16,14 +17,13 @@ import {
     SortableContext,
     useSortable,
 } from '@dnd-kit/sortable'
-import { Checkbox, Table, Popover, Button, Input, Spin } from 'antd'
-import { MenuOutlined, HomeOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Checkbox, Table, Popover, Button, Input } from 'antd'
+import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
 import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
 import OperationsInfo from './operations/OperationsInfo'
-import { t } from 'i18next'
 
 const breadcrumb = [
     {
@@ -70,8 +70,13 @@ const TableBodyCell = (props) => {
                 ...dragActiveStyle(dragState, props.id),
             }}
         />
-    );
+    )
 }
+TableBodyCell.propTypes = {
+    id: PropTypes.string.isRequired,
+    style: PropTypes.object,
+}
+
 const TableHeaderCell = (props) => {
     const dragState = useContext(DragIndexContext);
     const { attributes, listeners, setNodeRef, isDragging } = useSortable({
@@ -91,8 +96,12 @@ const TableHeaderCell = (props) => {
     };
     return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 }
+TableHeaderCell.propTypes = {
+    id: PropTypes.string.isRequired,
+    style: PropTypes.object,
+}
 
-const Vehicles = ({ t }) => {
+const Vehicles = () => {
     const [vehiclesData, setVehiclesData] = useState([])
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -422,4 +431,4 @@ const Vehicles = ({ t }) => {
     )
 }
 
-export default withNamespaces()(Vehicles)
+export default Vehicles

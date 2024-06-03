@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { t } from 'i18next'
 import { Button, Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { FaWrench, FaGear, FaBuildingShield, FaTruckFast } from 'react-icons/fa6'
@@ -9,7 +9,7 @@ import { MdFormatListBulleted, MdHealthAndSafety, MdSettingsInputComponent } fro
 import Yakit from './yakit/Yakit'
 import Bakim from './bakim/Bakim'
 
-const OperationsInfo = ({ ids, t }) => {
+const OperationsInfo = ({ ids }) => {
     const [selectedItem, setSelectedItem] = useState(null)
 
     const handleMenuClick = (e) => {
@@ -104,4 +104,4 @@ OperationsInfo.propTypes = {
     ids: PropTypes.array
 }
 
-export default withNamespaces()(OperationsInfo)
+export default OperationsInfo

@@ -1,15 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
-import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
+import { Modal, Button, Table, Checkbox } from 'antd'
 import { PlakaContext } from '../../../../../context/plakaSlice'
 import { YakitGetByIdService } from '../../../../../api/service'
-import { uploadPhoto, uploadFile } from '../../../../../utils/upload'
 import AddModal from './add/AddModal'
-import GeneralInfo from './update/GeneralInfo'
-import PersonalFields from '../../../../components/form/PersonalFields'
-import PhotoUpload from '../../../../components/upload/PhotoUpload'
-import FileUpload from '../../../../components/upload/FileUpload'
 import UpdateModal from './update/UpdateModal'
 
 const Yakit = ({ visible, onClose, ids }) => {
@@ -23,19 +18,12 @@ const Yakit = ({ visible, onClose, ids }) => {
         },
     })
     const [updateModal, setUpdateModal] = useState(false)
-    // file
-    const [filesUrl, setFilesUrl] = useState([])
-    const [files, setFiles] = useState([])
-    const [loadingFiles, setLoadingFiles] = useState(false)
-    // photo
-    const [imageUrls, setImageUrls] = useState([])
-    const [loadingImages, setLoadingImages] = useState(false)
-    const [images, setImages] = useState([])
 
     const { plaka, setPlaka } = useContext(PlakaContext)
 
     useEffect(() => {
         let newPlakaEntries = []
+        setLoading(true)
         YakitGetByIdService(ids, tableParams?.pagination.current).then(res => {
             res.data.fuel_list.map(vehicle => {
                 if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
@@ -51,7 +39,8 @@ const Yakit = ({ visible, onClose, ids }) => {
                     ...tableParams.pagination,
                     total: res?.data.total_count,
                 },
-            });
+            })
+            setLoading(false)
         })
     }, [tableParams.pagination.current, status])
 
@@ -60,13 +49,13 @@ const Yakit = ({ visible, onClose, ids }) => {
             title: 'Plaka',
             dataIndex: 'plaka',
             key: 1,
-            render: (text, record) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
+            render: (text) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
         },
         {
             title: 'Tarih',
             dataIndex: 'tarih',
             key: 2,
-            render: (text, record) => dayjs(text).format("DD.MM.YYYY")
+            render: (text) => dayjs(text).format("DD.MM.YYYY")
         },
         {
             title: 'Yakıt Tipi',
@@ -201,6 +190,12 @@ const Yakit = ({ visible, onClose, ids }) => {
             />
         </Modal>
     )
+}
+
+Yakit.propTypes = {
+    ids: PropTypes.array,
+    onClose: PropTypes.func,
+    visible: PropTypes.bool
 }
 
 export default Yakit
