@@ -19,19 +19,11 @@ const Yakit = ({ visible, onClose, ids }) => {
     })
     const [updateModal, setUpdateModal] = useState(false)
 
-    const { plaka, setPlaka } = useContext(PlakaContext)
+    const { plaka } = useContext(PlakaContext)
 
     useEffect(() => {
-        let newPlakaEntries = []
         setLoading(true)
         YakitGetByIdService(ids, tableParams?.pagination.current).then(res => {
-            res.data.fuel_list.map(vehicle => {
-                if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
-                    !newPlakaEntries.some(item => item.id === vehicle.aracId)) {
-                    newPlakaEntries.push({ id: vehicle.aracId, plaka: vehicle.plaka });
-                }
-            })
-            setPlaka(newPlakaEntries)
             setDataSource(res?.data.fuel_list)
             setTableParams({
                 ...tableParams,

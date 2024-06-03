@@ -24,6 +24,7 @@ import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
 import OperationsInfo from './operations/OperationsInfo'
+import { PlakaContext } from '../../../context/plakaSlice'
 
 const breadcrumb = [
     {
@@ -187,6 +188,8 @@ const Vehicles = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
+    const { setPlaka } = useContext(PlakaContext)
+
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -396,10 +399,20 @@ const Vehicles = () => {
                                 onChange={handleTableChange}
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
-                                    onChange: (selectedRowKeys) => {
+                                    onChange: (selectedRowKeys, rows) => {
+                                        console.log(rows)
                                         setSelectedRowKeys(selectedRowKeys);
+                                        let newPlakaEntries = []
+                                        rows.map(vehicle => {
+                                            if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
+                                                !newPlakaEntries.some(item => item.id === vehicle.aracId)) {
+                                                newPlakaEntries.push({ id: vehicle.aracId, plaka: vehicle.plaka })
+                                            }
+                                        })
+                                        setPlaka(newPlakaEntries)
                                     },
                                     onSelectAll: (selected, selectedRows, changeRows) => {
+                                        console.log(selectedRows)
                                         const keys = changeRows.map((row) => row.aracId);
                                         setSelectedRowKeys(selected ? keys : []);
                                     },

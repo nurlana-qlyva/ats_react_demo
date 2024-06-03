@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
-import { YakitAddService, YakitKmLogValidateService } from '../../../../../../api/service'
+import { YakitAddService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
@@ -251,6 +252,10 @@ const AddModal = ({ setStatus }) => {
             </Modal>
         </>
     )
+}
+
+AddModal.propTypes = {
+    setStatus: PropTypes.func,
 }
 
 export default AddModal

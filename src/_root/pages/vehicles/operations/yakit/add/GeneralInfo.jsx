@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
@@ -34,7 +35,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setValue("yakitTipId", data.yakitTipId)
         setValue("yakitTanki", data.yakitTanki)
         setId(data.yakitTipId)
-        setValue("plaka", data.plaka)
+        // setValue("plaka", data.plaka)
         setValue("birim", data.birim)
         setValue("depoYakitMiktar", data.depoYakitMiktar)
 
@@ -643,6 +644,12 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             </div>
         </>
     )
+}
+
+GeneralInfo.propTypes = {
+    setIsValid: PropTypes.func,
+    response: PropTypes.string,
+    setResponse: PropTypes.string,
 }
 
 export default GeneralInfo

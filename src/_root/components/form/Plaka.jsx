@@ -11,7 +11,7 @@ const Plaka = ({ field }) => {
         if (plaka.length === 1) {
             YakitDataGetByIdService(plaka[0].id).then(res => setData(res.data))
         }
-    }, [])
+    }, [plaka])
 
     const handleChange = (e) => {
         YakitDataGetByIdService(e).then(res => setData(res.data))
