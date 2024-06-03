@@ -235,10 +235,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                 format="DD.MM.YYYY"
                                                 onBlur={() => {
                                                     fetchData()
-                                                    validateLog()
+                                                    // if (watch('alinanKm')) validateLog()
                                                 }}
                                                 onChange={e => {
                                                     field.onChange(e)
+                                                    if (watch('alinanKm')) validateLog()
                                                 }}
                                             />
                                         </ConfigProvider>
@@ -259,10 +260,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             format="HH:mm"
                                             onBlur={() => {
                                                 fetchData()
-                                                validateLog()
+                                                // if (watch('alinanKm')) validateLog()
                                             }}
                                             onChange={e => {
                                                 field.onChange(e)
+                                                if (watch('alinanKm')) validateLog()
                                             }}
                                         />
                                     )}
