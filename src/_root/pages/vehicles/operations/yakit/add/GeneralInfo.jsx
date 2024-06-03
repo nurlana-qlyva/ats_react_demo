@@ -87,7 +87,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             aracId: data.aracId,
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
             saat: dayjs(watch("saat")).format("HH:mm"),
-            sonAlinanKm: watch("alinanKm"),
+            alinanKm: watch("alinanKm"),
             "kmLog": {
                 "kmAracId": data.aracId,
                 "plaka": data.plaka,
@@ -107,7 +107,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     message.error("Alınan Km Yakıt ve Km Log-a girilemez!")
                 } else if (res?.data.message === " Invalid FuelKm Range !") {
                     message.error("Alınan Km Yakıt Log-a girilemez!")
-                }else if (res?.data.message === " Invalid KmLog Range !") {
+                } else if (res?.data.message === " Invalid KmLog Range !") {
                     message.error("Alınan Km Km Log-a girilemez!")
                 }
             } else if (res?.data.statusCode === 200) {
@@ -118,6 +118,13 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
         setIsValid(false)
     }
+
+    useEffect(() => {
+        if (watch("alinanKm")) {
+            const fark = watch("alinanKm") - watch("sonAlinanKm")
+            setValue("farkKm", fark)
+        }
+    }, [watch("sonAlinanKm")])
 
     const handlePressAlinanKm = e => {
         const fark = +e.target.value - watch("sonAlinanKm")

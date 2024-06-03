@@ -173,8 +173,8 @@ export const YakitTankGetService = (id, type) => {
   return http.get(`/WareHouse/GetWareHouseList?tip=${type}&id=${id}`)
 }
 
-export const YakitKmLogValidateService = (data) => {
-  return http.post(`/Fuel/ValidateFuelInfoInsertion`, data)
+export const YakitKmLogValidateService = async (data) => {
+  return await http.post(`/Fuel/ValidateFuelInfoInsertion`, data)
 }
 
 

@@ -87,7 +87,7 @@ const OperationsInfo = ({ ids, t }) => {
 
     return (
         <>
-            <Dropdown menu={menuProps}>
+            <Dropdown menu={menuProps} disabled={ids.length === 0}>
                 <Button className="btn operations-btn">
                     <Space>
                         {t("islemler")}

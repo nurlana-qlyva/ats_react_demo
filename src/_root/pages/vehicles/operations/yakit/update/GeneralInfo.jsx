@@ -397,7 +397,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tankı</label>
+                                <label>Yakıt Tankı --- ?</label>
                                 <Controller
                                     name="yakitTanki"
                                     control={control}

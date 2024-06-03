@@ -10,6 +10,7 @@ import GeneralInfo from './update/GeneralInfo'
 import PersonalFields from '../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../components/upload/FileUpload'
+import UpdateModal from './update/UpdateModal'
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([])
@@ -173,6 +174,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             width={1200}
         >
             <AddModal setStatus={setStatus} />
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} />
             {/* <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
