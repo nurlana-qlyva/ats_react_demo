@@ -18,6 +18,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         },
     })
     const [updateModal, setUpdateModal] = useState(false)
+    const [yakitId, setYakitId] = useState(0)
 
     const { plaka } = useContext(PlakaContext)
 
@@ -36,12 +37,17 @@ const Yakit = ({ visible, onClose, ids }) => {
         })
     }, [tableParams.pagination.current, status])
 
+    console.log(dataSource)
+
     const columns = [
         {
             title: 'Plaka',
             dataIndex: 'plaka',
             key: 1,
-            render: (text) => <Button onClick={() => setUpdateModal(true)}>{text}</Button>
+            render: (text, record) => <Button onClick={() => {
+                setUpdateModal(true)
+                setYakitId(record.siraNo)
+            }}>{text}</Button>
         },
         {
             title: 'Tarih',
@@ -155,7 +161,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             width={1200}
         >
             <AddModal setStatus={setStatus} />
-            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} />
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} />
             {/* <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}

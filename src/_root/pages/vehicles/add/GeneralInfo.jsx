@@ -1,4 +1,5 @@
 import { Controller, useFormContext } from 'react-hook-form'
+import { t } from 'i18next'
 import dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { ConfigProvider, DatePicker, Input, InputNumber } from 'antd'
@@ -26,7 +27,7 @@ const GeneralInfo = () => {
                     <div className="grid gap-1">
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="plaka">Plaka</label>
+                                <label htmlFor="plaka">{t("plaka")}</label>
                                 <Controller
                                     name="plaka"
                                     control={control}
@@ -43,7 +44,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracTipId">Araç Tipi</label>
+                                <label htmlFor="aracTipId">{t("aracTip")}</label>
                                 <Controller
                                     name="aracTipId"
                                     control={control}
@@ -55,7 +56,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="guncelKm">Güncel Km.</label>
+                                <label htmlFor="guncelKm">{t("guncelKm")}</label>
                                 <Controller
                                     name="guncelKm"
                                     control={control}
@@ -75,7 +76,7 @@ const GeneralInfo = () => {
                 </div>
                 <div className="col-span-4 p-10">
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="lokasyonId">Lokasyon</label>
+                        <label htmlFor="lokasyonId">{t("lokasyon")}</label>
                         <Controller
                             name="lokasyonId"
                             control={control}
@@ -89,11 +90,11 @@ const GeneralInfo = () => {
 
             <div className="grid gap-1 mt-10">
                 <div className="col-span-8 border p-10">
-                    <h3 className="sub-title">Araç Bilgileri</h3>
+                    <h3 className="sub-title">{t("aracBilgileri")}</h3>
                     <div className="grid gap-1 mt-10">
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="markaId">Marka</label>
+                                <label htmlFor="markaId">{t("marka")}</label>
                                 <Controller
                                     name="markaId"
                                     control={control}
@@ -105,7 +106,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yil">Model Yılı</label>
+                                <label htmlFor="yil">{t("yil")}</label>
                                 <Controller
                                     name="yil"
                                     control={control}
@@ -126,7 +127,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="modelId">Model</label>
+                                <label htmlFor="modelId">{t("model")}</label>
                                 <Controller
                                     name="modelId"
                                     control={control}
@@ -138,7 +139,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracGrubuId">Araç Grup</label>
+                                <label htmlFor="aracGrubuId">{t("aracGrup")}</label>
                                 <Controller
                                     name="aracGrubuId"
                                     control={control}
@@ -162,7 +163,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracRenkId">Renk</label>
+                                <label htmlFor="aracRenkId">{t("renk")}</label>
                                 <Controller
                                     name="aracRenkId"
                                     control={control}
@@ -174,7 +175,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="">Mülkiyet</label>
+                                <label htmlFor="">{t("mulkiyet")}</label>
                                 <Controller
                                     name=""
                                     control={control}
@@ -191,7 +192,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="departmanId">Departman</label>
+                                <label htmlFor="departmanId">{t("departman")}</label>
                                 <Controller
                                     name="departmanId"
                                     control={control}
@@ -203,7 +204,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="surucuId">Sürücü</label>
+                                <label htmlFor="surucuId">{t("surucu")}</label>
                                 <Controller
                                     name="surucuId"
                                     control={control}
@@ -215,7 +216,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yakitTipId">Yakıt Tipi</label>
+                                <label htmlFor="yakitTipId">{t("yakitTip")}</label>
                                 <Controller
                                     name="yakitTipId"
                                     control={control}
@@ -229,11 +230,11 @@ const GeneralInfo = () => {
                 </div>
 
                 <div className="col-span-4 border p-10">
-                    <h3 className="sub-title">Yenilenme Tarihleri</h3>
+                    <h3 className="sub-title">{t("yenilenmeTarihleri")}</h3>
                     <div className="grid gap-1 mt-10">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="muayeneTarih">Muayene Tarihi</label>
+                                <label htmlFor="muayeneTarih">{t("muayeneTarihi")}</label>
                                 <Controller
                                     name="muayeneTarih"
                                     control={control}
@@ -249,7 +250,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="sozlesmeTarih">Sözleşme</label>
+                                <label htmlFor="sozlesmeTarih">{t("sozlesmeTarihi")}</label>
                                 <Controller
                                     name="sozlesmeTarih"
                                     control={control}
@@ -265,7 +266,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="egzosTarih">Egzoz Emisyon</label>
+                                <label htmlFor="egzosTarih">{t("egzozTarihi")}</label>
                                 <Controller
                                     name="egzosTarih"
                                     control={control}
@@ -281,7 +282,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="vergiTarih">Vergi</label>
+                                <label htmlFor="vergiTarih">{t("vergiTarihi")}</label>
                                 <Controller
                                     name="vergiTarih"
                                     control={control}

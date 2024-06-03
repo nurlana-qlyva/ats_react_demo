@@ -8,6 +8,8 @@
     "marka": "Brand",
     "model": "Model",
     "grup": "Group",
+    "aracGrup": "Vehicle Group",
+    "aracCinsi": "Vehicle Cinsi",
     "guncelKm": "Current Km",
     "renk": "Color",
     "yil": "Year of Production",
@@ -30,5 +32,18 @@
     "guncelle": "Update",
     "iptal": "Cancel",
     "kaydet": "Save",
-    "genelBilgiler": "General Information"
+    "genelBilgiler": "General Information",
+    "ozelAlanlar": "Custom Fields",
+    "plaka": "Registration Plate",
+    "lokasyon": "Location",
+    "mulkiyet": "Ownership",
+    "departman": "Department",
+    "surucu": "Driver",
+    "aracBilgileri": "Vehicle Information",
+    "yenilenmeTarihleri": "Renewal Dates",
+    "muayeneTarihi": "Inspection Date",
+    "sozlesmeTarihi": "Date of Contract",
+    "egzozTarihi": "Exhaust Emission Date",
+    "vergiTarihi": "Tax Date",
+    "ozelAlan": "Custom Field"
 }

@@ -9,9 +9,9 @@ const Istasyon = ({ field }) => {
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        // CodeControlService(111).then(res => {
-        //     setData(res.data)
-        // })
+        CodeControlService(203).then(res => {
+            setData(res.data)
+        })
     }
 
     return (
@@ -28,19 +28,19 @@ const Istasyon = ({ field }) => {
                 label: item.codeText,
                 value: item.siraNo,
             }))}
-            value={watch('renk')}
+            value={watch('istasyon')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('istasyon', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('istasyon', selectedOption.codeText)
                     }
                 }
             }}

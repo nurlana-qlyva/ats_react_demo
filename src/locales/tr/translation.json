@@ -6,8 +6,9 @@
     "aracPlaka": "Araç Plaka",
     "aracTip": "Araç Tip", 
     "marka": "Marka",
-    "model": "Model",
     "grup": "Grup",
+    "aracGrup": "Araç Grup",
+    "aracCinsi": "Araç Cinsi",
     "guncelKm": "Güncel Km",
     "renk": "Renk",
     "yil": "Üretim Yılı",
@@ -31,6 +32,17 @@
     "iptal": "İptal",
     "kaydet": "Kaydet",
     "genelBilgiler": "Genel Bilgiler",
-    "ozelAlanlar": "Özel Alanlar"
-
+    "ozelAlanlar": "Özel Alanlar",
+    "plaka": "Plaka",
+    "lokasyon": "Lokasyon",
+    "mulkiyet": "Mülkiyet",
+    "departman": "Departman",
+    "surucu": "Sürücü",
+    "aracBilgileri": "Araç Bilgileri",
+    "yenilenmeTarihleri": "Yenilenme Tarihleri",
+    "muayeneTarihi": "Muayene Tarihi",
+    "sozlesmeTarihi": "Sözleşme Tarihi",
+    "egzozTarihi": "Egzoz Emisyon",
+    "vergiTarihi": "Vergi",
+    "ozelAlan": "ÖZEL ALAN"
 }

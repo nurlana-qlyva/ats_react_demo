@@ -113,7 +113,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>Firma</label>
                                 <Controller
-                                    name=""
+                                    name="firmaId"
                                     control={control}
                                     render={({ field }) => (
                                         <Firma field={field} />
@@ -125,7 +125,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>İstasyon</label>
                                 <Controller
-                                    name=""
+                                    name="istasyonId"
                                     control={control}
                                     render={({ field }) => (
                                         <Istasyon field={field} />
@@ -327,7 +327,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Görev No</label>
+                                <label>Görev No -- ?</label>
                                 <Controller
                                     name=""
                                     control={control}
@@ -361,7 +361,7 @@ const GeneralInfo = () => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Masraf Merkezi</label>
+                                <label>Masraf Merkezi -- ?</label>
                                 <Controller
                                     name=""
                                     control={control}
@@ -375,7 +375,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>Güzergah</label>
                                 <Controller
-                                    name=""
+                                    name="guzergahId"
                                     control={control}
                                     render={({ field }) => (
                                         <Guzergah field={field} />

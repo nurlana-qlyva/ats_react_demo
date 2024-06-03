@@ -30,6 +30,19 @@
     "guncelle": "Yeniləyin",
     "iptal": "Ləğv Edin",
     "kaydet": "Yadda Saxla",
-    "genelBilgiler": "Ümumi Məlumat"
+    "genelBilgiler": "Ümumi Məlumat",
+    "ozelAlanlar": "Xüsusi Sahələr",
+    "plaka": "Nömrə Nişanı",
+    "lokasyon": "Bölgə",
+    "mulkiyet": "Mülkiyyət",
+    "departman": "Şöbə",
+    "surucu": "Sürücü",
+    "aracBilgileri": "Nəqliyyat Vasitəsinin Məlumatları",
+    "yenilenmeTarihleri": "Yeniləmə Tarixləri",
+    "muayeneTarihi": "Yoxlama Tarixi",
+    "sozlesmeTarihi": "Müqavilə Tarixi",
+    "egzozTarihi": "Egzoz Emissiya Tarixi",
+    "vergiTarihi": "Vergi Tarixi",
+    "ozelAlan": "Xüsusi Sahə"
 
 }

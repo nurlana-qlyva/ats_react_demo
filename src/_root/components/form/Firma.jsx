@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
-import { CodeControlService } from '../../../api/service'
+import { CustomCodeControlService } from '../../../api/service'
 
 const Firma = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        // CodeControlService(111).then(res => {
-        //     setData(res.data)
-        // })
+        CustomCodeControlService('Company/GetCompaniesList').then(res => {
+            setData(res.data)
+        })
     }
 
     return (
@@ -25,22 +25,22 @@ const Firma = ({ field }) => {
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={data.map((item) => ({
-                label: item.codeText,
-                value: item.siraNo,
+                label: item.unvan,
+                value: item.firmaId,
             }))}
-            value={watch('renk')}
+            value={watch('firma')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
-                    const selectedOption = data.find(option => option.siraNo === e);
+                    const selectedOption = data.find(option => option.firmaId === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('firma', "")
                     }
                 } else {
-                    const selectedOption = data.find(option => option.siraNo === e);
+                    const selectedOption = data.find(option => option.firmaId === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('firma', selectedOption.unvan)
                     }
                 }
             }}

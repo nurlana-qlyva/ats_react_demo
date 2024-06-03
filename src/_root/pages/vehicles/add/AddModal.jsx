@@ -2,68 +2,69 @@ import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
-import { withNamespaces } from 'react-i18next'
+import { t } from 'i18next'
 import { Button, Modal, Tabs } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { NewVehicleAddService } from '../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../components/form/PersonalFields'
 
-const AddModal = ({ setStatus, t }) => {
+const AddModal = ({ setStatus }) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
+
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
             key: "OZELALAN_1",
-            value: "Özel Alan 1",
+            value: `${t("ozelAlan")} 1`,
             type: 'text'
         },
         {
             label: "ozelAlan2",
             key: "OZELALAN_2",
-            value: "Özel Alan 2",
+            value: `${t("ozelAlan")} 2`,
             type: 'text'
         },
         {
             label: "ozelAlan3",
             key: "OZELALAN_3",
-            value: "Özel Alan 3",
+            value: `${t("ozelAlan")} 3`,
             type: 'text'
         },
         {
             label: "ozelAlan4",
             key: "OZELALAN_4",
-            value: "Özel Alan 4",
+            value: `${t("ozelAlan")} 4`,
             type: 'text'
         },
         {
             label: "ozelAlan5",
             key: "OZELALAN_5",
-            value: "Özel Alan 5",
+            value: `${t("ozelAlan")} 5`,
             type: 'text'
         },
         {
             label: "ozelAlan6",
             key: "OZELALAN_6",
-            value: "Özel Alan 6",
+            value: `${t("ozelAlan")} 6`,
             type: 'text'
         },
         {
             label: "ozelAlan7",
             key: "OZELALAN_7",
-            value: "Özel Alan 7",
+            value: `${t("ozelAlan")} 7`,
             type: 'text'
         },
         {
             label: "ozelAlan8",
             key: "OZELALAN_8",
-            value: "Özel Alan 8",
+            value: `${t("ozelAlan")} 8`,
             type: 'text'
         },
         {
             label: "ozelAlan9",
             key: "OZELALAN_9",
-            value: "Özel Alan 9",
+            value: `${t("ozelAlan")} 9`,
             type: 'select',
             code: 865,
             name2: "ozelAlanKodId9"
@@ -71,7 +72,7 @@ const AddModal = ({ setStatus, t }) => {
         {
             label: "ozelAlan10",
             key: "OZELALAN_10",
-            value: "Özel Alan 10",
+            value: `${t("ozelAlan")} 10`,
             type: 'select',
             code: 866,
             name2: "ozelAlanKodId10"
@@ -79,13 +80,13 @@ const AddModal = ({ setStatus, t }) => {
         {
             label: "ozelAlan11",
             key: "OZELALAN_11",
-            value: "Özel Alan 11",
+            value: `${t("ozelAlan")} 11`,
             type: 'number'
         },
         {
             label: "ozelAlan12",
             key: "OZELALAN_12",
-            value: "Özel Alan 12",
+            value: `${t("ozelAlan")} 12`,
             type: 'number'
         },
     ])
@@ -194,7 +195,7 @@ const AddModal = ({ setStatus, t }) => {
         },
         {
             key: '2',
-            label: 'Özel Alanlar',
+            label: t('ozelAlanlar'),
             children: <PersonalFields personalProps={personalProps} />
         },
     ]
@@ -229,4 +230,4 @@ AddModal.propTypes = {
     data: PropTypes.array,
 }
 
-export default withNamespaces()(AddModal)
+export default AddModal

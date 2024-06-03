@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Button, message, Modal, Tabs } from 'antd'
@@ -7,8 +7,9 @@ import PersonalFields from '../../../../../components/form/PersonalFields'
 import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
+import { YakitUpdateDataGetService } from '../../../../../../api/service'
 
-const UpdateModal = ({ updateModal, setUpdateModal }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
     // file
     const [filesUrl, setFilesUrl] = useState([])
     const [files, setFiles] = useState([])

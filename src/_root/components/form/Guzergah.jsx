@@ -2,17 +2,18 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
-import { CodeControlService } from '../../../api/service'
+import { CustomCodeControlService } from '../../../api/service'
 
 const Guzergah = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        // CodeControlService(111).then(res => {
-        //     setData(res.data)
-        // })
+        CustomCodeControlService('FuelRoute/GetFuelRoutesList ').then(res => {
+            setData(res.data)
+        })
     }
+    console.log(data)
 
     return (
         <Select
@@ -25,22 +26,22 @@ const Guzergah = ({ field }) => {
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={data.map((item) => ({
-                label: item.codeText,
-                value: item.siraNo,
+                label: item.guzergah,
+                value: item.guzergahId,
             }))}
-            value={watch('renk')}
+            value={watch('guzergah')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
-                    const selectedOption = data.find(option => option.siraNo === e);
+                    const selectedOption = data.find(option => option.guzergahId === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('guzergah', "")
                     }
                 } else {
-                    const selectedOption = data.find(option => option.siraNo === e);
+                    const selectedOption = data.find(option => option.guzergahId === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('guzergah', selectedOption.guzergah)
                     }
                 }
             }}
