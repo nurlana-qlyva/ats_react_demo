@@ -17,9 +17,9 @@ dayjs.locale('tr')
 
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const { control, setValue, watch } = useFormContext()
-    const { data } = useContext(PlakaContext)
+    const { plaka, data } = useContext(PlakaContext)
     const { setId } = useContext(FuelTankContext)
-    const [messageApi, contextHolder] = message.useMessage()
+    const [, contextHolder] = message.useMessage()
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [history, setHistory] = useState(0)
@@ -35,9 +35,12 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setValue("yakitTipId", data.yakitTipId)
         setValue("yakitTanki", data.yakitTanki)
         setId(data.yakitTipId)
-        // setValue("plaka", data.plaka)
         setValue("birim", data.birim)
         setValue("depoYakitMiktar", data.depoYakitMiktar)
+
+        if (plaka.length === 1) {
+            setValue("plaka", plaka[0].id)
+        }
 
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data));
 

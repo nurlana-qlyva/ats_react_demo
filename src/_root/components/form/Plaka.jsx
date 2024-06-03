@@ -12,6 +12,7 @@ const Plaka = ({ field }) => {
             YakitDataGetByIdService(plaka[0].id).then(res => setData(res.data))
         }
     }, [plaka])
+    console.log(plaka)
 
     const handleChange = (e) => {
         YakitDataGetByIdService(e).then(res => setData(res.data))
