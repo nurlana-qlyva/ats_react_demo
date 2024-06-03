@@ -114,7 +114,7 @@ const AddModal = ({ setStatus }) => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset, watch } = methods
+    const { handleSubmit, reset, watch } = methods 
 
     const onSubmit = handleSubmit((values) => {
         const kmLog = {

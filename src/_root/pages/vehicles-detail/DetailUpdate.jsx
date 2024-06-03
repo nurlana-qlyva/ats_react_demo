@@ -5,7 +5,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { HomeOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, Input, InputNumber, message, Modal, Spin, Tabs } from 'antd'
 import dayjs from 'dayjs'
-import { FileReadService, PhotoReadService, VehiclesUpdateReadService, VehiclesUpdateSetService } from '../../../api/service'
+import { FileReadService, KMValidateService, PhotoReadService, VehiclesUpdateReadService, VehiclesUpdateSetService } from '../../../api/service'
 import { uploadFile, uploadPhoto } from '../../../utils/upload'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import VehicleType from '../../components/form/VehicleType'
@@ -43,6 +43,8 @@ const DetailUpdate = () => {
     const [status, setStatus] = useState(false)
     const [dataStatus, setDataStatus] = useState(false)
     const [kmHistryModal, setKmHistryModal] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const [isValid, setIsValid] = useState("normal")
     // file
     const [filesUrl, setFilesUrl] = useState([])
     const [files, setFiles] = useState([])
@@ -170,7 +172,7 @@ const DetailUpdate = () => {
         defaultValues: defaultValues
     })
 
-    const { control, setValue, handleSubmit } = methods
+    const { control, setValue, handleSubmit, watch } = methods
 
     useEffect(() => {
         setLoading(true)
@@ -251,7 +253,50 @@ const DetailUpdate = () => {
         }
     }
 
+    console.log(vehiclesData)
+
+    const validateLog = () => {
+        const body = {
+            "kmAracId": vehiclesData.aracId,
+            "seferSiraNo": 0,
+            "yakitSiraNo": 0,
+            "plaka": vehiclesData.plaka,
+            "tarih": dayjs(new Date()).format('YYYY-MM-DD'),
+            "saat": dayjs(new Date()).format('HH:mm'),
+            "yeniKm": watch("guncelKm"),
+            "kaynak": "GÜNCELLEME",
+            "dorse": true,
+            "aciklama": ""
+        }
+
+        KMValidateService(body).then(res => {
+            if (res?.data.statusCode === 400) {
+                setIsValid("error")
+            } else if (res?.data.statusCode === 200) {
+                setIsValid("success")
+                setIsDisabled(false)
+            }
+        })
+    }
+
     const onSubmit = handleSubmit((values) => {
+        const kmLog = values.guncelKm ? {
+            "siraNo": 0,
+            "seferSiraNo": 0,
+            "yakitSiraNo": 0,
+            "eskiKm": vehiclesData.guncelKm,
+            "fark": 0,
+            "kaynak": "GÜNCELLEME",
+            "aciklama": "",
+            "kmAracId": vehiclesData.aracId,
+            "plaka": values.plaka,
+            "tarih": dayjs(new Date()).format("YYYY-MM-DD"),
+            "saat": dayjs(new Date()).format("HH:mm"),
+            "yeniKm": values.guncelKm,
+            "dorse": false,
+            "lokasyonId": values.lokasyonId
+        } : null
+
         const data = {
             "aracId": id,
             "plaka": values.plaka,
@@ -289,12 +334,14 @@ const DetailUpdate = () => {
             "ozelAlanKodId10": values.ozelAlanKodId10,
             "ozelAlan11": values.ozelAlan11,
             "ozelAlan12": values.ozelAlan12,
+            kmLog: kmLog
         }
         setLoading(true)
         VehiclesUpdateSetService(data).then(res => {
-            if (res.data.statusCode === 202) {
+            if (res.data.statusCode === 200) {
                 setStatus(true)
                 setLoading(false)
+                setIsValid("normal")
             }
         })
 
@@ -338,6 +385,7 @@ const DetailUpdate = () => {
             </Button>
         ]
     )
+    console.log(isDisabled)
 
     return (
         <>
@@ -376,7 +424,7 @@ const DetailUpdate = () => {
                         <div className="col-span-9">
                             <div className="grid p-10 gap-1">
                                 <div className="col-span-12 flex gap-1 justify-end">
-                                    <Button className="btn btn-min primary-btn" onClick={onSubmit}>{t('guncelle')}</Button>
+                                    <Button className="btn btn-min primary-btn" onClick={onSubmit} disabled={isDisabled}>{t('guncelle')}</Button>
                                     <Button className="btn btn-min cancel-btn">İptal</Button>
                                 </div>
                                 <div className="col-span-4">
@@ -420,8 +468,11 @@ const DetailUpdate = () => {
                                                         <InputNumber
                                                             {...field}
                                                             className='w-full'
+                                                            style={isValid === "error" ? { borderColor: '#dc3545' } : isValid === "success" ? { borderColor: '#23b545' } : { borderColor: 'black' }}
+                                                            onPressEnter={validateLog}
                                                             onChange={(e) => {
                                                                 field.onChange(e)
+                                                                setIsDisabled(true)
                                                             }}
                                                         />
                                                     )}

@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import PropTypes from 'prop-types'
 import { Button, message, Modal, Tabs } from 'antd'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
-import { uploadPhoto } from '../../../../../../utils/upload'
+import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
 
@@ -186,6 +187,11 @@ const UpdateModal = ({ updateModal, setUpdateModal }) => {
             </Modal>
         </>
     )
+}
+
+UpdateModal.propTypes = {
+    updateModal: PropTypes.bool,
+    setUpdateModal: PropTypes.bool,
 }
 
 export default UpdateModal
