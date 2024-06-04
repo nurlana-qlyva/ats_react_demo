@@ -12,7 +12,7 @@ const AddModal = ({ setStatus }) => {
     const [openModal, setopenModal] = useState(false)
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
-    const { data } = useContext(PlakaContext)
+    const { data, plaka } = useContext(PlakaContext)
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -210,7 +210,7 @@ const AddModal = ({ setStatus }) => {
                 reset(
                     {
                         sonAlinanKm: data.sonAlinanKm,
-                        plaka: data.plaka,
+                        plaka: plaka[0].id, 
                         yakitTipId: data.yakitTipId,
                         yakitTanki: data.yakitTanki,
                         surucuId: data.surucuId,

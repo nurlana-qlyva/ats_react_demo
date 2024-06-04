@@ -57,14 +57,20 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         if (fullDepo) {
             if (farkKm > 0) {
                 tktm = (miktar / farkKm).toFixed(2);
+            } else {
+                tktm = 0
             }
         } else {
             if (data.fullDepo) {
                 if (farkKm > 0) {
                     tktm = (data.miktar / farkKm).toFixed(2);
+                } else {
+                    tktm = 0
                 }
             } else {
-                if (miktar > 0) tktm = (yakitHacmi / farkKm).toFixed(2);
+                if (miktar > 0) {
+                    yakitHacmi !== null ? tktm = (yakitHacmi / farkKm).toFixed(2) : tktm = 0
+                }
             }
         }
         setValue("tuketim", tktm);
