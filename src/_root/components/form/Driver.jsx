@@ -6,7 +6,7 @@ import { Select } from 'antd'
 
 const Driver = ({ field }) => {
     const [data, setData] = useState([])
-    const { watch } = useFormContext()
+    const { watch, setValue } = useFormContext()
 
     const handleClickSelect = () => {
         CustomCodeControlService("Driver/GetDriverListForInput").then(res => {
@@ -33,6 +33,17 @@ const Driver = ({ field }) => {
                 onClick={handleClickSelect}
                 onChange={e => {
                     field.onChange(e)
+                    if (e === undefined) {
+                        const selectedOption = data.find(option => option.surucuId === e);
+                        if (!selectedOption) {
+                            setValue('surucu', "")
+                        }
+                    } else {
+                        const selectedOption = data.find(option => option.surucuId === e);
+                        if (selectedOption) {
+                            setValue('surucu', selectedOption.isim)
+                        }
+                    }
                 }}
             />
         </>

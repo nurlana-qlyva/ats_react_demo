@@ -85,10 +85,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         YakitDataGetByDateService(body).then(res => setValue("sonAlinanKm", res.data))
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data))
     }
-
     const validateLog = () => {
         const body = {
-            aracId: data.aracId,
+            aracId: watch("plaka"),
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
             saat: dayjs(watch("saat")).format("HH:mm"),
             alinanKm: watch("alinanKm"),
@@ -131,8 +130,13 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }, [watch("sonAlinanKm")])
 
     const handlePressAlinanKm = e => {
-        const fark = +e.target.value - watch("sonAlinanKm")
-        setValue("farkKm", fark)
+        if (watch("sonAlinanKm") === 0) {
+            setValue("farkKm", 0)
+        } else {
+            const fark = +e.target.value - watch("sonAlinanKm")
+            setValue("farkKm", fark)
+        }
+
         validateLog()
     }
 
@@ -572,79 +576,82 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 </div>
             </Modal>
 
-            <div className="grid gap-1 border p-10 mt-10">
-                <div className="col-span-12">
-                    <div className="grid">
-                        <div
-                            className="col-span-2 flex flex-col"
-                            style={{ textAlign: "center" }}
-                        >
-                            <p style={{ fontSize: "14px" }}>
-                                {dayjs(history[2]?.tarih).format("DD.MM.YYYY")}
-                            </p>
-                            <div>
-                                <img
-                                    src="/images/kirmizi.svg"
-                                    alt=""
-                                    style={{ width: "20%" }}
-                                />
+            {watch("sonAlinanKm") !== 0 && (
+                <div className="grid gap-1 border p-10 mt-10">
+                    <div className="col-span-12">
+                        <div className="grid">
+                            <div
+                                className="col-span-2 flex flex-col"
+                                style={{ textAlign: "center" }}
+                            >
+                                <p style={{ fontSize: "14px" }}>
+                                    {dayjs(history[2]?.tarih).format("DD.MM.YYYY")}
+                                </p>
+                                <div>
+                                    <img
+                                        src="/images/kirmizi.svg"
+                                        alt=""
+                                        style={{ width: "20%" }}
+                                    />
+                                </div>
+                                <p style={{ fontSize: "14px" }}>{history[2]?.sonAlinanKm} km</p>
+                                <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
+                                <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.sonAlinanKm} km</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
-                            <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{history[2]?.farkKm} km</p>
-                        </div>
-                        <div
-                            className="col-span-2 flex flex-col"
-                            style={{ textAlign: "center" }}
-                        >
-                            <p style={{ fontSize: "14px" }}>
-                                {dayjs(history[1]?.tarih).format("DD.MM.YYYY")}
-                            </p>
-                            <div>
-                                <img
-                                    src="/images/kirmizi.svg"
-                                    alt=""
-                                    style={{ width: "20%" }}
-                                />
+                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                                <p>{history[2]?.farkKm} km</p>
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.sonAlinanKm} km</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
-                            <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{history[1]?.farkKm} km</p>
-                        </div>
-                        <div
-                            className="col-span-2 flex flex-col"
-                            style={{ textAlign: "center" }}
-                        >
-                            <p style={{ fontSize: "14px" }}>
-                                {dayjs(history[0]?.tarih).format("DD.MM.YYYY")}
-                            </p>
-                            <div>
-                                <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
+                            <div
+                                className="col-span-2 flex flex-col"
+                                style={{ textAlign: "center" }}
+                            >
+                                <p style={{ fontSize: "14px" }}>
+                                    {dayjs(history[1]?.tarih).format("DD.MM.YYYY")}
+                                </p>
+                                <div>
+                                    <img
+                                        src="/images/kirmizi.svg"
+                                        alt=""
+                                        style={{ width: "20%" }}
+                                    />
+                                </div>
+                                <p style={{ fontSize: "14px" }}>{history[1]?.sonAlinanKm} km</p>
+                                <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
+                                <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
                             </div>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.sonAlinanKm} km</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
-                            <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
-                        </div>
-                        <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                            <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                            <p>{history[0]?.farkKm} km</p>
-                        </div>
-                        <div className="col-span-2 mt-20" style={{ textAlign: "center" }}>
-                            <div>
-                                <img src="/images/Araba.svg" alt="" style={{ width: "40%" }} />
+                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                                <p>{history[1]?.farkKm} km</p>
+                            </div>
+                            <div
+                                className="col-span-2 flex flex-col"
+                                style={{ textAlign: "center" }}
+                            >
+                                <p style={{ fontSize: "14px" }}>
+                                    {dayjs(history[0]?.tarih).format("DD.MM.YYYY")}
+                                </p>
+                                <div>
+                                    <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
+                                </div>
+                                <p style={{ fontSize: "14px" }}>{history[0]?.sonAlinanKm} km</p>
+                                <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-danger' />}</p>
+                                <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
+                            </div>
+                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
+                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
+                                <p>{history[0]?.farkKm} km</p>
+                            </div>
+                            <div className="col-span-2 mt-20" style={{ textAlign: "center" }}>
+                                <div>
+                                    <img src="/images/Araba.svg" alt="" style={{ width: "40%" }} />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
+
         </>
     )
 }

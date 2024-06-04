@@ -26,7 +26,7 @@ const convertToLocationFormat = (data, parentId = 0) => {
 
 const Location = ({ field }) => {
     const [data, setData] = useState([])
-    const { watch } = useFormContext()
+    const { watch, setValue } = useFormContext()
 
     const handleClickTree = () => {
         CustomCodeControlService("Location/GetLocationList").then(res => setData(res.data))
@@ -49,7 +49,18 @@ const Location = ({ field }) => {
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
-                    field.onChange("")
+                    const selectedOption = data.find(option => option.lokasyonId === e);
+                    console.log(selectedOption)
+                    if (!selectedOption) {
+                        setValue('lokasyon', "")
+                    }
+                } else {
+                    const selectedOption = data.find(option => option.lokasyonId === e);
+                    console.log(selectedOption)
+
+                    if (selectedOption) {
+                        setValue('lokasyon', selectedOption.lokasyonTanim)
+                    }
                 }
             }}
         />

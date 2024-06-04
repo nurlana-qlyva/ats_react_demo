@@ -437,6 +437,7 @@ const DetailUpdate = () => {
                                                         <InputNumber
                                                             {...field}
                                                             className='w-full'
+                                                            readOnly
                                                             onChange={(e) => {
                                                                 field.onChange(e)
                                                             }}

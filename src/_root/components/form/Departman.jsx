@@ -6,7 +6,7 @@ import { CodeControlService } from '../../../api/service'
 
 const Departman = ({ field }) => {
     const [data, setData] = useState([])
-    const { watch } = useFormContext()
+    const { watch, setValue } = useFormContext()
 
     const handleClick = () => {
         CodeControlService(200).then(res => {
@@ -32,6 +32,20 @@ const Departman = ({ field }) => {
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
+                if (e === undefined) {
+                    const selectedOption = data.find(option => option.siraNo === e);
+                    console.log(selectedOption)
+                    if (!selectedOption) {
+                        setValue('departman', "")
+                    }
+                } else {
+                    const selectedOption = data.find(option => option.siraNo === e);
+                    console.log(selectedOption)
+
+                    if (selectedOption) {
+                        setValue('departman', selectedOption.codeText)
+                    }
+                }
             }}
         />
     )

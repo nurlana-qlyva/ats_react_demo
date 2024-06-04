@@ -35,12 +35,12 @@ const Durum = ({ field }) => {
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('durum', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('durum', selectedOption.codeText)
                     }
                 }
             }}
