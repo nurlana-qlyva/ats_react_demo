@@ -94,10 +94,11 @@ const AddModal = ({ setStatus }) => {
 
     const defaultValues = {
         sonAlinanKm: data.sonAlinanKm,
-        plaka: data.plaka,
+        // plaka: data.plaka,
         yakitTipId: data.yakitTipId,
         yakitTanki: data.yakitTanki,
         surucuId: data.surucuId,
+        surucu: data.surucuAdi,
         litreFiyat: data.litreFiyat,
         yakitHacmi: data.yakitHacmi,
         "tarih": dayjs(new Date()),
@@ -107,19 +108,19 @@ const AddModal = ({ setStatus }) => {
         "miktar": null,
         "fullDepo": false,
         "tutar": null,
-        "tuketim": null
+        "tuketim": null,
     }
 
     const methods = useForm({
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset, watch } = methods 
+    const { handleSubmit, reset, watch } = methods
 
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
             "kmAracId": data.aracId,
-            "plaka": values.plaka,
+            "plaka": data.plaka,
             "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
             "saat": dayjs(values.saat).format("HH:mm:ss"),
             "eskiKm": data.sonAlinanKm,
@@ -133,7 +134,7 @@ const AddModal = ({ setStatus }) => {
 
         const body = {
             "aracId": data.aracId,
-            "plaka": values.plaka,
+            "plaka": data.plaka,
             "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
             "saat": dayjs(values.saat).format("HH:mm:ss"),
             "surucuId": values.surucuId,
@@ -171,7 +172,6 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
-                reset()
             }
         })
         setStatus(false)
@@ -207,25 +207,27 @@ const AddModal = ({ setStatus }) => {
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setopenModal(false)
-                reset(
-                    {
-                        sonAlinanKm: data.sonAlinanKm,
-                        plaka: plaka[0].id, 
-                        yakitTipId: data.yakitTipId,
-                        yakitTanki: data.yakitTanki,
-                        surucuId: data.surucuId,
-                        litreFiyat: data.litreFiyat,
-                        yakitHacmi: data.yakitHacmi,
-                        "tarih": dayjs(new Date()),
-                        "saat": dayjs(new Date()),
-                        "alinanKm": null,
-                        "farkKm": null,
-                        "miktar": null,
-                        "fullDepo": false,
-                        "tutar": null,
-                        "tuketim": null
-                    }
-                )
+                // reset(
+                //     {
+                //         aracId: data.aracId,
+                //         sonAlinanKm: data.sonAlinanKm,
+                //         litreFiyat: data.litreFiyat,
+                //         "tarih": dayjs(new Date()),
+                //         "saat": dayjs(new Date()),
+                //         "alinanKm": null,
+                //         "farkKm": null,
+                //         "miktar": null,
+                //         "fullDepo": false,
+                //         "tutar": null,
+                //         "tuketim": null,
+                //         "engelle": false,
+                //         surucuId: data.surucuId,
+                //         yakitTipId: data.yakitTipId,
+                //         yakitTip: data.yakitTip,
+                //         surucu: data.surucuAdi,
+                //         stokKullanimi: data.stokKullanimi
+                //     }
+                // )
                 setResponse("normal")
             }}>
                 İptal

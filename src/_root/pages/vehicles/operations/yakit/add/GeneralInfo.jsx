@@ -23,9 +23,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [history, setHistory] = useState(0)
-
     useEffect(() => {
         setValue("surucuId", data.surucuId)
+        setValue("surucu", data.surucuAdi)
         setValue("tarih", dayjs(new Date()))
         setValue("saat", dayjs(new Date()))
         setValue("sonAlinanKm", data.sonAlinanKm)
@@ -93,7 +93,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }
     const validateLog = () => {
         const body = {
-            aracId: watch("plaka"),
+            aracId: data.aracId,
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
             saat: dayjs(watch("saat")).format("HH:mm"),
             alinanKm: watch("alinanKm"),
@@ -136,7 +136,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }, [watch("sonAlinanKm")])
 
     const handlePressAlinanKm = e => {
-        if (watch("sonAlinanKm") === 0) {
+        if (data.sonAlinanKm === 0) {
             setValue("farkKm", 0)
         } else {
             const fark = +e.target.value - watch("sonAlinanKm")
@@ -338,7 +338,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            readOnly
+                                            readOnly={data.sonAlinanKm !== 0}
                                         />
                                     )}
                                 />
@@ -582,7 +582,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 </div>
             </Modal>
 
-            {watch("sonAlinanKm") !== 0 && (
+            {data.sonAlinanKm !== 0 && (
                 <div className="grid gap-1 border p-10 mt-10">
                     <div className="col-span-12">
                         <div className="grid">

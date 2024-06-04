@@ -37,7 +37,6 @@ const Yakit = ({ visible, onClose, ids }) => {
         })
     }, [tableParams.pagination.current, status])
 
-    console.log(dataSource)
 
     const columns = [
         {

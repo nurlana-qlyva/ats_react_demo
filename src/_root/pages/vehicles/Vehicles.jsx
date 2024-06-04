@@ -186,10 +186,17 @@ const Vehicles = () => {
         })),
     )
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
+    const [updatedSelectedRowKeys, setUpdatedSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
     const { setPlaka } = useContext(PlakaContext)
 
+    useEffect(() => {
+        setUpdatedSelectedRowKeys(prevKeys => {
+            const newKeys = selectedRowKeys.filter(key => !prevKeys.includes(key));
+            return [...prevKeys, ...newKeys];
+        });
+    }, [selectedRowKeys]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -345,6 +352,16 @@ const Vehicles = () => {
         </>
     )
 
+    const handleRowSelection = (selectedKeys, rows) => {
+        setSelectedRowKeys(selectedKeys);
+        let newPlakaEntries = [];
+        rows.forEach(vehicle => {
+            if (!newPlakaEntries.some(item => item.id === vehicle.aracId)) {
+                newPlakaEntries.push({ id: vehicle.aracId, plaka: vehicle.plaka });
+            }
+        });
+        setPlaka(newPlakaEntries);
+    };
     return (
         <>
             <div className="content">
@@ -398,21 +415,9 @@ const Vehicles = () => {
                                 size="small"
                                 onChange={handleTableChange}
                                 rowSelection={{
-                                    selectedRowKeys: selectedRowKeys,
-                                    onChange: (selectedRowKeys, rows) => {
-                                        console.log(rows)
-                                        setSelectedRowKeys(selectedRowKeys);
-                                        let newPlakaEntries = []
-                                        rows.map(vehicle => {
-                                            if (!newPlakaEntries.some(item => item.id === vehicle.aracId) &&
-                                                !newPlakaEntries.some(item => item.id === vehicle.aracId)) {
-                                                newPlakaEntries.push({ id: vehicle.aracId, plaka: vehicle.plaka })
-                                            }
-                                        })
-                                        setPlaka(newPlakaEntries)
-                                    },
+                                    selectedRowKeys: updatedSelectedRowKeys,
+                                    onChange: handleRowSelection,
                                     onSelectAll: (selected, selectedRows, changeRows) => {
-                                        console.log(selectedRows)
                                         const keys = changeRows.map((row) => row.aracId);
                                         setSelectedRowKeys(selected ? keys : []);
                                     },
