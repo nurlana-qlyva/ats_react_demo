@@ -325,6 +325,7 @@ const KmUpdate = () => {
                     marka: item.marka,
                     model: item.model,
                     lokasyon: item.lokasyon,
+                    lokasyonId: item.lokasyonId,
                     departman: item.departman,
                     guncelKm: item.guncelKm,
                     plaka: item.plaka,
@@ -387,7 +388,8 @@ const KmUpdate = () => {
                     "fark": 0,
                     "kaynak": "GÜNCELLEME",
                     "dorse": true,
-                    "aciklama": ""
+                    "aciklama": "",
+                    "lokasyonId": row.lokasyonId
                 }
 
                 if (body.tarih && body.saat && body.yeniKm) {
@@ -425,7 +427,7 @@ const KmUpdate = () => {
             console.error('Error saving row:', error);
         }
     }
-
+console.log(validatedRows)
     const handleKeyDown = (e, dataIndex, key) => {
         if (e.key === "Tab") {
             e.preventDefault();
@@ -524,7 +526,7 @@ const KmUpdate = () => {
         return () => {
             document.removeEventListener('click', handleOutsideClick);
         };
-    }, [showContext]);
+    }, [showContext])
 
     const addKm = () => {
         KMAddService(validatedRows).then(res => {

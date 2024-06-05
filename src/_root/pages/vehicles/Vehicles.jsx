@@ -40,6 +40,7 @@ const DragIndexContext = createContext({
     active: -1,
     over: -1,
 })
+
 const dragActiveStyle = (dragState, id) => {
     const { active, over, direction } = dragState
     let style = {}
@@ -48,8 +49,7 @@ const dragActiveStyle = (dragState, id) => {
             backgroundColor: 'gray',
             opacity: 0.5,
         };
-    }
-    else if (over && id === over && active !== over) {
+    } else if (over && id === over && active !== over) {
         style =
             direction === 'right'
                 ? {
@@ -61,6 +61,7 @@ const dragActiveStyle = (dragState, id) => {
     }
     return style;
 }
+
 const TableBodyCell = (props) => {
     const dragState = useContext(DragIndexContext);
     return (
@@ -73,6 +74,7 @@ const TableBodyCell = (props) => {
         />
     )
 }
+
 TableBodyCell.propTypes = {
     id: PropTypes.string.isRequired,
     style: PropTypes.object,
@@ -97,6 +99,7 @@ const TableHeaderCell = (props) => {
     };
     return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 }
+
 TableHeaderCell.propTypes = {
     id: PropTypes.string.isRequired,
     style: PropTypes.object,
@@ -185,18 +188,11 @@ const Vehicles = () => {
             }),
         })),
     )
+
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
-    const [updatedSelectedRowKeys, setUpdatedSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
-    const { setPlaka } = useContext(PlakaContext)
-
-    useEffect(() => {
-        setUpdatedSelectedRowKeys(prevKeys => {
-            const newKeys = selectedRowKeys.filter(key => !prevKeys.includes(key));
-            return [...prevKeys, ...newKeys];
-        });
-    }, [selectedRowKeys]);
+    const { setPlaka, plaka } = useContext(PlakaContext)
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -205,6 +201,7 @@ const Vehicles = () => {
             },
         }),
     )
+
     const onDragEnd = ({ active, over }) => {
         if (active.id !== over?.id) {
             setColumns((prevState) => {
@@ -218,6 +215,7 @@ const Vehicles = () => {
             over: -1,
         });
     }
+
     const onDragOver = ({ active, over }) => {
         const activeIndex = columns.findIndex((i) => i.key === active.id);
         const overIndex = columns.findIndex((i) => i.key === over?.id);
@@ -352,8 +350,24 @@ const Vehicles = () => {
         </>
     )
 
-    const handleRowSelection = (selectedKeys, rows) => {
-        setSelectedRowKeys(selectedKeys);
+    // get selected rows data
+    if (!localStorage.getItem('selectedRowKeys')) localStorage.setItem('selectedRowKeys', JSON.stringify([]))
+    const [keys, setKeys] = useState([])
+    const [rows, setRows] = useState([])
+    const handleRowSelection = (row, selected) => {
+        if (selected) {
+            if (!keys.includes(row.aracId)) {
+                setKeys([...keys, row.aracId])
+                setRows([...rows, row])
+            }
+        } else {
+            const filteredKeys = keys.filter(key => key !== row.aracId)
+            setKeys(filteredKeys)
+            setRows(filteredKeys)
+        }
+    }
+    useEffect(() => localStorage.setItem('selectedRowKeys', JSON.stringify(keys)), [keys])
+    useEffect(() => {
         let newPlakaEntries = [];
         rows.forEach(vehicle => {
             if (!newPlakaEntries.some(item => item.id === vehicle.aracId)) {
@@ -361,7 +375,26 @@ const Vehicles = () => {
             }
         });
         setPlaka(newPlakaEntries);
-    };
+    }, [rows])
+    useEffect(() => {
+        const storedSelectedKeys = JSON.parse(localStorage.getItem('selectedRowKeys'));
+        if (storedSelectedKeys && storedSelectedKeys.length) {
+            setSelectedRowKeys(storedSelectedKeys);
+        }
+    }, [tableParams.pagination.current])
+
+    useEffect(() => {
+        localStorage.setItem('selectedRowKeys', JSON.stringify([]))
+        setSelectedRowKeys([])
+    }, [])
+
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem('selectedRowKeys')).length !== 0) {
+            setSelectedRowKeys(JSON.parse(localStorage.getItem('selectedRowKeys')))
+        }
+    }, [tableParams.pagination.current, localStorage.getItem('selectedRowKeys')])
+    //    end getting selected rows data
+
     return (
         <>
             <div className="content">
@@ -415,12 +448,9 @@ const Vehicles = () => {
                                 size="small"
                                 onChange={handleTableChange}
                                 rowSelection={{
-                                    selectedRowKeys: updatedSelectedRowKeys,
-                                    onChange: handleRowSelection,
-                                    onSelectAll: (selected, selectedRows, changeRows) => {
-                                        const keys = changeRows.map((row) => row.aracId);
-                                        setSelectedRowKeys(selected ? keys : []);
-                                    },
+                                    selectedRowKeys: selectedRowKeys,
+                                    onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                                    onSelect: handleRowSelection
                                 }}
                                 components={{
                                     header: {

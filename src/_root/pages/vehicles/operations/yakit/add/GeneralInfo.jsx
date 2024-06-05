@@ -7,7 +7,7 @@ import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumb
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { FuelTankContext } from '../../../../../../context/fuelTankSlice'
-import { DetailInfoUpdateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import FuelTank from '../../../../../components/form/FuelTank'
@@ -45,6 +45,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data));
 
     }, [data])
+
+    useEffect(() => {
+        YakitPriceGetService(watch('yakitTipId')).then(res => setValue("litreFiyat", res.data))
+    }, [watch('yakitTipId')])
 
     useEffect(() => {
         const fullDepo = watch("fullDepo");
@@ -88,7 +92,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
             saat: dayjs(watch("saat")).format("HH:mm")
         }
-        YakitDataGetByDateService(body).then(res => setValue("sonAlinanKm", res.data))
+        YakitDataGetByDateService(body).then(res => {
+            res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
+        })
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data))
     }
     const validateLog = () => {
@@ -375,6 +381,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
+                                            readOnly={data.sonAlinanKm === 0}
                                             onPressEnter={handlePressFarkKm}
                                             onBlur={handlePressFarkKm}
                                             onChange={e => {
@@ -582,7 +589,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 </div>
             </Modal>
 
-            {data.sonAlinanKm !== 0 && (
+            {history.length >= 3 && (
                 <div className="grid gap-1 border p-10 mt-10">
                     <div className="col-span-12">
                         <div className="grid">

@@ -93,14 +93,14 @@ const AddModal = ({ setStatus }) => {
     ])
 
     const defaultValues = {
-        sonAlinanKm: data.sonAlinanKm,
-        // plaka: data.plaka,
-        yakitTipId: data.yakitTipId,
-        yakitTanki: data.yakitTanki,
-        surucuId: data.surucuId,
-        surucu: data.surucuAdi,
-        litreFiyat: data.litreFiyat,
-        yakitHacmi: data.yakitHacmi,
+        sonAlinanKm: null,
+        plaka: "",
+        yakitTipId: null,
+        yakitTanki: "",
+        surucuId: null,
+        surucu: "",
+        litreFiyat: null,
+        yakitHacmi: null,
         "tarih": dayjs(new Date()),
         "saat": dayjs(new Date()),
         "alinanKm": null,
@@ -172,6 +172,31 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
+                if (plaka.length === 1) {
+                    reset(
+                        {
+                            plaka: data.plaka,
+                            sonAlinanKm: data.sonAlinanKm,
+                            litreFiyat: data.litreFiyat,
+                            "tarih": dayjs(new Date()),
+                            "saat": dayjs(new Date()),
+                            "alinanKm": null,
+                            "farkKm": null,
+                            "miktar": null,
+                            "fullDepo": false,
+                            "tutar": null,
+                            "tuketim": null,
+                            "engelle": false,
+                            surucuId: data.surucuId,
+                            yakitTipId: data.yakitTipId,
+                            yakitTip: data.yakitTip,
+                            surucu: data.surucuAdi,
+                            stokKullanimi: data.stokKullanimi
+                        }
+                    )
+                } else {
+                    reset()
+                }
             }
         })
         setStatus(false)
@@ -207,27 +232,32 @@ const AddModal = ({ setStatus }) => {
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setopenModal(false)
-                // reset(
-                //     {
-                //         aracId: data.aracId,
-                //         sonAlinanKm: data.sonAlinanKm,
-                //         litreFiyat: data.litreFiyat,
-                //         "tarih": dayjs(new Date()),
-                //         "saat": dayjs(new Date()),
-                //         "alinanKm": null,
-                //         "farkKm": null,
-                //         "miktar": null,
-                //         "fullDepo": false,
-                //         "tutar": null,
-                //         "tuketim": null,
-                //         "engelle": false,
-                //         surucuId: data.surucuId,
-                //         yakitTipId: data.yakitTipId,
-                //         yakitTip: data.yakitTip,
-                //         surucu: data.surucuAdi,
-                //         stokKullanimi: data.stokKullanimi
-                //     }
-                // )
+                if (plaka.length === 1) {
+                    reset(
+                        {
+                            plaka: data.plaka,
+                            sonAlinanKm: data.sonAlinanKm,
+                            litreFiyat: data.litreFiyat,
+                            "tarih": dayjs(new Date()),
+                            "saat": dayjs(new Date()),
+                            "alinanKm": null,
+                            "farkKm": null,
+                            "miktar": null,
+                            "fullDepo": false,
+                            "tutar": null,
+                            "tuketim": null,
+                            "engelle": false,
+                            surucuId: data.surucuId,
+                            yakitTipId: data.yakitTipId,
+                            yakitTip: data.yakitTip,
+                            surucu: data.surucuAdi,
+                            stokKullanimi: data.stokKullanimi
+                        }
+                    )
+                } else {
+                    reset()
+                }
+
                 setResponse("normal")
             }}>
                 İptal
