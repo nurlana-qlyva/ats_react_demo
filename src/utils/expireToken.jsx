@@ -17,9 +17,6 @@ export function getItemWithExpiration(key) {
     const expirationTime = parseInt(itemExpire, 10)
     const currentTime = new Date().getTime()
 
-    console.log('now: ' + new Date(currentTime))
-    console.log(new Date(expirationTime))
-
     if (currentTime > expirationTime) {
         localStorage.removeItem(key)
         localStorage.removeItem(`${key}_expire`)

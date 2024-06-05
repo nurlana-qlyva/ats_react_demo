@@ -68,7 +68,6 @@ const KmLog = ({ data, setDataStatus }) => {
                 return true;
             }
         } catch (error) {
-            console.error('Validation failed', error);
             setKmStatus('red');
             return false;
         }

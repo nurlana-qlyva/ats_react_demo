@@ -34,14 +34,11 @@ const Departman = ({ field }) => {
                 field.onChange(e)
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
-                    console.log(selectedOption)
                     if (!selectedOption) {
                         setValue('departman', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
-                    console.log(selectedOption)
-
                     if (selectedOption) {
                         setValue('departman', selectedOption.codeText)
                     }

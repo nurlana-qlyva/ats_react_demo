@@ -427,12 +427,10 @@ const KmUpdate = () => {
             console.error('Error saving row:', error);
         }
     }
-console.log(validatedRows)
     const handleKeyDown = (e, dataIndex, key) => {
         if (e.key === "Tab") {
             e.preventDefault();
             const currentRowIndex = dataSource.findIndex((item) => item.aracId === key);
-            console.log(currentRowIndex)
             let nextRowIndex = e.shiftKey ? currentRowIndex - 1 : currentRowIndex + 1;
 
             if (nextRowIndex >= 0 && nextRowIndex < dataSource.length) {

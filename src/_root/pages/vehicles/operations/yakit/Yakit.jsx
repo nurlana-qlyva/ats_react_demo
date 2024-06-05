@@ -160,7 +160,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             width={1200}
         >
             <AddModal setStatus={setStatus} />
-            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} />
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} setStatus={setStatus} />
             {/* <Modal
                 title="Yakıt Bilgisi Güncelle"
                 open={updateModal}

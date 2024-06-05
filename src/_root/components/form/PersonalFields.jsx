@@ -27,7 +27,6 @@ const PersonalFields = ({ personalProps }) => {
             const updatedFields = fields.map(field => {
                 const apiFieldName = field.label;
                 if (apiData?.hasOwnProperty(apiFieldName)) {
-                    console.log(apiData)
                     return {
                         ...field,
                         value: apiData[apiFieldName],

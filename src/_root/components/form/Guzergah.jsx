@@ -13,7 +13,6 @@ const Guzergah = ({ field }) => {
             setData(res.data)
         })
     }
-    console.log(data)
 
     return (
         <Select

@@ -10,7 +10,7 @@ import PersonalFields from '../../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
 
-const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
     // file
@@ -100,7 +100,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
         },
     ])
 
-    const defaultValues = {}
+    const defaultValues = {
+
+    }
 
     const methods = useForm({
         defaultValues: defaultValues
@@ -234,9 +236,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
             "ozelAlan12": values.ozelAlan12 || 0,
             "yakitTanki": values.yakitTanki
         }
-        console.log(body)
 
-        YakitUpdateDataUpdateService(body).then(res => console.log(res.data))
+        YakitUpdateDataUpdateService(body).then(res => {
+            if (res.data.statusCode === 202) {
+                setStatus(true)
+                setUpdateModal(false)
+            }
+        })
         
         uploadImages()
         uploadFiles()
@@ -307,6 +313,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
 UpdateModal.propTypes = {
     updateModal: PropTypes.bool,
     setUpdateModal: PropTypes.bool,
+    setStatus: PropTypes.bool,
+    id: PropTypes.number,
 }
 
 export default UpdateModal

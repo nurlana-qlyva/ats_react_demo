@@ -348,7 +348,6 @@ const Yakit = () => {
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
                                     onChange: (selectedRowKeys, keys) => {
-                                        console.log(keys)
                                         setSelectedRowKeys(selectedRowKeys);
                                     },
                                     onSelectAll: (selected, selectedRows, changeRows) => {

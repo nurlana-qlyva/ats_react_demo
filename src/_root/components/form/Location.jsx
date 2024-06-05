@@ -50,13 +50,11 @@ const Location = ({ field }) => {
                 field.onChange(e)
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.lokasyonId === e);
-                    console.log(selectedOption)
                     if (!selectedOption) {
                         setValue('lokasyon', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.lokasyonId === e);
-                    console.log(selectedOption)
 
                     if (selectedOption) {
                         setValue('lokasyon', selectedOption.lokasyonTanim)
