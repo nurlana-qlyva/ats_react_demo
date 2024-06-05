@@ -181,3 +181,11 @@ export const YakitPriceGetService = (id) => {
   return http.get(`/Material/GetMaterialPrice?materialId=${id}`)
 }
 
+
+export const YakitUpdateDataGetService = (id) => {
+  return http.get(`/Fuel/GetFuelCardInfoByFuelId?id=${id}`)
+}
+
+export const YakitUpdateDataUpdateService = (data) => {
+  return http.post(`/Fuel/UpdateFuel`, data)
+}

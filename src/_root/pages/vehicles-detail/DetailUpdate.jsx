@@ -252,23 +252,6 @@ const DetailUpdate = () => {
     }
 
     const onSubmit = handleSubmit((values) => {
-        // const kmLog = values.guncelKm ? {
-        //     "siraNo": 0,
-        //     "seferSiraNo": 0,
-        //     "yakitSiraNo": 0,
-        //     "eskiKm": vehiclesData.guncelKm,
-        //     "fark": 0,
-        //     "kaynak": "GÜNCELLEME",
-        //     "aciklama": "",
-        //     "kmAracId": vehiclesData.aracId,
-        //     "plaka": values.plaka,
-        //     "tarih": dayjs(new Date()).format("YYYY-MM-DD"),
-        //     "saat": dayjs(new Date()).format("HH:mm"),
-        //     "yeniKm": values.guncelKm,
-        //     "dorse": false,
-        //     "lokasyonId": values.lokasyonId
-        // } : null
-
         const data = {
             "aracId": id,
             "plaka": values.plaka,

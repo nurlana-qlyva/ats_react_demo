@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
+import dayjs from 'dayjs'
 import { Button, message, Modal, Tabs } from 'antd'
+import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
+import { FileReadService, PhotoReadService, YakitUpdateDataGetService, YakitUpdateDataUpdateService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
-import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
 
 const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
+    const [isValid, setIsValid] = useState(false)
+    const [response, setResponse] = useState("normal")
     // file
     const [filesUrl, setFilesUrl] = useState([])
     const [files, setFiles] = useState([])
@@ -102,13 +106,64 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset, watch } = methods
+    const { handleSubmit, reset, watch, setValue } = methods
+
+    useEffect(() => {
+        YakitUpdateDataGetService(id).then(res => {
+            setValue("aracId", res?.data.aracId)
+            setValue("plaka", res?.data.plaka)
+            setValue("surucuId", res?.data.surucuId)
+            setValue("surucu", res?.data.surucuAdi)
+            setValue("yakitTipId", res?.data.yakitTipId)
+            setValue("yakitTip", res?.data.yakitTip)
+            setValue("lokasyonId", res?.data.lokasyonId)
+            setValue("lokasyon", res?.data.lokasyon)
+            setValue("firmaId", res?.data.firmaId)
+            setValue("firma", res?.data.firma)
+            setValue("istasyonKodId", res?.data.istasyonKodId)
+            setValue("istasyon", res?.data.istasyon)
+            setValue("sonAlinanKm", res?.data.sonAlinanKm)
+            setValue("alinanKm", res?.data.alinanKm)
+            setValue("farkKm", res?.data.farkKm)
+            setValue("tuketim", res?.data.tuketim)
+            setValue("miktar", res?.data.miktar)
+            setValue("tutar", res?.data.tutar)
+            setValue("litreFiyat", res?.data.litreFiyat)
+            setValue("kdv", res?.data.kdv)
+            setValue("faturaNo", res?.data.faturaNo)
+            setValue("guzergahId", res?.data.guzergahId)
+            setValue("guzergah", res?.data.guzergah)
+            setValue("ozelKullanim", res?.data.ozelKullanim)
+            setValue("stokKullanimi", res?.data.stokKullanimi)
+            setValue("aciklama", res?.data.aciklama)
+            setValue("faturaTarih", dayjs(res?.data.faturaTarih))
+            setValue("tarih", dayjs(res?.data.tarih))
+            setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"))
+            setValue("ozelAlan1", res?.data.ozelAlan1)
+            setValue("ozelAlan2", res?.data.ozelAlan2)
+            setValue("ozelAlan3", res?.data.ozelAlan3)
+            setValue("ozelAlan4", res?.data.ozelAlan4)
+            setValue("ozelAlan5", res?.data.ozelAlan5)
+            setValue("ozelAlan6", res?.data.ozelAlan6)
+            setValue("ozelAlan7", res?.data.ozelAlan7)
+            setValue("ozelAlan8", res?.data.ozelAlan8)
+            setValue("ozelAlan9", res?.data.ozelAlan9)
+            setValue("ozelAlanKodId9", res?.data.ozelAlanKodId9)
+            setValue("ozelAlan10", res?.data.ozelAlan10)
+            setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10)
+            setValue("ozelAlan11", res?.data.ozelAlan11)
+            setValue("ozelAlan12", res?.data.ozelAlan12)
+        })
+
+        PhotoReadService(id, "YAKIT").then(res => setImageUrls(res.data))
+        FileReadService(id, "YAKIT").then(res => setFilesUrl(res.data))
+    }, [id])
 
     const uploadImages = () => {
         try {
             setLoadingImages(true);
-            // const data = uploadPhoto(id, "Yakit", images)
-            // setImageUrls([...imageUrls, data.imageUrl]);
+            const data = uploadPhoto(id, "YAKIT", images)
+            setImageUrls([...imageUrls, data.imageUrl]);
         } catch (error) {
             message.error("Resim yüklenemedi. Yeniden deneyin.");
         } finally {
@@ -119,13 +174,73 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
     const uploadFiles = () => {
         try {
             setLoadingFiles(true);
-            // uploadFile(id, "Yakit", files)
+            uploadFile(id, "YAKIT", files)
         } catch (error) {
             message.error("Dosya yüklenemedi. Yeniden deneyin.");
         } finally {
             setLoadingFiles(false);
         }
     }
+
+    const onSubmit = handleSubmit((values) => {
+        const body = {
+            "siraNo": id,
+            "aracId": values.aracId,
+            "plaka": values.plaka,
+            "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
+            "faturaTarih": dayjs(values.faturaTarih).format("YYYY-MM-DD"),
+            "saat": dayjs(values.saat).format("HH:mm:ss"),
+            "aciklama": values.aciklama,
+            "faturaNo": values.faturaNo,
+            "sonAlinanKm": values.sonAlinanKm,
+            "farkKm": values.farkKm,
+            "yakitHacmi": values.yakitHacmi,
+            "yakitTipId": values.yakitTipId,
+            "lokasyonId": values.lokasyonId,
+            "guzergahId": values.guzergahId,
+            "surucuId": values.surucuId,
+            "firmaId": values.firmaId,
+            "istasyonKodId": values.istasyonKodId,
+            "tuketim": values.tuketim,
+            "alinanKm": values.alinanKm,
+            "miktar": values.miktar,
+            "kdv": values.kdv,
+            "fullDepo": values.fullDepo,
+            "ozelKullanim": values.ozelKullanim,
+            "stokKullanimi": values.stokKullanimi,
+            "litreFiyat": values.litreFiyat,
+            "tutar": values.tutar,
+            "birim": values.birim,
+            // "kmLog": {
+            //     "kmAracId": 0,
+            //     "plaka": "string",
+            //     "tarih": "2024-05-27T07:25:00.921Z",
+            //     "saat": "string",
+            //     "yeniKm": 0,
+            //     "dorse": true,
+            //     "lokasyonId": 0
+            // },
+            "ozelAlan1": values.ozelAlan1,
+            "ozelAlan2": values.ozelAlan2,
+            "ozelAlan3": values.ozelAlan3,
+            "ozelAlan4": values.ozelAlan4,
+            "ozelAlan5": values.ozelAlan5,
+            "ozelAlan6": values.ozelAlan6,
+            "ozelAlan7": values.ozelAlan7,
+            "ozelAlan8": values.ozelAlan8,
+            "ozelAlanKodId9": values.ozelAlanKodId9 || 0,
+            "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
+            "ozelAlan11": values.ozelAlan11 || 0,
+            "ozelAlan12": values.ozelAlan12 || 0,
+            "yakitTanki": values.yakitTanki
+        }
+        console.log(body)
+
+        YakitUpdateDataUpdateService(body).then(res => console.log(res.data))
+        
+        uploadImages()
+        uploadFiles()
+    })
 
     const personalProps = {
         form: "YAKIT",
@@ -137,7 +252,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo />,
+            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
         },
         {
             key: '2',
@@ -158,7 +273,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn">
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
                 Güncelle
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {

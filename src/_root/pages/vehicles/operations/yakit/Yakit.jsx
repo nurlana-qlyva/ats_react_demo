@@ -155,7 +155,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             title={`Yakıt Bilgileri Plaka: [${plakaData}]`}
             open={visible}
             onCancel={onClose}
-            maskClosable={false}
+            maskClosable={false} 
             footer={footer}
             width={1200}
         >

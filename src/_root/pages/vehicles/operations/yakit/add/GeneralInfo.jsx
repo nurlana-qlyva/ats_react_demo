@@ -255,7 +255,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                 format="DD.MM.YYYY"
                                                 onBlur={() => {
                                                     fetchData()
-                                                    // if (watch('alinanKm')) validateLog()
                                                 }}
                                                 onChange={e => {
                                                     field.onChange(e)
@@ -280,7 +279,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             format="HH:mm"
                                             onBlur={() => {
                                                 fetchData()
-                                                // if (watch('alinanKm')) validateLog()
                                             }}
                                             onChange={e => {
                                                 field.onChange(e)
