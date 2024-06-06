@@ -3,9 +3,9 @@ import { useFormContext, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
-import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, TimePicker } from 'antd'
+import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined } from '@ant-design/icons'
-import { YakitDataGetByDateService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, YakitDataGetByDateService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import Location from '../../../../../components/form/Location'
@@ -150,6 +150,32 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         const miktar = watch("tutar") / +e.target.value
         setValue("miktar", Math.round(miktar))
     }
+
+    const updateDepoHacmi = () => {
+        const body = {
+            dtyAracId: watch('aracId'),
+            yakitHacmi: watch("yakitHacmi")
+        };
+
+        DetailInfoUpdateService(body).then((res) => {
+            if (res?.data.statusCode === 202) {
+                setOpen(false);
+            }
+        })
+    }
+
+    const footer = (
+        [
+            <Button key="submit" className="btn btn-min primary-btn" onClick={updateDepoHacmi}>
+                Kaydet
+            </Button>,
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
+                setOpen(false)
+            }}>
+                İptal
+            </Button>
+        ]
+    )
 
     return (
         <>
@@ -629,6 +655,90 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                open={open}
+                maskClosable={false}
+                title="Depo Hacmi Girişi"
+                footer={footer}
+                onCancel={() => setOpen(false)}
+            >
+                <Controller
+                    name="yakitHacmi"
+                    control={control}
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                        />
+                    )}
+                />
+            </Modal>
+
+            {/* <Modal
+                open={openDetail}
+                maskClosable={false}
+                title="Ortalama Yakıt Tüketimi"
+                footer={detailModalFooter}
+                onCancel={() => setOpenDetail(false)}
+            >
+                <div className="grid detail-tuketim">
+                    <div className="col-span-5">
+                        <p>Araç depo hacmi:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{watch("yakitHacmi")} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Bir önceki yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.miktar} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Depoda bulunan yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <div className='text-info'>
+                            <Controller
+                                name="depoYakitMiktar"
+                                control={control}
+                                render={({ field }) => (
+                                    <InputNumber
+                                        {...field}
+                                        onChange={e => field.onChange(e)}
+                                    />
+                                )}
+                            />
+                            &nbsp; lt (Depo {data.fullDepo ? "fullendi" : "fullenmedi"})
+                        </div>
+                    </div>
+                    <div className="col-span-12">
+                        <Divider />
+                    </div>
+                    <div className="col-span-5">
+                        <p>Harcanan yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.miktar - data.depoYakitMiktar} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Gidilen yol:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.farkKm} km</p>
+                    </div>
+                    <div className="col-span-12">
+                        <Divider />
+                    </div>
+                    <div className="col-span-5">
+                        <p>Yakıt Tüketimi:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{data.tuketim} lt/km</p>
+                    </div>
+                </div>
+            </Modal> */}
         </>
     )
 }
