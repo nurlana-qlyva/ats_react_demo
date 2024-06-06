@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined } from '@ant-design/icons'
-import { DetailInfoUpdateService, YakitDataGetByDateService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, YakitDataGetByDateService, YakitKmLogValidateForUpdateService, YakitPriceGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import Location from '../../../../../components/form/Location'
@@ -66,23 +66,31 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
     const validateLog = () => {
         const body = {
-            aracId: watch('aracId'),
+            "siraNo": watch('siraNo'),
+            "aracId": watch('aracId'),
+            "plaka": watch('plaka'),
+            "sonAlinanKm": watch('sonAlinanKm'),
+            "farkKm": watch('farkKm'),
+            "tuketim": watch('tuketim'),
+            "alinanKm": watch('alinanKm'),
+            "hasToInsertKmLog": watch('engelle'),
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm"),
-            alinanKm: watch("alinanKm"),
+            saat: dayjs(watch("saat")).format("HH:mm:ss"),
             "kmLog": {
+                "siraNo": watch('kmLogId'),
                 "kmAracId": watch('aracId'),
                 "plaka": watch('plaka'),
                 "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
-                "saat": dayjs(watch("saat")).format("HH:mm"),
+                "saat": dayjs(watch("saat")).format("HH:mm:ss"),
                 "yeniKm": watch("alinanKm"),
+                "eskiKm": watch("eskiKm"),
                 "dorse": false,
                 "kaynak": "YAKIT",
                 "lokasyonId": watch('lokasyonId')
             }
         }
 
-        YakitKmLogValidateService(body).then(res => {
+        YakitKmLogValidateForUpdateService(body).then(res => {
             if (res?.data.statusCode === 400) {
                 setResponse("error");
                 if (res?.data.message === " Invalid Km range for both KmLog and FuelKm !") {
@@ -186,6 +194,26 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div className="flex flex-col gap-1">
                                 <Controller
                                     name="aracId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                 <Controller
+                                    name="siraNo"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                 <Controller
+                                    name="eskiKm"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -377,7 +405,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 <Controller
                                     name="engelle"
                                     control={control}
-                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field} />}
+                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field}  onChange={(e) => {
+                                        field.onChange(e);
+                                        validateLog();
+                                    }}  />}
                                 />
                             </div>
                         </div>

@@ -130,7 +130,6 @@ const AddModal = ({ setStatus }) => {
 
     const { handleSubmit, reset } = methods
 
-
     const handleOk = handleSubmit(async (value) => {
         const kmLog = value.guncelKm ? {
             "plaka": value.plaka,

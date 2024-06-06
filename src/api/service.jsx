@@ -177,6 +177,10 @@ export const YakitKmLogValidateService = async (data) => {
   return await http.post(`/Fuel/ValidateFuelInfoInsertion`, data)
 }
 
+export const YakitKmLogValidateForUpdateService = async (data) => {
+  return await http.post(`/Fuel/ValidateFuelInfoUpdate`, data)
+}
+
 export const YakitPriceGetService = (id) => {
   return http.get(`/Material/GetMaterialPrice?materialId=${id}`)
 }

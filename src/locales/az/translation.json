@@ -43,6 +43,13 @@
     "sozlesmeTarihi": "Müqavilə Tarixi",
     "egzozTarihi": "Egzoz Emissiya Tarixi",
     "vergiTarihi": "Vergi Tarixi",
-    "ozelAlan": "Xüsusi Sahə"
-
+    "ozelAlan": "Xüsusi Sahə",
+    "uygula": "Tətbiq Edin",
+    "temizle": "Təmizlə",
+    "miktar": "Miqdar",
+    "tutar": "Məbləğ",
+    "tarih": "Tarix",
+    "alinanKm": "Alınan KM.",
+    "kullanim": "İstifadə",
+    "tuketim": "Orta İstehlak"
 }

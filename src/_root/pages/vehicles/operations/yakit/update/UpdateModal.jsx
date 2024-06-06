@@ -10,7 +10,7 @@ import PersonalFields from '../../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => {
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
     // file
@@ -155,11 +155,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
             setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10)
             setValue("ozelAlan11", res?.data.ozelAlan11)
             setValue("ozelAlan12", res?.data.ozelAlan12)
+            setValue("siraNo", res?.data.siraNo)
+            setValue("kmLogId", res?.data.kmLogId)
+            setValue("eskiKm", res?.data.kmLogEskiKm)
+            setValue("engelle", res?.data.hasToInsertKmLog)
         })
 
         PhotoReadService(id, "YAKIT").then(res => setImageUrls(res.data))
         FileReadService(id, "YAKIT").then(res => setFilesUrl(res.data))
-    }, [id])
+    }, [id, status])
 
     const uploadImages = () => {
         try {
@@ -185,6 +189,19 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     }
 
     const onSubmit = handleSubmit((values) => {
+        const kmLog = !watch('engelle') ? {
+            "siraNo": watch('kmLogId'),
+            "kmAracId": watch('aracId'),
+            "plaka": watch('plaka'),
+            "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
+            "saat": dayjs(watch("saat")).format("HH:mm:ss"),
+            "yeniKm": watch("alinanKm"),
+            "eskiKm": watch("eskiKm"),
+            "dorse": false,
+            "kaynak": "YAKIT",
+            "lokasyonId": watch('lokasyonId')
+        } : null
+
         const body = {
             "siraNo": id,
             "aracId": values.aracId,
@@ -213,15 +230,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
             "litreFiyat": values.litreFiyat,
             "tutar": values.tutar,
             "birim": values.birim,
-            // "kmLog": {
-            //     "kmAracId": 0,
-            //     "plaka": "string",
-            //     "tarih": "2024-05-27T07:25:00.921Z",
-            //     "saat": "string",
-            //     "yeniKm": 0,
-            //     "dorse": true,
-            //     "lokasyonId": 0
-            // },
+            hasToInsertKmLog: values.engelle,
+            "kmLog": kmLog,
             "ozelAlan1": values.ozelAlan1,
             "ozelAlan2": values.ozelAlan2,
             "ozelAlan3": values.ozelAlan3,
@@ -241,11 +251,31 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
             if (res.data.statusCode === 202) {
                 setStatus(true)
                 setUpdateModal(false)
+                // reset(      {
+                //     plaka: watch('plaka'), 
+                //     sonAlinanKm: watch('sonAlinanKm'),
+                //     litreFiyat: watch('litreFiyat'),
+                //     "tarih": dayjs(new Date()),
+                //     "saat": dayjs(new Date()),
+                //     "alinanKm": watch('alinanKm'),
+                //     "farkKm": watch('farkKm'),
+                //     "miktar": watch('miktar'),
+                //     "fullDepo": watch('fullDepo'),
+                //     "tutar": watch('tutar'),
+                //     "tuketim": watch('tuketim'),
+                //     "engelle": watch('engelle'),
+                //     surucuId: watch('surucuId'),
+                //     yakitTipId: watch('yakitTipId'),
+                //     yakitTip: watch('yakitTip'),
+                //     surucu: watch('surucuAdi'),
+                //     stokKullanimi: watch('stokKullanimi')
+                // })
             }
         })
-        
+
         uploadImages()
         uploadFiles()
+        setStatus(false)
     })
 
     const personalProps = {
@@ -279,11 +309,30 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={!isValid}>
                 Güncelle
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
+                // reset(      {
+                //     plaka: watch('plaka'), 
+                //     sonAlinanKm: watch('sonAlinanKm'),
+                //     litreFiyat: watch('litreFiyat'),
+                //     "tarih": dayjs(new Date()),
+                //     "saat": dayjs(new Date()),
+                //     "alinanKm": watch('alinanKm'),
+                //     "farkKm": watch('farkKm'),
+                //     "miktar": watch('miktar'),
+                //     "fullDepo": watch('fullDepo'),
+                //     "tutar": watch('tutar'),
+                //     "tuketim": watch('tuketim'),
+                //     "engelle": watch('engelle'),
+                //     surucuId: watch('surucuId'),
+                //     yakitTipId: watch('yakitTipId'),
+                //     yakitTip: watch('yakitTip'),
+                //     surucu: watch('surucuAdi'),
+                //     stokKullanimi: watch('stokKullanimi')
+                // })
             }}>
                 İptal
             </Button>

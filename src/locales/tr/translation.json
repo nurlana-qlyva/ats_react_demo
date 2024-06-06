@@ -44,5 +44,13 @@
     "sozlesmeTarihi": "Sözleşme Tarihi",
     "egzozTarihi": "Egzoz Emisyon",
     "vergiTarihi": "Vergi",
-    "ozelAlan": "ÖZEL ALAN"
+    "ozelAlan": "ÖZEL ALAN",
+    "uygula": "Uygula",
+    "temizle": "Temizle",
+    "tarih": "Tarih",
+    "alinanKm": "Alınan KM.",
+    "kullanim": "Kullanım",
+    "miktar": "Miktar",
+    "tutar": "Tutar",
+    "tuketim": "Ortalama Tüketim"
 }

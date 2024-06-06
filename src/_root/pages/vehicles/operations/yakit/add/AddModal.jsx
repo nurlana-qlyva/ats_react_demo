@@ -235,7 +235,7 @@ const AddModal = ({ setStatus }) => {
                 if (plaka.length === 1) {
                     reset(
                         {
-                            plaka: data.plaka,
+                            plaka: data.plaka, 
                             sonAlinanKm: data.sonAlinanKm,
                             litreFiyat: data.litreFiyat,
                             "tarih": dayjs(new Date()),

@@ -64,11 +64,11 @@ const Filter = ({ filter, clearFilters, t }) => {
                 <Button className='btn btn-min cancel-btn' onClick={() => {
                     clear()
                     setOpenDrawer(false)
-                }}>Temizle</Button>
+                }}>{t('temizle')}</Button>
                 <Button className='btn btn-min primary-btn' onClick={() => {
                     handleSearchFilters()
                     setOpenDrawer(false)
-                }}>Uygula</Button>
+                }}>{t('uygula')}</Button>
             </div>
         </div>
     )
@@ -84,7 +84,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                     <div className="grid gap-1">
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="plaka">Plaka</label>
+                                <label htmlFor="plaka">{t('plaka')}</label>
                                 <Controller
                                     name="plaka"
                                     control={control}
@@ -101,7 +101,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracTipId">Araç Tipi</label>
+                                <label htmlFor="aracTipId">{t('aracTip')}</label>
                                 <Controller
                                     name="aracTipId"
                                     control={control}
@@ -113,7 +113,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="markaId">Marka</label>
+                                <label htmlFor="markaId">{t('marka')}</label>
                                 <Controller
                                     name="markaId"
                                     control={control}
@@ -125,7 +125,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="modelId">Model</label>
+                                <label htmlFor="modelId">{t('model')}</label>
                                 <Controller
                                     name="modelId"
                                     control={control}
@@ -137,7 +137,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracGrubuId">Araç Grup</label>
+                                <label htmlFor="aracGrubuId">{t('grup')}</label>
                                 <Controller
                                     name="aracGrubuId"
                                     control={control}
@@ -149,7 +149,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="aracRenkId">Renk</label>
+                                <label htmlFor="aracRenkId">{t('renk')}</label>
                                 <Controller
                                     name="aracRenkId"
                                     control={control}
@@ -161,7 +161,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yil">Model Yılı</label>
+                                <label htmlFor="yil">{t('yil')}</label>
                                 <Controller
                                     name="yil"
                                     control={control}
@@ -182,7 +182,7 @@ const Filter = ({ filter, clearFilters, t }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yakitId">Yakıt Tipi</label>
+                                <label htmlFor="yakitId">{t('yakitTip')}</label>
                                 <Controller
                                     name="yakitId"
                                     control={control}

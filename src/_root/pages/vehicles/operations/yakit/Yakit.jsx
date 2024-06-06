@@ -7,6 +7,7 @@ import { PlakaContext } from '../../../../../context/plakaSlice';
 import { YakitDataDeleteService, YakitGetByIdService } from '../../../../../api/service';
 import AddModal from './add/AddModal';
 import UpdateModal from './update/UpdateModal';
+import { t } from 'i18next';
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([]);
@@ -51,7 +52,7 @@ const Yakit = ({ visible, onClose, ids }) => {
 
     const columns = [
         {
-            title: 'Plaka',
+            title: t('plaka'),
             dataIndex: 'plaka',
             key: 1,
             render: (text, record) => (
@@ -62,29 +63,29 @@ const Yakit = ({ visible, onClose, ids }) => {
             )
         },
         {
-            title: 'Tarih',
+            title: t('tarih'),
             dataIndex: 'tarih',
             key: 2,
             render: (text) => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: 'Yakıt Tipi',
+            title: t('yakitTip'),
             dataIndex: 'yakitTip',
             key: 3,
         },
         {
-            title: 'Alınan KM.',
+            title: t('alinanKm'),
             dataIndex: 'sonAlinanKm',
             key: 4,
         },
         {
-            title: 'Kullanım',
+            title: t('kullanim'),
             dataIndex: 'ozelKullanim',
             key: 5,
             render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
         },
         {
-            title: 'Miktar',
+            title: t('miktar'),
             dataIndex: 'miktar',
             key: 6,
             render: (text, record) => (
@@ -95,7 +96,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             )
         },
         {
-            title: 'Tutar',
+            title: t('tutar'),
             dataIndex: 'tutar',
             key: 7,
         },
@@ -122,12 +123,12 @@ const Yakit = ({ visible, onClose, ids }) => {
             render: (text, record) => <Checkbox checked={record.stokKullanimi} readOnly />
         },
         {
-            title: 'Sürücü',
+            title: t('surucu'),
             dataIndex: 'surucuAdi',
             key: 12,
         },
         {
-            title: 'Lokasyon',
+            title: t('lokasyon'),
             dataIndex: 'lokasyon',
             key: 13,
         },
@@ -223,7 +224,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 <AddModal setStatus={setStatus} />
             </div>
 
-            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} setStatus={setStatus} />
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} setStatus={setStatus} status={status} />
             <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
             <Table
                 columns={filteredColumns}
