@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { PersonalFieldsReadService, PersonalFieldsUpdateService, CodeControlService } from '../../../api/service'
@@ -10,6 +10,7 @@ const PersonalFields = ({ personalProps }) => {
     const [originalFields, setOriginalFields] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [values, setValues] = useState(null)
+    const debounceTimers = useRef({})
 
     const { control, setValue } = useFormContext()
 
@@ -48,13 +49,13 @@ const PersonalFields = ({ personalProps }) => {
         );
         setFields(updatedFields);
 
-        if (field.debounceTimer) {
-            clearTimeout(field.debounceTimer);
+        if (debounceTimers.current[field.key]) {
+            clearTimeout(debounceTimers.current[field.key]);
         }
 
-        field.debounceTimer = setTimeout(() => {
-            setIsModalOpen(true)
-        }, 500)
+        debounceTimers.current[field.key] = setTimeout(() => {
+            setIsModalOpen(true);
+        }, 800)
         setValues({ key: field.key, value })
     }
 

@@ -561,7 +561,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     name="stokKullanimi"
                                     control={control}
                                     render={({ field }) => (
-                                        <Checkbox {...field} checked={field.value}/>
+                                        <Checkbox {...field} checked={field.value} />
                                     )}
                                 />
                             </div>

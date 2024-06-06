@@ -189,3 +189,7 @@ export const YakitUpdateDataGetService = (id) => {
 export const YakitUpdateDataUpdateService = (data) => {
   return http.post(`/Fuel/UpdateFuel`, data)
 }
+
+export const YakitDataDeleteService = (id) => {
+  return http.get(`/Fuel/DeleteFuelCard?fuelId=${id}`)
+}

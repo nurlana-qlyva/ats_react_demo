@@ -267,7 +267,7 @@ const AddModal = ({ setStatus }) => {
 
     return (
         <>
-            <Button className='btn mb-10 primary-btn' onClick={() => setopenModal(true)}>Yenisini Ekle</Button>
+            <Button className='btn primary-btn' onClick={() => setopenModal(true)}>Yenisini Ekle</Button>
             <Modal
                 title="Yeni Yakıt Girişi"
                 open={openModal}
