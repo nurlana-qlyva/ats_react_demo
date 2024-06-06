@@ -257,3 +257,6 @@
   background-color: var(--info);
 }
 
+.ant-modal {
+  top: 40px;
+}

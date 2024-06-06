@@ -86,7 +86,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         }
     }, [watch("tuketim")])
 
-    const fetchData = () => {
+    const fetchData = () => { 
         const body = {
             aracId: data.aracId,
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),

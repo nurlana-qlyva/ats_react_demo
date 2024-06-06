@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
-import { Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, TimePicker } from 'antd'
+import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, TimePicker } from 'antd'
+import { ArrowUpOutlined } from '@ant-design/icons'
 import { YakitDataGetByDateService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
@@ -19,6 +20,8 @@ dayjs.locale('tr')
 
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const { control, watch, setValue } = useFormContext()
+    const [open, setOpen] = useState(false)
+    const [openDetail, setOpenDetail] = useState(false)
 
     useEffect(() => {
         const fullDepo = watch("fullDepo");
@@ -238,7 +241,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 </div>
                 <div className="col-span-6 p-20">
                     <div className="grid gap-1">
-                        <div className="col-span-6">
+                        <div className="col-span-12">
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="yakitId">Yakıt Tipi</label>
                                 <Controller
@@ -252,36 +255,24 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="lokasyonId">Lokasyon</label>
+                                <label>Stoktan Kullanım</label>
                                 <Controller
-                                    name="lokasyonId"
+                                    name="stokKullanimi"
                                     control={control}
                                     render={({ field }) => (
-                                        <Location field={field} />
+                                        <Checkbox {...field} checked={field.value} />
                                     )}
                                 />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Firma</label>
+                                <label>Yakıt Tankı --- ?</label>
                                 <Controller
-                                    name="firmaId"
+                                    name="yakitTanki"
                                     control={control}
                                     render={({ field }) => (
-                                        <Firma field={field} />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-6">
-                            <div className="flex flex-col gap-1">
-                                <label>İstasyon</label>
-                                <Controller
-                                    name="istasyonKodId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Istasyon field={field} />
+                                        <FuelTank field={field} />
                                     )}
                                 />
                             </div>
@@ -314,26 +305,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label className='text-info'>Fark Km</label>
-                                <Controller
-                                    name="farkKm"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <InputNumber
-                                            {...field}
-                                            className='w-full'
-                                            onPressEnter={handlePressFarkKm}
-                                            onBlur={handlePressFarkKm}
-                                            onChange={e => {
-                                                field.onChange(e)
-                                            }}
-                                        />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-6">
-                            <div className="flex flex-col gap-1">
                                 <label className='text-info'>Yakıtın Alındığı Km</label>
                                 <Controller
                                     name="alinanKm"
@@ -356,17 +327,31 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label className='text-danger'>Ortalama Tuketim</label>
+                                <label className='text-info'>Fark Km</label>
                                 <Controller
-                                    name="tuketim"
+                                    name="farkKm"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            readOnly
+                                            onPressEnter={handlePressFarkKm}
+                                            onBlur={handlePressFarkKm}
+                                            onChange={e => {
+                                                field.onChange(e)
+                                            }}
                                         />
                                     )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>KM Log&apos;a Yazma</label>
+                                <Controller
+                                    name="engelle"
+                                    control={control}
+                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field} />}
                                 />
                             </div>
                         </div>
@@ -378,7 +363,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline justify-between">
                                     <label className='text-info'>Miktar (lt)</label>
-                                    {/* <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {yakitHacmi} {data?.birim === "LITRE" && "lt"}</Button> */}
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch('yakitHacmi')} {watch('birim') === "LITRE" && "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
@@ -396,26 +381,43 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             </div>
                         </div>
                         <div className="col-span-6">
-                            <div className="flex flex-col gap-1">
-                                <label className='text-info'>Tutar</label>
-                                <Controller
-                                    name="tutar"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <InputNumber
-                                            {...field}
-                                            className='w-full'
-                                            onPressEnter={handlePressTutar}
-                                            onBLur={handlePressTutar}
-                                            onChange={(e => {
-                                                field.onChange(e)
-                                            })}
-                                        />
-                                    )}
-                                />
+                            <div className="grid">
+                                <div className="col-span-4 flex flex-col">
+                                    <label htmlFor="">Full Depo</label>
+                                    <Controller
+                                        control={control}
+                                        name="fullDepo"
+                                        render={({ field }) => <Checkbox {...field} onChange={e => {
+                                            field.onChange(e.target.checked)
+                                        }} />}
+                                    />
+                                </div>
+                                <div className="col-span-8">
+                                    <div className="grid gap-1">
+                                        <div className="col-span-10">
+                                            <div className="flex flex-col gap-1">
+                                                <label className='text-danger'>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
+                                                <Controller
+                                                    name="tuketim"
+                                                    control={control}
+                                                    render={({ field }) => (
+                                                        <Input
+                                                            {...field}
+                                                            readOnly
+                                                        />
+                                                    )}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-span-2 self-end">
+                                            <Button className='w-full text-center' style={{ padding: "4px" }} onClick={() => setOpenDetail(true)}>...</Button>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>Birim Fiyat</label>
                                 <Controller
@@ -435,7 +437,27 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label className='text-info'>Tutar</label>
+                                <Controller
+                                    name="tutar"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            onPressEnter={handlePressTutar}
+                                            onBLur={handlePressTutar}
+                                            onChange={(e => {
+                                                field.onChange(e)
+                                            })}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>KDV Tutar</label>
                                 <Controller
@@ -525,12 +547,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 />
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div className="col-span-6 p-20">
                     <div className="grid gap-1">
-                        <div className="col-span-6">
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>Masraf Merkezi -- ?</label>
                                 <Controller
@@ -542,7 +563,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>Güzergah</label>
                                 <Controller
@@ -554,26 +575,38 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>Stoktan Kullanım</label>
+                                <label htmlFor="lokasyonId">Lokasyon</label>
                                 <Controller
-                                    name="stokKullanimi"
+                                    name="lokasyonId"
                                     control={control}
                                     render={({ field }) => (
-                                        <Checkbox {...field} checked={field.value} />
+                                        <Location field={field} />
                                     )}
                                 />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tankı --- ?</label>
+                                <label>Firma</label>
                                 <Controller
-                                    name="yakitTanki"
+                                    name="firmaId"
                                     control={control}
                                     render={({ field }) => (
-                                        <FuelTank field={field} />
+                                        <Firma field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>İstasyon</label>
+                                <Controller
+                                    name="istasyonKodId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Istasyon field={field} />
                                     )}
                                 />
                             </div>
@@ -596,7 +629,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     </div>
                 </div>
             </div>
-
         </>
     )
 }
