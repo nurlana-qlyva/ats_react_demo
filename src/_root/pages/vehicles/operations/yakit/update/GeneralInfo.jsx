@@ -125,6 +125,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         }
 
         validateLog()
+        e.target.blur()
     }
 
     const fetchData = () => {

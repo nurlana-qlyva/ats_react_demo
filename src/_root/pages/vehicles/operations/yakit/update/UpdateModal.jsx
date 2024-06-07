@@ -110,7 +110,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
     const { handleSubmit, reset, watch, setValue } = methods
 
-    useEffect(() => {
+    const getData = () => {
         YakitUpdateDataGetService(id).then(res => {
             setValue("aracId", res?.data.aracId)
             setValue("plaka", res?.data.plaka)
@@ -163,6 +163,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
         PhotoReadService(id, "YAKIT").then(res => setImageUrls(res.data))
         FileReadService(id, "YAKIT").then(res => setFilesUrl(res.data))
+    }
+
+    useEffect(() => {
+        getData()
     }, [id, status])
 
     const uploadImages = () => {
@@ -251,25 +255,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             if (res.data.statusCode === 202) {
                 setStatus(true)
                 setUpdateModal(false)
-                // reset(      {
-                //     plaka: watch('plaka'), 
-                //     sonAlinanKm: watch('sonAlinanKm'),
-                //     litreFiyat: watch('litreFiyat'),
-                //     "tarih": dayjs(new Date()),
-                //     "saat": dayjs(new Date()),
-                //     "alinanKm": watch('alinanKm'),
-                //     "farkKm": watch('farkKm'),
-                //     "miktar": watch('miktar'),
-                //     "fullDepo": watch('fullDepo'),
-                //     "tutar": watch('tutar'),
-                //     "tuketim": watch('tuketim'),
-                //     "engelle": watch('engelle'),
-                //     surucuId: watch('surucuId'),
-                //     yakitTipId: watch('yakitTipId'),
-                //     yakitTip: watch('yakitTip'),
-                //     surucu: watch('surucuAdi'),
-                //     stokKullanimi: watch('stokKullanimi')
-                // })
+                setResponse('normal')
+                reset()
             }
         })
 
@@ -314,25 +301,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
-                // reset(      {
-                //     plaka: watch('plaka'), 
-                //     sonAlinanKm: watch('sonAlinanKm'),
-                //     litreFiyat: watch('litreFiyat'),
-                //     "tarih": dayjs(new Date()),
-                //     "saat": dayjs(new Date()),
-                //     "alinanKm": watch('alinanKm'),
-                //     "farkKm": watch('farkKm'),
-                //     "miktar": watch('miktar'),
-                //     "fullDepo": watch('fullDepo'),
-                //     "tutar": watch('tutar'),
-                //     "tuketim": watch('tuketim'),
-                //     "engelle": watch('engelle'),
-                //     surucuId: watch('surucuId'),
-                //     yakitTipId: watch('yakitTipId'),
-                //     yakitTip: watch('yakitTip'),
-                //     surucu: watch('surucuAdi'),
-                //     stokKullanimi: watch('stokKullanimi')
-                // })
+                setResponse('normal')
+                reset()
+                getData()
             }}>
                 İptal
             </Button>
