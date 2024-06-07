@@ -205,7 +205,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         />
                                     )}
                                 />
-                                 <Controller
+                                <Controller
                                     name="siraNo"
                                     control={control}
                                     render={({ field }) => (
@@ -215,7 +215,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         />
                                     )}
                                 />
-                                 <Controller
+                                <Controller
                                     name="eskiKm"
                                     control={control}
                                     render={({ field }) => (
@@ -263,13 +263,15 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => (
                                         <ConfigProvider locale={tr_TR}>
                                             <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY"
-                                                onBlur={() => {
-                                                    fetchData()
-                                                }}
-                                                onChange={e => {
-                                                    field.onChange(e)
-                                                    if (watch('alinanKm')) validateLog()
-                                                }} />
+                                                // onBlur={() => {
+                                                //     fetchData()
+                                                // }}
+                                                disabled
+                                            // onChange={e => {
+                                            //     field.onChange(e)
+                                            //     if (watch('alinanKm')) validateLog()
+                                            // }}
+                                            />
                                         </ConfigProvider>
                                     )}
                                 />
@@ -283,13 +285,16 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     control={control}
                                     render={({ field }) => (
                                         <TimePicker {...field} placeholder="" format="HH:mm"
-                                            onBlur={() => {
-                                                fetchData()
-                                            }}
-                                            onChange={e => {
-                                                field.onChange(e)
-                                                if (watch('alinanKm')) validateLog()
-                                            }} />
+                                            disabled
+
+                                        // onBlur={() => {
+                                        //     fetchData()
+                                        // }}
+                                        // onChange={e => {
+                                        //     field.onChange(e)
+                                        //     if (watch('alinanKm')) validateLog()
+                                        // }} 
+                                        />
                                     )}
                                 />
                             </div>
@@ -408,10 +413,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 <Controller
                                     name="engelle"
                                     control={control}
-                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field}  onChange={(e) => {
+                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field} onChange={(e) => {
                                         field.onChange(e);
                                         validateLog();
-                                    }}  />}
+                                    }} />}
                                 />
                             </div>
                         </div>
