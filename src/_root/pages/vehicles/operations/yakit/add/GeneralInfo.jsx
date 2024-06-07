@@ -150,12 +150,16 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         }
 
         validateLog()
+        e.target.blur()
+
     }
 
     const handlePressFarkKm = e => {
         const alinanKm = watch("sonAlinanKm") + +e.target.value
         setValue("alinanKm", alinanKm)
         validateLog()
+        e.target.blur()
+
     }
 
     const handlePressMiktar = e => {

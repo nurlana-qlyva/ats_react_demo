@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
-import { YakitAddService } from '../../../../../../api/service'
+import { YakitAddService, YakitDataGetByDateService, YakitDataGetByIdService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
@@ -12,7 +12,7 @@ const AddModal = ({ setStatus }) => {
     const [openModal, setopenModal] = useState(false)
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
-    const { data, plaka } = useContext(PlakaContext)
+    const { data, plaka, setData } = useContext(PlakaContext)
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -115,7 +115,26 @@ const AddModal = ({ setStatus }) => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset, watch } = methods
+    const { handleSubmit, reset, watch, setValue } = methods
+
+    const getData = () => {
+        setValue("surucuId", data.surucuId)
+        setValue("surucu", data.surucuAdi)
+        setValue("tarih", dayjs(new Date()))
+        setValue("saat", dayjs(new Date()))
+        setValue("sonAlinanKm", data.sonAlinanKm)
+        setValue("litreFiyat", data.litreFiyat)
+        setValue("yakitHacmi", data.yakitHacmi)
+        setValue("yakitTip", data.yakitTip)
+        setValue("yakitTipId", data.yakitTipId)
+        setValue("yakitTanki", data.yakitTanki)
+        setValue("birim", data.birim)
+        setValue("depoYakitMiktar", data.depoYakitMiktar)
+
+        if (plaka.length === 1) {
+            setValue("plaka", plaka[0].id)
+        }
+    }
 
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
@@ -172,31 +191,8 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
-                if (plaka.length === 1) {
-                    reset(
-                        {
-                            plaka: data.plaka,
-                            sonAlinanKm: data.sonAlinanKm,
-                            litreFiyat: data.litreFiyat,
-                            "tarih": dayjs(new Date()),
-                            "saat": dayjs(new Date()),
-                            "alinanKm": null,
-                            "farkKm": null,
-                            "miktar": null,
-                            "fullDepo": false,
-                            "tutar": null,
-                            "tuketim": null,
-                            "engelle": false,
-                            surucuId: data.surucuId,
-                            yakitTipId: data.yakitTipId,
-                            yakitTip: data.yakitTip,
-                            surucu: data.surucuAdi,
-                            stokKullanimi: data.stokKullanimi
-                        }
-                    )
-                } else {
-                    reset()
-                }
+                reset()
+                getData()
             }
         })
         setStatus(false)
@@ -205,6 +201,26 @@ const AddModal = ({ setStatus }) => {
     useEffect(() => {
         if (watch("engelle")) setIsValid(false)
     }, [watch("engelle")])
+
+    useEffect(() => {
+        if (openModal && plaka.length === 1) {
+            // YakitDataGetByIdService(plaka[0].id).then(res => {
+            //     setData(res.data)
+            //     getData()
+            // })
+
+            const body = {
+                aracId: data.aracId,
+                tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+                saat: dayjs(watch("saat")).format("HH:mm")
+            }
+            YakitDataGetByDateService(body).then(res => {
+                setData(res.data)
+                // getData()
+                res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
+            })
+        }
+    }, [openModal])
 
     const personalProps = {
         form: "YAKIT",
@@ -235,7 +251,7 @@ const AddModal = ({ setStatus }) => {
                 if (plaka.length === 1) {
                     reset(
                         {
-                            plaka: data.plaka, 
+                            plaka: data.plaka,
                             sonAlinanKm: data.sonAlinanKm,
                             litreFiyat: data.litreFiyat,
                             "tarih": dayjs(new Date()),

@@ -1,9 +1,10 @@
 import { useContext, useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
+import dayjs from 'dayjs'
 import PropTypes from 'prop-types'
 import { PlakaContext } from '../../../context/plakaSlice'
 import { YakitDataGetByIdService } from '../../../api/service'
 import { Select } from 'antd'
-import { useFormContext } from 'react-hook-form'
 
 const Plaka = ({ field }) => {
     const { plaka, setData, data } = useContext(PlakaContext)
@@ -11,7 +12,21 @@ const Plaka = ({ field }) => {
 
     useEffect(() => {
         if (plaka.length === 1) {
-            YakitDataGetByIdService(plaka[0].id).then(res => setData(res.data))
+            YakitDataGetByIdService(plaka[0].id).then(res => {
+                setData(res.data)
+                setValue("surucuId", data.surucuId)
+                setValue("surucu", data.surucuAdi)
+                setValue("tarih", dayjs(new Date()))
+                setValue("saat", dayjs(new Date()))
+                setValue("sonAlinanKm", data.sonAlinanKm)
+                setValue("litreFiyat", data.litreFiyat)
+                setValue("yakitHacmi", data.yakitHacmi)
+                setValue("yakitTip", data.yakitTip)
+                setValue("yakitTipId", data.yakitTipId)
+                setValue("yakitTanki", data.yakitTanki)
+                setValue("birim", data.birim)
+                setValue("depoYakitMiktar", data.depoYakitMiktar)
+            })
         }
     }, [plaka])
 
