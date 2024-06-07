@@ -28,7 +28,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setValue("surucu", data.surucuAdi)
         setValue("tarih", dayjs(new Date()))
         setValue("saat", dayjs(new Date()))
-        setValue("sonAlinanKm", data.sonAlinanKm)
+        // setValue("sonAlinanKm", data.sonAlinanKm)
         setValue("litreFiyat", data.litreFiyat)
         setValue("yakitHacmi", data.yakitHacmi)
         setValue("yakitTip", data.yakitTip)
@@ -42,9 +42,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             setValue("plaka", plaka[0].id)
         }
 
-        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data));
-
+        // YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data));
+        fetchData()
     }, [data])
+
+
 
     useEffect(() => {
         YakitPriceGetService(watch('yakitTipId')).then(res => setValue("litreFiyat", res.data))

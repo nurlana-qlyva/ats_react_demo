@@ -202,26 +202,6 @@ const AddModal = ({ setStatus }) => {
         if (watch("engelle")) setIsValid(false)
     }, [watch("engelle")])
 
-    useEffect(() => {
-        if (openModal && plaka.length === 1) {
-            // YakitDataGetByIdService(plaka[0].id).then(res => {
-            //     setData(res.data)
-            //     getData()
-            // })
-
-            const body = {
-                aracId: data.aracId,
-                tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-                saat: dayjs(watch("saat")).format("HH:mm")
-            }
-            YakitDataGetByDateService(body).then(res => {
-                setData(res.data)
-                // getData()
-                res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
-            })
-        }
-    }, [openModal])
-
     const personalProps = {
         form: "YAKIT",
         fields,

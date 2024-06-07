@@ -3,32 +3,20 @@ import { useFormContext } from 'react-hook-form'
 import dayjs from 'dayjs'
 import PropTypes from 'prop-types'
 import { PlakaContext } from '../../../context/plakaSlice'
-import { YakitDataGetByIdService } from '../../../api/service'
+import { YakitDataGetByDateService, YakitDataGetByIdService } from '../../../api/service'
 import { Select } from 'antd'
 
 const Plaka = ({ field }) => {
-    const { plaka, setData, data } = useContext(PlakaContext)
-    const { setValue } = useFormContext()
+    const { plaka, setData } = useContext(PlakaContext)
 
     useEffect(() => {
         if (plaka.length === 1) {
             YakitDataGetByIdService(plaka[0].id).then(res => {
                 setData(res.data)
-                setValue("surucuId", data.surucuId)
-                setValue("surucu", data.surucuAdi)
-                setValue("tarih", dayjs(new Date()))
-                setValue("saat", dayjs(new Date()))
-                setValue("sonAlinanKm", data.sonAlinanKm)
-                setValue("litreFiyat", data.litreFiyat)
-                setValue("yakitHacmi", data.yakitHacmi)
-                setValue("yakitTip", data.yakitTip)
-                setValue("yakitTipId", data.yakitTipId)
-                setValue("yakitTanki", data.yakitTanki)
-                setValue("birim", data.birim)
-                setValue("depoYakitMiktar", data.depoYakitMiktar)
             })
         }
     }, [plaka])
+
 
     const handleChange = (e) => {
         YakitDataGetByIdService(e).then(res => setData(res.data))
