@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FuelTankContext } from '../../../context/fuelTankSlice'
-import { PlakaContext } from '../../../context/plakaSlice'
 import { YakitTankGetService } from '../../../api/service'
 import { Select } from 'antd'
 import { useFormContext } from 'react-hook-form'
@@ -10,7 +9,6 @@ const FuelTank = ({ field }) => {
     const [tank, setTank] = useState([])
     const { watch } = useFormContext()
     const { id } = useContext(FuelTankContext)
-    const { data } = useContext(PlakaContext)
 
     const handleClickSelect = () => {
         YakitTankGetService(id, "YAKIT").then(res => {

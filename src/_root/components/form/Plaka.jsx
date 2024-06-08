@@ -1,9 +1,7 @@
 import { useContext, useEffect } from 'react'
-import { useFormContext } from 'react-hook-form'
-import dayjs from 'dayjs'
 import PropTypes from 'prop-types'
 import { PlakaContext } from '../../../context/plakaSlice'
-import { YakitDataGetByDateService, YakitDataGetByIdService } from '../../../api/service'
+import { YakitDataGetByIdService } from '../../../api/service'
 import { Select } from 'antd'
 
 const Plaka = ({ field }) => {

@@ -18,6 +18,10 @@
   color: var(--white);
 }
 
+.text-success {
+  color: var(--success);
+}
+
 .bg-secondary {
   background-color: var(--secondary);
 }

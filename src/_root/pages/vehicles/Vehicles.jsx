@@ -76,7 +76,7 @@ const TableBodyCell = (props) => {
 }
 
 TableBodyCell.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     style: PropTypes.object,
 }
 
@@ -101,7 +101,7 @@ const TableHeaderCell = (props) => {
 }
 
 TableHeaderCell.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     style: PropTypes.object,
 }
 

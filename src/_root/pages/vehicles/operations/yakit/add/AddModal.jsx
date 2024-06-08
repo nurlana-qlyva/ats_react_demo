@@ -4,15 +4,17 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
-import { YakitAddService, YakitDataGetByDateService, YakitDataGetByIdService } from '../../../../../../api/service'
+import { YakitAddService, YakitDataGetByIdService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
 const AddModal = ({ setStatus }) => {
+    const { data, plaka, setData } = useContext(PlakaContext)
+
     const [openModal, setopenModal] = useState(false)
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
-    const { data, plaka, setData } = useContext(PlakaContext)
+
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -109,15 +111,14 @@ const AddModal = ({ setStatus }) => {
         "fullDepo": false,
         "tutar": null,
         "tuketim": null,
+        engelle: false
     }
-
     const methods = useForm({
         defaultValues: defaultValues
     })
+    const { handleSubmit, reset, setValue, watch } = methods
 
-    const { handleSubmit, reset, watch, setValue } = methods
-
-    const getData = () => {
+    useEffect(() => {
         setValue("surucuId", data.surucuId)
         setValue("surucu", data.surucuAdi)
         setValue("tarih", dayjs(new Date()))
@@ -134,7 +135,9 @@ const AddModal = ({ setStatus }) => {
         if (plaka.length === 1) {
             setValue("plaka", plaka[0].id)
         }
-    }
+
+        if (watch('farkKm') < 0 && !watch('alinanKm')) setValue('farkKm', null)
+    }, [data, status])
 
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
@@ -171,6 +174,7 @@ const AddModal = ({ setStatus }) => {
             "ozelKullanim": false,
             "kmLog": kmLog,
             "yakitTanki": values.yakitTanki,
+            "lokasyonIn": values.lokasyonIn,
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",
             ozelAlan3: values.ozelAlan3 || "",
@@ -191,16 +195,41 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
-                reset()
-                getData()
+                if (plaka.length === 1) {
+                    reset(
+                        {
+                            plaka: data.plaka,
+                            sonAlinanKm: data.sonAlinanKm,
+                            litreFiyat: data.litreFiyat,
+                            "tarih": dayjs(new Date()),
+                            "saat": dayjs(new Date()),
+                            "alinanKm": null,
+                            "farkKm": null,
+                            "miktar": null,
+                            "fullDepo": false,
+                            "tutar": null,
+                            "tuketim": null,
+                            "engelle": false,
+                            surucuId: data.surucuId,
+                            yakitTipId: data.yakitTipId,
+                            yakitTip: data.yakitTip,
+                            surucu: data.surucuAdi,
+                            stokKullanimi: data.stokKullanimi
+                        }
+                    )
+                } else {
+                    reset()
+                }
+
+                if (plaka.length === 1) {
+                    YakitDataGetByIdService(plaka[0].id).then(res => {
+                        setData(res.data)
+                    })
+                }
             }
         })
         setStatus(false)
     })
-
-    useEffect(() => {
-        if (watch("engelle")) setIsValid(false)
-    }, [watch("engelle")])
 
     const personalProps = {
         form: "YAKIT",
@@ -223,7 +252,7 @@ const AddModal = ({ setStatus }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={!isValid}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
@@ -253,7 +282,6 @@ const AddModal = ({ setStatus }) => {
                 } else {
                     reset()
                 }
-
                 setResponse("normal")
             }}>
                 İptal
@@ -272,6 +300,7 @@ const AddModal = ({ setStatus }) => {
                 footer={footer}
                 width={1200}
             >
+                <p className="count">Güncel Km: []</p>
                 <FormProvider {...methods}>
                     <form>
                         <Tabs defaultActiveKey="1" items={items} />
