@@ -22,14 +22,15 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const { control, watch, setValue } = useFormContext()
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
 
-    useEffect(() => {
+    const calculateTuketim = () => {
         const fullDepo = watch("fullDepo");
         const farkKm = watch("farkKm");
         const miktar = watch("miktar");
         const yakitHacmi = watch("yakitHacmi");
 
-        let tktm = 0;
+        let tktm;
 
         if (fullDepo) {
             if (farkKm > 0) {
@@ -38,27 +39,22 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 tktm = 0
             }
         } else {
-            if (fullDepo) {
+            if (history[0]?.fullDepo) {
                 if (farkKm > 0) {
-                    tktm = (miktar / farkKm).toFixed(2);
+                    tktm = (history[0]?.miktar / farkKm).toFixed(2);
                 } else {
                     tktm = 0
                 }
             } else {
-                if (miktar > 0) {
-                    // yakitHacmi !== null ? tktm = (yakitHacmi / farkKm).toFixed(2) : tktm = 0
+                if (farkKm > 0) {
+                    yakitHacmi !== null ? tktm = (yakitHacmi / farkKm).toFixed(2) : tktm = 0
+                } else {
+                    tktm = 0
                 }
             }
         }
         setValue("tuketim", tktm);
-    }, [watch("fullDepo"), watch("farkKm"), watch("miktar"), watch("yakitHacmi")])
-
-    useEffect(() => {
-        if (watch("tuketim") === "0.00") {
-            message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!");
-            setValue("tuketim", 0)
-        }
-    }, [watch("tuketim")])
+    }
 
     useEffect(() => {
         YakitPriceGetService(watch('yakitTipId')).then(res => setValue("litreFiyat", res.data))
@@ -94,73 +90,49 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             if (res?.data.statusCode === 400) {
                 setResponse("error");
                 if (res?.data.message === " Invalid Km range for both KmLog and FuelKm !") {
-                    message.error("Alınan Km Yakıt ve Km Log-a girilemez!")
+                    setErrorMessage("Alınan Km Yakıt ve Km Log-a girilemez!")
                 } else if (res?.data.message === " Invalid FuelKm Range !") {
-                    message.error("Alınan Km Yakıt Log-a girilemez!")
+                    setErrorMessage("Alınan Km Yakıt Log-a girilemez!")
                 } else if (res?.data.message === " Invalid KmLog Range !") {
-                    message.error("Alınan Km Km Log-a girilemez!")
+                    setErrorMessage("Alınan Km Km Log-a girilemez!")
+                    if (watch('engelle')) {
+                        setResponse("success");
+                    }
                 }
+
             } else if (res?.data.statusCode === 200) {
                 setResponse("success");
-                setIsValid(true)
+                setIsValid(false)
             }
         })
-
-        setIsValid(false)
+        setIsValid(true)
     }
 
     useEffect(() => {
-        if (watch("alinanKm")) {
-            const fark = watch("alinanKm") - watch("sonAlinanKm")
-            setValue("farkKm", fark)
+        if (errorMessage) {
+            message.error(errorMessage);
         }
-    }, [watch("sonAlinanKm")])
+        setErrorMessage("")
+    }, [errorMessage])
 
-    const handlePressAlinanKm = e => {
-        if (watch("sonAlinanKm") === 0) {
-            setValue("farkKm", 0)
-        } else {
-            const fark = +e.target.value - watch("sonAlinanKm")
-            setValue("farkKm", fark)
-        }
+    // useEffect(() => {
+    //     if (watch("alinanKm")) {
+    //         const fark = watch("alinanKm") - watch("sonAlinanKm")
+    //         setValue("farkKm", fark)
+    //     }
+    // }, [watch("sonAlinanKm")])
 
-        validateLog()
-        e.target.blur()
-    }
 
-    const fetchData = () => {
-        const body = {
-            aracId: watch('aracId'),
-            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm")
-        }
-        YakitDataGetByDateService(body).then(res => {
-            res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
-        })
-    }
-
-    const handlePressFarkKm = e => {
-        const alinanKm = watch("sonAlinanKm") + +e.target.value
-        setValue("alinanKm", alinanKm)
-        validateLog()
-        e.target.blur()
-
-    }
-
-    const handlePressMiktar = e => {
-        const tutar = +e.target.value * watch("litreFiyat")
-        setValue("tutar", tutar)
-    }
-
-    const handlePressTutar = e => {
-        const miktar = +e.target.value / watch("litreFiyat")
-        setValue("miktar", Math.round(miktar))
-    }
-
-    const handlePressLitreFiyat = e => {
-        const miktar = watch("tutar") / +e.target.value
-        setValue("miktar", Math.round(miktar))
-    }
+    // const fetchData = () => {
+    //     const body = {
+    //         aracId: watch('aracId'),
+    //         tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+    //         saat: dayjs(watch("saat")).format("HH:mm")
+    //     }
+    //     YakitDataGetByDateService(body).then(res => {
+    //         res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
+    //     })
+    // }
 
     const updateDepoHacmi = () => {
         const body = {
@@ -263,14 +235,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => (
                                         <ConfigProvider locale={tr_TR}>
                                             <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY"
-                                                // onBlur={() => {
-                                                //     fetchData()
-                                                // }}
                                                 disabled
-                                            // onChange={e => {
-                                            //     field.onChange(e)
-                                            //     if (watch('alinanKm')) validateLog()
-                                            // }}
                                             />
                                         </ConfigProvider>
                                     )}
@@ -286,14 +251,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => (
                                         <TimePicker {...field} placeholder="" format="HH:mm"
                                             disabled
-
-                                        // onBlur={() => {
-                                        //     fetchData()
-                                        // }}
-                                        // onChange={e => {
-                                        //     field.onChange(e)
-                                        //     if (watch('alinanKm')) validateLog()
-                                        // }} 
                                         />
                                     )}
                                 />
@@ -322,7 +279,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     name="stokKullanimi"
                                     control={control}
                                     render={({ field }) => (
-                                        <Checkbox {...field} checked={field.value} />
+                                        <Checkbox {...field} checked={field.value} onChange={e => {
+                                            field.onChange(e.target.checked)
+                                        }}
+                                        />
                                     )}
                                 />
                             </div>
@@ -377,10 +337,21 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             {...field}
                                             style={response === 'error' ? { borderColor: "#dc3545" } : response === "success" ? { borderColor: "#23b545" } : { color: '#000' }}
                                             {...field}
-                                            onPressEnter={handlePressAlinanKm}
-                                            onBlur={handlePressAlinanKm}
+                                            onPressEnter={e => {
+                                                validateLog()
+                                                e.target.blur()
+                                            }}
+                                            onBlur={validateLog}
                                             onChange={e => {
                                                 field.onChange(e)
+                                                setIsValid(true)
+                                                if (watch('sonAlinanKm') === 0 && !watch("alinanKm")) {
+                                                    setValue("farkKm", 0)
+                                                } else {
+                                                    const fark = +e - watch("sonAlinanKm")
+                                                    setValue("farkKm", fark)
+                                                }
+                                                calculateTuketim()
                                             }}
                                         />
                                     )}
@@ -397,10 +368,21 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            onPressEnter={handlePressFarkKm}
-                                            onBlur={handlePressFarkKm}
+                                            readOnly={watch('sonAlinanKm') === 0}
+                                            onPressEnter={e => {
+                                                validateLog()
+                                                e.target.blur()
+                                            }}
+
+                                            onBlur={validateLog}
                                             onChange={e => {
                                                 field.onChange(e)
+                                                setIsValid(true)
+                                                const alinanKm = watch("sonAlinanKm") + +e
+                                                setValue("alinanKm", alinanKm)
+                                                validateLog()
+                                                calculateTuketim()
+
                                             }}
                                         />
                                     )}
@@ -416,6 +398,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => <Checkbox className='custom-checkbox' {...field} onChange={(e) => {
                                         field.onChange(e);
                                         validateLog();
+                                        
                                     }} />}
                                 />
                             </div>
@@ -426,9 +409,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <div className="flex align-baseline justify-between">
+                                <div className="flex align-baseline gap-1">
                                     <label className='text-info'>Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch('yakitHacmi')} {watch('birim') === "LITRE" && "lt"}</Button>
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi") === "" && 0} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
@@ -436,10 +419,20 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => <InputNumber
                                         className="w-full"
                                         {...field}
-                                        onPressEnter={handlePressMiktar}
-                                        onBlur={handlePressMiktar}
+                                        onPressEnter={e => {
+                                            if (watch("yakitHacmi" === "" && !watch("fullDepo"))) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
+                                            if (watch("yakitHacmi") < e) message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+                                        }}
                                         onChange={(e => {
                                             field.onChange(e)
+                                            if (watch("litreFiyat") === null) {
+                                                setValue("tutar", 0)
+                                            } else {
+                                                const tutar = +e * watch("litreFiyat")
+                                                setValue("tutar", tutar)
+                                            }
+                                            calculateTuketim()
+
                                         })}
                                     />}
                                 />
@@ -452,8 +445,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     <Controller
                                         control={control}
                                         name="fullDepo"
-                                        render={({ field }) => <Checkbox {...field} onChange={e => {
+                                        render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => {
                                             field.onChange(e.target.checked)
+                                            calculateTuketim()
                                         }} />}
                                     />
                                 </div>
@@ -492,10 +486,17 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            onPressEnter={handlePressLitreFiyat}
-                                            onBLur={handlePressLitreFiyat}
+
                                             onChange={(e => {
                                                 field.onChange(e)
+                                                if (e === null) {
+                                                    setValue("miktar", 0)
+                                                } else {
+                                                    const miktar = watch("tutar") / +e
+                                                    setValue("miktar", Math.round(miktar))
+                                                }
+                                                calculateTuketim()
+
                                             })}
                                         />
                                     )}
@@ -512,10 +513,17 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            onPressEnter={handlePressTutar}
-                                            onBLur={handlePressTutar}
+
                                             onChange={(e => {
                                                 field.onChange(e)
+                                                if (watch("litreFiyat") === null) {
+                                                    setValue("miktar", 0)
+                                                } else {
+                                                    const miktar = +e / watch("litreFiyat")
+                                                    setValue("miktar", Math.round(miktar))
+                                                }
+                                                calculateTuketim()
+
                                             })}
                                         />
                                     )}

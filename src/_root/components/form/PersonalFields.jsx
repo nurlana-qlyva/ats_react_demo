@@ -182,7 +182,7 @@ PersonalFields.propTypes = {
     personalProps: PropTypes.shape({
         form: PropTypes.string,
         fields: PropTypes.array,
-        setFields: PropTypes.string,
+        setFields: PropTypes.func,
     }),
 }
 

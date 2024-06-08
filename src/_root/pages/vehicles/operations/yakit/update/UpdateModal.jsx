@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
@@ -9,8 +9,11 @@ import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../../components/upload/FileUpload'
+import { PlakaContext } from '../../../../../../context/plakaSlice'
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => {
+    const { data, plaka, setData } = useContext(PlakaContext)
+
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
     // file
@@ -101,7 +104,23 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     ])
 
     const defaultValues = {
-
+        sonAlinanKm: null,
+        plaka: "",
+        yakitTipId: null,
+        yakitTanki: "",
+        surucuId: null,
+        surucu: "",
+        litreFiyat: null,
+        yakitHacmi: null,
+        "tarih": dayjs(new Date()),
+        "saat": dayjs(new Date()),
+        "alinanKm": null,
+        "farkKm": null,
+        "miktar": null,
+        "fullDepo": false,
+        "tutar": null,
+        "tuketim": null,
+        engelle: false
     }
 
     const methods = useForm({
@@ -109,8 +128,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     })
 
     const { handleSubmit, reset, watch, setValue } = methods
-
-    const getData = () => {
+// console.log(watch('tuketim'))
+    useEffect(() => {
         YakitUpdateDataGetService(id).then(res => {
             setValue("aracId", res?.data.aracId)
             setValue("plaka", res?.data.plaka)
@@ -136,6 +155,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             setValue("guzergahId", res?.data.guzergahId)
             setValue("guzergah", res?.data.guzergah)
             setValue("ozelKullanim", res?.data.ozelKullanim)
+            setValue("fullDepo", res?.data.fullDepo)
             setValue("stokKullanimi", res?.data.stokKullanimi)
             setValue("aciklama", res?.data.aciklama)
             setValue("faturaTarih", dayjs(res?.data.faturaTarih))
@@ -163,10 +183,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
         PhotoReadService(id, "YAKIT").then(res => setImageUrls(res.data))
         FileReadService(id, "YAKIT").then(res => setFilesUrl(res.data))
-    }
-
-    useEffect(() => {
-        getData()
     }, [id, status])
 
     const uploadImages = () => {
@@ -248,15 +264,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
             "ozelAlan11": values.ozelAlan11 || 0,
             "ozelAlan12": values.ozelAlan12 || 0,
-            "yakitTanki": values.yakitTanki
+            // "yakitTanki": values.yakitTanki
         }
 
         YakitUpdateDataUpdateService(body).then(res => {
             if (res.data.statusCode === 202) {
-                setStatus(true)
                 setUpdateModal(false)
                 setResponse('normal')
                 reset()
+                setStatus(true)
             }
         })
 
@@ -296,14 +312,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={!isValid}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
                 Güncelle
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
                 setResponse('normal')
                 reset()
-                getData()
+                setStatus(true)
             }}>
                 İptal
             </Button>
@@ -332,8 +348,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
 UpdateModal.propTypes = {
     updateModal: PropTypes.bool,
-    setUpdateModal: PropTypes.bool,
-    setStatus: PropTypes.bool,
+    setUpdateModal: PropTypes.func,
+    setStatus: PropTypes.func,
     id: PropTypes.number,
 }
 

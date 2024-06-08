@@ -174,7 +174,7 @@ const AddModal = ({ setStatus }) => {
             "ozelKullanim": false,
             "kmLog": kmLog,
             "yakitTanki": values.yakitTanki,
-            "lokasyonIn": values.lokasyonIn,
+            "lokasyonId": values.lokasyonId,
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",
             ozelAlan3: values.ozelAlan3 || "",

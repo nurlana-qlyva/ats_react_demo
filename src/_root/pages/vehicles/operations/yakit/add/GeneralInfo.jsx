@@ -415,8 +415,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     render={({ field }) => <InputNumber
                                         className="w-full"
                                         {...field}
-                                        onPressEnter={() => {
+                                        onPressEnter={e => {
                                             if (watch("yakitHacmi" === "" && !watch("fullDepo"))) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
+
+                                            if (watch("yakitHacmi") < e) message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
                                         }}
                                         onChange={(e => {
                                             field.onChange(e)
