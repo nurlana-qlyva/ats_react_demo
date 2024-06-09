@@ -138,7 +138,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         YakitDataGetByDateService(body).then(res => {
             res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
 
-            setValue('farkKm', watch('alinanKm') - watch('sonAlinanKm'))
+            if (watch('farkKm') > 0 && watch('alinanKm')) setValue('farkKm', watch('alinanKm') - watch('sonAlinanKm'))
+
         })
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data))
     }

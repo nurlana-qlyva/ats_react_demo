@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { HomeOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, Input, InputNumber, message, Modal, Spin, Tabs } from 'antd'
@@ -38,6 +38,7 @@ const breadcrumb = [
 ]
 
 const DetailUpdate = () => {
+    const navigate = useNavigate()
     const [vehiclesData, setVehiclesData] = useState([])
     const [loading, setLoading] = useState(false)
     const [status, setStatus] = useState(false)
@@ -339,11 +340,13 @@ const DetailUpdate = () => {
         ]
     )
 
+    const handleCancel = () => navigate('/araclar')
+
     return (
         <>
             {loading && (
                 <div className="loading-spin">
-                    <div>
+                    <div className='loader'>
                         <Spin
                             indicator={
                                 <LoadingOutlined
@@ -377,7 +380,7 @@ const DetailUpdate = () => {
                             <div className="grid p-10 gap-1">
                                 <div className="col-span-12 flex gap-1 justify-end">
                                     <Button className="btn btn-min primary-btn" onClick={onSubmit}>{t('guncelle')}</Button>
-                                    <Button className="btn btn-min cancel-btn">İptal</Button>
+                                    <Button className="btn btn-min cancel-btn" onClick={handleCancel}>İptal</Button>
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">

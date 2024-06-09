@@ -35,7 +35,8 @@ const RootLayout = () => {
                     style={{
                         padding: "10px 20px",
                         minHeight: 280,
-                        overflow: "auto"
+                        overflow: "auto",
+                        position: "relative"
                     }}
                 >
                     <Outlet />

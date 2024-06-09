@@ -626,7 +626,7 @@ const KmUpdate = () => {
         <div className='km'>
             {loading && (
                 <div className="loading-spin">
-                    <div>
+                    <div className='loader'>
                         <Spin
                             indicator={
                                 <LoadingOutlined

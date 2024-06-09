@@ -106,6 +106,18 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
+                                <label htmlFor="modelId">{t("model")}</label>
+                                <Controller
+                                    name="modelId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Model field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
                                 <label htmlFor="yil">{t("yil")}</label>
                                 <Controller
                                     name="yil"
@@ -121,18 +133,6 @@ const GeneralInfo = () => {
                                                 }
                                             }}
                                         />
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-4">
-                            <div className="flex flex-col gap-1">
-                                <label htmlFor="modelId">{t("model")}</label>
-                                <Controller
-                                    name="modelId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Model field={field} />
                                     )}
                                 />
                             </div>
@@ -234,7 +234,7 @@ const GeneralInfo = () => {
                     <div className="grid gap-1 mt-10">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="muayeneTarih">{t("muayeneTarihi")}</label>
+                                <label htmlFor="muayeneTarih" className='text-info'>{t("muayeneTarihi")}</label>
                                 <Controller
                                     name="muayeneTarih"
                                     control={control}
@@ -250,7 +250,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="sozlesmeTarih">{t("sozlesmeTarihi")}</label>
+                                <label htmlFor="sozlesmeTarih" className='text-info'>{t("sozlesmeTarihi")}</label>
                                 <Controller
                                     name="sozlesmeTarih"
                                     control={control}
@@ -266,7 +266,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="egzosTarih">{t("egzozTarihi")}</label>
+                                <label htmlFor="egzosTarih" className='text-info'>{t("egzozTarihi")}</label>
                                 <Controller
                                     name="egzosTarih"
                                     control={control}
@@ -282,7 +282,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="vergiTarih">{t("vergiTarihi")}</label>
+                                <label htmlFor="vergiTarih" className='text-info'>{t("vergiTarihi")}</label>
                                 <Controller
                                     name="vergiTarih"
                                     control={control}

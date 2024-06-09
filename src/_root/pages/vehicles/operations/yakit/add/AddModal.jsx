@@ -195,37 +195,7 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
-                if (plaka.length === 1) {
-                    reset(
-                        {
-                            plaka: data.plaka,
-                            sonAlinanKm: data.sonAlinanKm,
-                            litreFiyat: data.litreFiyat,
-                            "tarih": dayjs(new Date()),
-                            "saat": dayjs(new Date()),
-                            "alinanKm": null,
-                            "farkKm": null,
-                            "miktar": null,
-                            "fullDepo": false,
-                            "tutar": null,
-                            "tuketim": null,
-                            "engelle": false,
-                            surucuId: data.surucuId,
-                            yakitTipId: data.yakitTipId,
-                            yakitTip: data.yakitTip,
-                            surucu: data.surucuAdi,
-                            stokKullanimi: data.stokKullanimi
-                        }
-                    )
-                } else {
-                    reset()
-                }
-
-                if (plaka.length === 1) {
-                    YakitDataGetByIdService(plaka[0].id).then(res => {
-                        setData(res.data)
-                    })
-                }
+                reset()
             }
         })
         setStatus(false)
@@ -250,6 +220,34 @@ const AddModal = ({ setStatus }) => {
         }
     ]
 
+    const resetForm = (plaka, data, reset) => {
+        if (plaka.length === 1) {
+            reset(
+                {
+                    plaka: data.plaka,
+                    sonAlinanKm: data.sonAlinanKm,
+                    litreFiyat: data.litreFiyat,
+                    "tarih": dayjs(new Date()),
+                    "saat": dayjs(new Date()),
+                    "alinanKm": null,
+                    "farkKm": null,
+                    "miktar": null,
+                    "fullDepo": false,
+                    "tutar": null,
+                    "tuketim": null,
+                    "engelle": false,
+                    surucuId: data.surucuId,
+                    yakitTipId: data.yakitTipId,
+                    yakitTip: data.yakitTip,
+                    surucu: data.surucuAdi,
+                    stokKullanimi: data.stokKullanimi
+                }
+            )
+        } else {
+            reset()
+        }
+    }
+
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
@@ -257,31 +255,7 @@ const AddModal = ({ setStatus }) => {
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setopenModal(false)
-                if (plaka.length === 1) {
-                    reset(
-                        {
-                            plaka: data.plaka,
-                            sonAlinanKm: data.sonAlinanKm,
-                            litreFiyat: data.litreFiyat,
-                            "tarih": dayjs(new Date()),
-                            "saat": dayjs(new Date()),
-                            "alinanKm": null,
-                            "farkKm": null,
-                            "miktar": null,
-                            "fullDepo": false,
-                            "tutar": null,
-                            "tuketim": null,
-                            "engelle": false,
-                            surucuId: data.surucuId,
-                            yakitTipId: data.yakitTipId,
-                            yakitTip: data.yakitTip,
-                            surucu: data.surucuAdi,
-                            stokKullanimi: data.stokKullanimi
-                        }
-                    )
-                } else {
-                    reset()
-                }
+                resetForm(plaka, data, reset)
                 setResponse("normal")
             }}>
                 İptal

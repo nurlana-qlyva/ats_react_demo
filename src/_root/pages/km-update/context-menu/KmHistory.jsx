@@ -160,7 +160,7 @@ const KmUpdate = ({ data, setTable }) => {
             dataIndex: 'delete',
             render: (_, record) => {
                 return record.kaynak === "DÜZELTME" || record.kaynak === "SIFIRLAMA" ? dataSource.length >= 1 ? (
-                    <Button disabled style={{border: "none", background: "transparent", padding: 0}}><DeleteOutlined style={{ color: "#dc3545" }} /></Button>
+                    <Button disabled style={{ border: "none", background: "transparent", padding: 0 }}><DeleteOutlined style={{ color: "#dc3545" }} /></Button>
                 ) : null : dataSource.length >= 1 ? (
                     <Popconfirm title="Silmeye eminmisiniz?" onConfirm={() => handleDelete(record)}>
                         <DeleteOutlined style={{ color: "#dc3545" }} />
@@ -223,16 +223,18 @@ const KmUpdate = ({ data, setTable }) => {
             >
                 <div className="grid gap-1">
                     <div className="col-span-6">
-                        <Input className="w-full" placeholder="Tarih" disabled value={updateData?.tarih.split("T")[0].split("-").reverse().join(".")} />
+                        <label className='text-info'>Tarih</label>
+                        <Input className="w-full" disabled value={updateData?.tarih.split("T")[0].split("-").reverse().join(".")} />
                     </div>
                     <div className="col-span-6">
-                        <Input className="w-full" placeholder="Saat" disabled value={updateData?.saat} />
+                        <label className='text-info'>Saat</label>
+                        <Input className="w-full" disabled value={updateData?.saat} />
                     </div>
                     <div className="col-span-6">
+                        <label className='text-info'>Yeni Km</label>
                         <InputNumber
                             allowClear
                             style={{ borderColor: kmStatus }}
-                            placeholder="Yeni Km"
                             className="w-full"
                             value={updateData?.yeniKm}
                             onChange={e => {
