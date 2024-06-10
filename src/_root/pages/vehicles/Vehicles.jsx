@@ -424,7 +424,6 @@ const Vehicles = () => {
             </div>
 
             <div className="content">
-                <p className="count">[ {tableParams?.pagination.total} {t('kayit')} ]</p>
                 <DndContext
                     sensors={sensors}
                     modifiers={[restrictToHorizontalAxis]}
@@ -440,6 +439,7 @@ const Vehicles = () => {
                                 dataSource={vehiclesData}
                                 pagination={{
                                     ...tableParams.pagination,
+                                    showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
                                     locale: {
                                         items_per_page: `/ ${t('sayfa')}`,
                                     },

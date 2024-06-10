@@ -654,7 +654,10 @@ const KmUpdate = () => {
                 <Table
                     components={components}
                     rowClassName={() => 'editable-row'}
-                    pagination={tableParams.pagination}
+                    pagination={{
+                        ...tableParams.pagination,
+                        showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+                    }}
                     dataSource={dataSource}
                     columns={columns}
                     size="small"

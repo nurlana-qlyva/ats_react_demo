@@ -11,6 +11,7 @@ import { t } from 'i18next';
 
 const Yakit = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([]);
+    const [total, setTotal] = useState(null);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(false);
     const [tableParams, setTableParams] = useState({
@@ -27,7 +28,13 @@ const Yakit = ({ visible, onClose, ids }) => {
     useEffect(() => {
         setLoading(true);
         YakitGetByIdService(ids, tableParams?.pagination.current).then(res => {
-            setDataSource(res?.data.fuel_list);
+            setDataSource(res?.data.fuel_list)
+            setTotal({
+                avg_consumption: res?.data.avg_consumption,
+                avg_cost: res?.data.avg_cost,
+                total_cost: res?.data.total_cost,
+                total_quantity: res?.data.total_quantity,
+            })
             setTableParams({
                 ...tableParams,
                 pagination: {
@@ -225,11 +232,13 @@ const Yakit = ({ visible, onClose, ids }) => {
             </div>
 
             <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} id={yakitId} setStatus={setStatus} status={status} />
-            <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
             <Table
                 columns={filteredColumns}
                 dataSource={dataSource}
-                pagination={tableParams.pagination}
+                pagination={{
+                    ...tableParams.pagination,
+                    showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+                }}
                 loading={loading}
                 size="small"
                 onChange={handleTableChange}
@@ -237,6 +246,25 @@ const Yakit = ({ visible, onClose, ids }) => {
                     x: 1500,
                 }}
             />
+
+            <div className="grid gap-1 mt-10 text-center">
+                <div className="col-span-3 p-10 border">
+                    <h3 className='text-secondary'>Toplam Maliyet</h3>
+                    <p>{total?.total_cost} TL</p>
+                </div>
+                <div className="col-span-3 p-10 border">
+                    <h3 className='text-secondary'>Toplam Miktar</h3>
+                    <p>{total?.total_quantity}  Litre</p>
+                </div>
+                <div className="col-span-3 p-10 border">
+                    <h3 className='text-secondary'>Ortalama Tüketim</h3>
+                    <p>{total?.avg_consumption} lt/100 km</p>
+                </div>
+                <div className="col-span-3 p-10 border">
+                    <h3 className='text-secondary'>Ortalama Maliyet</h3>
+                    <p>{total?.avg_cost} TL</p>
+                </div>
+            </div>
         </Modal>
     );
 };

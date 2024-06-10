@@ -35,13 +35,6 @@
   position: relative;
 }
 
-.count {
-  position: absolute;
-  bottom: 36px;
-  left: 30px;
-  color: var(--info);
-}
-
 .loading-spin {
   background-color: var(--gray-200);
   width: 100%;
