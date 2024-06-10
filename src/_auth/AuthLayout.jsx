@@ -33,7 +33,7 @@ const AuthLayout = () => {
             const response = await LoginUserService(body)
             if (response?.data.accessToken) {
                 setIsSuccess(true)
-                setItemWithExpiration("token", response?.data.accessToken, 24)
+                setItemWithExpiration("token", response?.data.accessToken, 24, response?.data.siraNo)
                 navigate("/")
             }
         } catch (error) {

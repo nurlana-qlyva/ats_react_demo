@@ -1,8 +1,9 @@
-export function setItemWithExpiration(key, value, expirationHours) {
+export function setItemWithExpiration(key, value, expirationHours, id) {
     const now = new Date()
     const expirationTime = now.getTime() + expirationHours * 60 * 60 * 1000
 
     localStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem("id", JSON.stringify(id))
     localStorage.setItem(`${key}_expire`, expirationTime.toString())
 }
 
