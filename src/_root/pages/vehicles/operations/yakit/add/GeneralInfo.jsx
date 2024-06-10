@@ -24,6 +24,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const [openDetail, setOpenDetail] = useState(false)
     const [history, setHistory] = useState(0)
     const [errorMessage, setErrorMessage] = useState("")
+    const [content, setContent] = useState(null)
 
     useEffect(() => {
         setId(data.yakitTipId)
@@ -49,6 +50,51 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             } else {
                 tktm = 0
             }
+            const content = (
+                <div className="grid detail-tuketim">
+                    <div className="col-span-5">
+                        <p>Gidilen yol:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{watch('farkKm')} km</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{watch("miktar")} lt</p>
+                    </div>
+                    <div className="col-span-5">
+                        <p>Depoda bulunan yakıt miktarı:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <div className='text-info'>
+                            <Controller
+                                name="depoYakitMiktar"
+                                control={control}
+                                render={({ field }) => (
+                                    <InputNumber
+                                        {...field}
+                                        onChange={e => field.onChange(e)}
+                                    />
+                                )}
+                            />
+                            &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
+                        </div>
+                    </div>
+                    <div className="col-span-12">
+                        <Divider />
+                    </div>
+                    <div className="col-span-5">
+                        <p>Yakıt Tüketimi:</p>
+                    </div>
+                    <div className="col-span-6">
+                        <p className='text-info'>{watch('tuketim')} lt/km</p>
+                    </div>
+                </div>
+            )
+
+            setContent(content)
         } else {
             if (history[0]?.fullDepo) {
                 if (farkKm > 0) {
@@ -56,9 +102,101 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 } else {
                     tktm = 0
                 }
+
+                const content = (
+                    <div className="grid detail-tuketim">
+                        <div className="col-span-5">
+                            <p>Gidilen yol:</p>
+                        </div>
+                        <div className="col-span-6">
+                            <p className='text-info'>{watch('farkKm')} km</p>
+                        </div>
+                        <div className="col-span-5">
+                            <p>Bir önceki yakıt miktarı:</p>
+                        </div>
+                        <div className="col-span-6">
+                            <p className='text-info'>{history[0]?.miktar} lt</p>
+                        </div>
+                        <div className="col-span-5">
+                            <p>Depoda bulunan yakıt miktarı:</p>
+                        </div>
+                        <div className="col-span-6">
+                            <div className='text-info'>
+                                <Controller
+                                    name="depoYakitMiktar"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            onChange={e => field.onChange(e)}
+                                        />
+                                    )}
+                                />
+                                &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
+                            </div>
+                        </div>
+                        <div className="col-span-12">
+                            <Divider />
+                        </div>
+                        <div className="col-span-5">
+                            <p>Yakıt Tüketimi:</p>
+                        </div>
+                        <div className="col-span-6">
+                            <p className='text-info'>{watch('tuketim')} lt/km</p>
+                        </div>
+                    </div>
+                )
+
+                setContent(content)
             } else {
                 if (farkKm > 0) {
                     yakitHacmi !== null ? tktm = (yakitHacmi / farkKm).toFixed(2) : tktm = 0
+
+                    const content = (
+                        <div className="grid detail-tuketim">
+                            <div className="col-span-5">
+                                <p>Gidilen yol:</p>
+                            </div>
+                            <div className="col-span-6">
+                                <p className='text-info'>{watch('farkKm')} km</p>
+                            </div>
+                            <div className="col-span-5">
+                                <p>Araç depo hacmi:</p>
+                            </div>
+                            <div className="col-span-6">
+                                <p className='text-info'>{watch("yakitHacmi")} lt</p>
+                            </div>
+                            <div className="col-span-5">
+                                <p>Depoda bulunan yakıt miktarı:</p>
+                            </div>
+                            <div className="col-span-6">
+                                <div className='text-info'>
+                                    <Controller
+                                        name="depoYakitMiktar"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <InputNumber
+                                                {...field}
+                                                onChange={e => field.onChange(e)}
+                                            />
+                                        )}
+                                    />
+                                    &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
+                                </div>
+                            </div>
+                            <div className="col-span-12">
+                                <Divider />
+                            </div>
+                            <div className="col-span-5">
+                                <p>Yakıt Tüketimi:</p>
+                            </div>
+                            <div className="col-span-6">
+                                <p className='text-info'>{watch('tuketim')} lt/km</p>
+                            </div>
+                        </div>
+                    )
+
+                    setContent(content)
                 } else {
                     tktm = 0
                 }
@@ -553,62 +691,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 footer={detailModalFooter}
                 onCancel={() => setOpenDetail(false)}
             >
-                <div className="grid detail-tuketim">
-                    <div className="col-span-5">
-                        <p>Araç depo hacmi:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <p className='text-info'>{watch("yakitHacmi")} lt</p>
-                    </div>
-                    <div className="col-span-5">
-                        <p>Bir önceki yakıt miktarı:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <p className='text-info'>{data.miktar} lt</p>
-                    </div>
-                    <div className="col-span-5">
-                        <p>Depoda bulunan yakıt miktarı:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <div className='text-info'>
-                            <Controller
-                                name="depoYakitMiktar"
-                                control={control}
-                                render={({ field }) => (
-                                    <InputNumber
-                                        {...field}
-                                        onChange={e => field.onChange(e)}
-                                    />
-                                )}
-                            />
-                            &nbsp; lt (Depo {data.fullDepo ? "fullendi" : "fullenmedi"})
-                        </div>
-                    </div>
-                    <div className="col-span-12">
-                        <Divider />
-                    </div>
-                    <div className="col-span-5">
-                        <p>Harcanan yakıt miktarı:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <p className='text-info'>{data.miktar - data.depoYakitMiktar} lt</p>
-                    </div>
-                    <div className="col-span-5">
-                        <p>Gidilen yol:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <p className='text-info'>{data.farkKm} km</p>
-                    </div>
-                    <div className="col-span-12">
-                        <Divider />
-                    </div>
-                    <div className="col-span-5">
-                        <p>Yakıt Tüketimi:</p>
-                    </div>
-                    <div className="col-span-6">
-                        <p className='text-info'>{data.tuketim} lt/km</p>
-                    </div>
-                </div>
+                {content}
             </Modal>
 
             {history.length >= 3 && (

@@ -128,7 +128,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     })
 
     const { handleSubmit, reset, watch, setValue } = methods
-// console.log(watch('tuketim'))
     useEffect(() => {
         YakitUpdateDataGetService(id).then(res => {
             setValue("aracId", res?.data.aracId)
@@ -233,7 +232,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             "faturaNo": values.faturaNo,
             "sonAlinanKm": values.sonAlinanKm,
             "farkKm": values.farkKm,
-            "yakitHacmi": values.yakitHacmi,
+            // "yakitHacmi": `${values.yakitHacmi}`,
             "yakitTipId": values.yakitTipId,
             "lokasyonId": values.lokasyonId,
             "guzergahId": values.guzergahId,
@@ -271,7 +270,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             if (res.data.statusCode === 202) {
                 setUpdateModal(false)
                 setResponse('normal')
-                reset()
                 setStatus(true)
             }
         })
@@ -318,7 +316,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
                 setResponse('normal')
-                reset()
                 setStatus(true)
             }}>
                 İptal
