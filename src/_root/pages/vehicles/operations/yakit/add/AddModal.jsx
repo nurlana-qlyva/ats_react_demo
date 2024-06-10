@@ -9,7 +9,7 @@ import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 
 const AddModal = ({ setStatus }) => {
-    const { data, plaka, setData } = useContext(PlakaContext)
+    const { data, plaka, setData, setHistory } = useContext(PlakaContext)
 
     const [openModal, setopenModal] = useState(false)
     const [isValid, setIsValid] = useState(false)
@@ -139,39 +139,6 @@ const AddModal = ({ setStatus }) => {
         if (watch('farkKm') < 0 && !watch('alinanKm')) setValue('farkKm', null)
     }, [data, status])
 
-    // useEffect(() => {
-    //     if (plaka.length === 1) {
-    //         reset(
-    //             {
-    //                 plaka: data.plaka,
-    //                 sonAlinanKm: data.sonAlinanKm,
-    //                 litreFiyat: data.litreFiyat,
-    //                 "tarih": dayjs(new Date()),
-    //                 "saat": dayjs(new Date()),
-    //                 "alinanKm": null,
-    //                 "farkKm": null,
-    //                 "miktar": null,
-    //                 "fullDepo": false,
-    //                 "tutar": null,
-    //                 "tuketim": null,
-    //                 "engelle": false,
-    //                 surucuId: data.surucuId,
-    //                 yakitTipId: data.yakitTipId,
-    //                 yakitTip: data.yakitTip,
-    //                 surucu: data.surucuAdi,
-    //                 stokKullanimi: data.stokKullanimi
-    //             }
-    //         )
-    //     } else {
-    //         reset()
-    //     }
-    //     if (plaka.length === 1) {
-    //         YakitDataGetByIdService(plaka[0].id).then(res => {
-    //             setData(res.data)
-    //         })
-    //     }
-    // }, [status])
-
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
             "kmAracId": data.aracId,
@@ -254,6 +221,7 @@ const AddModal = ({ setStatus }) => {
                 } else {
                     reset()
                 }
+                setHistory([])
                 if (plaka.length === 1) {
                     YakitDataGetByIdService(plaka[0].id).then(res => {
                         setData(res.data)
@@ -276,7 +244,7 @@ const AddModal = ({ setStatus }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
+            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse}/>,
         },
         {
             key: '2',
@@ -323,6 +291,7 @@ const AddModal = ({ setStatus }) => {
                 setopenModal(false)
                 resetForm(plaka, data, reset)
                 setResponse("normal")
+                setHistory([])
             }}>
                 İptal
             </Button>

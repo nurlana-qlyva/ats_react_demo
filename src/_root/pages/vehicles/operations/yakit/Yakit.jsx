@@ -179,7 +179,6 @@ const Yakit = ({ visible, onClose, ids }) => {
             Kapat
         </Button>
     ];
-
     const plakaData = plaka.map(item => item.plaka).join(', ');
 
     const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -208,7 +207,6 @@ const Yakit = ({ visible, onClose, ids }) => {
             />
         </>
     );
-
     return (
         <Modal
             title={`Yakıt Bilgileri Plaka: [${plakaData}]`}
@@ -259,7 +257,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 </div>
                 <div className="col-span-3 p-10 border">
                     <h3 className='text-secondary'>Ortalama Tüketim <ArrowUpOutlined style={{ color: 'red' }} /></h3>
-                    <p>{total?.avg_consumption % 100} lt/100 km</p>
+                    <p>{(total?.avg_consumption % 100).toFixed(2)} lt/100 km</p>
                 </div>
                 <div className="col-span-3 p-10 border">
                     <h3 className='text-secondary'>Ortalama Maliyet</h3>

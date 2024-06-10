@@ -197,3 +197,9 @@ export const YakitUpdateDataUpdateService = (data) => {
 export const YakitDataDeleteService = (id) => {
   return http.get(`/Fuel/DeleteFuelCard?fuelId=${id}`)
 }
+
+// Vehicle/GetUserId
+// demo
+export const DemoService = () => {
+  return http.get(`/Vehicle/GetUserId`)
+}

@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable'
 import { Checkbox, Table, Popover, Button, Input } from 'antd'
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
-import { VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
+import { DemoService, VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
@@ -192,7 +192,7 @@ const Vehicles = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
-    const { setPlaka, plaka } = useContext(PlakaContext)
+    const { setPlaka } = useContext(PlakaContext)
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -215,7 +215,9 @@ const Vehicles = () => {
             over: -1,
         });
     }
-
+    useEffect(() => {
+        DemoService().then(res => res.data)
+    }, [])
     const onDragOver = ({ active, over }) => {
         const activeIndex = columns.findIndex((i) => i.key === active.id);
         const overIndex = columns.findIndex((i) => i.key === over?.id);
@@ -362,8 +364,9 @@ const Vehicles = () => {
             }
         } else {
             const filteredKeys = keys.filter(key => key !== row.aracId)
+            const filteredRows = rows.filter(item => item.aracId !== row.aracId)
             setKeys(filteredKeys)
-            setRows(filteredKeys)
+            setRows(filteredRows)
         }
     }
     useEffect(() => localStorage.setItem('selectedRowKeys', JSON.stringify(keys)), [keys])
@@ -393,7 +396,6 @@ const Vehicles = () => {
             setSelectedRowKeys(JSON.parse(localStorage.getItem('selectedRowKeys')))
         }
     }, [tableParams.pagination.current, localStorage.getItem('selectedRowKeys')])
-    //    end getting selected rows data
 
     return (
         <>

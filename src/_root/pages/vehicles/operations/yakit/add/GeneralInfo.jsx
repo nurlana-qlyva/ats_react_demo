@@ -18,11 +18,10 @@ dayjs.locale('tr')
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const [, contextHolder] = message.useMessage()
     const { control, setValue, watch } = useFormContext()
-    const { data } = useContext(PlakaContext)
+    const { data, history, setHistory } = useContext(PlakaContext)
     const { setId } = useContext(FuelTankContext)
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
-    const [history, setHistory] = useState(0)
     const [errorMessage, setErrorMessage] = useState("")
     const [content, setContent] = useState(null)
     const [logError, setLogError] = useState(false)
@@ -46,7 +45,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         let tktm = 0;
 
         if (fullDepo) {
-            if (farkKm > 0) {
+            if (farkKm > 0 && miktar > 0) {
                 tktm = (miktar / farkKm).toFixed(2);
             } else {
                 tktm = 0
@@ -76,7 +75,9 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 render={({ field }) => (
                                     <InputNumber
                                         {...field}
+                                        value={watch('yakitHacmi') - watch('miktar')}
                                         onChange={e => field.onChange(e)}
+                                        readOnly
                                     />
                                 )}
                             />
@@ -98,7 +99,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             setContent(content)
         } else {
             if (history[0]?.fullDepo) {
-                if (farkKm > 0) {
+                if (farkKm > 0 && miktar > 0) {
                     tktm = (history[0]?.miktar / farkKm).toFixed(2);
                 } else {
                     tktm = 0
@@ -150,7 +151,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
                 setContent(content)
             } else {
-                if (farkKm > 0) {
+                if (farkKm > 0 && miktar > 0) {
                     yakitHacmi !== null ? tktm = (yakitHacmi / farkKm).toFixed(2) : tktm = 0
 
                     const content = (
@@ -166,6 +167,12 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             </div>
                             <div className="col-span-6">
                                 <p className='text-info'>{watch("yakitHacmi")} lt</p>
+                            </div>
+                            <div className="col-span-5">
+                                <p>Bir önceki yakıt miktarı:</p>
+                            </div>
+                            <div className="col-span-6">
+                                <p className='text-info'>{history[0]?.miktar} lt</p>
                             </div>
                             <div className="col-span-5">
                                 <p>Depoda bulunan yakıt miktarı:</p>
@@ -205,7 +212,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         }
         setValue("tuketim", tktm);
     }, [watch("fullDepo"), watch("farkKm"), watch("miktar"), watch("yakitHacmi")])
-
 
     const validateLog = () => {
         const body = {
@@ -248,6 +254,15 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
         setIsValid(true)
     }
+
+    useEffect(() => {
+        if (watch('depoYakitMiktar') + history[0]?.miktar > watch('yakitHacmi')) {
+            message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+            setIsValid(true)
+        }else {
+            setIsValid(false)
+        }
+    }, [watch('depoYakitMiktar')])
 
     useEffect(() => {
         if (logError) {
@@ -559,11 +574,14 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         className="w-full"
                                         {...field}
                                         onPressEnter={e => {
-                                            console.log(watch("yakitHacmi"))
-                                            console.log(e)
                                             if (watch("yakitHacmi") === 0 && !watch("fullDepo")) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
 
-                                            if (watch("yakitHacmi") < +e.target.value) message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+                                            if (watch("yakitHacmi") < (+e.target.value + +watch("depoYakitMiktar"))) {
+                                                message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+                                                setIsValid(true)
+                                            }else {
+                                                setIsValid(false)
+                                            }
                                         }}
                                         onChange={(e => {
                                             field.onChange(e)
@@ -574,7 +592,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                 const tutar = +e * watch("litreFiyat")
                                                 setValue("tutar", tutar)
                                             }
-
                                         })}
                                     />}
                                 />
