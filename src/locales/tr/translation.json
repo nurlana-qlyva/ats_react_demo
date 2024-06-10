@@ -52,5 +52,16 @@
     "kullanim": "Kullanım",
     "miktar": "Miktar",
     "tutar": "Tutar",
-    "tuketim": "Ortalama Tüketim"
+    "tuketim": "Ortalama Tüketim",
+    "malzemeKodu": "Malzeme Kodu",
+    "malzemeTanimi": "Malzeme Tanımı",
+    "malzemeTipi": "Malzeme Tipi",
+    "stokMiktar": "Stok Miktar",
+    "birim": "Birim",
+    "fiyat": "Fiyat",
+    "seriNo": "Seri No",
+    "barkodNo": "Barkod No",
+    "aciklama": "Açıklama",
+    "malzemeTanimlari": "Malzeme Tanımları",
+    "fisGirisDateyi": "FİŞ GİRİŞ DETAYI"
 }

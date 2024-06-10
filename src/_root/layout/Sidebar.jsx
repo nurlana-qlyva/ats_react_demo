@@ -21,73 +21,108 @@ const items = [
         label: 'Araç Yönetimi',
         children: [
             {
-                key: '5',
+                key: '3',
                 label: (
                     <Link to={'/araclar'}>Araçlar</Link>
                 ),
             },
             {
-                key: '6',
+                key: '4',
                 label: (
                     <Link to={'/yakit'}>Yakıt İşlemleri</Link>
                 )
             },
             {
-                key: '7',
+                key: '5',
                 label: 'Servis İşlemleri',
             },
             {
-                key: '9',
+                key: '6',
                 label: 'Görevler',
             },
             {
-                key: '10',
+                key: '7',
                 label: 'Sigortalar',
             },
             {
-                key: '11',
+                key: '8',
                 label: 'Harcamalar',
             },
             {
-                key: '12',
+                key: '9',
                 label: 'Kazalar',
             },
             {
-                key: '13',
+                key: '10',
                 label: 'Cezalar',
             },
             {
-                key: '14',
+                key: '11',
                 label: 'Lokasyonlar',
             },
         ],
     },
     {
-        key: '15',
+        key: '12',
+        icon: <CarOutlined />,
+        label: 'Malzeme Depo',
+        children: [
+            {
+                key: '13',
+                label: (
+                    <Link to={'/malzeme-tanimlari'}>Malzeme Tanımları</Link>
+                ),
+            },
+            {
+                key: '14',
+                label: (
+                    <Link to={''}>Malzeme Giriş Fişleri</Link>
+                )
+            },
+            {
+                key: '15',
+                label: <Link to={''}>Malzeme Çıkış Fişleri</Link>,
+            },
+            {
+                key: '16',
+                label: <Link to={''}>Depo Transferleri</Link>,
+            },
+            {
+                key: '17',
+                label: <Link to={''}>Malzeme Talepleri</Link>,
+            },
+            {
+                key: '18',
+                label: <Link to={''}>Malzeme Hareketleri</Link>,
+            },
+        ],
+    },
+    {
+        key: '19',
         icon: <FastForwardOutlined />,
         label: (
             <Link to={'/hizli-km-guncelleme'}>Hızlı Km Güncelleme</Link>
         ),
     },
     {
-        key: '16',
+        key: '20',
         icon: <FaGears />,
         label: 'Sistem Ayarları',
         children: [
             {
-                key: '17',
+                key: '21',
                 label: (
                     <Link to={'/ayarlar'}>Ayarlar</Link>
                 ),
             },
             {
-                key: '18',
+                key: '22',
                 label: (
                     <Link to={`/kullanici-tanimlari`}>Kullanıcı Tanımları</Link>
                 ),
             },
             {
-                key: '19',
+                key: '23',
                 label: (
                     <Link to={`/kullanici-tanimlari`}>Doküman Yöneticisi</Link>
 
