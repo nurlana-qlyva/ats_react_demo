@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { Modal, Button, Table, Checkbox, Popconfirm, Input, Popover } from 'antd';
-import { DeleteOutlined, MenuOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MenuOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { PlakaContext } from '../../../../../context/plakaSlice';
 import { YakitDataDeleteService, YakitGetByIdService } from '../../../../../api/service';
 import AddModal from './add/AddModal';
@@ -111,6 +111,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             title: 'Ortalama Tüketim',
             dataIndex: 'tuketim',
             key: 8,
+            render: (text, record) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
         },
         {
             title: 'Km Başına Maliyet',
@@ -257,8 +258,8 @@ const Yakit = ({ visible, onClose, ids }) => {
                     <p>{total?.total_quantity}  Litre</p>
                 </div>
                 <div className="col-span-3 p-10 border">
-                    <h3 className='text-secondary'>Ortalama Tüketim</h3>
-                    <p>{total?.avg_consumption} lt/100 km</p>
+                    <h3 className='text-secondary'>Ortalama Tüketim <ArrowUpOutlined style={{ color: 'red' }} /></h3>
+                    <p>{total?.avg_consumption % 100} lt/100 km</p>
                 </div>
                 <div className="col-span-3 p-10 border">
                     <h3 className='text-secondary'>Ortalama Maliyet</h3>

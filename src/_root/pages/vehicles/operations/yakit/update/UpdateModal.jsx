@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, message, Modal, Tabs } from 'antd'
 import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
-import { FileReadService, PhotoReadService, YakitUpdateDataGetService, YakitUpdateDataUpdateService } from '../../../../../../api/service'
+import { FileReadService, PhotoReadService, YakitDataGetByIdService, YakitUpdateDataGetService, YakitUpdateDataUpdateService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../../../components/form/PersonalFields'
 import PhotoUpload from '../../../../../components/upload/PhotoUpload'
@@ -178,6 +178,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             setValue("kmLogId", res?.data.kmLogId)
             setValue("eskiKm", res?.data.kmLogEskiKm)
             setValue("engelle", res?.data.hasToInsertKmLog)
+            setValue("yakitHacmi", res?.data.yakitHacmi)
         })
 
         PhotoReadService(id, "YAKIT").then(res => setImageUrls(res.data))
@@ -271,6 +272,37 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
                 setUpdateModal(false)
                 setResponse('normal')
                 setStatus(true)
+                if (plaka.length === 1) {
+                    reset(
+                        {
+                            plaka: data.plaka,
+                            sonAlinanKm: data.sonAlinanKm,
+                            litreFiyat: data.litreFiyat,
+                            "tarih": dayjs(new Date()),
+                            "saat": dayjs(new Date()),
+                            "alinanKm": null,
+                            "farkKm": null,
+                            "miktar": null,
+                            "fullDepo": false,
+                            "tutar": null,
+                            "tuketim": null,
+                            "engelle": false,
+                            surucuId: data.surucuId,
+                            yakitTipId: data.yakitTipId,
+                            yakitTip: data.yakitTip,
+                            surucu: data.surucuAdi,
+                            stokKullanimi: data.stokKullanimi,
+                            yakitHacmi: data.yakitHacmi
+                        }
+                    )
+                } else {
+                    reset()
+                }
+                if (plaka.length === 1) {
+                    YakitDataGetByIdService(plaka[0].id).then(res => {
+                        setData(res.data)
+                    })
+                }
             }
         })
 

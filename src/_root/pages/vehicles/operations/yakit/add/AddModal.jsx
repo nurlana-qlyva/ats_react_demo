@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
-import { Button, Modal, Tabs } from 'antd'
+import { Button, message, Modal, Tabs } from 'antd'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
 import { YakitAddService, YakitDataGetByIdService } from '../../../../../../api/service'
 import GeneralInfo from './GeneralInfo'
@@ -139,6 +139,39 @@ const AddModal = ({ setStatus }) => {
         if (watch('farkKm') < 0 && !watch('alinanKm')) setValue('farkKm', null)
     }, [data, status])
 
+    // useEffect(() => {
+    //     if (plaka.length === 1) {
+    //         reset(
+    //             {
+    //                 plaka: data.plaka,
+    //                 sonAlinanKm: data.sonAlinanKm,
+    //                 litreFiyat: data.litreFiyat,
+    //                 "tarih": dayjs(new Date()),
+    //                 "saat": dayjs(new Date()),
+    //                 "alinanKm": null,
+    //                 "farkKm": null,
+    //                 "miktar": null,
+    //                 "fullDepo": false,
+    //                 "tutar": null,
+    //                 "tuketim": null,
+    //                 "engelle": false,
+    //                 surucuId: data.surucuId,
+    //                 yakitTipId: data.yakitTipId,
+    //                 yakitTip: data.yakitTip,
+    //                 surucu: data.surucuAdi,
+    //                 stokKullanimi: data.stokKullanimi
+    //             }
+    //         )
+    //     } else {
+    //         reset()
+    //     }
+    //     if (plaka.length === 1) {
+    //         YakitDataGetByIdService(plaka[0].id).then(res => {
+    //             setData(res.data)
+    //         })
+    //     }
+    // }, [status])
+
     const onSubmit = handleSubmit((values) => {
         const kmLog = {
             "kmAracId": data.aracId,
@@ -170,24 +203,24 @@ const AddModal = ({ setStatus }) => {
             "stokKullanimi": values.stokKullanimi,
             "litreFiyat": values.litreFiyat,
             "tutar": values.tutar ? values.tutar : 0,
-            birim: data.birim,
+            "birim": data.birim,
             "ozelKullanim": false,
             "kmLog": kmLog,
             "yakitTanki": values.yakitTanki,
             "lokasyonId": values.lokasyonId,
-            ozelAlan1: values.ozelAlan1 || "",
-            ozelAlan2: values.ozelAlan2 || "",
-            ozelAlan3: values.ozelAlan3 || "",
-            ozelAlan4: values.ozelAlan4 || "",
-            ozelAlan5: values.ozelAlan5 || "",
-            ozelAlan6: values.ozelAlan6 || "",
-            ozelAlan7: values.ozelAlan7 || "",
-            ozelAlan8: values.ozelAlan8 || "",
-            ozelAlanKodId9: values.ozelAlanKodId9 || 0,
-            ozelAlanKodId10: values.ozelAlanKodId10 || 0,
-            ozelAlan11: values.ozelAlan11 || 0,
-            ozelAlan12: values.ozelAlan12 || 0,
-            hasToInsertKmLog: values.engelle ? values.engelle : false
+            "ozelAlan1": values.ozelAlan1 || "",
+            "ozelAlan2": values.ozelAlan2 || "",
+            "ozelAlan3": values.ozelAlan3 || "",
+            "ozelAlan4": values.ozelAlan4 || "",
+            "ozelAlan5": values.ozelAlan5 || "",
+            "ozelAlan6": values.ozelAlan6 || "",
+            "ozelAlan7": values.ozelAlan7 || "",
+            "ozelAlan8": values.ozelAlan8 || "",
+            "ozelAlanKodId9": values.ozelAlanKodId9 || 0,
+            "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
+            "ozelAlan11": values.ozelAlan11 || 0,
+            "ozelAlan12": values.ozelAlan12 || 0,
+            "hasToInsertKmLog": values.engelle ? values.engelle : false
         }
 
         YakitAddService(body).then(res => {
@@ -195,7 +228,39 @@ const AddModal = ({ setStatus }) => {
                 setStatus(true)
                 setResponse("normal")
                 setopenModal(false)
-                reset()
+                if (plaka.length === 1) {
+                    reset(
+                        {
+                            plaka: data.plaka,
+                            sonAlinanKm: data.sonAlinanKm,
+                            litreFiyat: data.litreFiyat,
+                            "tarih": dayjs(new Date()),
+                            "saat": dayjs(new Date()),
+                            "alinanKm": null,
+                            "farkKm": null,
+                            "miktar": null,
+                            "fullDepo": false,
+                            "tutar": null,
+                            "tuketim": null,
+                            "engelle": false,
+                            surucuId: data.surucuId,
+                            yakitTipId: data.yakitTipId,
+                            yakitTip: data.yakitTip,
+                            surucu: data.surucuAdi,
+                            stokKullanimi: data.stokKullanimi,
+                            yakitHacmi: data.yakitHacmi
+                        }
+                    )
+                } else {
+                    reset()
+                }
+                if (plaka.length === 1) {
+                    YakitDataGetByIdService(plaka[0].id).then(res => {
+                        setData(res.data)
+                    })
+                }
+            }else {
+                message.error('Bir sorun oluşdu! Tekrar deneyiniz.')
             }
         })
         setStatus(false)
@@ -236,6 +301,7 @@ const AddModal = ({ setStatus }) => {
                     "tutar": null,
                     "tuketim": null,
                     "engelle": false,
+                    "yakitHacmi": data.yakitHacmi,
                     surucuId: data.surucuId,
                     yakitTipId: data.yakitTipId,
                     yakitTip: data.yakitTip,

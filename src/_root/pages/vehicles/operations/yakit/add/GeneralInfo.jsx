@@ -25,6 +25,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const [history, setHistory] = useState(0)
     const [errorMessage, setErrorMessage] = useState("")
     const [content, setContent] = useState(null)
+    const [logError, setLogError] = useState(false)
 
     useEffect(() => {
         setId(data.yakitTipId)
@@ -210,13 +211,13 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         const body = {
             aracId: data.aracId,
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm"),
+            saat: dayjs(watch("saat")).format("HH:mm:ss"),
             alinanKm: watch("alinanKm"),
             "kmLog": {
                 "kmAracId": data.aracId,
                 "plaka": data.plaka,
                 "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
-                "saat": dayjs(watch("saat")).format("HH:mm"),
+                "saat": dayjs(watch("saat")).format("HH:mm:ss"),
                 "yeniKm": watch("alinanKm"),
                 "dorse": false,
                 "kaynak": "YAKIT",
@@ -233,6 +234,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     setErrorMessage("Alınan Km Yakıt Log-a girilemez!")
                 } else if (res?.data.message === " Invalid KmLog Range !") {
                     setErrorMessage("Alınan Km Km Log-a girilemez!")
+                    setLogError(true)
                     if (watch('engelle')) {
                         setResponse("success");
                     }
@@ -246,6 +248,15 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
         setIsValid(true)
     }
+
+    useEffect(() => {
+        if (logError) {
+            if (watch('engelle')) {
+                setResponse("success");
+                setIsValid(false)
+            }
+        }
+    }, [logError, watch('engelle')])
 
     useEffect(() => {
         if (errorMessage) {
@@ -271,7 +282,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         const body = {
             aracId: data.aracId,
             tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm")
+            saat: dayjs(watch("saat")).format("HH:mm:ss")
         }
         YakitDataGetByDateService(body).then(res => {
             res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
@@ -279,7 +290,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             if (watch('farkKm') > 0 && watch('alinanKm')) setValue('farkKm', watch('alinanKm') - watch('sonAlinanKm'))
 
         })
-        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm")).then((res) => setHistory(res.data))
+        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm:ss")).then((res) => setHistory(res.data))
     }
 
     const footer = (
@@ -304,13 +315,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             </Button>
         ]
     )
-
-    // useEffect(() => {
-    //     if (watch("alinanKm")) {
-    //         const fark = watch("alinanKm") - watch("sonAlinanKm")
-    //         setValue("farkKm", fark)
-    //     }
-    // }, [watch("sonAlinanKm")])
 
     return (
         <>
@@ -379,7 +383,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <TimePicker
                                             {...field}
                                             placeholder=""
-                                            format="HH:mm"
+                                            format="HH:mm:ss"
                                             onBlur={() => {
                                                 fetchData()
                                             }}
@@ -507,11 +511,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             {...field}
                                             className='w-full'
                                             readOnly={data.sonAlinanKm === 0}
+                                            value={watch('farkKm') < 0 ? 0 : watch('farkKm')}
                                             onPressEnter={e => {
                                                 validateLog()
                                                 e.target.blur()
                                             }}
-
                                             onBlur={validateLog}
                                             onChange={e => {
                                                 field.onChange(e)
@@ -546,7 +550,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline gap-1">
                                     <label htmlFor="miktar" >Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi") === "" && 0} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
@@ -555,9 +559,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         className="w-full"
                                         {...field}
                                         onPressEnter={e => {
-                                            if (watch("yakitHacmi" === "" && !watch("fullDepo"))) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
+                                            console.log(watch("yakitHacmi"))
+                                            console.log(e)
+                                            if (watch("yakitHacmi") === 0 && !watch("fullDepo")) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
 
-                                            if (watch("yakitHacmi") < e) message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+                                            if (watch("yakitHacmi") < +e.target.value) message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
                                         }}
                                         onChange={(e => {
                                             field.onChange(e)

@@ -60,7 +60,7 @@ const EditableCell = ({
             setOpenTimePicker(true);
         }
         form.setFieldsValue({
-            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm") : record[dataIndex],
+            [dataIndex]: dataIndex === 'tarih' && record[dataIndex] ? dayjs(record[dataIndex], 'DD.MM.YYYY') : dataIndex === 'saat' && record[dataIndex] ? dayjs(record[dataIndex], "HH:mm:ss") : record[dataIndex],
         })
     }
 
@@ -78,7 +78,7 @@ const EditableCell = ({
                             : ''
                         : dataIndex === 'saat' && values[dataIndex]
                             ? dayjs(values[dataIndex]).isValid()
-                                ? dayjs(values[dataIndex]).format('HH:mm')
+                                ? dayjs(values[dataIndex]).format('HH:mm:ss')
                                 : ''
                             : values[dataIndex],
             });
@@ -293,7 +293,7 @@ const KmUpdate = () => {
     const [loading, setLoading] = useState(false)
     const [date, setDate] = useState({
         tarih: dayjs(new Date()).format('DD.MM.YYYY'),
-        saat: dayjs(new Date()).format('HH:mm')
+        saat: dayjs(new Date()).format('HH:mm:ss')
     })
     const [filter, setFilter] = useState(null)
 

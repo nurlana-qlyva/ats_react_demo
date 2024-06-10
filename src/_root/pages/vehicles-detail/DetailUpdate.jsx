@@ -296,6 +296,7 @@ const DetailUpdate = () => {
             if (res.data.statusCode === 200) {
                 setStatus(true)
                 setLoading(false)
+                message.success("Güncelleme başarılı!")
             }
         })
 

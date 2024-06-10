@@ -115,25 +115,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setErrorMessage("")
     }, [errorMessage])
 
-    // useEffect(() => {
-    //     if (watch("alinanKm")) {
-    //         const fark = watch("alinanKm") - watch("sonAlinanKm")
-    //         setValue("farkKm", fark)
-    //     }
-    // }, [watch("sonAlinanKm")])
-
-
-    // const fetchData = () => {
-    //     const body = {
-    //         aracId: watch('aracId'),
-    //         tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-    //         saat: dayjs(watch("saat")).format("HH:mm")
-    //     }
-    //     YakitDataGetByDateService(body).then(res => {
-    //         res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
-    //     })
-    // }
-
     const updateDepoHacmi = () => {
         const body = {
             dtyAracId: watch('aracId'),
@@ -249,7 +230,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     name="saat"
                                     control={control}
                                     render={({ field }) => (
-                                        <TimePicker {...field} placeholder="" format="HH:mm"
+                                        <TimePicker {...field} placeholder="" format="HH:mm:ss"
                                             disabled
                                         />
                                     )}
@@ -373,7 +354,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                 validateLog()
                                                 e.target.blur()
                                             }}
-
+                                            value={watch('farkKm') < 0 ? 0 : watch('farkKm')}
                                             onBlur={validateLog}
                                             onChange={e => {
                                                 field.onChange(e)
@@ -411,7 +392,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline gap-1">
                                     <label className='text-info'>Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi") === "" && 0} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
+                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
