@@ -20,6 +20,9 @@ import {
 import { Checkbox, Table, Popover, Button, Input } from 'antd'
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
+import AddModal from './add/AddModal'
+import { MalzemeListGetService } from '../../../api/service'
+import dayjs from 'dayjs'
 
 const breadcrumb = [
     {
@@ -118,55 +121,148 @@ const MalzemeTanimlari = () => {
     const [openRowHeader, setOpenRowHeader] = useState(false)
     const baseColumns = [
         {
-            title: t('malzemeKodu'),
-            dataIndex: 'malzemeKodu',
+            title: t('malzemeId'),
+            dataIndex: 'malzemeId',
             key: 1,
+            // render: (text, record) => <Link to={`/detay/${record.malzemeId}`}>{text}</Link>
+        },
+        {
+            title: t('malzemeKodu'),
+            dataIndex: 'malzemeKod',
+            key: 2,
             // render: (text, record) => <Link to={`/detay/${record.aracId}`}>{text}</Link>
         },
         {
             title: t('malzemeTanimi'),
-            dataIndex: 'malzemeTanimi',
-            key: 2,
+            dataIndex: 'tanim',
+            key: 3,
         },
         {
             title: t('malzemeTipi'),
-            dataIndex: 'malzemeTipi',
-            key: 3,
+            dataIndex: 'malzemeTip',
+            key: 4,
         },
         {
             title: t('stokMiktar'),
             dataIndex: 'stokMiktar',
-            key: 4,
+            key: 5,
         },
         {
             title: t('birim'),
             dataIndex: 'birim',
-            key: 5,
+            key: 6,
         },
         {
             title: t('fiyat'),
             dataIndex: 'fiyat',
-            key: 6,
+            key: 7,
         },
         {
             title: t('tedarikci'),
             dataIndex: 'tedarikci',
-            key: 6,
+            key: 8,
         },
         {
             title: t('seriNo'),
             dataIndex: 'seriNo',
-            key: 7,
+            key: 9,
         },
         {
             title: t('barkodNo'),
             dataIndex: 'barkodNo',
-            key: 8,
+            key: 10,
+        },
+        {
+            title: t('depo'),
+            dataIndex: 'depo',
+            key: 11,
+        },
+        {
+            title: t('bolum'),
+            dataIndex: 'bolum',
+            key: 12,
+        },
+        {
+            title: t('raf'),
+            dataIndex: 'raf',
+            key: 13,
+        },
+        {
+            title: t('kritikMik'),
+            dataIndex: 'kritikMiktar',
+            key: 14,
+        },
+        {
+            title: t('sonAlisTarihi'),
+            dataIndex: 'sonAlisTarih',
+            key: 15,
+            render: (text) => dayjs(text).format("DD.MM.YYYY")
+        },
+        {
+            title: t('sonAlinanFirma'),
+            dataIndex: 'sonAlinanFirma',
+            key: 16,
+        },
+        {
+            title: t('sonAlinanFiyat'),
+            dataIndex: 'sonFiyat',
+            key: 17,
+        },
+        {
+            title: t('aktif'),
+            dataIndex: 'aktif',
+            key: 18,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
+        },
+        {
+            title: t('kdvOrani'),
+            dataIndex: 'kdvOran',
+            key: 19,
+        },
+        {
+            title: t('girenMiktar'),
+            dataIndex: 'girenMiktar',
+            key: 20,
+        },
+        {
+            title: t('cikanMiktar'),
+            dataIndex: 'cikanMiktar',
+            key: 21,
+        },
+        {
+            title: t('yedekParca'),
+            dataIndex: 'yedekParca',
+            key: 22,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
+        },
+        {
+            title: t('sarfMalz'),
+            dataIndex: 'sarfMalz',
+            key: 23,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
+        },
+        {
+            title: t('demirbas'),
+            dataIndex: 'demirBas',
+            key: 24,
+            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
+        },
+        {
+            title: t('degistirme'),
+            dataIndex: 'degistirme',
+            key: 25,
+            render: (text, record) => <p className='text-secondary'>{text}</p>
+        },
+        {
+            title: t('olusturma'),
+            dataIndex: 'olusturma',
+            key: 26,
+            render: (text, record) => <p className='text-success'>{text}</p>
         },
         {
             title: t('aciklama'),
             dataIndex: 'aciklama',
-            key: 9,
+            key: 27,
         },
     ]
 
@@ -186,6 +282,21 @@ const MalzemeTanimlari = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const defaultCheckedList = columns.map((item) => item.key)
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
+
+    useEffect(() => {
+        setLoading(true);
+        MalzemeListGetService(tableParams?.pagination.current).then(res => {
+            setData(res?.data.materialList)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
+            setLoading(false);
+        })
+    }, [tableParams.pagination.current, status]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -219,6 +330,23 @@ const MalzemeTanimlari = () => {
         });
     }
 
+    const handleTableChange = (pagination, filters, sorter) => {
+        setLoading(true)
+        // VehiclesReadForPageService(search, pagination.current).then(res => {
+        //     setVehiclesData(res.data.vehicleList)
+        //     setLoading(false)
+        // })
+        setTableParams({
+            pagination,
+            filters,
+            ...sorter,
+        });
+
+        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+            setData([]);
+        }
+    }
+
     const newColumns = columns.map(col => (
         {
             ...col,
@@ -245,6 +373,53 @@ const MalzemeTanimlari = () => {
         </>
     )
 
+    // get selected rows data
+    if (!localStorage.getItem('selectedRowKeys')) localStorage.setItem('selectedRowKeys', JSON.stringify([]))
+    const [keys, setKeys] = useState([])
+    const [rows, setRows] = useState([])
+    const handleRowSelection = (row, selected) => {
+        console.log(row)
+        if (selected) {
+            if (!keys.includes(row.malzemeId)) {
+                setKeys([...keys, row.malzemeId])
+                setRows([...rows, row])
+            }
+        } else {
+            const filteredKeys = keys.filter(key => key !== row.malzemeId)
+            const filteredRows = rows.filter(item => item.malzemeId !== row.malzemeId)
+            setKeys(filteredKeys)
+            setRows(filteredRows)
+        }
+    }
+    useEffect(() => localStorage.setItem('selectedRowKeys', JSON.stringify(keys)), [keys])
+    // useEffect(() => {
+    //     let newPlakaEntries = [];
+    //     rows.forEach(vehicle => {
+    //         if (!newPlakaEntries.some(item => item.id === vehicle.malzemeId)) {
+    //             newPlakaEntries.push({ id: vehicle.malzemeId, plaka: vehicle.plaka });
+    //         }
+    //     });
+    //     // setPlaka(newPlakaEntries);
+    // }, [rows])
+    useEffect(() => {
+        const storedSelectedKeys = JSON.parse(localStorage.getItem('selectedRowKeys'));
+        if (storedSelectedKeys && storedSelectedKeys.length) {
+            setSelectedRowKeys(storedSelectedKeys);
+        }
+    }, [tableParams.pagination.current])
+
+    useEffect(() => {
+        localStorage.setItem('selectedRowKeys', JSON.stringify([]))
+        setSelectedRowKeys([])
+    }, [])
+
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem('selectedRowKeys')).length !== 0) {
+            setSelectedRowKeys(JSON.parse(localStorage.getItem('selectedRowKeys')))
+        }
+    }, [tableParams.pagination.current, localStorage.getItem('selectedRowKeys')])
+
+
     return (
         <>
             <div className="content">
@@ -259,12 +434,12 @@ const MalzemeTanimlari = () => {
                             placement="bottom"
                             trigger="click"
                             open={openRowHeader}
-                        // onOpenChange={handleOpenChange}
+                            onOpenChange={(newOpen) => setOpenRowHeader(newOpen)}
                         >
                             <Button className="btn primary-btn"><MenuOutlined /></Button>
                         </Popover>
                         <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
-                        {/* <AddModal setStatus={setStatus} data={vehiclesData} /> */}
+                        <AddModal setStatus={setStatus} />
                         {/* <Filter filter={filter} clearFilters={clear} /> */}
                     </div>
                     <div>
@@ -284,9 +459,9 @@ const MalzemeTanimlari = () => {
                     <SortableContext items={columns.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                         <DragIndexContext.Provider value={dragIndex}>
                             <Table
-                                rowKey={(record) => record.aracId}
+                                rowKey={(record) => record.malzemeId}
                                 columns={newColumns}
-                                // dataSource={vehiclesData}
+                                dataSource={data}
                                 pagination={{
                                     ...tableParams.pagination,
                                     showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
@@ -296,11 +471,14 @@ const MalzemeTanimlari = () => {
                                 }}
                                 loading={loading}
                                 size="small"
-                                // onChange={handleTableChange}
+                                onChange={handleTableChange}
+                                scroll={{
+                                    x: 2500
+                                }}
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
                                     onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                                    // onSelect: handleRowSelection
+                                    onSelect: handleRowSelection
                                 }}
                                 components={{
                                     header: {

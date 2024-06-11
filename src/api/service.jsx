@@ -203,3 +203,8 @@ export const YakitDataDeleteService = (id) => {
 export const DemoService = () => {
   return http.get(`/Vehicle/GetUserId`)
 }
+
+// malzeme
+export const MalzemeListGetService = (page) => {
+  return http.post(`/Material/GetMaterialList?page=${page}`)
+}

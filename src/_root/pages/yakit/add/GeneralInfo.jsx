@@ -10,6 +10,7 @@ import Plaka from '../../../components/form/Plaka'
 import Driver from '../../../components/form/Driver'
 import FuelType from '../../../components/form/FuelType'
 import FuelTank from '../../../components/form/FuelTank'
+import { YakitDataGetByDateService } from '../../../../api/service'
 
 
 dayjs.locale('tr')
