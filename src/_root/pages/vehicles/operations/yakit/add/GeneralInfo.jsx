@@ -137,7 +137,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         />
                                     )}
                                 />
-                                &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
+                                &nbsp; lt (Depo {history[0]?.fullDepo ? "fullendi" : "fullenmedi"})
                             </div>
                         </div>
                         <div className="col-span-12">
@@ -192,7 +192,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             />
                                         )}
                                     />
-                                    &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
+                                    &nbsp; lt (Depo {history[0]?.fullDepo ? "fullendi" : "fullenmedi"})
                                 </div>
                             </div>
                             <div className="col-span-12">
