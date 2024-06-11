@@ -1,13 +1,21 @@
-import { useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import { Button, Modal, Tabs } from "antd"
-import { PlusOutlined } from '@ant-design/icons'
-import PersonalFields from "../../../components/form/PersonalFields"
-import GeneralInfo from "./GeneralInfo"
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import PropTypes from 'prop-types'
+import PersonalFields from '../../../components/form/PersonalFields'
+import { Button, message, Modal, Tabs } from 'antd'
+import PhotoUpload from '../../../components/upload/PhotoUpload'
+import FileUpload from '../../../components/upload/FileUpload'
+import { uploadPhoto } from '../../../../utils/upload'
 
-
-const AddModal = () => {
-    const [isOpen, setIsModalOpen] = useState(false)
+const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
+    // file
+    const [filesUrl, setFilesUrl] = useState([])
+    const [files, setFiles] = useState([])
+    const [loadingFiles, setLoadingFiles] = useState(false)
+    // photo
+    const [imageUrls, setImageUrls] = useState([])
+    const [loadingImages, setLoadingImages] = useState(false)
+    const [images, setImages] = useState([])
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -93,7 +101,30 @@ const AddModal = () => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset } = methods
+    const { handleSubmit, reset, watch, setValue } = methods
+
+    const uploadImages = () => {
+        try {
+            setLoadingImages(true);
+            // const data = uploadPhoto(id, "YAKIT", images)
+            // setImageUrls([...imageUrls, data.imageUrl]);
+        } catch (error) {
+            message.error("Resim yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingImages(false);
+        }
+    }
+
+    const uploadFiles = () => {
+        try {
+            setLoadingFiles(true);
+            // uploadFile(id, "YAKIT", files)
+        } catch (error) {
+            message.error("Dosya yüklenemedi. Yeniden deneyin.");
+        } finally {
+            setLoadingFiles(false);
+        }
+    }
 
     const personalProps = {
         form: "",
@@ -105,21 +136,34 @@ const AddModal = () => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo />,
+            // children: <GeneralInfo />,
         },
         {
             key: '2',
             label: 'Özel Alanlar',
             children: <PersonalFields personalProps={personalProps} />
         },
+        {
+            key: '3',
+            label: `[${imageUrls.length}] Resimler`,
+            children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
+        },
+        {
+            key: '4',
+            label: `[${filesUrl.length}] Ekli Belgeler`,
+            children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
+        }
     ]
 
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn">
-                Kaydet
+                Güncelle
             </Button>,
-            <Button key="back" className="btn btn-min cancel-btn" onClick={() => setIsModalOpen(false)}>
+            <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
+                setUpdateModal(false)
+                setStatus(true)
+            }}>
                 İptal
             </Button>
         ]
@@ -127,11 +171,10 @@ const AddModal = () => {
 
     return (
         <>
-            <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}><PlusOutlined /> Ekle</Button>
             <Modal
-                title="Yeni Malzeme Girişi"
-                open={isOpen}
-                onCancel={() => setIsModalOpen(false)}
+                title="Malzeme Bilgisi Güncelle"
+                open={updateModal}
+                onCancel={() => setUpdateModal(false)}
                 maskClosable={false}
                 footer={footer}
                 width={1200}
@@ -146,4 +189,12 @@ const AddModal = () => {
     )
 }
 
-export default AddModal
+UpdateModal.propTypes = {
+    updateModal: PropTypes.bool,
+    setUpdateModal: PropTypes.func,
+    setStatus: PropTypes.func,
+    id: PropTypes.number,
+    status: PropTypes.bool
+}
+
+export default UpdateModal

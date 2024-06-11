@@ -18,7 +18,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     const [response, setResponse] = useState("normal")
     // file
     const [filesUrl, setFilesUrl] = useState([])
-    const [files, setFiles] = useState([])
+    const [files, setFiles] = useState([]) 
     const [loadingFiles, setLoadingFiles] = useState(false)
     // photo
     const [imageUrls, setImageUrls] = useState([])

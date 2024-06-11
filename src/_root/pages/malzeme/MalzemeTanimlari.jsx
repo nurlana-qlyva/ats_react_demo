@@ -23,6 +23,7 @@ import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import { MalzemeListGetService } from '../../../api/service'
 import dayjs from 'dayjs'
+import UpdateModal from './update/UpdateModal'
 
 const breadcrumb = [
     {
@@ -119,12 +120,19 @@ const MalzemeTanimlari = () => {
     const [search, setSearch] = useState("")
     const [status, setStatus] = useState(false)
     const [openRowHeader, setOpenRowHeader] = useState(false)
+    const [updateModal, setUpdateModal] = useState(false)
+
     const baseColumns = [
         {
             title: t('malzemeId'),
             dataIndex: 'malzemeId',
             key: 1,
             // render: (text, record) => <Link to={`/detay/${record.malzemeId}`}>{text}</Link>
+            render: (text, record) => (
+                <Button onClick={() => {
+                    setUpdateModal(true);
+                }}>{text}</Button>
+            )
         },
         {
             title: t('malzemeKodu'),
@@ -447,7 +455,7 @@ const MalzemeTanimlari = () => {
                     </div>
                 </div>
             </div>
-
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} setStatus={setStatus} status={status} />
             <div className="content">
                 <DndContext
                     sensors={sensors}
