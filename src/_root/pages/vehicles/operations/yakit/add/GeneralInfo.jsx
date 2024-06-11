@@ -32,7 +32,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }, [data])
 
     useEffect(() => {
-        YakitPriceGetService(watch('yakitTipId')).then(res => setValue("litreFiyat", res.data))
+        YakitPriceGetService(watch('yakitTipId')).then(res => {
+            setValue("litreFiyat", res?.data.price)
+            setValue("kdv", res?.data.kdv)
+        })
     }, [watch('yakitTipId')])
 
 
@@ -301,9 +304,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         }
         YakitDataGetByDateService(body).then(res => {
             res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
-
             if (watch('farkKm') > 0 && watch('alinanKm')) setValue('farkKm', watch('alinanKm') - watch('sonAlinanKm'))
-
         })
         YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm:ss")).then((res) => setHistory(res.data))
     }
@@ -800,7 +801,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 GeneralInfo.propTypes = {
     setIsValid: PropTypes.func,
     response: PropTypes.string,
-    setResponse: PropTypes.string,
+    setResponse: PropTypes.func,
 }
 
 export default GeneralInfo

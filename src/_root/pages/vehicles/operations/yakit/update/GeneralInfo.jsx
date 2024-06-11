@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined } from '@ant-design/icons'
-import { DetailInfoUpdateService, YakitDataGetByDateService, YakitKmLogValidateForUpdateService, YakitPriceGetService } from '../../../../../../api/service'
+import { DetailInfoUpdateService, YakitHistoryGetService, YakitKmLogValidateForUpdateService, YakitPriceGetService } from '../../../../../../api/service'
 import Driver from '../../../../../components/form/Driver'
 import FuelType from '../../../../../components/form/FuelType'
 import Location from '../../../../../components/form/Location'
@@ -15,11 +15,13 @@ import MasrafMerkezi from '../../../../../components/form/MasrafMerkezi'
 import Guzergah from '../../../../../components/form/Guzergah'
 import FuelTank from '../../../../../components/form/FuelTank'
 import TextArea from 'antd/lib/input/TextArea'
+import { PlakaContext } from '../../../../../../context/plakaSlice'
 
 dayjs.locale('tr')
 
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const { control, watch, setValue } = useFormContext()
+    const { history, setHistory, data } = useContext(PlakaContext)
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -212,8 +214,25 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }, [watch('depoYakitMiktar')])
 
     useEffect(() => {
-        YakitPriceGetService(watch('yakitTipId')).then(res => setValue("litreFiyat", res.data))
-    }, [watch('yakitTipId')])
+        YakitPriceGetService(watch('yakitTipId')).then(res => {
+            setValue("litreFiyat", res?.data.price)
+            setValue("kdvOran", res?.data.kdv)
+        })
+    }, [watch('yakitTipId'), watch('tutar')])
+
+    useEffect(() => {
+        const kdvAmount = (watch('tutar') * (100 - watch('kdvOran'))) / 100
+        setValue("kdv", kdvAmount)
+    }, [watch('kdvOran'), watch('tutar')])
+
+    useEffect(() => {
+        const tutar = watch('miktar') * watch('litreFiyat')
+        setValue('tutar', tutar.toFixed(2))
+    }, [watch('litreFiyat')])
+
+    useEffect(() => {
+        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm:ss")).then((res) => setHistory(res.data))
+    }, [data])
 
     const validateLog = () => {
         const body = {
@@ -315,6 +334,16 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <div className="flex flex-col gap-1">
                                 <Controller
                                     name="aracId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="kdvOran"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -692,6 +721,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
+                                            readOnly
                                             onChange={(e => {
                                                 field.onChange(e)
                                             })}
@@ -890,7 +920,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 GeneralInfo.propTypes = {
     setIsValid: PropTypes.func,
     response: PropTypes.string,
-    setResponse: PropTypes.string,
+    setResponse: PropTypes.func,
 }
 
 export default GeneralInfo

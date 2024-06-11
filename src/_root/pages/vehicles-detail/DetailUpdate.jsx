@@ -210,7 +210,7 @@ const DetailUpdate = () => {
             setValue("egzosTarih", res?.data.egzosTarih && res?.data.egzosTarih !== '1970-01-01T00:00:00' ? dayjs(res?.data.egzosTarih) : null)
             setValue("onGorulen", res?.data.onGorulen)
             setValue("onGorulenMin", res?.data.onGorulenMin)
-            setValue("gerceklesen", res?.data.gerceklesen)
+            setValue("gerceklesen", res?.data.gerceklesen.toFixed(2))
             setValue("ozelAlan1", res?.data.ozelAlan1)
             setValue("ozelAlan2", res?.data.ozelAlan2)
             setValue("ozelAlan3", res?.data.ozelAlan3)

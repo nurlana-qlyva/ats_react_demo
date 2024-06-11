@@ -131,6 +131,7 @@ const AddModal = ({ setStatus }) => {
         setValue("yakitTanki", data.yakitTanki)
         setValue("birim", data.birim)
         setValue("depoYakitMiktar", data.depoYakitMiktar)
+        setValue("guncelKmLog", data.guncelKmLog)
 
         if (plaka.length === 1) {
             setValue("plaka", plaka[0].id)
@@ -173,6 +174,7 @@ const AddModal = ({ setStatus }) => {
             "birim": data.birim,
             "ozelKullanim": false,
             "kmLog": kmLog,
+            "depoYakitMiktar": values.depoYakitMiktar,
             "yakitTanki": values.yakitTanki,
             "lokasyonId": values.lokasyonId,
             "ozelAlan1": values.ozelAlan1 || "",
@@ -227,7 +229,7 @@ const AddModal = ({ setStatus }) => {
                         setData(res.data)
                     })
                 }
-            }else {
+            } else {
                 message.error('Bir sorun oluşdu! Tekrar deneyiniz.')
             }
         })
@@ -244,7 +246,7 @@ const AddModal = ({ setStatus }) => {
         {
             key: '1',
             label: 'Genel Bilgiler',
-            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse}/>,
+            children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
         },
         {
             key: '2',
@@ -297,7 +299,7 @@ const AddModal = ({ setStatus }) => {
             </Button>
         ]
     )
-
+    console.log(watch("guncelKmLog"))
     return (
         <>
             <Button className='btn primary-btn' onClick={() => setopenModal(true)}>Yenisini Ekle</Button>
@@ -309,7 +311,7 @@ const AddModal = ({ setStatus }) => {
                 footer={footer}
                 width={1200}
             >
-                <p className="count">Güncel Km: []</p>
+                <p className="count">Güncel Km: [ {watch("guncelKmLog")} km ]</p>
                 <FormProvider {...methods}>
                     <form>
                         <Tabs defaultActiveKey="1" items={items} />

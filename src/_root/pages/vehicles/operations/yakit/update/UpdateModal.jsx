@@ -149,7 +149,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             setValue("miktar", res?.data.miktar)
             setValue("tutar", res?.data.tutar)
             setValue("litreFiyat", res?.data.litreFiyat)
-            setValue("kdv", res?.data.kdv)
+            setValue("kdvOran", res?.data.kdv)
+            const kdvAmount = (watch('tutar') * (100 - res?.data.kdv)) / 100
+            setValue("kdv", kdvAmount)
             setValue("faturaNo", res?.data.faturaNo)
             setValue("guzergahId", res?.data.guzergahId)
             setValue("guzergah", res?.data.guzergah)
@@ -264,6 +266,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
             "ozelAlan11": values.ozelAlan11 || 0,
             "ozelAlan12": values.ozelAlan12 || 0,
+            "depoYakitMiktar": values.depoYakitMiktar
             // "yakitTanki": values.yakitTanki
         }
 
@@ -380,6 +383,7 @@ UpdateModal.propTypes = {
     setUpdateModal: PropTypes.func,
     setStatus: PropTypes.func,
     id: PropTypes.number,
+    status: PropTypes.bool
 }
 
 export default UpdateModal
