@@ -16,7 +16,7 @@ const Yakit = ({ visible, onClose, ids }) => {
     const [status, setStatus] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
-            current: 1,
+            current: 1, 
             pageSize: 10,
         },
     });
@@ -111,7 +111,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             title: 'Ortalama Tüketim',
             dataIndex: 'tuketim',
             key: 8,
-            render: (text, record) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
+            render: (text) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
         },
         {
             title: 'Km Başına Maliyet',
@@ -120,7 +120,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         },
         {
             title: 'Full Depo',
-            dataIndex: 'tuketim',
+            dataIndex: 'fullDepo',
             key: 10,
             render: (text, record) => <Checkbox checked={record.fullDepo} readOnly />
         },
@@ -176,7 +176,7 @@ const Yakit = ({ visible, onClose, ids }) => {
 
     const footer = [
         <Button key="back" className="btn cancel-btn" onClick={onClose}>
-            Kapat
+            {t("kapat")}
         </Button>
     ];
     const plakaData = plaka.map(item => item.plaka).join(', ');
@@ -226,7 +226,7 @@ const Yakit = ({ visible, onClose, ids }) => {
                 >
                     <Button className="btn primary-btn"><MenuOutlined /></Button>
                 </Popover>
-                <Input placeholder="Arama" style={{ width: '20%' }} />
+                <Input placeholder={t("arama")} style={{ width: '20%' }} />
                 <AddModal setStatus={setStatus} />
             </div>
 
@@ -248,19 +248,19 @@ const Yakit = ({ visible, onClose, ids }) => {
 
             <div className="grid gap-1 mt-10 text-center">
                 <div className="col-span-3 p-10 border">
-                    <h3 className='text-secondary'>Toplam Maliyet</h3>
+                    <h3 className='text-secondary'>{t("toplamMaliyet")}</h3>
                     <p>{total?.total_cost} TL</p>
                 </div>
                 <div className="col-span-3 p-10 border">
-                    <h3 className='text-secondary'>Toplam Miktar</h3>
-                    <p>{total?.total_quantity}  Litre</p>
+                    <h3 className='text-secondary'>{t("toplamMiktar")}</h3>
+                    <p>{total?.total_quantity}  Lt</p>
                 </div>
                 <div className="col-span-3 p-10 border">
-                    <h3 className='text-secondary'>Ortalama Tüketim <ArrowUpOutlined style={{ color: 'red' }} /></h3>
+                    <h3 className='text-secondary'>{t("ortalamaTuketim")} <ArrowUpOutlined style={{ color: 'red' }} /></h3>
                     <p>{(total?.avg_consumption % 100).toFixed(2)} lt/100 km</p>
                 </div>
                 <div className="col-span-3 p-10 border">
-                    <h3 className='text-secondary'>Ortalama Maliyet</h3>
+                    <h3 className='text-secondary'>{t("ortalamaMaliyet")}</h3>
                     <p>{total?.avg_cost} TL</p>
                 </div>
             </div>
@@ -269,9 +269,9 @@ const Yakit = ({ visible, onClose, ids }) => {
 };
 
 Yakit.propTypes = {
-    ids: PropTypes.array.isRequired,
-    onClose: PropTypes.func.isRequired,
-    visible: PropTypes.bool.isRequired,
+    ids: PropTypes.array,
+    onClose: PropTypes.func,
+    visible: PropTypes.bool,
 };
 
 export default Yakit;

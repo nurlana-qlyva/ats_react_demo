@@ -1,60 +1,33 @@
 import { useContext, useEffect, useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { useFormContext, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
-import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
+import TextArea from 'antd/lib/input/TextArea'
+import { ArrowUpOutlined } from '@ant-design/icons'
+import { DetailInfoUpdateService, YakitHistoryGetService, YakitKmLogValidateForUpdateService, YakitPriceGetService } from '../../../../api/service'
 import { PlakaContext } from '../../../../context/plakaSlice'
-import { FuelTankContext } from '../../../../context/fuelTankSlice'
-import { CustomCodeControlService, DetailInfoUpdateService, YakitDataGetByDateService, YakitHistoryGetService, YakitKmLogValidateService, YakitPriceGetService } from '../../../../api/service'
 import Driver from '../../../components/form/Driver'
 import FuelType from '../../../components/form/FuelType'
+import Location from '../../../components/form/Location'
+import Firma from '../../../components/form/Firma'
+import Istasyon from '../../../components/form/Istasyon'
+import MasrafMerkezi from '../../../components/form/MasrafMerkezi'
+import Guzergah from '../../../components/form/Guzergah'
 import FuelTank from '../../../components/form/FuelTank'
-import Plaka from '../../..//components/form/Plaka'
 
 dayjs.locale('tr')
 
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
-    const [, contextHolder] = message.useMessage()
-    const { control, setValue, watch } = useFormContext()
-    const { data, history, setHistory, setPlaka } = useContext(PlakaContext)
-    const { setId } = useContext(FuelTankContext)
+    const { control, watch, setValue } = useFormContext()
+    const { history, setHistory, data } = useContext(PlakaContext)
     const [open, setOpen] = useState(false)
     const [openDetail, setOpenDetail] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [content, setContent] = useState(null)
-    const [logError, setLogError] = useState(false)
 
-    useEffect(() => {
-        setId(data.yakitTipId)
-        fetchData()
-    }, [data])
-
-    useEffect(() => {
-        CustomCodeControlService("Vehicle/GetVehiclePlates").then(res => {
-            const updatedData = res.data.map(item => {
-                if ("aracId" in item && "plaka" in item) {
-                    return {
-                        ...item,
-                        id: item.aracId
-                    }
-                }
-                return item
-            })
-            setPlaka(updatedData)
-        })
-    }, [])
-
-    useEffect(() => {
-        YakitPriceGetService(watch('yakitTipId')).then(res => {
-            setValue("litreFiyat", res?.data.price)
-            setValue("kdv", res?.data.kdv)
-        })
-    }, [watch('yakitTipId')])
-
-
-    useEffect(() => {
+    const calculateTuketim = () => {
         const fullDepo = watch("fullDepo");
         const farkKm = watch("farkKm");
         const miktar = watch("miktar");
@@ -152,7 +125,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         />
                                     )}
                                 />
-                                &nbsp; lt (Depo {history[0]?.fullDepo ? "fullendi" : "fullenmedi"})
+                                &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
                             </div>
                         </div>
                         <div className="col-span-12">
@@ -207,7 +180,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             />
                                         )}
                                     />
-                                    &nbsp; lt (Depo {history[0]?.fullDepo ? "fullendi" : "fullenmedi"})
+                                    &nbsp; lt (Depo {watch('fullDepo') ? "fullendi" : "fullenmedi"})
                                 </div>
                             </div>
                             <div className="col-span-12">
@@ -229,48 +202,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             }
         }
         setValue("tuketim", tktm);
-    }, [watch("fullDepo"), watch("farkKm"), watch("miktar"), watch("yakitHacmi")])
-
-    const validateLog = () => {
-        const body = {
-            aracId: data.aracId,
-            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm:ss"),
-            alinanKm: watch("alinanKm"),
-            "kmLog": {
-                "kmAracId": data.aracId,
-                "plaka": data.plaka,
-                "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
-                "saat": dayjs(watch("saat")).format("HH:mm:ss"),
-                "yeniKm": watch("alinanKm"),
-                "dorse": false,
-                "kaynak": "YAKIT",
-                "lokasyonId": data.lokasyonId
-            }
-        }
-
-        YakitKmLogValidateService(body).then(res => {
-            if (res?.data.statusCode === 400) {
-                setResponse("error");
-                if (res?.data.message === " Invalid Km range for both KmLog and FuelKm !") {
-                    setErrorMessage("Alınan Km Yakıt ve Km Log-a girilemez!")
-                } else if (res?.data.message === " Invalid FuelKm Range !") {
-                    setErrorMessage("Alınan Km Yakıt Log-a girilemez!")
-                } else if (res?.data.message === " Invalid KmLog Range !") {
-                    setErrorMessage("Alınan Km Km Log-a girilemez!")
-                    setLogError(true)
-                    if (watch('engelle')) {
-                        setResponse("success");
-                    }
-                }
-
-            } else if (res?.data.statusCode === 200) {
-                setResponse("success");
-                setIsValid(false)
-            }
-        })
-
-        setIsValid(true)
     }
 
     useEffect(() => {
@@ -283,13 +214,73 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     }, [watch('depoYakitMiktar')])
 
     useEffect(() => {
-        if (logError) {
-            if (watch('engelle')) {
+        YakitPriceGetService(watch('yakitTipId')).then(res => {
+            setValue("litreFiyat", res?.data.price)
+            setValue("kdvOran", res?.data.kdv)
+        })
+    }, [watch('yakitTipId'), watch('tutar')])
+
+    useEffect(() => {
+        const kdvAmount = (watch('tutar') * (100 - watch('kdvOran'))) / 100
+        setValue("kdv", kdvAmount)
+    }, [watch('kdvOran'), watch('tutar')])
+
+    useEffect(() => {
+        const tutar = watch('miktar') * watch('litreFiyat')
+        setValue('tutar', tutar.toFixed(2))
+    }, [watch('litreFiyat')])
+
+    useEffect(() => {
+        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm:ss")).then((res) => setHistory(res.data))
+    }, [data])
+
+    const validateLog = () => {
+        const body = {
+            "siraNo": watch('siraNo'),
+            "aracId": watch('aracId'),
+            "plaka": watch('plaka'),
+            "sonAlinanKm": watch('sonAlinanKm'),
+            "farkKm": watch('farkKm'),
+            "tuketim": watch('tuketim'),
+            "alinanKm": watch('alinanKm'),
+            "hasToInsertKmLog": watch('engelle'),
+            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+            saat: dayjs(watch("saat")).format("HH:mm:ss"),
+            "kmLog": {
+                "siraNo": watch('kmLogId'),
+                "kmAracId": watch('aracId'),
+                "plaka": watch('plaka'),
+                "tarih": dayjs(watch("tarih")).format("YYYY-MM-DD"),
+                "saat": dayjs(watch("saat")).format("HH:mm:ss"),
+                "yeniKm": watch("alinanKm"),
+                "eskiKm": watch("eskiKm"),
+                "dorse": false,
+                "kaynak": "YAKIT",
+                "lokasyonId": watch('lokasyonId')
+            }
+        }
+
+        YakitKmLogValidateForUpdateService(body).then(res => {
+            if (res?.data.statusCode === 400) {
+                setResponse("error");
+                if (res?.data.message === " Invalid Km range for both KmLog and FuelKm !") {
+                    setErrorMessage("Alınan Km Yakıt ve Km Log-a girilemez!")
+                } else if (res?.data.message === " Invalid FuelKm Range !") {
+                    setErrorMessage("Alınan Km Yakıt Log-a girilemez!")
+                } else if (res?.data.message === " Invalid KmLog Range !") {
+                    setErrorMessage("Alınan Km Km Log-a girilemez!")
+                    if (watch('engelle')) {
+                        setResponse("success");
+                    }
+                }
+
+            } else if (res?.data.statusCode === 200) {
                 setResponse("success");
                 setIsValid(false)
             }
-        }
-    }, [logError, watch('engelle')])
+        })
+        setIsValid(true)
+    }
 
     useEffect(() => {
         if (errorMessage) {
@@ -300,7 +291,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
     const updateDepoHacmi = () => {
         const body = {
-            dtyAracId: data.aracId,
+            dtyAracId: watch('aracId'),
             yakitHacmi: watch("yakitHacmi")
         };
 
@@ -309,19 +300,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 setOpen(false);
             }
         })
-    }
-
-    const fetchData = () => {
-        const body = {
-            aracId: data.aracId,
-            tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-            saat: dayjs(watch("saat")).format("HH:mm:ss")
-        }
-        YakitDataGetByDateService(body).then(res => {
-            res.data === -1 ? setValue("sonAlinanKm", 0) : setValue("sonAlinanKm", res.data)
-            if (watch('farkKm') > 0 && watch('alinanKm')) setValue('farkKm', watch('alinanKm') - watch('sonAlinanKm'))
-        })
-        YakitHistoryGetService(data.aracId, dayjs(watch("tarih")).format("YYYY-MM-DD"), dayjs(watch("saat")).format("HH:mm:ss")).then((res) => setHistory(res.data))
     }
 
     const footer = (
@@ -349,11 +327,53 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
     return (
         <>
-            {contextHolder}
-
-            <div className="grid gap-4 border p-10">
-                <div className="col-span-6">
+            <div className="grid gap-1">
+                <div className="col-span-6 p-20">
                     <div className="grid gap-1">
+                        <div className="col-span-6" style={{ display: 'none' }}>
+                            <div className="flex flex-col gap-1">
+                                <Controller
+                                    name="aracId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="kdvOran"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="siraNo"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="eskiKm"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            hidden
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="plaka">Plaka</label>
@@ -361,7 +381,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     name="plaka"
                                     control={control}
                                     render={({ field }) => (
-                                        <Plaka field={field} />
+                                        <Input
+                                            {...field}
+                                            readOnly
+                                        />
                                     )}
                                 />
                             </div>
@@ -386,18 +409,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     control={control}
                                     render={({ field }) => (
                                         <ConfigProvider locale={tr_TR}>
-                                            <DatePicker
-                                                {...field}
-                                                placeholder=""
-                                                locale={dayjs.locale("tr")}
-                                                format="DD.MM.YYYY"
-                                                onBlur={() => {
-                                                    fetchData()
-                                                }}
-                                                onChange={e => {
-                                                    field.onChange(e)
-                                                    if (watch('alinanKm')) validateLog()
-                                                }}
+                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY"
+                                                disabled
                                             />
                                         </ConfigProvider>
                                     )}
@@ -411,17 +424,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     name="saat"
                                     control={control}
                                     render={({ field }) => (
-                                        <TimePicker
-                                            {...field}
-                                            placeholder=""
-                                            format="HH:mm:ss"
-                                            onBlur={() => {
-                                                fetchData()
-                                            }}
-                                            onChange={e => {
-                                                field.onChange(e)
-                                                if (watch('alinanKm')) validateLog()
-                                            }}
+                                        <TimePicker {...field} placeholder="" format="HH:mm:ss"
+                                            disabled
                                         />
                                     )}
                                 />
@@ -429,11 +433,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-6">
+                <div className="col-span-6 p-20">
                     <div className="grid gap-1">
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tipi</label>
+                                <label htmlFor="yakitId">Yakıt Tipi</label>
                                 <Controller
                                     name="yakitTipId"
                                     control={control}
@@ -443,17 +447,24 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 />
                             </div>
                         </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label>Stoktan Kullanım</label>
-                            <Controller
-                                name="stokKullanimi"
-                                control={control}
-                                render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
-                            />
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Stoktan Kullanım</label>
+                                <Controller
+                                    name="stokKullanimi"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Checkbox {...field} checked={field.value} onChange={e => {
+                                            field.onChange(e.target.checked)
+                                        }}
+                                        />
+                                    )}
+                                />
+                            </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tankı -- ?</label>
+                                <label>Yakıt Tankı --- ?</label>
                                 <Controller
                                     name="yakitTanki"
                                     control={control}
@@ -465,14 +476,17 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="grid gap-4 border p-10 mt-10">
                 <div className="col-span-6">
+                    <Divider />
+                </div>
+                <div className="col-span-6">
+                    <Divider />
+                </div>
+                <div className="col-span-6 p-20">
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label> Son Alınan Km</label>
+                                <label className='text-info'> Son Alınan Km</label>
                                 <Controller
                                     name="sonAlinanKm"
                                     control={control}
@@ -480,21 +494,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            readOnly={data.sonAlinanKm !== 0}
-                                            onPressEnter={e => {
-                                                validateLog()
-                                                e.target.blur()
-                                            }}
-                                            onBlur={validateLog}
-                                            onChange={e => {
-                                                field.onChange(e)
-                                                setIsValid(true)
-                                                if (watch("alinanKm")) {
-                                                    const fark = watch("alinanKm") - e
-                                                    setValue("farkKm", fark)
-                                                    validateLog()
-                                                }
-                                            }}
+                                            readOnly
                                         />
                                     )}
                                 />
@@ -502,13 +502,14 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıtın Alındığı Km</label>
+                                <label className='text-info'>Yakıtın Alındığı Km</label>
                                 <Controller
                                     name="alinanKm"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             className="w-full"
+                                            {...field}
                                             style={response === 'error' ? { borderColor: "#dc3545" } : response === "success" ? { borderColor: "#23b545" } : { color: '#000' }}
                                             {...field}
                                             onPressEnter={e => {
@@ -519,12 +520,13 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                             onChange={e => {
                                                 field.onChange(e)
                                                 setIsValid(true)
-                                                if (data.sonAlinanKm === 0 && !watch("alinanKm")) {
+                                                if (watch('sonAlinanKm') === 0 && !watch("alinanKm")) {
                                                     setValue("farkKm", 0)
                                                 } else {
                                                     const fark = +e - watch("sonAlinanKm")
                                                     setValue("farkKm", fark)
                                                 }
+                                                calculateTuketim()
                                             }}
                                         />
                                     )}
@@ -533,7 +535,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label> Fark Km</label>
+                                <label className='text-info'>Fark Km</label>
                                 <Controller
                                     name="farkKm"
                                     control={control}
@@ -541,12 +543,12 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            readOnly={data.sonAlinanKm === 0}
-                                            value={watch('farkKm') < 0 ? 0 : watch('farkKm')}
+                                            readOnly={watch('sonAlinanKm') === 0}
                                             onPressEnter={e => {
                                                 validateLog()
                                                 e.target.blur()
                                             }}
+                                            value={watch('farkKm') < 0 ? 0 : watch('farkKm')}
                                             onBlur={validateLog}
                                             onChange={e => {
                                                 field.onChange(e)
@@ -554,6 +556,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                 const alinanKm = watch("sonAlinanKm") + +e
                                                 setValue("alinanKm", alinanKm)
                                                 validateLog()
+                                                calculateTuketim()
+
                                             }}
                                         />
                                     )}
@@ -566,21 +570,22 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 <Controller
                                     name="engelle"
                                     control={control}
-                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field} checked={field.value} onChange={e => {
-                                        field.onChange(e.target.checked)
-                                    }
-                                    } />}
+                                    render={({ field }) => <Checkbox className='custom-checkbox' {...field} onChange={(e) => {
+                                        field.onChange(e);
+                                        validateLog();
+
+                                    }} />}
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-span-6">
+                <div className="col-span-6 p-20">
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline gap-1">
-                                    <label htmlFor="miktar" >Miktar (lt)</label>
+                                    <label className='text-info'>Miktar (lt)</label>
                                     <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                                 </div>
                                 <Controller
@@ -601,13 +606,14 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         }}
                                         onChange={(e => {
                                             field.onChange(e)
-
                                             if (watch("litreFiyat") === null) {
                                                 setValue("tutar", 0)
                                             } else {
                                                 const tutar = +e * watch("litreFiyat")
                                                 setValue("tutar", tutar)
                                             }
+                                            calculateTuketim()
+
                                         })}
                                     />}
                                 />
@@ -622,6 +628,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         name="fullDepo"
                                         render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => {
                                             field.onChange(e.target.checked)
+                                            calculateTuketim()
                                         }} />}
                                     />
                                 </div>
@@ -629,7 +636,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     <div className="grid gap-1">
                                         <div className="col-span-10">
                                             <div className="flex flex-col gap-1">
-                                                <label>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
+                                                <label className='text-danger'>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
                                                 <Controller
                                                     name="tuketim"
                                                     control={control}
@@ -649,11 +656,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
 
                                 </div>
                             </div>
-
                         </div>
-                        <div className="col-span-6">
+                        <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>Litre Fiyatı</label>
+                                <label className='text-info'>Birim Fiyat</label>
                                 <Controller
                                     name="litreFiyat"
                                     control={control}
@@ -661,7 +667,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <InputNumber
                                             {...field}
                                             className='w-full'
-                                            onChange={e => {
+
+                                            onChange={(e => {
                                                 field.onChange(e)
                                                 if (e === null) {
                                                     setValue("miktar", 0)
@@ -669,6 +676,81 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                                     const miktar = watch("tutar") / +e
                                                     setValue("miktar", Math.round(miktar))
                                                 }
+                                                calculateTuketim()
+
+                                            })}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label className='text-info'>Tutar</label>
+                                <Controller
+                                    name="tutar"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+
+                                            onChange={(e => {
+                                                field.onChange(e)
+                                                if (watch("litreFiyat") === null) {
+                                                    setValue("miktar", 0)
+                                                } else {
+                                                    const miktar = +e / watch("litreFiyat")
+                                                    setValue("miktar", Math.round(miktar))
+                                                }
+                                                calculateTuketim()
+
+                                            })}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label className='text-info'>KDV Tutar</label>
+                                <Controller
+                                    name="kdv"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputNumber
+                                            {...field}
+                                            className='w-full'
+                                            readOnly
+                                            onChange={(e => {
+                                                field.onChange(e)
+                                            })}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-span-6">
+                    <Divider />
+                </div>
+                <div className="col-span-6">
+                    <Divider />
+                </div>
+                <div className="col-span-6 p-20">
+                    <div className="grid gap-1">
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Fatura / Fiş No</label>
+                                <Controller
+                                    name="faturaNo"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value)
                                             }}
                                         />
                                     )}
@@ -677,29 +759,128 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Tutar</label>
+                                <label>Fatura / Fiş Tarihi</label>
                                 <Controller
-                                    name="tutar"
+                                    name="faturaTarih"
                                     control={control}
                                     render={({ field }) => (
-                                        <InputNumber
-                                            {...field}
-                                            className='w-full'
-                                            onChange={e => {
+                                        <ConfigProvider locale={tr_TR}>
+                                            <DatePicker {...field} placeholder="" locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
                                                 field.onChange(e)
-
-                                                if (watch("litreFiyat") === null) {
-                                                    setValue("miktar", 0)
-                                                } else {
-                                                    const miktar = +e / watch("litreFiyat")
-                                                    setValue("miktar", Math.round(miktar))
-                                                }
+                                            }} />
+                                        </ConfigProvider>
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Görev No -- ?</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value)
                                             }}
                                         />
                                     )}
                                 />
                             </div>
                         </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Özel Kullanım</label>
+                                <Controller
+                                    name="ozelKullanim"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Checkbox {...field} checked={field.value} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-span-6 p-20">
+                    <div className="grid gap-1">
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label>Masraf Merkezi -- ?</label>
+                                <Controller
+                                    name=""
+                                    control={control}
+                                    render={({ field }) => (
+                                        <MasrafMerkezi field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label>Güzergah</label>
+                                <Controller
+                                    name="guzergahId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Guzergah field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-4">
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="lokasyonId">Lokasyon</label>
+                                <Controller
+                                    name="lokasyonId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Location field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>Firma</label>
+                                <Controller
+                                    name="firmaId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Firma field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>İstasyon</label>
+                                <Controller
+                                    name="istasyonKodId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Istasyon field={field} />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-span-12">
+                    <Divider />
+                </div>
+                <div className="col-span-12 p-20">
+                    <div className="flex flex-col gap-1">
+                        <label>Açıklama</label>
+                        <Controller
+                            name="aciklama"
+                            control={control}
+                            render={({ field }) => (
+                                <TextArea {...field} onChange={(e => field.onChange(e.target.value))} />
+                            )}
+                        />
                     </div>
                 </div>
             </div>
@@ -732,83 +913,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             >
                 {content}
             </Modal>
-
-            {history.length >= 3 && (
-                <div className="grid gap-1 border p-10 mt-10">
-                    <div className="col-span-12">
-                        <div className="grid">
-                            <div
-                                className="col-span-2 flex flex-col"
-                                style={{ textAlign: "center" }}
-                            >
-                                <p style={{ fontSize: "14px" }}>
-                                    {dayjs(history[2]?.tarih).format("DD.MM.YYYY")}
-                                </p>
-                                <div>
-                                    <img
-                                        src="/images/kirmizi.svg"
-                                        alt=""
-                                        style={{ width: "20%" }}
-                                    />
-                                </div>
-                                <p style={{ fontSize: "14px" }}>{history[2]?.sonAlinanKm} km</p>
-                                <p style={{ fontSize: "14px" }}>{history[2]?.miktar} Lt. {history[2]?.fullDepo && <CheckOutlined className='text-success' />}</p>
-                                <p style={{ fontSize: "14px" }}>{history[2]?.tuketim} Lt.Km..</p>
-                            </div>
-                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                                <p>{history[2]?.farkKm} km</p>
-                            </div>
-                            <div
-                                className="col-span-2 flex flex-col"
-                                style={{ textAlign: "center" }}
-                            >
-                                <p style={{ fontSize: "14px" }}>
-                                    {dayjs(history[1]?.tarih).format("DD.MM.YYYY")}
-                                </p>
-                                <div>
-                                    <img
-                                        src="/images/kirmizi.svg"
-                                        alt=""
-                                        style={{ width: "20%" }}
-                                    />
-                                </div>
-                                <p style={{ fontSize: "14px" }}>{history[1]?.sonAlinanKm} km</p>
-                                <p style={{ fontSize: "14px" }}>{history[1]?.miktar} Lt.  {history[1]?.fullDepo && <CheckOutlined className='text-success' />}</p>
-                                <p style={{ fontSize: "14px" }}>{history[1]?.tuketim} Lt.Km..</p>
-                            </div>
-                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                                <p>{history[1]?.farkKm} km</p>
-                            </div>
-                            <div
-                                className="col-span-2 flex flex-col"
-                                style={{ textAlign: "center" }}
-                            >
-                                <p style={{ fontSize: "14px" }}>
-                                    {dayjs(history[0]?.tarih).format("DD.MM.YYYY")}
-                                </p>
-                                <div>
-                                    <img src="/images/Mor.svg" alt="" style={{ width: "20%" }} />
-                                </div>
-                                <p style={{ fontSize: "14px" }}>{history[0]?.sonAlinanKm} km</p>
-                                <p style={{ fontSize: "14px" }}>{history[0]?.miktar} Lt.  {history[0]?.fullDepo && <CheckOutlined className='text-success' />}</p>
-                                <p style={{ fontSize: "14px" }}>{history[0]?.tuketim} Lt.Km..</p>
-                            </div>
-                            <div className="col-span-1 mt-20" style={{ textAlign: "center" }}>
-                                <img src="/images/yol.svg" alt="" style={{ width: "70%" }} />
-                                <p>{history[0]?.farkKm} km</p>
-                            </div>
-                            <div className="col-span-2 mt-20" style={{ textAlign: "center" }}>
-                                <div>
-                                    <img src="/images/Araba.svg" alt="" style={{ width: "40%" }} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
         </>
     )
 }
@@ -820,4 +924,3 @@ GeneralInfo.propTypes = {
 }
 
 export default GeneralInfo
-

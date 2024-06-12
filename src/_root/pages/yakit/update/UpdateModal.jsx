@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
-import { t } from 'i18next'
 import { Button, message, Modal, Tabs } from 'antd'
-import { uploadPhoto, uploadFile } from '../../../../../../utils/upload'
-import { FileReadService, PhotoReadService, YakitDataGetByIdService, YakitUpdateDataGetService, YakitUpdateDataUpdateService } from '../../../../../../api/service'
-import { PlakaContext } from '../../../../../../context/plakaSlice'
+import { uploadPhoto, uploadFile } from '../../../../utils/upload'
+import { FileReadService, PhotoReadService, YakitDataGetByIdService, YakitUpdateDataGetService, YakitUpdateDataUpdateService } from '../../../../api/service'
+import { PlakaContext } from '../../../../context/plakaSlice'
 import GeneralInfo from './GeneralInfo'
-import PersonalFields from '../../../../../components/form/PersonalFields'
-import PhotoUpload from '../../../../../components/upload/PhotoUpload'
-import FileUpload from '../../../../../components/upload/FileUpload'
+import PersonalFields from '../../../components/form/PersonalFields'
+import PhotoUpload from '../../../components/upload/PhotoUpload'
+import FileUpload from '../../../components/upload/FileUpload'
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => {
     const { data, plaka, setData } = useContext(PlakaContext)
+
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
     // file
@@ -323,22 +323,22 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     const items = [
         {
             key: '1',
-            label: t("genelBilgiler"),
+            label: 'Genel Bilgiler',
             children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
         },
         {
             key: '2',
-            label: t("ozelAlanlar"),
+            label: 'Özel Alanlar',
             children: <PersonalFields personalProps={personalProps} />
         },
         {
             key: '3',
-            label: `[${imageUrls.length}] ${t("resimler")}`,
+            label: `[${imageUrls.length}] Resimler`,
             children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
         },
         {
             key: '4',
-            label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
+            label: `[${filesUrl.length}] Ekli Belgeler`,
             children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
         }
     ]
@@ -346,14 +346,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
-                {t("guncelle")}
+                Güncelle
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
                 setResponse('normal')
                 setStatus(true)
             }}>
-                {t("iptal")}
+                İptal
             </Button>
         ]
     )
@@ -361,7 +361,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     return (
         <>
             <Modal
-                title={t("yakitBilgisiGuncelle")}
+                title="Yakıt Bilgisi Güncelle"
                 open={updateModal}
                 onCancel={() => setUpdateModal(false)}
                 maskClosable={false}

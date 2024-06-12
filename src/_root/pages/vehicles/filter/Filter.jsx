@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { t } from 'i18next'
 import { Button, Drawer, Input, InputNumber } from 'antd'
 import { FunnelPlotOutlined } from '@ant-design/icons'
 import VehicleType from '../../../components/form/VehicleType'
@@ -11,7 +11,7 @@ import VehicleGroup from '../../../components/form/VehicleGroup'
 import Renk from '../../../components/form/Renk'
 import FuelType from '../../../components/form/FuelType'
 
-const Filter = ({ filter, clearFilters, t }) => {
+const Filter = ({ filter, clearFilters }) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [hasValue, setHasValue] = useState(false)
 
@@ -204,4 +204,4 @@ Filter.propTypes = {
     clearFilters: PropTypes.func,
 }
 
-export default withNamespaces()(Filter)
+export default Filter

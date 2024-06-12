@@ -5,7 +5,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { HomeOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, Input, InputNumber, message, Modal, Spin, Tabs } from 'antd'
 import dayjs from 'dayjs'
-import { FileReadService, KMValidateService, PhotoReadService, VehiclesUpdateReadService, VehiclesUpdateSetService } from '../../../api/service'
+import { FileReadService, PhotoReadService, VehiclesUpdateReadService, VehiclesUpdateSetService } from '../../../api/service'
 import { uploadFile, uploadPhoto } from '../../../utils/upload'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import VehicleType from '../../components/form/VehicleType'
@@ -313,22 +313,22 @@ const DetailUpdate = () => {
     const items = [
         {
             key: '1',
-            label: 'Genel Bilgiler',
+            label: t("genelBilgiler"),
             children: <GeneralInfo />,
         },
         {
             key: '2',
-            label: 'Özel Alanlar',
+            label: t("ozelAlanlar"),
             children: <PersonalFields personalProps={personalProps} />
         },
         {
             key: '3',
-            label: `[${imageUrls.length}] Resimler`,
+            label: `[${imageUrls.length}] ${t("resimler")}`,
             children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
         },
         {
             key: '4',
-            label: `[${filesUrl.length}] Ekli Belgeler`,
+            label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
             children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
         },
     ]
@@ -336,7 +336,7 @@ const DetailUpdate = () => {
     const footer = (
         [
             <Button key="back" className="btn cancel-btn" onClick={() => setKmHistryModal(false)}>
-                Kapat
+                {t("kapat")}
             </Button>
         ]
     )
@@ -371,21 +371,21 @@ const DetailUpdate = () => {
                     <div className="grid">
                         <div className="col-span-3">
                             <img src="/images/ats_login_image.jpg" className="car-image border" alt="" />
-                            <div className="flex gap-1 justify-between">
+                            {/* <div className="flex gap-1 justify-between">
                                 <p>Aktif</p>
                                 <p>Bursa</p>
                                 <p>50 km/h</p>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="col-span-9">
                             <div className="grid p-10 gap-1">
                                 <div className="col-span-12 flex gap-1 justify-end">
                                     <Button className="btn btn-min primary-btn" onClick={onSubmit}>{t('guncelle')}</Button>
-                                    <Button className="btn btn-min cancel-btn" onClick={handleCancel}>İptal</Button>
+                                    <Button className="btn btn-min cancel-btn" onClick={handleCancel}>{t('iptal')}</Button>
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="plaka">Plaka</label>
+                                        <label htmlFor="plaka">{t('plaka')}</label>
                                         <Controller
                                             name="plaka"
                                             control={control}
@@ -402,7 +402,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label>Araç Tipi</label>
+                                        <label>{t('aracTip')}</label>
                                         <Controller
                                             name="aracTipId"
                                             control={control}
@@ -416,7 +416,7 @@ const DetailUpdate = () => {
                                     <div className="grid gap-1">
                                         <div className="col-span-10">
                                             <div className="flex flex-col gap-1">
-                                                <label htmlFor="guncelKm">Güncel Km.</label>
+                                                <label htmlFor="guncelKm">{t('guncelKm')}</label>
                                                 <Controller
                                                     name="guncelKm"
                                                     control={control}
@@ -440,7 +440,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="lokasyonId">Lokasyon</label>
+                                        <label htmlFor="lokasyonId">{t('lokasyon')}</label>
                                         <Controller
                                             name="lokasyonId"
                                             control={control}
@@ -452,7 +452,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="markaId">Marka</label>
+                                        <label htmlFor="markaId">{t('marka')}</label>
                                         <Controller
                                             name="markaId"
                                             control={control}
@@ -464,7 +464,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="modelId">Model</label>
+                                        <label htmlFor="modelId">{t('model')}</label>
                                         <Controller
                                             name="modelId"
                                             control={control}
@@ -476,7 +476,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="surucuId">Sürücü</label>
+                                        <label htmlFor="surucuId">{t('surucu')}</label>
                                         <Controller
                                             name="surucuId"
                                             control={control}
@@ -488,7 +488,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="yakitTipId">Yakıt Tipi</label>
+                                        <label htmlFor="yakitTipId">{t('yakitTip')}</label>
                                         <Controller
                                             name="yakitTipId"
                                             control={control}
@@ -500,7 +500,7 @@ const DetailUpdate = () => {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="flex flex-col gap-1">
-                                        <label htmlFor="aracRenkId">Renk</label>
+                                        <label htmlFor="aracRenkId">{t('renk')}</label>
                                         <Controller
                                             name="aracRenkId"
                                             control={control}
@@ -522,7 +522,7 @@ const DetailUpdate = () => {
             </FormProvider>
 
             <Modal
-                title={`Kilometre Güncelleme Geçmişi: ${vehiclesData?.plaka}`}
+                title={`${t("kilometreGuncellemeGecmisi")}: ${vehiclesData?.plaka}`}
                 open={kmHistryModal}
                 onCancel={() => setKmHistryModal(false)}
                 maskClosable={false}

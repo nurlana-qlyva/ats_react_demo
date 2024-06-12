@@ -1,7 +1,9 @@
-import { Checkbox, Divider, Input, InputNumber } from "antd"
-import { t } from "i18next"
 import { Controller, useFormContext } from "react-hook-form"
-
+import { t } from "i18next"
+import { Checkbox, Divider, Input, InputNumber } from "antd"
+import Firma from '../../../components/form/Firma'
+import Birim from "../../../components/form/Birim"
+import MalzemeTipi from "../../../components/form/MalzemeTipi"
 
 const GeneralInfo = () => {
     const { control, setValue, watch } = useFormContext()
@@ -58,10 +60,7 @@ const GeneralInfo = () => {
                                     name=""
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={e => field.onChange(e.target.value)}
-                                        />
+                                        <Birim field={field} />
                                     )}
                                 />
                             </div>
@@ -73,10 +72,7 @@ const GeneralInfo = () => {
                                     name=""
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={e => field.onChange(e.target.value)}
-                                        />
+                                        <MalzemeTipi field={field} />
                                     )}
                                 />
                             </div>
@@ -358,13 +354,10 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("firmaKodu")}</label>
                                 <Controller
-                                    name=""
+                                    name="firmaId"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={e => field.onChange(e.target.value)}
-                                        />
+                                        <Firma field={field} />
                                     )}
                                 />
                             </div>

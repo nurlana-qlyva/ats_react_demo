@@ -34,7 +34,7 @@ const App = () => {
         <Route path="/detay/:id" element={<DetailUpdate />} />
         <Route path="/hizli-km-guncelleme" element={<KmUpdate />} />
         <Route path="/ayarlar" element={<Settings />} />
-        <Route path="/yakit" element={<Yakit />} />
+        <Route path="/yakit-islemleri" element={<Yakit />} />
         <Route path="/malzeme-tanimlari" element={<MalzemeTanimlari />} />
       </Route>
       {hasToken && (

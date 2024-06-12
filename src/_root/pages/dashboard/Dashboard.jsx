@@ -1,13 +1,14 @@
 import LineChartComp from './charts/LineChartComp'
 import BarChartComp from './charts/BarChartComp'
 import PieChartComp from './charts/PieChartComp'
+import { t } from 'i18next'
 
 const Dashboard = () => {
 
   return (
     <div className="dashboard">
       <div className="content">
-        Dashboard
+        {t("dashboard")}
       </div>
 
       <div className="grid gap-2">

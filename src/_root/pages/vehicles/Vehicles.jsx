@@ -20,11 +20,11 @@ import {
 import { Checkbox, Table, Popover, Button, Input } from 'antd'
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
 import { DemoService, VehiclesReadForFilterService, VehiclesReadForPageService, VehiclesReadForSearchService } from '../../../api/service'
+import { PlakaContext } from '../../../context/plakaSlice'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
 import Filter from './filter/Filter'
 import OperationsInfo from './operations/OperationsInfo'
-import { PlakaContext } from '../../../context/plakaSlice'
 
 const breadcrumb = [
     {
@@ -215,9 +215,11 @@ const Vehicles = () => {
             over: -1,
         });
     }
+    
     useEffect(() => {
         DemoService().then(res => res.data)
     }, [])
+
     const onDragOver = ({ active, over }) => {
         const activeIndex = columns.findIndex((i) => i.key === active.id);
         const overIndex = columns.findIndex((i) => i.key === over?.id);

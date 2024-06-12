@@ -7,6 +7,7 @@ import {
     MenuFoldOutlined
 } from '@ant-design/icons'
 import LanguageSelector from '../components/lang/LanguageSelector';
+import { t } from 'i18next';
 
 const { Header } = Layout
 
@@ -35,7 +36,7 @@ const HeaderComp = ({ collapsed, colorBgContainer, setCollapsed }) => {
                 <div className="flex gap-1 justify-between align-center">
                     <Input
                         className="search-input"
-                        placeholder="Arama"
+                        placeholder={t("arama")}
                         allowClear
                     />
                     <Avatar

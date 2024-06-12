@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import dayjs from 'dayjs'
+import PropTypes from 'prop-types'
+import { t } from 'i18next'
 import {
     closestCenter,
     DndContext,
@@ -16,12 +16,13 @@ import {
     SortableContext,
     useSortable,
 } from '@dnd-kit/sortable'
-import { HomeOutlined, MenuOutlined } from '@ant-design/icons'
-import { Modal, Button, Table, Tabs, message, Checkbox, Popover, Input } from 'antd'
+import dayjs from 'dayjs'
+import { Checkbox, Table, Popover, Button, Input, Popconfirm } from 'antd'
+import { MenuOutlined, HomeOutlined, DeleteOutlined, ArrowUpOutlined } from '@ant-design/icons'
+import { YakitDataDeleteService, YakitGetService } from '../../../api/service'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
-import { YakitGetService } from '../../../api/service'
 import AddModal from './add/AddModal'
-import { PlakaContext } from '../../../context/plakaSlice'
+import UpdateModal from './update/UpdateModal'
 
 const breadcrumb = [
     {
@@ -29,7 +30,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: 'Yakıt İşlemleri',
+        title: t('yakitIslemleri'),
     },
 ]
 
@@ -37,6 +38,7 @@ const DragIndexContext = createContext({
     active: -1,
     over: -1,
 })
+
 const dragActiveStyle = (dragState, id) => {
     const { active, over, direction } = dragState
     let style = {}
@@ -45,8 +47,7 @@ const dragActiveStyle = (dragState, id) => {
             backgroundColor: 'gray',
             opacity: 0.5,
         };
-    }
-    else if (over && id === over && active !== over) {
+    } else if (over && id === over && active !== over) {
         style =
             direction === 'right'
                 ? {
@@ -58,6 +59,7 @@ const dragActiveStyle = (dragState, id) => {
     }
     return style;
 }
+
 const TableBodyCell = (props) => {
     const dragState = useContext(DragIndexContext);
     return (
@@ -68,8 +70,14 @@ const TableBodyCell = (props) => {
                 ...dragActiveStyle(dragState, props.id),
             }}
         />
-    );
+    )
 }
+
+TableBodyCell.propTypes = {
+    id: PropTypes.string,
+    style: PropTypes.object,
+}
+
 const TableHeaderCell = (props) => {
     const dragState = useContext(DragIndexContext);
     const { attributes, listeners, setNodeRef, isDragging } = useSortable({
@@ -90,6 +98,11 @@ const TableHeaderCell = (props) => {
     return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 }
 
+TableHeaderCell.propTypes = {
+    id: PropTypes.string,
+    style: PropTypes.object,
+}
+
 const Yakit = () => {
     const [dataSource, setDataSource] = useState([])
     const [tableParams, setTableParams] = useState({
@@ -99,17 +112,18 @@ const Yakit = () => {
         },
     })
     const [loading, setLoading] = useState(false)
-    const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const [dragIndex, setDragIndex] = useState({
         active: -1,
         over: -1,
     })
-    const [openRowHeader, setOpenRowHeader] = useState(false)
+    const [search, setSearch] = useState("")
     const [status, setStatus] = useState(false)
-    const { setPlaka } = useContext(PlakaContext)
+    const [openRowHeader, setOpenRowHeader] = useState(false)
+    const [updateModal, setUpdateModal] = useState(false)
+    const [id, setId] = useState(0)
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
         YakitGetService(tableParams?.pagination.current).then(res => {
             setDataSource(res?.data.fuel_list)
             setTableParams({
@@ -118,64 +132,67 @@ const Yakit = () => {
                     ...tableParams.pagination,
                     total: res?.data.total_count,
                 },
-            })
-            setLoading(false)
-        })
-    }, [tableParams?.pagination.current])
-
-    useEffect(() => setPlaka(selectedRowKeys), [selectedRowKeys])
-
-    const handleTableChange = (pagination, filters, sorter) => {
-        setTableParams({
-            pagination,
-            filters,
-            ...sorter,
+            });
+            setLoading(false);
         });
+    }, [tableParams.pagination.current, status])
 
-        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            console.log(1)
-        }
+    const handleDelete = (data) => {
+        YakitDataDeleteService(data.siraNo).then(res => {
+            if (res?.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        setStatus(false);
     }
 
     const baseColumns = [
         {
-            title: 'Plaka',
+            title: t('plaka'),
             dataIndex: 'plaka',
             key: 1,
+            render: (text, record) => (
+                <Button onClick={() => {
+                    setUpdateModal(true)
+                    setId(record.siraNo)
+                }}>{text}</Button>
+            )
         },
         {
-            title: 'Tarih',
+            title: t('tarih'),
             dataIndex: 'tarih',
             key: 2,
-            render: (text, record) => dayjs(text).format("DD.MM.YYYY")
+            render: (text) => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: 'Yakıt Tipi',
+            title: t('yakitTip'),
             dataIndex: 'yakitTip',
             key: 3,
         },
         {
-            title: 'Alınan KM.',
-            dataIndex: 'alinanKm',
+            title: t('alinanKm'),
+            dataIndex: 'sonAlinanKm',
             key: 4,
         },
         {
-            title: 'Kullanım',
+            title: t('kullanim'),
             dataIndex: 'ozelKullanim',
             key: 5,
             render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
         },
         {
-            title: 'Miktar',
+            title: t('miktar'),
             dataIndex: 'miktar',
             key: 6,
-            render: (text, record) => <div className=''>
-                <span>{text} </span>
-                <span style={{ fontSize: '14px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
-            </div>
+            render: (text, record) => (
+                <div className=''>
+                    <span>{text} </span>
+                    <span style={{ fontSize: '14px', color: 'rgb(147 147 147)' }}>{record.birim === "LITRE" && 'lt'}</span>
+                </div>
+            )
         },
         {
-            title: 'Tutar',
+            title: t('tutar'),
             dataIndex: 'tutar',
             key: 7,
         },
@@ -183,6 +200,7 @@ const Yakit = () => {
             title: 'Ortalama Tüketim',
             dataIndex: 'tuketim',
             key: 8,
+            render: (text, record) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
         },
         {
             title: 'Km Başına Maliyet',
@@ -202,12 +220,12 @@ const Yakit = () => {
             render: (text, record) => <Checkbox checked={record.stokKullanimi} readOnly />
         },
         {
-            title: 'Sürücü',
+            title: t('surucu'),
             dataIndex: 'surucuAdi',
             key: 12,
         },
         {
-            title: 'Lokasyon',
+            title: t('lokasyon'),
             dataIndex: 'lokasyon',
             key: 13,
         },
@@ -220,7 +238,17 @@ const Yakit = () => {
             title: 'Açıklama',
             dataIndex: 'aciklama',
             key: 15,
-        }
+        },
+        {
+            title: '',
+            dataIndex: 'delete',
+            key: 16,
+            render: (_, record) => (
+                <Popconfirm title="Silmeye emin misiniz?" onConfirm={() => handleDelete(record)}>
+                    <DeleteOutlined style={{ color: "#dc3545" }} />
+                </Popconfirm>
+            ),
+        },
     ]
 
     const [columns, setColumns] = useState(() =>
@@ -235,42 +263,21 @@ const Yakit = () => {
             }),
         })),
     )
-    const defaultCheckedList = columns.map((item) => item.key)
-    const [checkedList, setCheckedList] = useState(defaultCheckedList)
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 1,
-            },
-        }),
-    )
-    const onDragEnd = ({ active, over }) => {
-        if (active.id !== over?.id) {
-            setColumns((prevState) => {
-                const activeIndex = prevState.findIndex((i) => i.key === active?.id);
-                const overIndex = prevState.findIndex((i) => i.key === over?.id);
-                return arrayMove(prevState, activeIndex, overIndex);
-            });
+    const handleTableChange = (pagination, filters, sorter) => {
+        setTableParams({
+            pagination,
+            filters,
+            ...sorter,
+        });
+
+        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+            console.log(1);
         }
-        setDragIndex({
-            active: -1,
-            over: -1,
-        });
-    }
-    const onDragOver = ({ active, over }) => {
-        const activeIndex = columns.findIndex((i) => i.key === active.id);
-        const overIndex = columns.findIndex((i) => i.key === over?.id);
-        setDragIndex({
-            active: active.id,
-            over: over?.id,
-            direction: overIndex > activeIndex ? 'right' : 'left',
-        });
     }
 
-    const handleOpenChange = (newOpen) => {
-        setOpenRowHeader(newOpen);
-    }
+    const defaultCheckedList = columns.map((item) => item.key);
+    const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
     const newColumns = columns.map(col => (
         {
@@ -279,10 +286,12 @@ const Yakit = () => {
         }
     ))
 
-    const options = columns.map(({ key, title }) => ({
-        label: title,
-        value: key,
-    }))
+    const options = columns
+        // .filter(column => column.dataIndex !== 'delete')
+        .map(({ key, title }) => ({
+            label: title,
+            value: key,
+        }))
 
     const content = (
         <>
@@ -297,6 +306,39 @@ const Yakit = () => {
             />
         </>
     )
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 1,
+            },
+        }),
+    )
+
+    const onDragEnd = ({ active, over }) => {
+        if (active.id !== over?.id) {
+            setColumns((prevState) => {
+                const activeIndex = prevState.findIndex((i) => i.key === active?.id);
+                const overIndex = prevState.findIndex((i) => i.key === over?.id);
+                return arrayMove(prevState, activeIndex, overIndex);
+            });
+        }
+        setDragIndex({
+            active: -1,
+            over: -1,
+        });
+    }
+
+    const onDragOver = ({ active, over }) => {
+        const activeIndex = columns.findIndex((i) => i.key === active.id);
+        const overIndex = columns.findIndex((i) => i.key === over?.id);
+        setDragIndex({
+            active: active.id,
+            over: over?.id,
+            direction: overIndex > activeIndex ? 'right' : 'left',
+        });
+    }
+
     return (
         <>
             <div className="content">
@@ -311,20 +353,23 @@ const Yakit = () => {
                             placement="bottom"
                             trigger="click"
                             open={openRowHeader}
-                            onOpenChange={handleOpenChange}
+                            onOpenChange={(newOpen) => setOpenRowHeader(newOpen)}
                         >
                             <Button className="btn primary-btn"><MenuOutlined /></Button>
                         </Popover>
-                        {/* <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} /> */}
-                        <Input placeholder="Arama" />
-                        <AddModal />
+                        <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
+                        <AddModal setStatus={setStatus} />
                         {/* <Filter filter={filter} clearFilters={clear} /> */}
+                    </div>
+                    <div>
+                        {/* <OperationsInfo ids={selectedRowKeys} /> */}
                     </div>
                 </div>
             </div>
 
+            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} setStatus={setStatus} status={status} id={id} />
+
             <div className="content">
-                <p className="count">[ {tableParams?.pagination.total} kayıt ]</p>
                 <DndContext
                     sensors={sensors}
                     modifiers={[restrictToHorizontalAxis]}
@@ -335,24 +380,33 @@ const Yakit = () => {
                     <SortableContext items={columns.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                         <DragIndexContext.Provider value={dragIndex}>
                             <Table
-                                rowKey={(record) => record.aracId}
+                                rowKey={(record) => record.malzemeId}
                                 columns={newColumns}
                                 dataSource={dataSource}
-                                pagination={tableParams.pagination}
+                                pagination={{
+                                    ...tableParams.pagination,
+                                    showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+                                    locale: {
+                                        items_per_page: `/ ${t('sayfa')}`,
+                                    },
+                                }}
                                 loading={loading}
                                 size="small"
                                 onChange={handleTableChange}
                                 scroll={{
-                                    x: 1500,
+                                    x: 2500
                                 }}
-                                rowSelection={{
-                                    selectedRowKeys: selectedRowKeys,
-                                    onChange: (selectedRowKeys, keys) => {
-                                        setSelectedRowKeys(selectedRowKeys);
+                                // rowSelection={{
+                                //     selectedRowKeys: selectedRowKeys,
+                                //     onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                                //     onSelect: handleRowSelection
+                                // }}
+                                components={{
+                                    header: {
+                                        cell: TableHeaderCell,
                                     },
-                                    onSelectAll: (selected, selectedRows, changeRows) => {
-                                        const keys = changeRows.map((row) => row.aracId);
-                                        setSelectedRowKeys(selected ? keys : []);
+                                    body: {
+                                        cell: TableBodyCell,
                                     },
                                 }}
                             />
@@ -370,7 +424,6 @@ const Yakit = () => {
                     </DragOverlay>
                 </DndContext>
             </div>
-
         </>
     )
 }

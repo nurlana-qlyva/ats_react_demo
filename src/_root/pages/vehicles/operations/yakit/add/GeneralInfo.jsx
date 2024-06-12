@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
+import { t } from 'i18next'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, message, Modal, TimePicker } from 'antd'
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../context/plakaSlice'
@@ -312,12 +313,12 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={updateDepoHacmi}>
-                Kaydet
+                {t("kaydet")}
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setOpen(false)
             }}>
-                İptal
+                {t("iptal")}
             </Button>
         ]
     )
@@ -327,7 +328,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setOpenDetail(false)
             }}>
-                Kapat
+                {t("kapat")}
             </Button>
         ]
     )
@@ -341,7 +342,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="plaka">Plaka</label>
+                                <label htmlFor="plaka">{t("plaka")}</label>
                                 <Controller
                                     name="plaka"
                                     control={control}
@@ -353,7 +354,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="surucuId">Sürücü</label>
+                                <label htmlFor="surucuId">{t("surucu")}</label>
                                 <Controller
                                     name="surucuId"
                                     control={control}
@@ -365,7 +366,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Tarih</label>
+                                <label>{t("tarih")}</label>
                                 <Controller
                                     name="tarih"
                                     control={control}
@@ -391,7 +392,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Saat</label>
+                                <label>{t("saat")}</label>
                                 <Controller
                                     name="saat"
                                     control={control}
@@ -418,7 +419,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     <div className="grid gap-1">
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tipi</label>
+                                <label>{t("yakitTip")}</label>
                                 <Controller
                                     name="yakitTipId"
                                     control={control}
@@ -429,7 +430,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             </div>
                         </div>
                         <div className="col-span-6 flex flex-col">
-                            <label>Stoktan Kullanım</label>
+                            <label>{t("stoktanKullanim")}</label>
                             <Controller
                                 name="stokKullanimi"
                                 control={control}
@@ -438,7 +439,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıt Tankı -- ?</label>
+                                <label>{t("yakitTank")} -- ?</label>
                                 <Controller
                                     name="yakitTanki"
                                     control={control}
@@ -457,7 +458,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label> Son Alınan Km</label>
+                                <label>{t("sonAlinanKm")}</label>
                                 <Controller
                                     name="sonAlinanKm"
                                     control={control}
@@ -487,7 +488,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Yakıtın Alındığı Km</label>
+                                <label>{t("yakitinAlindigiKm")}</label>
                                 <Controller
                                     name="alinanKm"
                                     control={control}
@@ -518,7 +519,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label> Fark Km</label>
+                                <label>{t("farkKm")}</label>
                                 <Controller
                                     name="farkKm"
                                     control={control}
@@ -547,7 +548,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>KM Log&apos;a Yazma</label>
+                                <label>{t("engelle")}</label>
                                 <Controller
                                     name="engelle"
                                     control={control}
@@ -565,8 +566,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <div className="flex align-baseline gap-1">
-                                    <label htmlFor="miktar" >Miktar (lt)</label>
-                                    <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
+                                    <label htmlFor="miktar">{t("miktar")} (lt)</label>
+                                    <Button className="depo" onClick={() => setOpen(true)}>{t("depoHacmi")}: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                                 </div>
                                 <Controller
                                     name="miktar"
@@ -601,7 +602,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-6">
                             <div className="grid">
                                 <div className="col-span-4 flex flex-col">
-                                    <label htmlFor="">Full Depo</label>
+                                    <label htmlFor="">{t("fullDepo")}</label>
                                     <Controller
                                         control={control}
                                         name="fullDepo"
@@ -614,7 +615,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                     <div className="grid gap-1">
                                         <div className="col-span-10">
                                             <div className="flex flex-col gap-1">
-                                                <label>Ortalama Tuketim <ArrowUpOutlined style={{ color: 'red' }} /></label>
+                                                <label>{t("ortalamaTuketim")} <ArrowUpOutlined style={{ color: 'red' }} /></label>
                                                 <Controller
                                                     name="tuketim"
                                                     control={control}
@@ -638,7 +639,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Litre Fiyatı</label>
+                                <label>{watch("birim") === "LITRE" && t("litr")} {t("fiyati")}</label>
                                 <Controller
                                     name="litreFiyat"
                                     control={control}
@@ -662,7 +663,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>Tutar</label>
+                                <label>{t("tutar")}</label>
                                 <Controller
                                     name="tutar"
                                     control={control}
@@ -692,7 +693,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <Modal
                 open={open}
                 maskClosable={false}
-                title="Depo Hacmi Girişi"
+                title={t("depoHacmiGirisi")}
                 footer={footer}
                 onCancel={() => setOpen(false)}
             >
@@ -711,7 +712,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <Modal
                 open={openDetail}
                 maskClosable={false}
-                title="Ortalama Yakıt Tüketimi"
+                title={t("ortalamaYakitTuketimi")}
                 footer={detailModalFooter}
                 onCancel={() => setOpenDetail(false)}
             >

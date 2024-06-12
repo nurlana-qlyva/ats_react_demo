@@ -151,7 +151,7 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="">Araç Cinsi</label>
+                                <label htmlFor="">{t("aracCinsi")}</label>
                                 <Controller
                                     name=""
                                     control={control}
