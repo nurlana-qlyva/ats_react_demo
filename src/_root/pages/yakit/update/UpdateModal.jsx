@@ -10,6 +10,7 @@ import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../components/form/PersonalFields'
 import PhotoUpload from '../../../components/upload/PhotoUpload'
 import FileUpload from '../../../components/upload/FileUpload'
+import { t } from 'i18next'
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => {
     const { data, plaka, setData } = useContext(PlakaContext)
@@ -323,22 +324,22 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     const items = [
         {
             key: '1',
-            label: 'Genel Bilgiler',
+            label: t("genelBilgiler"),
             children: <GeneralInfo setIsValid={setIsValid} response={response} setResponse={setResponse} />,
         },
         {
             key: '2',
-            label: 'Özel Alanlar',
+            label: t("ozelAlanlar"),
             children: <PersonalFields personalProps={personalProps} />
         },
         {
             key: '3',
-            label: `[${imageUrls.length}] Resimler`,
+            label: `[${imageUrls.length}] ${t("resimler")}`,
             children: <PhotoUpload imageUrls={imageUrls} loadingImages={loadingImages} setImages={setImages} />
         },
         {
             key: '4',
-            label: `[${filesUrl.length}] Ekli Belgeler`,
+            label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
             children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
         }
     ]
@@ -346,14 +347,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
-                Güncelle
+                {t("guncelle")}
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setUpdateModal(false)
                 setResponse('normal')
                 setStatus(true)
             }}>
-                İptal
+                {t("iptal")}
             </Button>
         ]
     )
@@ -361,7 +362,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
     return (
         <>
             <Modal
-                title="Yakıt Bilgisi Güncelle"
+                title={t("yakitBilgisiGuncelle")}
                 open={updateModal}
                 onCancel={() => setUpdateModal(false)}
                 maskClosable={false}

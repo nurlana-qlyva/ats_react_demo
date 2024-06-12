@@ -35,12 +35,12 @@ const Birim = ({ field }) => {
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('birim', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('birim', selectedOption.codeText)
                     }
                 }
             }}

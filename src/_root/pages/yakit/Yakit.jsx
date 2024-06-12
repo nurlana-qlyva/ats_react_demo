@@ -197,24 +197,24 @@ const Yakit = () => {
             key: 7,
         },
         {
-            title: 'Ortalama Tüketim',
+            title: t("ortalamaTuketim"),
             dataIndex: 'tuketim',
             key: 8,
-            render: (text, record) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
+            render: (text) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
         },
         {
-            title: 'Km Başına Maliyet',
+            title: t("kmBasinaMaliyet"),
             dataIndex: '',
             key: 9,
         },
         {
-            title: 'Full Depo',
-            dataIndex: 'tuketim',
+            title: t("fullDepo"),
+            dataIndex: 'fullDepo',
             key: 10,
             render: (text, record) => <Checkbox checked={record.fullDepo} readOnly />
         },
         {
-            title: 'Stoktan Kullanım',
+            title: t("stoktanKullanim"),
             dataIndex: 'stokKullanimi',
             key: 11,
             render: (text, record) => <Checkbox checked={record.stokKullanimi} readOnly />
@@ -230,12 +230,12 @@ const Yakit = () => {
             key: 13,
         },
         {
-            title: 'İstasyon',
+            title: t("istasyon"),
             dataIndex: 'istasyon',
             key: 14,
         },
         {
-            title: 'Açıklama',
+            title: t("aciklama"),
             dataIndex: 'aciklama',
             key: 15,
         },
@@ -244,7 +244,7 @@ const Yakit = () => {
             dataIndex: 'delete',
             key: 16,
             render: (_, record) => (
-                <Popconfirm title="Silmeye emin misiniz?" onConfirm={() => handleDelete(record)}>
+                <Popconfirm title={t("confirmQuiz")} cancelText={t("cancel")} okText={t("ok")} onConfirm={() => handleDelete(record)}>
                     <DeleteOutlined style={{ color: "#dc3545" }} />
                 </Popconfirm>
             ),

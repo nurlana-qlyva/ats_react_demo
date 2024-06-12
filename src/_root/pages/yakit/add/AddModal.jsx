@@ -3,10 +3,12 @@ import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, message, Modal, Tabs } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../context/plakaSlice'
 import { YakitAddService, YakitDataGetByIdService } from '../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../components/form/PersonalFields'
+import { t } from 'i18next'
 
 const AddModal = ({ setStatus }) => {
     const { data, plaka, setData, setHistory } = useContext(PlakaContext)
@@ -287,7 +289,7 @@ const AddModal = ({ setStatus }) => {
     const footer = (
         [
             <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid}>
-                Kaydet
+                {t("kaydet")}
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => {
                 setopenModal(false)
@@ -295,22 +297,23 @@ const AddModal = ({ setStatus }) => {
                 setResponse("normal")
                 setHistory([])
             }}>
-                İptal
+                {t("iptal")}
             </Button>
         ]
     )
+
     return (
         <>
-            <Button className='btn primary-btn' onClick={() => setopenModal(true)}>Yenisini Ekle</Button>
+            <Button className='btn primary-btn' onClick={() => setopenModal(true)}><PlusOutlined /> {t('ekle')}</Button>
             <Modal
-                title="Yeni Yakıt Girişi"
+                title={t("yeniYakitGirisi")}
                 open={openModal}
                 onCancel={() => setopenModal(false)}
                 maskClosable={false}
                 footer={footer}
                 width={1200}
             >
-                <p className="count">Güncel Km: [ {watch("guncelKmLog")} km ]</p>
+                <p className="count">{t("guncelKm")}: [ {watch("guncelKmLog")} km ]</p>
                 <FormProvider {...methods}>
                     <form>
                         <Tabs defaultActiveKey="1" items={items} />

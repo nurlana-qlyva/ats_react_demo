@@ -16,7 +16,7 @@ const Yakit = ({ visible, onClose, ids }) => {
     const [status, setStatus] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
-            current: 1, 
+            current: 1,
             pageSize: 10,
         },
     });
@@ -114,7 +114,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             render: (text) => <p>{text} <ArrowUpOutlined style={{ color: 'red' }} /></p>
         },
         {
-            title: 'Km Başına Maliyet',
+            title: t("kmBasinaMaliyet"),
             dataIndex: '',
             key: 9,
         },
@@ -155,7 +155,7 @@ const Yakit = ({ visible, onClose, ids }) => {
             dataIndex: 'delete',
             key: 16,
             render: (_, record) => (
-                <Popconfirm title="Silmeye emin misiniz?" onConfirm={() => handleDelete(record)}>
+                <Popconfirm title={t("confirmQuiz")} cancelText={t("cancel")} okText={t("ok")} onConfirm={() => handleDelete(record)}>
                     <DeleteOutlined style={{ color: "#dc3545" }} />
                 </Popconfirm>
             ),

@@ -57,7 +57,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("birim")}</label>
                                 <Controller
-                                    name=""
+                                    name="birimId"
                                     control={control}
                                     render={({ field }) => (
                                         <Birim field={field} />

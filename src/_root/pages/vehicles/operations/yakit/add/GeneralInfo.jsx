@@ -57,19 +57,19 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             const content = (
                 <div className="grid detail-tuketim">
                     <div className="col-span-5">
-                        <p>Gidilen yol:</p>
+                        <p>{t("gidilenYol")}:</p>
                     </div>
                     <div className="col-span-6">
                         <p className='text-info'>{watch('farkKm')} km</p>
                     </div>
                     <div className="col-span-5">
-                        <p>Yakıt miktarı:</p>
+                        <p>{t("yakitMiktari")}:</p>
                     </div>
                     <div className="col-span-6">
                         <p className='text-info'>{watch("miktar")} lt</p>
                     </div>
                     <div className="col-span-5">
-                        <p>Depoda bulunan yakıt miktarı:</p>
+                        <p>{t("kalanYakitMiktari")}:</p>
                     </div>
                     <div className="col-span-6">
                         <div className='text-info'>
@@ -92,7 +92,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <Divider />
                     </div>
                     <div className="col-span-5">
-                        <p>Yakıt Tüketimi:</p>
+                        <p>{t("yakitTuketimi")}:</p>
                     </div>
                     <div className="col-span-6">
                         <p className='text-info'>{watch('tuketim')} lt/km</p>
@@ -112,19 +112,19 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 const content = (
                     <div className="grid detail-tuketim">
                         <div className="col-span-5">
-                            <p>Gidilen yol:</p>
+                            <p>{t("gidilenYol")}:</p>
                         </div>
                         <div className="col-span-6">
                             <p className='text-info'>{watch('farkKm')} km</p>
                         </div>
                         <div className="col-span-5">
-                            <p>Bir önceki yakıt miktarı:</p>
+                            <p>{t("oncekiYakitMiktari")}:</p>
                         </div>
                         <div className="col-span-6">
                             <p className='text-info'>{history[0]?.miktar} lt</p>
                         </div>
                         <div className="col-span-5">
-                            <p>Depoda bulunan yakıt miktarı:</p>
+                            <p>{t("kalanYakitMiktari")}:</p>
                         </div>
                         <div className="col-span-6">
                             <div className='text-info'>
@@ -145,7 +145,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                             <Divider />
                         </div>
                         <div className="col-span-5">
-                            <p>Yakıt Tüketimi:</p>
+                            <p>{t("yakitTuketimi")}:</p>
                         </div>
                         <div className="col-span-6">
                             <p className='text-info'>{watch('tuketim')} lt/km</p>
@@ -161,25 +161,25 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                     const content = (
                         <div className="grid detail-tuketim">
                             <div className="col-span-5">
-                                <p>Gidilen yol:</p>
+                                <p>{t("gidilenYol")}:</p>
                             </div>
                             <div className="col-span-6">
                                 <p className='text-info'>{watch('farkKm')} km</p>
                             </div>
                             <div className="col-span-5">
-                                <p>Araç depo hacmi:</p>
+                                <p>{t("aracDepoHacmi")}:</p>
                             </div>
                             <div className="col-span-6">
                                 <p className='text-info'>{watch("yakitHacmi")} lt</p>
                             </div>
                             <div className="col-span-5">
-                                <p>Bir önceki yakıt miktarı:</p>
+                                <p>{t("oncekiYakitMiktari")}:</p>
                             </div>
                             <div className="col-span-6">
                                 <p className='text-info'>{history[0]?.miktar} lt</p>
                             </div>
                             <div className="col-span-5">
-                                <p>Depoda bulunan yakıt miktarı:</p>
+                                <p>{t("kalanYakitMiktari")}:</p>
                             </div>
                             <div className="col-span-6">
                                 <div className='text-info'>
@@ -200,7 +200,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                 <Divider />
                             </div>
                             <div className="col-span-5">
-                                <p>Yakıt Tüketimi:</p>
+                                <p>{t("yakitTuketimi")}:</p>
                             </div>
                             <div className="col-span-6">
                                 <p className='text-info'>{watch('tuketim')} lt/km</p>

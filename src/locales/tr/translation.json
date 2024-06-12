@@ -136,5 +136,15 @@
     "guzergah": "Güzergah",
     "firma": "Firma",
     "istasyon": "İstasyon",
-    "kilometreGuncellemeGecmisi": "Kilometre Güncelleme Geçmişi"
+    "kilometreGuncellemeGecmisi": "Kilometre Güncelleme Geçmişi",
+    "kmBasinaMaliyet": "Km Başına Maliyet",
+    "confirmQuiz": "Silmeye emin misiniz?",
+    "cancel": "Hayır",
+    "ok": "Evet",
+    "gidilenYol": "Gidilen yol",
+    "yakitMiktari": "Yakıt miktarı",
+    "kalanYakitMiktari": "Depoda bulunan yakıt miktarı",
+    "yakitTuketimi": "Yakıt Tüketimi",
+    "oncekiYakitMiktari": "Bir önceki yakıt miktarı",
+    "aracDepoHacmi": "Araç depo hacmi"
 }

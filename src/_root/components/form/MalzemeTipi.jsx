@@ -35,12 +35,12 @@ const MalzemeTipi = ({ field }) => {
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue('renk', "")
+                        setValue('mlzmTip', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue('renk', selectedOption.codeText)
+                        setValue('mlzmTip', selectedOption.codeText)
                     }
                 }
             }}
