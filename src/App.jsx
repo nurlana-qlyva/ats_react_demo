@@ -10,6 +10,7 @@ import KmUpdate from './_root/pages/km-update/KmUpdate'
 import Settings from './_root/pages/settings/Settings'
 import Yakit from './_root/pages/yakit/Yakit'
 import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
+import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/ayarlar" element={<Settings />} />
         <Route path="/yakit-islemleri" element={<Yakit />} />
         <Route path="/malzeme-tanimlari" element={<MalzemeTanimlari />} />
+        <Route path="/giris-fisleri" element={<GirisFisleri />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

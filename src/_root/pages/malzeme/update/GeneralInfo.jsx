@@ -4,6 +4,7 @@ import { Checkbox, Divider, Input, InputNumber } from "antd"
 import Firma from '../../../components/form/Firma'
 import Birim from "../../../components/form/Birim"
 import MalzemeTipi from "../../../components/form/MalzemeTipi"
+import Depo from "../../../components/form/Depo"
 
 const GeneralInfo = () => {
     const { control } = useFormContext()
@@ -166,10 +167,7 @@ const GeneralInfo = () => {
                                     name="depoId"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={e => field.onChange(e.target.value)}
-                                        />
+                                        <Depo field={field}/>
                                     )}
                                 />
                             </div>

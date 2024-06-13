@@ -16,13 +16,12 @@ import {
     SortableContext,
     useSortable,
 } from '@dnd-kit/sortable'
+import dayjs from 'dayjs'
 import { Checkbox, Table, Popover, Button, Input } from 'antd'
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
-import { MalzemeListGetService } from '../../../api/service'
-import dayjs from 'dayjs'
-import UpdateModal from './update/UpdateModal'
+// import UpdateModal from './update/UpdateModal'
 
 const breadcrumb = [
     {
@@ -30,7 +29,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: t('malzemeTanimlari'),
+        title: t('girisFisleri'),
     },
 ]
 
@@ -103,7 +102,7 @@ TableHeaderCell.propTypes = {
     style: PropTypes.object,
 }
 
-const MalzemeTanimlari = () => {
+const GirisFisleri = () => {
     const [data, setData] = useState([])
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -124,152 +123,60 @@ const MalzemeTanimlari = () => {
 
     const baseColumns = [
         {
-            title: t('malzemeId'),
-            dataIndex: 'malzemeId',
+            title: t('tarih'),
+            dataIndex: 'tarih',
             key: 1,
-            render: (text, record) => (
-                <Button onClick={() => {
-                    setRecord(record)
-                    setUpdateModal(true)
-                }}>{text}</Button>
-            )
+            render: (text) => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: t('malzemeKodu'),
-            dataIndex: 'malzemeKod',
+            title: t('fisNo'),
+            dataIndex: 'fisNo',
             key: 2,
         },
         {
-            title: t('malzemeTanimi'),
+            title: t('firmaTanimi'),
             dataIndex: 'tanim',
             key: 3,
         },
         {
-            title: t('malzemeTipi'),
-            dataIndex: 'malzemeTipKodText',
+            title: t('plaka'),
+            dataIndex: 'plaka',
+            key: 3,
+        },
+        {
+            title: t('islemTipi'),
+            dataIndex: 'islemTipi',
             key: 4,
         },
         {
-            title: t('stokMiktar'),
-            dataIndex: 'stokMiktar',
+            title: t('girisDeposu'),
+            dataIndex: 'girisDeposu',
             key: 5,
         },
         {
-            title: t('birim'),
-            dataIndex: 'birim',
+            title: t('cikisDeposu'),
+            dataIndex: 'cikisDeposu',
             key: 6,
         },
         {
-            title: t('fiyat'),
-            dataIndex: 'fiyat',
+            title: t('araToplam'),
+            dataIndex: 'araToplam',
             key: 7,
         },
         {
-            title: t('tedarikci'),
-            dataIndex: 'tedarikci',
+            title: t('kdvToplam'),
+            dataIndex: 'kdvToplam',
             key: 8,
         },
         {
-            title: t('seriNo'),
-            dataIndex: 'seriNo',
+            title: t('genelToplam'),
+            dataIndex: 'genelToplam',
             key: 9,
         },
         {
-            title: t('barkodNo'),
-            dataIndex: 'barkodNo',
+            title: t('faturaIrsaliyeNo'),
+            dataIndex: 'faturaIrsaliyeNo',
             key: 10,
-        },
-        {
-            title: t('depo'),
-            dataIndex: 'depo',
-            key: 11,
-        },
-        {
-            title: t('bolum'),
-            dataIndex: 'bolum',
-            key: 12,
-        },
-        {
-            title: t('raf'),
-            dataIndex: 'raf',
-            key: 13,
-        },
-        {
-            title: t('kritikMik'),
-            dataIndex: 'kritikMiktar',
-            key: 14,
-        },
-        {
-            title: t('sonAlisTarihi'),
-            dataIndex: 'sonAlisTarih',
-            key: 15,
-            render: (text) => dayjs(text).format("DD.MM.YYYY")
-        },
-        {
-            title: t('sonAlinanFirma'),
-            dataIndex: 'sonAlinanFirma',
-            key: 16,
-        },
-        {
-            title: t('sonAlinanFiyat'),
-            dataIndex: 'sonFiyat',
-            key: 17,
-        },
-        {
-            title: t('aktif'),
-            dataIndex: 'aktif',
-            key: 18,
-            render: (text, record) => <Checkbox checked={record.ozelKullanim} readOnly />
-        },
-        {
-            title: t('kdvOrani'),
-            dataIndex: 'kdvOran',
-            key: 19,
-        },
-        {
-            title: t('girenMiktar'),
-            dataIndex: 'girenMiktar',
-            key: 20,
-        },
-        {
-            title: t('cikanMiktar'),
-            dataIndex: 'cikanMiktar',
-            key: 21,
-        },
-        {
-            title: t('yedekParca'),
-            dataIndex: 'yedekParca',
-            key: 22,
-            render: (text, record) => <Checkbox checked={record.yedekParca} readOnly />
-        },
-        {
-            title: t('sarfMalz'),
-            dataIndex: 'sarfMlz',
-            key: 23,
-            render: (text, record) => <Checkbox checked={record.sarfMlz} readOnly />
-        },
-        {
-            title: t('demirbas'),
-            dataIndex: 'demirBas',
-            key: 24,
-            render: (text, record) => <Checkbox checked={record.demirBas} readOnly />
-        },
-        {
-            title: t('degistirme'),
-            dataIndex: 'degistirme',
-            key: 25,
-            render: (text, record) => <p className='text-secondary'>{text}</p>
-        },
-        {
-            title: t('olusturma'),
-            dataIndex: 'olusturma',
-            key: 26,
-            render: (text, record) => <p className='text-success'>{text}</p>
-        },
-        {
-            title: t('aciklama'),
-            dataIndex: 'aciklama',
-            key: 27,
         },
     ]
 
@@ -291,18 +198,18 @@ const MalzemeTanimlari = () => {
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
 
     useEffect(() => {
-        setLoading(true);
-        MalzemeListGetService(tableParams?.pagination.current).then(res => {
-            setData(res?.data.materialList)
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams.pagination,
-                    total: res?.data.total_count,
-                },
-            });
-            setLoading(false);
-        })
+        // setLoading(true)
+        // MalzemeListGetService(tableParams?.pagination.current).then(res => {
+        //     setData(res?.data.materialList)
+        //     setTableParams({
+        //         ...tableParams,
+        //         pagination: {
+        //             ...tableParams.pagination,
+        //             total: res?.data.total_count,
+        //         },
+        //     });
+        //     setLoading(false);
+        // })
     }, [tableParams.pagination.current, status]);
 
     const sensors = useSensors(
@@ -426,7 +333,6 @@ const MalzemeTanimlari = () => {
         }
     }, [tableParams.pagination.current, localStorage.getItem('selectedRowKeys')])
 
-
     return (
         <>
             <div className="content">
@@ -454,7 +360,7 @@ const MalzemeTanimlari = () => {
                     </div>
                 </div>
             </div>
-            <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} setStatus={setStatus} status={status} id={record.malzemeId} />
+            {/* <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} setStatus={setStatus} status={status} id={record.malzemeId} /> */}
             <div className="content">
                 <DndContext
                     sensors={sensors}
@@ -479,9 +385,9 @@ const MalzemeTanimlari = () => {
                                 loading={loading}
                                 size="small"
                                 onChange={handleTableChange}
-                                scroll={{
-                                    x: 2500
-                                }}
+                                // scroll={{
+                                //     x: 2500
+                                // }}
                                 rowSelection={{
                                     selectedRowKeys: selectedRowKeys,
                                     onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
@@ -514,4 +420,4 @@ const MalzemeTanimlari = () => {
     )
 }
 
-export default MalzemeTanimlari
+export default GirisFisleri

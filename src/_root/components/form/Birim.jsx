@@ -28,7 +28,7 @@ const Birim = ({ field }) => {
                 label: item.codeText,
                 value: item.siraNo,
             }))}
-            value={watch('renk')}
+            value={watch('birim')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)

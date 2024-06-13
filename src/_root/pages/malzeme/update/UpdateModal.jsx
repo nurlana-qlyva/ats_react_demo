@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { Button, message, Modal, Tabs } from "antd";
-import { uploadPhoto } from "../../../../utils/upload";
-import { MalzemeUpdateService } from "../../../../api/service";
+import { uploadFile, uploadPhoto } from "../../../../utils/upload";
+import { MalzemeDataByIdGetService, MalzemeUpdateService } from "../../../../api/service";
 import PersonalFields from "../../../components/form/PersonalFields";
 import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
 import GeneralInfo from "./GeneralInfo";
 
-const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => {
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -139,8 +139,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      // const data = uploadPhoto(id, "MALZEME", images)
-      // setImageUrls([...imageUrls, data.imageUrl]);
+      const data = uploadPhoto(id, "MALZEME", images)
+      setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
     } finally {
@@ -151,7 +151,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
   const uploadFiles = () => {
     try {
       setLoadingFiles(true);
-      // uploadFile(id, "MALZEME", files)
+      uploadFile(id, "MALZEME", files)
     } catch (error) {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
@@ -160,7 +160,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
   };
 
   const personalProps = {
-    form: "",
+    form: "MALZEME",
     fields,
     setFields,
   };
@@ -198,49 +198,85 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
         />
       ),
     },
-  ];
+  ]
+
+  useEffect(() => {
+    MalzemeDataByIdGetService(id).then(res => {
+      setValue("malzemeKod", res.data.malzemeKod)
+      setValue("aktif", res.data.aktif)
+      setValue("barKodNo", res.data.barKodNo)
+      setValue("birim", res.data.birim)
+      setValue("birimKodId", res.data.birimKodId)
+      setValue("bolum", res.data.bolum)
+      setValue("demirBas", res.data.demirBas)
+      setValue("depo", res.data.depo)
+      setValue("depoId", res.data.depoId)
+      setValue("fiyat", res.data.fiyat)
+      setValue("kdvOran", res.data.kdvOran)
+      setValue("malzemeTipKodText", res.data.malzemeTipKodText)
+      setValue("malzemeTipKodId", res.data.malzemeTipKodId)
+      setValue("olcu", res.data.olcu)
+      setValue("raf", res.data.raf)
+      setValue("sarfMlz", res.data.sarfMlz)
+      setValue("seriNo", res.data.seriNo)
+      setValue("tanim", res.data.tanim)
+      setValue("firmaId", res.data.firmaId)
+      setValue("tedarikciFiyat", res.data.tedarikciFiyat)
+      setValue("tedarikciIskontoOran", res.data.tedarikciIskontoOran)
+      setValue("yedekParca", res.data.yedekParca)
+      setValue("unvan", res.data.tedarikci)
+      setValue("kritikMiktar", res.data.kritikMiktar)
+    })
+  }, [id, updateModal])
 
   const onSubmit = handleSubmit((values) => {
     const body = {
+      malzemeId: id,
       tanim: values.tanim,
-      stokMiktar: values.stokMiktar,
+      stokMiktar: values.stokMiktar || 0,
       birimKodId: values.birimKodId || 0,
       malzemeTipKodId: values.malzemeTipKodId || 0,
-      fiyat: values.fiyat,
+      fiyat: values.fiyat || 0,
       firmaId: values.firmaId || 0,
       tedarikci: values.malzemtedarikcieKod,
-      tedarikciFiyat: values.tedarikciFiyat,
-      tedarikciIskontoOran: values.tedarikciIskontoOran,
+      tedarikciFiyat: values.tedarikciFiyat || 0,
+      tedarikciIskontoOran: values.tedarikciIskontoOran || 0,
       seriNo: values.seriNo,
       barKodNo: values.barKodNo,
       depoId: values.depoId || 0,
       bolum: values.bolum,
       raf: values.raf,
-      kritikMiktar: values.kritikMiktar,
-      cikanMiktar: values.cikanMiktar,
-      girenMiktar: values.girenMiktar,
-      sonAlisTarih: dayjs(values.sonAlisTarih).format("YYYY-MM-DD"),
-      sonFiyat: values.sonFiyat,
-      kdvOran: values.kdvOran,
+      kritikMiktar: values.kritikMiktar || 0,
+      cikanMiktar: values.cikanMiktar || 0,
+      girenMiktar: values.girenMiktar || 0,
+      // sonAlisTarih: dayjs(values.sonAlisTarih).format("YYYY-MM-DD") || "",
+      sonFiyat: values.sonFiyat || 0,
+      kdvOran: values.kdvOran || 0,
       aktif: values.aktif,
       yedekParca: values.yedekParca,
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
-      olusturma: values.olusturma,
-      degistirme: values.degistirme,
-      aciklama: values.aciklama,
+      // olusturma: values.olusturma,
+      // degistirme: values.degistirme,
+      // aciklama: values.aciklama,
       olcu: values.olcu,
     };
 
-    console.log(body);
+    MalzemeUpdateService(body).then(res => {
+        if (res?.data.statusCode === 202) {
+          setStatus(true)
+          setUpdateModal(false)
+          reset(defaultValues)
+        }
+    })
+    setStatus(false)
 
-    // MalzemeUpdateService(body).then(res => {
-    //     console.log(res?.data)
-    // })
+    uploadImages()
+    uploadFiles()
   });
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn">
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
       Güncelle
     </Button>,
     <Button
@@ -279,7 +315,7 @@ UpdateModal.propTypes = {
   updateModal: PropTypes.bool,
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
-  id: PropTypes.number,
+  id: PropTypes.object,
   status: PropTypes.bool,
 };
 

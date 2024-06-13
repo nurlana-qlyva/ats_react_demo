@@ -197,7 +197,7 @@ const EditableCell = ({
                     >
                         <TimePicker
                             open={openTimePicker}
-                            format="HH:mm"
+                            format="HH:mm:ss"
                             onOpenChange={(status) => setOpenTimePicker(status)}
                             onChange={handleTimePickerChange}
                         />

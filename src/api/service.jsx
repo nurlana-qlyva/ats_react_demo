@@ -224,3 +224,7 @@ export const MalzemeDepoListGetService = () => {
 export const MalzemeCodeGetService = () => {
   return http.get(`/Numbering/GetModuleCodeByCode?code=MALZEME_KOD`)
 }
+
+export const MalzemeDataByIdGetService = (id) => {
+  return http.get(`/Material/GetMaterialCardById?id=${id}`)
+}

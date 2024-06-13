@@ -28,7 +28,7 @@ const Depo = ({ field }) => {
                 label: item.tanim,
                 value: item.siraNo,
             }))}
-            value={watch('departman')}
+            value={watch('depo')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)

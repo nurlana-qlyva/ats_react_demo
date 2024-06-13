@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { t } from "i18next";
-import { Checkbox, Divider, Input, InputNumber } from "antd";
+import { Checkbox, Input, InputNumber } from "antd";
 import Firma from "../../../components/form/Firma";
 import Birim from "../../../components/form/Birim";
 import MalzemeTipi from "../../../components/form/MalzemeTipi";

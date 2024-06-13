@@ -28,19 +28,19 @@ const MalzemeTipi = ({ field }) => {
                 label: item.codeText,
                 value: item.siraNo,
             }))}
-            value={watch('renk')}
+            value={watch('malzemeTipKodText')}
             onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue('mlzmTip', "")
+                        setValue('malzemeTipKodText', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue('mlzmTip', selectedOption.codeText)
+                        setValue('malzemeTipKodText', selectedOption.codeText)
                     }
                 }
             }}

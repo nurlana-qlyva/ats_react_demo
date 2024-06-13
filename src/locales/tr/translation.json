@@ -146,5 +146,14 @@
     "kalanYakitMiktari": "Depoda bulunan yakıt miktarı",
     "yakitTuketimi": "Yakıt Tüketimi",
     "oncekiYakitMiktari": "Bir önceki yakıt miktarı",
-    "aracDepoHacmi": "Araç depo hacmi"
+    "aracDepoHacmi": "Araç depo hacmi",
+    "fisNo": "Fiş No",
+    "firmaTanimi": "Firma Tanımı",
+    "islemTipi": "İşlem Tipi",
+    "girisDeposu": "Giriş Deposu",
+    "cikisDeposu": "Çıkış Deposu",
+    "araToplam": "Ara Toplam",
+    "kdvToplam": "KDV Toplam",
+    "genelToplam": "Genel Toplam",
+    "faturaIrsaliyeNo": "Fatura / İrsaliye No"
 }
