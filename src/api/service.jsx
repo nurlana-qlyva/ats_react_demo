@@ -208,3 +208,11 @@ export const DemoService = () => {
 export const MalzemeListGetService = (page) => {
   return http.post(`/Material/GetMaterialList?page=${page}`)
 }
+
+export const MalzemeAddService = (data) => {
+  return http.post(`/Material/AddMaterial`, data)
+}
+
+export const MalzemeUpdateService = (data) => {
+  return http.post(`/Material/UpdateMaterialCard`, data)
+}

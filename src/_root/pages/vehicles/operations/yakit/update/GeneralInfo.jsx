@@ -86,7 +86,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <p className='text-info'>{watch('tuketim')} lt/km</p>
                     </div>
                 </div>
-            )
+            )      
 
             setContent(content)
         } else {

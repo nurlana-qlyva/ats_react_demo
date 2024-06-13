@@ -198,7 +198,7 @@ const AddModal = ({ setStatus }) => {
             if (res?.data.statusCode === 200) {
                 setStatus(true)
                 setResponse("normal")
-                setopenModal(false)
+                // setopenModal(false)
                 if (plaka.length === 1) {
                     reset(
                         {

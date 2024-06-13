@@ -4,6 +4,8 @@ import { Button, Modal, Tabs } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import PersonalFields from "../../../components/form/PersonalFields"
 import GeneralInfo from "./GeneralInfo"
+import dayjs from "dayjs"
+import { MalzemeAddService } from "../../../../api/service"
 
 
 const AddModal = () => {
@@ -87,7 +89,37 @@ const AddModal = () => {
         },
     ])
 
-    const defaultValues = {}
+    const defaultValues = {
+        "malzemeKod": "",
+        "tanim": "",
+        "stokMiktar": null,
+        "birimKodId": "",
+        "malzemeTipKodId": null,
+        "fiyat": null,
+        "firmaId": null,
+        "tedarikci": "",
+        "tedarikciFiyat": null,
+        "tedarikciIskontoOran": null,
+        "seriNo": "",
+        "barKodNo": "",
+        "depoId": null,
+        "bolum": "",
+        "raf": "",
+        "kritikMiktar": null,
+        "cikanMiktar": null,
+        "girenMiktar": null,
+        "sonAlisTarih": "",
+        "sonFiyat": null,
+        "kdvOran": null,
+        "aktif": false,
+        "yedekParca": false,
+        "sarfMlz": false,
+        "demirBas": false,
+        "olusturma": "",
+        "degistirme": "",
+        "aciklama": "",
+        "olcu": ""
+    }
 
     const methods = useForm({
         defaultValues: defaultValues
@@ -114,9 +146,50 @@ const AddModal = () => {
         },
     ]
 
+    const onSubmit = handleSubmit(values => {
+        const body = {
+            "malzemeKod": values.malzemeKod,
+            "tanim": values.tanim,
+            "stokMiktar": values.stokMiktar,
+            "birimKodId": values.birimKodId || 0,
+            "malzemeTipKodId": values.malzemeTipKodId || 0,
+            "fiyat": values.fiyat,
+            // "firmaId": values.firmaId || 0,
+            // "tedarikci": values.malzemtedarikcieKod,
+            // "tedarikciFiyat": values.tedarikciFiyat,
+            // "tedarikciIskontoOran": values.tedarikciIskontoOran,
+            "seriNo": values.seriNo,
+            "barKodNo": values.barKodNo,
+            "depoId": values.depoId || 0,
+            "bolum": values.bolum,
+            "raf": values.raf,
+            "kritikMiktar": values.kritikMiktar,
+            // "cikanMiktar": values.cikanMiktar,
+            // "girenMiktar": values.girenMiktar,
+            // "sonAlisTarih": dayjs(values.sonAlisTarih).format("YYYY-MM-DD"),
+            // "sonFiyat": values.sonFiyat,
+            "kdvOran": values.kdvOran,
+            "aktif": values.aktif,
+            "yedekParca": values.yedekParca,
+            "sarfMlz": values.sarfMlz,
+            "demirBas": values.demirBas,
+            "olusturma": values.olusturma,
+            "degistirme": values.degistirme,
+            "aciklama": values.aciklama,
+            "olcu": values.olcu
+        }
+
+        console.log(body)
+
+        // MalzemeAddService(body).then(res => {
+        //     console.log(res?.data)
+        // })
+
+    })
+
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn">
+            <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
                 Kaydet
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => setIsModalOpen(false)}>

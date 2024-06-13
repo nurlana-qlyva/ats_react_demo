@@ -25,7 +25,7 @@ const Firma = ({ field }) => {
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={data.map((item) => ({
-                label: item.unvan,
+                label: item.kod,
                 value: item.firmaId,
             }))}
             value={watch('firma')}
@@ -35,12 +35,13 @@ const Firma = ({ field }) => {
                 if (e === undefined) {
                     const selectedOption = data.find(option => option.firmaId === e);
                     if (!selectedOption) {
-                        setValue('firma', "")
+                        setValue('tedarikciKod', "")
                     }
                 } else {
                     const selectedOption = data.find(option => option.firmaId === e);
                     if (selectedOption) {
-                        setValue('firma', selectedOption.unvan)
+                        setValue('tedarikciKod', selectedOption.kod)
+                        setValue('unvan', selectedOption.unvan)
                     }
                 }
             }}

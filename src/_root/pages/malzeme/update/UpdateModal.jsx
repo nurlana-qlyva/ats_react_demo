@@ -6,6 +6,8 @@ import { Button, message, Modal, Tabs } from 'antd'
 import PhotoUpload from '../../../components/upload/PhotoUpload'
 import FileUpload from '../../../components/upload/FileUpload'
 import { uploadPhoto } from '../../../../utils/upload'
+import dayjs from 'dayjs'
+import { MalzemeUpdateService } from '../../../../api/service'
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
     // file
@@ -106,7 +108,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
     const uploadImages = () => {
         try {
             setLoadingImages(true);
-            // const data = uploadPhoto(id, "YAKIT", images)
+            // const data = uploadPhoto(id, "MALZEME", images)
             // setImageUrls([...imageUrls, data.imageUrl]);
         } catch (error) {
             message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -118,7 +120,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
     const uploadFiles = () => {
         try {
             setLoadingFiles(true);
-            // uploadFile(id, "YAKIT", files)
+            // uploadFile(id, "MALZEME", files)
         } catch (error) {
             message.error("Dosya yüklenemedi. Yeniden deneyin.");
         } finally {
@@ -154,6 +156,45 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status }) => {
             children: <FileUpload filesUrl={filesUrl} loadingFiles={loadingFiles} setFiles={setFiles} />
         }
     ]
+
+    const onSubmit = handleSubmit(values => {
+        const body = {
+            "tanim": values.tanim,
+            "stokMiktar": values.stokMiktar,
+            "birimKodId": values.birimKodId || 0,
+            "malzemeTipKodId": values.malzemeTipKodId || 0,
+            "fiyat": values.fiyat,
+            "firmaId": values.firmaId || 0,
+            "tedarikci": values.malzemtedarikcieKod,
+            "tedarikciFiyat": values.tedarikciFiyat,
+            "tedarikciIskontoOran": values.tedarikciIskontoOran,
+            "seriNo": values.seriNo,
+            "barKodNo": values.barKodNo,
+            "depoId": values.depoId || 0,
+            "bolum": values.bolum,
+            "raf": values.raf,
+            "kritikMiktar": values.kritikMiktar,
+            "cikanMiktar": values.cikanMiktar,
+            "girenMiktar": values.girenMiktar,
+            "sonAlisTarih": dayjs(values.sonAlisTarih).format("YYYY-MM-DD"),
+            "sonFiyat": values.sonFiyat,
+            "kdvOran": values.kdvOran,
+            "aktif": values.aktif,
+            "yedekParca": values.yedekParca,
+            "sarfMlz": values.sarfMlz,
+            "demirBas": values.demirBas,
+            "olusturma": values.olusturma,
+            "degistirme": values.degistirme,
+            "aciklama": values.aciklama,
+            "olcu": values.olcu
+        }
+
+        console.log(body)
+
+        // MalzemeUpdateService(body).then(res => {
+        //     console.log(res?.data)
+        // })
+    })
 
     const footer = (
         [

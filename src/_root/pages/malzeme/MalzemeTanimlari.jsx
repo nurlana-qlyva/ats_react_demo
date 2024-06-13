@@ -445,7 +445,7 @@ const MalzemeTanimlari = () => {
                         >
                             <Button className="btn primary-btn"><MenuOutlined /></Button>
                         </Popover>
-                        <Input placeholder="Arama" onChange={e => setSearch(e.target.value)} />
+                        <Input placeholder={t("arama")} onChange={e => setSearch(e.target.value)} />
                         <AddModal setStatus={setStatus} />
                         {/* <Filter filter={filter} clearFilters={clear} /> */}
                     </div>

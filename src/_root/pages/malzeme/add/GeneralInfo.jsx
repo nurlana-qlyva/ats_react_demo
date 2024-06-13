@@ -6,7 +6,7 @@ import Birim from "../../../components/form/Birim"
 import MalzemeTipi from "../../../components/form/MalzemeTipi"
 
 const GeneralInfo = () => {
-    const { control, setValue, watch } = useFormContext()
+    const { control } = useFormContext()
 
     return (
         <>
@@ -17,7 +17,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("malzemeKodu")}</label>
                                 <Controller
-                                    name=""
+                                    name="malzemeKod"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -32,7 +32,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("aktifDegil")}</label>
                                 <Controller
-                                    name=""
+                                    name="aktif"
                                     control={control}
                                     render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
                                 />
@@ -42,7 +42,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("tanimi")}</label>
                                 <Controller
-                                    name=""
+                                    name="tanim"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -57,7 +57,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("birim")}</label>
                                 <Controller
-                                    name="birimId"
+                                    name="birimKodId"
                                     control={control}
                                     render={({ field }) => (
                                         <Birim field={field} />
@@ -69,7 +69,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("malzemeTipi")}</label>
                                 <Controller
-                                    name=""
+                                    name="malzemeTipKodId"
                                     control={control}
                                     render={({ field }) => (
                                         <MalzemeTipi field={field} />
@@ -81,7 +81,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("fiyat")}</label>
                                 <Controller
-                                    name=""
+                                    name="fiyat"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
@@ -97,7 +97,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("kdvOrani")}</label>
                                 <Controller
-                                    name=""
+                                    name="kdvOran"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
@@ -113,7 +113,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("kritikStokMiktari")}</label>
                                 <Controller
-                                    name=""
+                                    name="kritikMiktar"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
@@ -133,7 +133,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("seriNo")}</label>
                                 <Controller
-                                    name=""
+                                    name="seriNo"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -148,7 +148,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("barkodNo")}</label>
                                 <Controller
-                                    name=""
+                                    name="barKodNo"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -163,7 +163,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("depo")}</label>
                                 <Controller
-                                    name=""
+                                    name="depoId"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -178,7 +178,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("bolum")}</label>
                                 <Controller
-                                    name=""
+                                    name="bolum"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -193,7 +193,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("raf")}</label>
                                 <Controller
-                                    name=""
+                                    name="raf"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -208,7 +208,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("olcu")}</label>
                                 <Controller
-                                    name=""
+                                    name="olcu"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -223,7 +223,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("yedekParca")}</label>
                                 <Controller
-                                    name=""
+                                    name="yedekParca"
                                     control={control}
                                     render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
                                 />
@@ -233,7 +233,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("sarfMalz")}</label>
                                 <Controller
-                                    name=""
+                                    name="sarfMlz"
                                     control={control}
                                     render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
                                 />
@@ -243,7 +243,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("demirbas")}</label>
                                 <Controller
-                                    name=""
+                                    name="demirBas"
                                     control={control}
                                     render={({ field }) => <Checkbox {...field} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
                                 />
@@ -257,20 +257,21 @@ const GeneralInfo = () => {
                 <div className="col-span-6">
                     <Divider />
                 </div>
-                <div className="col-span-6 p-10">
+                {/* <div className="col-span-6 p-10">
                     <h3 className="sub-title">Durum Bilgileri</h3>
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("girenMiktar")}</label>
                                 <Controller
-                                    name=""
+                                    name="girenMiktar"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className="w-full"
-                                            onChange={e => field.onChange(e.target.value)}
+                                            disabled
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -278,13 +279,14 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("cikanMiktar")}</label>
                                 <Controller
-                                    name=""
+                                    name="cikanMiktar"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className="w-full"
-                                            onChange={e => field.onChange(e.target.value)}
+                                            disabled
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -292,13 +294,14 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("stokMiktar")}</label>
                                 <Controller
-                                    name=""
+                                    name="stokMiktar"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className="w-full"
-                                            onChange={e => field.onChange(e.target.value)}
+                                            disabled
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -306,13 +309,14 @@ const GeneralInfo = () => {
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("sonAlinanFirma")}</label>
+                                <label>{t("sonAlinanFirma")} -- ?</label>
                                 <Controller
                                     name=""
                                     control={control}
                                     render={({ field }) => (
                                         <Input
                                             {...field}
+                                            disabled
                                             onChange={e => field.onChange(e.target.value)}
                                         />
                                     )}
@@ -321,11 +325,12 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("sonAlisTarihi")}</label>
                                 <Controller
-                                    name=""
+                                    name="sonAlisTarih"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
                                             {...field}
+                                            disabled
                                             onChange={e => field.onChange(e.target.value)}
                                         />
                                     )}
@@ -334,12 +339,14 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("sonAlisFiyati")}</label>
                                 <Controller
-                                    name=""
+                                    name="sonFiyat"
                                     control={control}
                                     render={({ field }) => (
-                                        <Input
+                                        <InputNumber
                                             {...field}
-                                            onChange={e => field.onChange(e.target.value)}
+                                            className="w-full"
+                                            disabled
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -366,7 +373,7 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("firmaUnvani")}</label>
                                 <Controller
-                                    name=""
+                                    name="unvan"
                                     control={control}
                                     render={({ field }) => (
                                         <Input
@@ -381,13 +388,13 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("fiyat")}</label>
                                 <Controller
-                                    name=""
+                                    name="tedarikciFiyat"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className="w-full"
-                                            onChange={e => field.onChange(e.target.value)}
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
@@ -397,20 +404,20 @@ const GeneralInfo = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("iskontoOrani")}</label>
                                 <Controller
-                                    name=""
+                                    name="tedarikciIskontoOran"
                                     control={control}
                                     render={({ field }) => (
                                         <InputNumber
                                             {...field}
                                             className="w-full"
-                                            onChange={e => field.onChange(e.target.value)}
+                                            onChange={e => field.onChange(e)}
                                         />
                                     )}
                                 />
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     )

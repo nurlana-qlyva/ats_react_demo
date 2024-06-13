@@ -99,7 +99,7 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
 PhotoUpload.propTypes = {
     imageUrls: PropTypes.array,
     setImages: PropTypes.func,
-    loadingImages: PropTypes.array,
+    loadingImages: PropTypes.bool,
 }
 
 export default PhotoUpload
