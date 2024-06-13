@@ -216,3 +216,11 @@ export const MalzemeAddService = (data) => {
 export const MalzemeUpdateService = (data) => {
   return http.post(`/Material/UpdateMaterialCard`, data)
 }
+
+export const MalzemeDepoListGetService = () => {
+  return http.get(`/WareHouse/GetWareHouseListByTip?tip=MALZEME`)
+}
+
+export const MalzemeCodeGetService = () => {
+  return http.get(`/Numbering/GetModuleCodeByCode?code=MALZEME_KOD`)
+}

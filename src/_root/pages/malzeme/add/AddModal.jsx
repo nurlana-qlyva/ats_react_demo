@@ -1,11 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button, Modal, Tabs } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import PersonalFields from "../../../components/form/PersonalFields"
 import GeneralInfo from "./GeneralInfo"
 import dayjs from "dayjs"
-import { MalzemeAddService } from "../../../../api/service"
+import { MalzemeAddService, MalzemeCodeGetService } from "../../../../api/service"
 
 
 const AddModal = () => {
@@ -125,7 +125,7 @@ const AddModal = () => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset } = methods
+    const { handleSubmit, reset, setValue } = methods
 
     const personalProps = {
         form: "",
@@ -145,6 +145,10 @@ const AddModal = () => {
             children: <PersonalFields personalProps={personalProps} />
         },
     ]
+
+    useEffect(() => {
+        MalzemeCodeGetService().then(res => setValue("malzemeKod", res.data))
+    }, [isOpen])
 
     const onSubmit = handleSubmit(values => {
         const body = {
