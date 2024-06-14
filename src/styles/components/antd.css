@@ -265,3 +265,7 @@
   color: var(--white);
   background-color: var(--gray-400) !important;
 }
+
+.fis .ant-modal-content {
+  background-color: var(--gray-400);
+}

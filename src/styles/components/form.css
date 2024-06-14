@@ -20,3 +20,7 @@
   border-radius: 0;
   border-bottom: 1px solid var(--primary);
 }
+
+.custom {
+  height: 100% !important;
+}

@@ -35,7 +35,7 @@ const GeneralInfo = () => {
 
   return (
     <>
-      <div className="grid gap-1">
+      <div className="grid gap-1 border p-20">
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("fisNo")}</label>

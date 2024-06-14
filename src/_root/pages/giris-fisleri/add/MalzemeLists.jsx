@@ -19,6 +19,12 @@ const MalzemeLists = () => {
   const [count, setCount] = useState(2);
   const [isOpen, setIsModalOpen] = useState(false);
   const [malzemeKod, setMalzemeKod] = useState("");
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 3,
+    },
+  })
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
@@ -71,8 +77,8 @@ const MalzemeLists = () => {
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
-    setIsModalOpen(false)
-    setMalzemeKod("")
+    setIsModalOpen(false);
+    setMalzemeKod("");
   };
   const handleSave = (row) => {
     const newData = [...dataSource];
@@ -101,17 +107,38 @@ const MalzemeLists = () => {
     };
   });
 
+  const handleTableChange = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  }
+
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={handleAdd}>
+    <Button
+      key="submit"
+      className="btn btn-min primary-btn"
+      onClick={handleAdd}
+    >
       {t("ekle")}
     </Button>,
-    <Button key="back" className="btn btn-min cancel-btn">
-      İptal
+    <Button
+      key="back"
+      className="btn btn-min cancel-btn"
+      onClick={() => setIsModalOpen(false)}
+    >
+      {t("iptal")}
     </Button>,
   ];
 
   return (
-    <div>
+    <div className="border p-20 mt-20">
       <Button
         onClick={() => setIsModalOpen(true)}
         type="primary"
@@ -121,8 +148,13 @@ const MalzemeLists = () => {
       >
         {t("ekle")}
       </Button>
-      <Table bordered dataSource={dataSource} columns={columns} />
-
+      <Table
+        bordered
+        dataSource={dataSource}
+        columns={columns}
+        pagination={tableParams.pagination}
+        onChange={handleTableChange}
+      />
       <Modal
         title="Fiş Giriş Detayı"
         open={isOpen}
@@ -132,7 +164,10 @@ const MalzemeLists = () => {
         width={500}
       >
         <label>Malzeme Kodu</label>
-        <Input value={malzemeKod} onChange={(e) => setMalzemeKod(e.target.value)} />
+        <Input
+          value={malzemeKod}
+          onChange={(e) => setMalzemeKod(e.target.value)}
+        />
       </Modal>
     </div>
   );
