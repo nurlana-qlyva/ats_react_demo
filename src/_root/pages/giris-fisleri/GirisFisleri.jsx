@@ -21,6 +21,7 @@ import { Checkbox, Table, Popover, Button, Input } from 'antd'
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
 import AddModal from './add/AddModal'
+import { GirisFisleriListGetService } from '../../../api/service'
 // import UpdateModal from './update/UpdateModal'
 
 const breadcrumb = [
@@ -135,7 +136,7 @@ const GirisFisleri = () => {
         },
         {
             title: t('firmaTanimi'),
-            dataIndex: 'tanim',
+            dataIndex: 'firmaTanim',
             key: 3,
         },
         {
@@ -150,12 +151,12 @@ const GirisFisleri = () => {
         },
         {
             title: t('girisDeposu'),
-            dataIndex: 'girisDeposu',
+            dataIndex: 'girisDepo',
             key: 5,
         },
         {
             title: t('cikisDeposu'),
-            dataIndex: 'cikisDeposu',
+            dataIndex: 'cikisDepo',
             key: 6,
         },
         {
@@ -198,18 +199,18 @@ const GirisFisleri = () => {
     const [checkedList, setCheckedList] = useState(defaultCheckedList)
 
     useEffect(() => {
-        // setLoading(true)
-        // MalzemeListGetService(tableParams?.pagination.current).then(res => {
-        //     setData(res?.data.materialList)
-        //     setTableParams({
-        //         ...tableParams,
-        //         pagination: {
-        //             ...tableParams.pagination,
-        //             total: res?.data.total_count,
-        //         },
-        //     });
-        //     setLoading(false);
-        // })
+        setLoading(true)
+        GirisFisleriListGetService(tableParams?.pagination.current).then(res => {
+            setData(res?.data.materialList)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.total_count,
+                },
+            });
+            setLoading(false);
+        })
     }, [tableParams.pagination.current, status]);
 
     const sensors = useSensors(
@@ -372,7 +373,7 @@ const GirisFisleri = () => {
                     <SortableContext items={columns.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                         <DragIndexContext.Provider value={dragIndex}>
                             <Table
-                                rowKey={(record) => record.malzemeId}
+                                rowKey={(record) => record.mlzFisId}
                                 columns={newColumns}
                                 dataSource={data}
                                 pagination={{

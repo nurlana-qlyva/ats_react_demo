@@ -9,6 +9,7 @@ import {
   MalzemeAddService,
   MalzemeCodeGetService,
 } from "../../../../api/service";
+import { t } from "i18next";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
@@ -186,7 +187,7 @@ const AddModal = ({ setStatus }) => {
 
   const footer = [
     <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
-      Kaydet
+      {t("kaydet")}
     </Button>,
     <Button
       key="back"
@@ -196,17 +197,17 @@ const AddModal = ({ setStatus }) => {
         reset(defaultValues)
       }}
     >
-      İptal
+      {t("iptal")}
     </Button>,
   ];
 
   return (
     <>
       <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}>
-        <PlusOutlined /> Ekle
+        <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title="Yeni Malzeme Girişi"
+        title={t("yeniMalzemeGirisi")}
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}

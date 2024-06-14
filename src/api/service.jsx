@@ -228,3 +228,8 @@ export const MalzemeCodeGetService = () => {
 export const MalzemeDataByIdGetService = (id) => {
   return http.get(`/Material/GetMaterialCardById?id=${id}`)
 }
+
+// giris fisleri
+export const GirisFisleriListGetService = (page) => {
+  return http.post(`/MaterialReceipt/GetMaterialReceiptList?page=${page}`)
+}

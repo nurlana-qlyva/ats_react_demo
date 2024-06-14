@@ -3,6 +3,7 @@ import { SearchOutlined, CarryOutOutlined } from '@ant-design/icons'
 import { IoIosRefresh, IoIosMore } from 'react-icons/io'
 import { Button, Popconfirm, Popover, Select, TreeSelect } from 'antd'
 import { CodeControlService, CustomCodeControlService } from '../../../../api/service'
+import { t } from "i18next";
 
 const convertToFormat = (data, parentId = 0) => {
   const result = []
@@ -87,7 +88,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
               const selectedLabel = selectedOption ? selectedOption.plaka : '';
               setFilter({ ...filter, plaka: selectedLabel });
             }}
-            placeholder="Plaka"
+            placeholder={t("plaka")}
             className='w-full'
           />
         </div>
@@ -108,7 +109,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
             onChange={e => {
               setFilter({ ...filter, aracTip: e })
             }}
-            placeholder="Araç Tipi"
+            placeholder={t("aracTip")}
             className='w-full'
           />
         </div>
@@ -116,7 +117,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
           <TreeSelect
             showSearch
             allowClear
-            placeholder="Lokasyon"
+            placeholder={t("lokasyon")}
             dropdownStyle={{
               maxHeight: 400,
               overflow: 'auto',
@@ -149,7 +150,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
             onChange={e => {
               setFilter({ ...filter, departman: e })
             }}
-            placeholder="Departman"
+            placeholder={t("departman")}
             className='w-full'
           />
         </div>
@@ -173,14 +174,14 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
           </Popover>
 
           <Popconfirm
-            title="Güncelle"
-            description="Hızlı km verilerini güncellemeye eminmisiniz?"
+            title={t("guncelle")}
+            description={t("hizliKmGuncellemeSoru")}
             onConfirm={confirm}
             onCancel={cancel}
-            okText="Evet"
-            cancelText="Hayır"
+            okText={t("ok")}
+            cancelText={t("cancel")}
           >
-            <Button className="btn primary-btn km-update" disabled={isDisabled}>Güncelle</Button>
+            <Button className="btn primary-btn km-update" disabled={isDisabled}>{t("guncelle")}</Button>
           </Popconfirm>
         </div>
       </div>

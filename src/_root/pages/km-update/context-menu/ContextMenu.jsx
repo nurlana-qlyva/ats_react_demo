@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import KmHistory from "./KmHistory"
 import dayjs from "dayjs";
 import { KMEditService, KMResetService } from "../../../../api/service";
+import { t } from "i18next";
 
 const ContextMenu = ({ position, rowData, setStatus }) => {
     const [visible, setVisible] = useState(false)
@@ -77,7 +78,7 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
     const footer = (
         [
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
-                Kapat
+                {t("kapat")}
             </Button>
         ]
     )
@@ -85,10 +86,10 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
     const resetFooter = (
         [
             <Button key="submit" className="btn primary-btn km-update" onClick={resetKm}>
-                Sıfırla
+                {t("sifirla")}
             </Button>,
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
-                Kapat
+                {t("kapat")}
             </Button>
         ]
     )
@@ -119,20 +120,20 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
     const updateFooter = (
         [
             <Button key="submit" className="btn primary-btn km-update" onClick={updateKm}>
-                Düzenle
+                {t("Düzenle")}
             </Button>,
             <Button key="back" className="btn cancel-btn" onClick={onClose}>
-                Kapat
+                {t("kapat")}
             </Button>
         ]
     )
     return (
         <div style={style} className="context-menu" ref={modalRef}>
-            <Button onClick={() => setVisible(true)}>Kilometre Güncelleme Geçmişi: {rowData?.plaka}</Button>
-            <Button onClick={() => setIsUpdateModalOpen(true)}>Güncel Km Düzeltme</Button>
-            <Button onClick={handleReset}>Km Sıfırlama</Button>
+            <Button onClick={() => setVisible(true)}>{t("kmGuncellemeGecmis")}: {rowData?.plaka}</Button>
+            <Button onClick={() => setIsUpdateModalOpen(true)}>{t("guncelKmDzeltme")}</Button>
+            <Button onClick={handleReset}>{t("kmSifirlama")}</Button>
             <Modal
-                title={`Kilometre Güncelleme Geçmişi: ${rowData?.plaka}`}
+                title={`${t("kmGuncellemeGecmis")}: ${rowData?.plaka}`}
                 open={visible}
                 onCancel={onClose}
                 maskClosable={false}
@@ -144,17 +145,17 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
                 </div>
             </Modal>
 
-            <Modal title="Güncel Km Sıfırlamaya Eminmisiniz?" footer={resetFooter} open={isModalOpen} onCancel={handleCancel}>
+            <Modal title={t("guncelKmSifirlamaSoru")} footer={resetFooter} open={isModalOpen} onCancel={handleCancel}>
             </Modal>
 
             <Modal title="Güncel Km Düzenle" footer={updateFooter} open={isUpdateModalOpen} onCancel={() => setIsUpdateModalOpen(false)} maskClosable={false} onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
                     <div>
-                        <label htmlFor="">Güncel Km</label>
+                        <label>{t("guncelKm")}</label>
                         <Input value={rowData.guncelKm} disabled />
                     </div>
                     <div>
-                        <label htmlFor="">Yeni Km</label>
+                        <label>{t("yeniKm")}</label>
                         <Input onChange={(e) => setYeniKm(e.target.value)}/>
                     </div>
                 </div>

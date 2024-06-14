@@ -156,5 +156,18 @@
     "kdvToplam": "KDV Toplam",
     "genelToplam": "Genel Toplam",
     "faturaIrsaliyeNo": "Fatura / İrsaliye No",
-    "toplam": "Toplam"
+    "toplam": "Toplam",
+    "yeniMalzemeGirisi": "Yeni Malzeme Girişi",
+    "malzemeBilgisiGuncelle": "Malzeme Bilgisi Güncelle",
+    "durumBilgileri": "Durum Bilgileri",
+    "tedarikciBilgileri": "Tedarikçi Bilgileri",
+    "yeniKm": "Yeni Km",
+    "sifirla": "Sıfırla",
+    "duzenle": "Düzenle",
+    "hizliKmGuncellendi": "Hızlı Km Güncellendi",
+    "hizliKmGuncellemeSoru": "Hızlı km verilerini güncellemeye eminmisiniz?",
+    "kmGuncellemeGecmis": "Kilometre Güncelleme Geçmişi",
+    "guncelKmDzeltme": "Güncel Km Düzeltme",
+    "kmSifirlama": "Km Sıfırlama",
+    "guncelKmSifirlamaSoru": "Güncel Km Sıfırlamaya Eminmisiniz?"
 }

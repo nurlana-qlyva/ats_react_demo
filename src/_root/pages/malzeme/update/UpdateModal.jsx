@@ -9,6 +9,7 @@ import PersonalFields from "../../../components/form/PersonalFields";
 import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
 import GeneralInfo from "./GeneralInfo";
+import { t } from "i18next";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => {
   // file
@@ -277,7 +278,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
 
   const footer = [
     <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
-      Güncelle
+      {t("guncelle")}
     </Button>,
     <Button
       key="back"
@@ -287,14 +288,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
         setStatus(true);
       }}
     >
-      İptal
+      {t("iptal")}
     </Button>,
   ];
 
   return (
     <>
       <Modal
-        title="Malzeme Bilgisi Güncelle"
+        title={t("malzemeBilgisiGuncelle")}
         open={updateModal}
         onCancel={() => setUpdateModal(false)}
         maskClosable={false}

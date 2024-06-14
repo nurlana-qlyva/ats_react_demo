@@ -256,7 +256,7 @@ const GeneralInfo = () => {
                     <Divider />
                 </div>
                 <div className="col-span-6 p-10">
-                    <h3 className="sub-title">Durum Bilgileri</h3>
+                    <h3 className="sub-title">{t("durumBilgileri")}</h3>
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
@@ -353,7 +353,7 @@ const GeneralInfo = () => {
                     </div>
                 </div>
                 <div className="col-span-6 p-10">
-                    <h3 className="sub-title">Tedarikçi Bilgileri</h3>
+                    <h3 className="sub-title">{t("tedarikciBilgileri")}</h3>
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
