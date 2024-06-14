@@ -1,14 +1,37 @@
 import { Controller, useFormContext } from "react-hook-form";
+import { useContext, useEffect } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import "dayjs/locale/tr";
 import tr_TR from "antd/lib/locale/tr_TR";
 import { Input, ConfigProvider, DatePicker, TimePicker } from "antd";
+import { PlakaContext } from "../../../../context/plakaSlice";
+import { CustomCodeControlService } from "../../../../api/service";
+import Firma from "../../../components/form/Firma";
+import Plaka from "../../../components/form/Plaka";
+import Location from "../../../components/form/Location";
+import IslemTipi from "../../../components/form/IslemTipi";
 
 dayjs.locale("tr");
 
 const GeneralInfo = () => {
   const { control } = useFormContext();
+  const { setPlaka } = useContext(PlakaContext);
+
+  useEffect(() => {
+    CustomCodeControlService("Vehicle/GetVehiclePlates").then((res) => {
+      const updatedData = res.data.map((item) => {
+        if ("aracId" in item && "plaka" in item) {
+          return {
+            ...item,
+            id: item.aracId,
+          };
+        }
+        return item;
+      });
+      setPlaka(updatedData);
+    });
+  }, []);
 
   return (
     <>
@@ -69,14 +92,9 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("firma")}</label>
             <Controller
-              name=""
+              name="firmaId"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <Firma field={field} />}
             />
           </div>
         </div>
@@ -86,7 +104,16 @@ const GeneralInfo = () => {
             <Controller
               name=""
               control={control}
-              render={({ field }) => <TimePicker format="HH:mm:ss" />}
+              render={({ field }) => (
+                <TimePicker
+                  {...field}
+                  placeholder=""
+                  format="HH:mm:ss"
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                />
+              )}
             />
           </div>
         </div>
@@ -111,12 +138,7 @@ const GeneralInfo = () => {
             <Controller
               name=""
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <Plaka field={field} />}
             />
           </div>
         </div>
@@ -126,12 +148,7 @@ const GeneralInfo = () => {
             <Controller
               name=""
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <IslemTipi field={field} />}
             />
           </div>
         </div>
@@ -141,12 +158,7 @@ const GeneralInfo = () => {
             <Controller
               name=""
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <Location field={field} />}
             />
           </div>
         </div>

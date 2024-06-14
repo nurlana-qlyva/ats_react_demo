@@ -155,5 +155,6 @@
     "araToplam": "Ara Toplam",
     "kdvToplam": "KDV Toplam",
     "genelToplam": "Genel Toplam",
-    "faturaIrsaliyeNo": "Fatura / İrsaliye No"
+    "faturaIrsaliyeNo": "Fatura / İrsaliye No",
+    "toplam": "Toplam"
 }

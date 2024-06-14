@@ -260,3 +260,8 @@
 .ant-modal {
   top: 40px;
 }
+
+.ant-picker-ok button:disabled {
+  color: var(--white);
+  background-color: var(--gray-400) !important;
+}

@@ -3,6 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import GeneralInfo from "./GeneralInfo";
+import MalzemeLists from "./MalzemeLists";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
@@ -19,23 +20,23 @@ const AddModal = ({ setStatus }) => {
     {
       key: "1",
       label: "Genel Bilgiler",
-        children: <GeneralInfo />,
+      children: <GeneralInfo />,
     },
     {
       key: "2",
       label: "Malzeme Listesi",
       //   children: <PersonalFields personalProps={personalProps} />,
+      children: <MalzemeLists />,
     },
     {
-        key: "3",
-        label: "Ek Bilgiler",
-        //   children: <PersonalFields personalProps={personalProps} />,
-      },
+      key: "3",
+      label: "Ek Bilgiler",
+      //   children: <PersonalFields personalProps={personalProps} />,
+    },
   ];
 
   const onSubmit = handleSubmit((values) => {
     const body = {};
-
   });
 
   const footer = [
