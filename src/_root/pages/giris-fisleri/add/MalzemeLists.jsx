@@ -15,22 +15,12 @@ import { Controller, useFormContext } from "react-hook-form";
 import TextArea from "antd/lib/input/TextArea";
 import Plaka from "../../../components/form/Plaka";
 import Location from "../../../components/form/Location";
+import MalzemeTable from "./MalzemeTable";
 
 const MalzemeLists = () => {
   const { control } = useFormContext();
-  const [dataSource, setDataSource] = useState([
-    {
-      key: "0",
-      malzemeKod: "MLZ0978",
-      malzemeTanim: "Arac",
-      miktar: 23,
-      birim: "Birim",
-      fiyat: 23,
-      araToplam: 23,
-      kdvOran: 23,
-      toplam: 23,
-    },
-  ]);
+  const [dataSource, setDataSource] = useState([]);
+  const [malzemeList, setMalzemeList] = useState([]);
   const [count, setCount] = useState(2);
   const [isOpen, setIsModalOpen] = useState(false);
   const [malzemeKod, setMalzemeKod] = useState("");
@@ -134,6 +124,7 @@ const MalzemeLists = () => {
       ),
     },
   ];
+
   const handleAdd = () => {
     const newData = {
       key: count,
@@ -151,21 +142,12 @@ const MalzemeLists = () => {
     setIsModalOpen(false);
     setMalzemeKod("");
   };
-  const handleSave = (row) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    setDataSource(newData);
-  };
 
   const columns = defaultColumns.map((col) => {
     if (!col.editable) {
       return col;
     }
+
     return {
       ...col,
       onCell: (record) => ({
@@ -173,7 +155,6 @@ const MalzemeLists = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
       }),
     };
   });
@@ -242,6 +223,9 @@ const MalzemeLists = () => {
         pagination={tableParams.pagination}
         onChange={handleTableChange}
         scroll={{ x: 1800 }}
+        locale={{
+          emptyText: "Veri Bulunamadı",
+        }}
       />
       <Modal
         title="Fiş Giriş Detayı"
@@ -249,13 +233,24 @@ const MalzemeLists = () => {
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
         footer={footer}
-        width={500}
+        width={1000}
       >
-        <label>Malzeme Kodu</label>
-        <Input
-          value={malzemeKod}
-          onChange={(e) => setMalzemeKod(e.target.value)}
-        />
+        {/* <label>Malzeme Kodu</label>
+        <Controller
+          name=""
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              value={malzemeKod}
+              onChange={(e) => {
+                field.onChange(e.target.value);
+                setMalzemeKod(e.target.value);
+              }}
+            />
+          )}
+        /> */}
+        <MalzemeTable />
       </Modal>
 
       <Modal

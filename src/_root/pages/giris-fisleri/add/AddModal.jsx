@@ -5,11 +5,26 @@ import { PlusOutlined } from "@ant-design/icons";
 import GeneralInfo from "./GeneralInfo";
 import MalzemeLists from "./MalzemeLists";
 import EkBilgiler from "./EkBilgiler";
+import dayjs from "dayjs";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
 
-  const defaultValues = {};
+  const defaultValues = {
+    fisNo: "",
+    tarih: dayjs(new Date()),
+    saat: dayjs(new Date()),
+    girisDepoSiraNo: null,
+    girisDepo: "",
+    firmaId: null,
+    lokasyonId: null,
+    lokasyon: "",
+    aracId: null,
+    plaka: "",
+    islemTipiKodId: null,
+    islemTipi: "",
+    aciklama: "",
+  };
 
   const methods = useForm({
     defaultValues: defaultValues,
@@ -18,7 +33,19 @@ const AddModal = ({ setStatus }) => {
   const { handleSubmit, reset, setValue } = methods;
 
   const onSubmit = handleSubmit((values) => {
-    const body = {};
+    const body = {
+      fisNo: values.fisNo,
+      tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
+      saat: dayjs(values.saat).format("HH:mm:ss"),
+      girisDepoSiraNo: values.girisDepoSiraNo,
+      firmaId: values.firmaId,
+      lokasyonId: values.lokasyonId,
+      aracId: values.aracId,
+      islemTipiKodId: values.islemTipiKodId,
+      aciklama: values.aciklama
+    };
+
+    console.log(body)
   });
 
   const footer = [

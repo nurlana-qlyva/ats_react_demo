@@ -97,7 +97,7 @@ const EkBilgiler = () => {
           <div className="flex flex-col gap-1 h-full">
             <label>{t("aciklama")}</label>
             <Controller
-              name=""
+              name="aciklama"
               control={control}
               render={({ field }) => (
                 <TextArea

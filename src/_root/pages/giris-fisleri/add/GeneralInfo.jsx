@@ -7,10 +7,11 @@ import tr_TR from "antd/lib/locale/tr_TR";
 import { Input, ConfigProvider, DatePicker, TimePicker } from "antd";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { CustomCodeControlService } from "../../../../api/service";
-import Firma from "../../../components/form/Firma";
+import FirmaUnvani from "../../../components/form/FirmaUnvani";
 import Plaka from "../../../components/form/Plaka";
 import Location from "../../../components/form/Location";
 import IslemTipi from "../../../components/form/IslemTipi";
+import Depo from "../../../components/form/Depo";
 
 dayjs.locale("tr");
 
@@ -40,7 +41,7 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("fisNo")}</label>
             <Controller
-              name=""
+              name="fisNo"
               control={control}
               render={({ field }) => (
                 <Input
@@ -55,7 +56,7 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("tarih")}</label>
             <Controller
-              name=""
+              name="tarih"
               control={control}
               render={({ field }) => (
                 <ConfigProvider locale={tr_TR}>
@@ -77,14 +78,9 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("girisDeposu")}</label>
             <Controller
-              name=""
+              name="girisDepoSiraNo"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <Depo field={field} />}
             />
           </div>
         </div>
@@ -94,7 +90,7 @@ const GeneralInfo = () => {
             <Controller
               name="firmaId"
               control={control}
-              render={({ field }) => <Firma field={field} />}
+              render={({ field }) => <FirmaUnvani field={field} />}
             />
           </div>
         </div>
@@ -102,7 +98,7 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("saat")}</label>
             <Controller
-              name=""
+              name="saat"
               control={control}
               render={({ field }) => (
                 <TimePicker
@@ -119,16 +115,11 @@ const GeneralInfo = () => {
         </div>
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
-            <label>{t("cikisDeposu")}</label>
+            <label>{t("lokasyon")}</label>
             <Controller
-              name=""
+              name="lokasyonId"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
+              render={({ field }) => <Location field={field} />}
             />
           </div>
         </div>
@@ -136,7 +127,7 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("plaka")}</label>
             <Controller
-              name=""
+              name="aracId"
               control={control}
               render={({ field }) => <Plaka field={field} />}
             />
@@ -146,19 +137,9 @@ const GeneralInfo = () => {
           <div className="flex flex-col gap-1">
             <label>{t("islemTipi")}</label>
             <Controller
-              name=""
+              name="islemTipiKodId"
               control={control}
               render={({ field }) => <IslemTipi field={field} />}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("lokasyon")}</label>
-            <Controller
-              name=""
-              control={control}
-              render={({ field }) => <Location field={field} />}
             />
           </div>
         </div>
