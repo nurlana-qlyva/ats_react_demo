@@ -1,13 +1,16 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { t } from "i18next";
-import { Checkbox, Input, InputNumber } from "antd";
+import { Checkbox, Input, InputNumber, Select } from "antd";
 import Firma from "../../../components/form/Firma";
 import Birim from "../../../components/form/Birim";
 import MalzemeTipi from "../../../components/form/MalzemeTipi";
 import Depo from "../../../components/form/Depo";
+import { useEffect } from "react";
 
 const GeneralInfo = () => {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
+
+  useEffect(() => {setValue("kdvDahilHaric", "dahil")}, [])
 
   return (
     <>
@@ -97,19 +100,40 @@ const GeneralInfo = () => {
               </div>
             </div>
             <div className="col-span-6">
-              <div className="flex flex-col gap-1">
-                <label>{t("kdvOrani")}</label>
-                <Controller
-                  name="kdvOran"
-                  control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => field.onChange(e)}
+              <div className="grid gap-1">
+                <div className="col-span-8">
+                  <div className="flex flex-col gap-1">
+                    <label>{t("kdvOrani")}</label>
+                    <Controller
+                      name="kdvOran"
+                      control={control}
+                      render={({ field }) => (
+                        <InputNumber
+                          {...field}
+                          className="w-full"
+                          onChange={(e) => field.onChange(e)}
+                        />
+                      )}
                     />
-                  )}
-                />
+                  </div>
+                </div>
+                <div className="col-span-4 self-end">
+                  <Controller
+                    name="kdvDahilHaric"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        defaultValue="dahil"
+                        options={[
+                          { value: "dahil", label: <span>Dahil</span> },
+                          { value: "haric", label: <span>Hariç</span> },
+                        ]}
+                        onChange={e => field.onChange(e)}
+                      />
+                    )}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-span-6">

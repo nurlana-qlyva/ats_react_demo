@@ -31,7 +31,7 @@ const EkBilgiler = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("indirim")}</label>
                 <Controller
-                  name=""
+                  name="toplam_indirim"
                   control={control}
                   render={({ field }) => (
                     <InputNumber
@@ -47,7 +47,7 @@ const EkBilgiler = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("araToplam")}</label>
                 <Controller
-                  name=""
+                  name="toplam_araToplam"
                   control={control}
                   render={({ field }) => (
                     <InputNumber
@@ -63,7 +63,7 @@ const EkBilgiler = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("kdvToplam")}</label>
                 <Controller
-                  name=""
+                  name="toplam_kdvToplam"
                   control={control}
                   render={({ field }) => (
                     <InputNumber
@@ -79,7 +79,7 @@ const EkBilgiler = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("genelToplam")}</label>
                 <Controller
-                  name=""
+                  name="toplam_genelToplam"
                   control={control}
                   render={({ field }) => (
                     <InputNumber

@@ -3,7 +3,7 @@ import { Table } from "antd";
 import { MalzemeListGetService } from "../../../../api/service";
 import { t } from "i18next";
 
-const MalzemeTable = () => {
+const MalzemeTable = ({ setSelectedRow }) => {
   const [data, setData] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -11,34 +11,35 @@ const MalzemeTable = () => {
       pageSize: 10,
     },
   });
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const columns = [
     {
       title: t("malzemeId"),
       dataIndex: "malzemeId",
-      key: 1,
+      key: "malzemeId",
     },
     {
       title: t("malzemeKodu"),
       dataIndex: "malzemeKod",
-      key: 2,
+      key: "malzemeKod",
     },
     {
       title: t("fiyat"),
       dataIndex: "fiyat",
-      key: 3,
+      key: "fiyat",
     },
     {
       title: t("kdvOrani"),
       dataIndex: "kdvOran",
-      key: 4,
+      key: "kdvOran",
     },
   ];
 
   useEffect(() => {
     setLoading(true);
-    MalzemeListGetService(tableParams?.pagination.current).then((res) => {
+    MalzemeListGetService(tableParams.pagination.current).then((res) => {
       setData(res?.data.materialList);
       setTableParams({
         ...tableParams,
@@ -52,8 +53,8 @@ const MalzemeTable = () => {
   }, [tableParams.pagination.current]);
 
   const handleRowSelectionChange = (selectedRowKeys, selectedRows) => {
-    setSelectedRow(selectedRows.length > 0 ? selectedRows[0] : null); // Set selectedRow to the first selected row
-    console.log("selectedRows: ", selectedRows);
+    setSelectedRowKeys(selectedRowKeys.length > 0 ? [selectedRowKeys[0]] : []);
+    setSelectedRow(selectedRows.length > 0 ? selectedRows[0] : null);
   };
 
   return (
@@ -61,6 +62,7 @@ const MalzemeTable = () => {
       <Table
         rowSelection={{
           type: "radio",
+          selectedRowKeys,
           onChange: handleRowSelectionChange,
         }}
         columns={columns}
@@ -72,6 +74,8 @@ const MalzemeTable = () => {
             items_per_page: `/ ${t("sayfa")}`,
           },
         }}
+        loading={loading}
+        rowKey="malzemeId"
       />
     </>
   );

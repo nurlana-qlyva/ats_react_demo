@@ -67,7 +67,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 865,
+      code: 869,
       name2: "ozelAlanKodId9",
     },
     {
@@ -75,7 +75,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 866,
+      code: 870,
       name2: "ozelAlanKodId10",
     },
     {
@@ -173,6 +173,19 @@ const AddModal = ({ setStatus }) => {
       // "degistirme": values.degistirme,
       // "aciklama": values.aciklama,
       olcu: values.olcu,
+      "ozelAlan1": values.ozelAlan1 || "",
+      "ozelAlan2": values.ozelAlan2 || "",
+      "ozelAlan3": values.ozelAlan3 || "",
+      "ozelAlan4": values.ozelAlan4 || "",
+      "ozelAlan5": values.ozelAlan5 || "",
+      "ozelAlan6": values.ozelAlan6 || "",
+      "ozelAlan7": values.ozelAlan7 || "",
+      "ozelAlan8": values.ozelAlan8 || "",
+      "ozelAlanKodId9": values.ozelAlanKodId9 || 0,
+      "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
+      "ozelAlan11": values.ozelAlan11 || 0,
+      "ozelAlan12": values.ozelAlan12 || 0,
+      kdvDahilHaric: values.kdvDahilHaric === "dahil" ? true : false
     };
 
     MalzemeAddService(body).then((res) => {

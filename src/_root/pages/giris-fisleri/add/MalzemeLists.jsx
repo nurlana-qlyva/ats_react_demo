@@ -14,16 +14,14 @@ import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import TextArea from "antd/lib/input/TextArea";
 import Plaka from "../../../components/form/Plaka";
+import Birim from "../../../components/form/Birim";
 import Location from "../../../components/form/Location";
 import MalzemeTable from "./MalzemeTable";
 
-const MalzemeLists = () => {
-  const { control } = useFormContext();
+const MalzemeLists = ({ setTableData, tableData }) => {
+  const { control, setValue, watch, handleSubmit } = useFormContext();
   const [dataSource, setDataSource] = useState([]);
-  const [malzemeList, setMalzemeList] = useState([]);
-  const [count, setCount] = useState(2);
   const [isOpen, setIsModalOpen] = useState(false);
-  const [malzemeKod, setMalzemeKod] = useState("");
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -31,6 +29,7 @@ const MalzemeLists = () => {
     },
   });
   const [editModal, setEditModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
@@ -105,7 +104,7 @@ const MalzemeLists = () => {
           title="Silmeye eminmisiniz?"
           okText={t("ok")}
           cancelText={t("cancel")}
-          // onConfirm={() => handleDelete(record)}
+        // onConfirm={() => handleDelete(record)}
         >
           <DeleteOutlined style={{ color: "#dc3545" }} />
         </Popconfirm>
@@ -116,7 +115,18 @@ const MalzemeLists = () => {
       dataIndex: "edit",
       render: (_, record) => (
         <Button
-          onClick={() => setEditModal(true)}
+          onClick={() => {
+            setEditModal(true)
+            setValue("edit_malzemeTanimi", record.malzemeTanim)
+            setValue("edit_miktar", record.miktar)
+            setValue("birim", record.birim)
+            setValue("edit_birim", record.birimId)
+            setValue("edit_fiyat", record.fiyat)
+            setValue("edit_araToplam", record.araToplam)
+            setValue("edit_kdvOrani", record.kdvOran)
+            setValue("edit_toplam", record.toplam)
+            setValue("edit_aciklama", record.aciklama)
+          }}
           style={{ border: "none", color: "#5B548B" }}
         >
           <EditOutlined />
@@ -125,22 +135,59 @@ const MalzemeLists = () => {
     },
   ];
 
+  useEffect(() => { setValue("edit_kdv", "dahil") }, [])
+
+  useEffect(() => {
+    const araToplam = watch("edit_araToplam");
+    const kdvOrani = watch("edit_kdvOrani");
+    const kdvDH = watch("edit_kdv");
+
+    if (araToplam) {
+      let kdvTutar;
+      if (kdvDH === "dahil") {
+        kdvTutar = araToplam / (1 + kdvOrani);
+      } else {
+        kdvTutar = araToplam * (kdvOrani / 100);
+      }
+      setValue("edit_kdvTutar", kdvTutar.toFixed(2));
+
+      let toplam;
+      if (kdvDH === "dahil") {
+        toplam = araToplam;
+      } else {
+        toplam = +araToplam + +kdvTutar;
+      }
+
+      const indirimOrani = watch("edit_indirimOrani");
+      if (indirimOrani) {
+        const indirimTutar = toplam * indirimOrani / 100;
+        console.log(indirimTutar)
+        setValue("edit_indirimTutari", indirimTutar);
+        toplam -= indirimTutar;
+      }
+
+      setValue("edit_toplam", toplam.toFixed(2));
+    }
+  }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
+
   const handleAdd = () => {
     const newData = {
-      key: count,
-      malzemeKod: malzemeKod,
-      malzemeTanim: "Arac",
-      miktar: 23,
-      birim: "Birim",
-      fiyat: 23,
-      araToplam: 23,
-      kdvOran: 23,
-      toplam: 23,
+      key: selectedRow.malzemeId,
+      malzemeKod: selectedRow.malzemeKod,
+      malzemeTanim: selectedRow.malzemeTipKodText,
+      miktar: null,
+      birim: selectedRow.birim,
+      fiyat: selectedRow.fiyat,
+      araToplam: null,
+      kdvOran: selectedRow.kdvOran,
+      toplam: null,
+      aciklama: selectedRow.aciklama,
+      kdvDH: selectedRow.kdvDahilHaric ? "Dahil" : "Hariç"
     };
     setDataSource([...dataSource, newData]);
-    setCount(count + 1);
+    setTableData([...tableData, newData])
+
     setIsModalOpen(false);
-    setMalzemeKod("");
   };
 
   const columns = defaultColumns.map((col) => {
@@ -168,9 +215,40 @@ const MalzemeLists = () => {
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
+      setDataSource([]);
     }
   };
+
+  const handleEdit = handleSubmit((values) => {
+    const key = selectedRow.malzemeId;
+    const index = dataSource.findIndex(item => item.key === key);
+
+    if (index !== -1) {
+      const newData = [...dataSource];
+      newData[index] = {
+        ...newData[index],
+        malzemeTanim: values.edit_malzemeTanimi,
+        miktar: values.edit_miktar,
+        birim: values.birim,
+        fiyat: values.edit_fiyat,
+        araToplam: values.edit_araToplam,
+        kdvOran: values.edit_kdvOrani,
+        toplam: values.edit_toplam,
+        aciklama: values.edit_aciklama,
+        indirimOran: values.edit_indirimOrani,
+        indirimTutar: values.edit_indirimTutari,
+        kdvDH: values.edit_kdv,
+        kdvTutar: values.edit_kdvTutar,
+        plaka: values.plaka,
+        lokasyon: values.edit_lokasyonId,
+      };
+
+      setDataSource(newData);
+      setTableData(newData);
+    }
+
+    setEditModal(false);
+  });
 
   const footer = [
     <Button
@@ -190,7 +268,7 @@ const MalzemeLists = () => {
   ];
 
   const editModalFooter = [
-    <Button key="submit" className="btn primary-btn km-update">
+    <Button key="submit" className="btn primary-btn km-update" onClick={handleEdit}>
       Güncelle
     </Button>,
     <Button
@@ -235,22 +313,7 @@ const MalzemeLists = () => {
         footer={footer}
         width={1000}
       >
-        {/* <label>Malzeme Kodu</label>
-        <Controller
-          name=""
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              value={malzemeKod}
-              onChange={(e) => {
-                field.onChange(e.target.value);
-                setMalzemeKod(e.target.value);
-              }}
-            />
-          )}
-        /> */}
-        <MalzemeTable />
+        <MalzemeTable setSelectedRow={setSelectedRow} />
       </Modal>
 
       <Modal
@@ -266,7 +329,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTanimi")}</label>
               <Controller
-                name=""
+                name="edit_malzemeTanimi"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -281,13 +344,21 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("miktar")}</label>
               <Controller
-                name=""
+                name="edit_miktar"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onPressEnter={e => {
+                      const result = watch("edit_fiyat") * e.target.value
+                      setValue("edit_araToplam", result)
+                    }}
+                    // onBlur={e => {
+                    //   const result = watch("edit_fiyat") * e.target.value
+                    //   setValue("edit_araToplam", result)
+                    // }}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -297,12 +368,11 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("birim")}</label>
               <Controller
-                name=""
+                name="edit_birim"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value)}
+                  <Birim
+                    field={field}
                   />
                 )}
               />
@@ -312,13 +382,21 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("fiyat")}</label>
               <Controller
-                name=""
+                name="edit_fiyat"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onPressEnter={e => {
+                      const result = watch("edit_miktar") * e.target.value
+                      setValue("edit_araToplam", result)
+                    }}
+                    // onBlur={e => {
+                    //   const result = watch("edit_miktar") * e.target.value
+                    //   setValue("edit_araToplam", result)
+                    // }}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -328,13 +406,13 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("araToplam")}</label>
               <Controller
-                name=""
+                name="edit_araToplam"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -344,13 +422,23 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("indirimOrani")} %</label>
               <Controller
-                name=""
+                name="edit_indirimOrani"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onPressEnter={e => {
+                      const result = watch("edit_toplam") * e.target.value / 100
+                      setValue("edit_indirimTutari", result)
+                      setValue("edit_toplam", +watch("edit_indirimTutari") + +watch("edit_toplam"))
+                    }}
+                    // onBlur={e => {
+                    //   const result = watch("edit_toplam") * e.target.value / 100
+                    //   setValue("edit_indirimTutari", result)
+                    //   setValue("edit_toplam", +watch("edit_indirimTutari") + +watch("edit_toplam"))
+                    // }}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -360,7 +448,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("indirimTutari")}</label>
               <Controller
-                name=""
+                name="edit_indirimTutari"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
@@ -376,7 +464,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("kdvOrani")}</label>
               <Controller
-                name=""
+                name="edit_kdvOrani"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
@@ -392,7 +480,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("kdv")} D/H</label>
               <Controller
-                name=""
+                name="edit_kdv"
                 control={control}
                 render={({ field }) => (
                   <Select
@@ -400,8 +488,9 @@ const MalzemeLists = () => {
                     defaultValue="dahil"
                     options={[
                       { value: "dahil", label: <span>Dahil</span> },
-                      { value: "hariç", label: <span>Hariç</span> },
+                      { value: "haric", label: <span>Hariç</span> },
                     ]}
+                    onChange={e => field.onChange(e)}
                   />
                 )}
               />
@@ -411,7 +500,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("kdvTutar")}</label>
               <Controller
-                name=""
+                name="edit_kdvTutar"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
@@ -427,7 +516,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("toplam")}</label>
               <Controller
-                name=""
+                name="edit_toplam"
                 control={control}
                 render={({ field }) => (
                   <InputNumber
@@ -443,7 +532,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("plaka")}</label>
               <Controller
-                name=""
+                name="edit_plakaId"
                 control={control}
                 render={({ field }) => <Plaka field={field} />}
               />
@@ -453,7 +542,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("lokasyon")}</label>
               <Controller
-                name=""
+                name="edit_lokasyonId"
                 control={control}
                 render={({ field }) => <Location field={field} />}
               />
@@ -463,7 +552,7 @@ const MalzemeLists = () => {
             <div className="flex flex-col gap-1">
               <label>{t("aciklama")}</label>
               <Controller
-                name=""
+                name="edit_aciklama"
                 control={control}
                 render={({ field }) => <TextArea field={field} />}
               />

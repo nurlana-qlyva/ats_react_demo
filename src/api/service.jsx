@@ -233,3 +233,7 @@ export const MalzemeDataByIdGetService = (id) => {
 export const GirisFisleriListGetService = (page) => {
   return http.post(`/MaterialReceipt/GetMaterialReceiptList?page=${page}`)
 }
+
+export const GirisFisCodeGetService = () => {
+  return http.get(`/Numbering/GetModuleCodeByCode?code=STOK_FIS_ALIS`)
+}
