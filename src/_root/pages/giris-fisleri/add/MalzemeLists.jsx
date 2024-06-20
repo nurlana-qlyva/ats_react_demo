@@ -15,10 +15,10 @@ import { Controller, useFormContext } from "react-hook-form";
 import TextArea from "antd/lib/input/TextArea";
 import Plaka from "../../../components/form/Plaka";
 import Birim from "../../../components/form/Birim";
-import Location from "../../../components/form/Location";
+import MalzemeLokasyon from "../../../components/form/MalzemeLokasyon";
 import MalzemeTable from "./MalzemeTable";
 
-const MalzemeLists = ({ setTableData, tableData }) => {
+const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const { control, setValue, watch, handleSubmit } = useFormContext();
   const [dataSource, setDataSource] = useState([]);
   const [isOpen, setIsModalOpen] = useState(false);
@@ -126,6 +126,7 @@ const MalzemeLists = ({ setTableData, tableData }) => {
             setValue("edit_kdvOrani", record.kdvOran)
             setValue("edit_toplam", record.toplam)
             setValue("edit_aciklama", record.aciklama)
+            
           }}
           style={{ border: "none", color: "#5B548B" }}
         >
@@ -136,6 +137,13 @@ const MalzemeLists = ({ setTableData, tableData }) => {
   ];
 
   useEffect(() => { setValue("edit_kdv", "dahil") }, [])
+
+  useEffect(() => {
+    if (isSuccess) {
+      setDataSource([])
+      setIsSuccess(false)
+    }
+  }, [isSuccess])
 
   useEffect(() => {
     const araToplam = watch("edit_araToplam");
@@ -171,6 +179,7 @@ const MalzemeLists = ({ setTableData, tableData }) => {
   }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
 
   const handleAdd = () => {
+    console.log(selectedRow)
     const newData = {
       key: selectedRow.malzemeId,
       malzemeKod: selectedRow.malzemeKod,
@@ -222,7 +231,6 @@ const MalzemeLists = ({ setTableData, tableData }) => {
   const handleEdit = handleSubmit((values) => {
     const key = selectedRow.malzemeId;
     const index = dataSource.findIndex(item => item.key === key);
-
     if (index !== -1) {
       const newData = [...dataSource];
       newData[index] = {
@@ -230,6 +238,7 @@ const MalzemeLists = ({ setTableData, tableData }) => {
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
+        birimId: values.edit_birim ? values.edit_birim : selectedRow.birimKodId,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
@@ -240,7 +249,8 @@ const MalzemeLists = ({ setTableData, tableData }) => {
         kdvDH: values.edit_kdv,
         kdvTutar: values.edit_kdvTutar,
         plaka: values.plaka,
-        lokasyon: values.edit_lokasyonId,
+        lokasyonId: values.edit_lokasyonId,
+        lokasyon: values.edit_lokasyon,
       };
 
       setDataSource(newData);
@@ -544,7 +554,7 @@ const MalzemeLists = ({ setTableData, tableData }) => {
               <Controller
                 name="edit_lokasyonId"
                 control={control}
-                render={({ field }) => <Location field={field} />}
+                render={({ field }) => <MalzemeLokasyon field={field} />}
               />
             </div>
           </div>

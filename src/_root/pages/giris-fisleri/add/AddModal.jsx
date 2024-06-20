@@ -6,11 +6,12 @@ import GeneralInfo from "./GeneralInfo";
 import MalzemeLists from "./MalzemeLists";
 import EkBilgiler from "./EkBilgiler";
 import dayjs from "dayjs";
-import { GirisFisCodeGetService } from "../../../../api/service";
+import { GirisFisCodeGetService, GirisFisleriAddService } from "../../../../api/service";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false)
 
 
   const defaultValues = {
@@ -36,32 +37,26 @@ const AddModal = ({ setStatus }) => {
   const { handleSubmit, reset, setValue } = methods;
 
   const onSubmit = handleSubmit((values) => {
-    console.log(values)
     let materialMovements = [];
     tableData.map(item => {
-      console.log(item)
       materialMovements.push({
-        "siraNo": 0,
-        "mlzAracId": item.key,
+        "mlzAracId": values.aracId || 0,
         "tarih": dayjs(values.tarih).format("YYYY-MM-DD"),
-        "firmaId": 0,
-        "malzemeId": 0,
-        "birimKodId": item.birim,
-        "lokasyonId": item.lokasyon,
+        "firmaId": values.firmaId || 0,
+        "malzemeId": item.key,
+        "birimKodId": item.birimId || 0,
+        "lokasyonId": item.lokasyonId || 0,
         "miktar": item.miktar,
         "fiyat": item.fiyat,
         "toplam": +item.toplam,
-        "gc": 0,
         "aciklama": values.aciklama,
         "kdvOran": item.kdvOran,
         "indirim": item.indirimTutar,
-        "mlzFisId": 0,
         "araToplam": item.araToplam,
         "kdvToplam": +values.toplam_kdvToplam,
         "girisDepoSiraNo": values.girisDepoSiraNo,
         "indirimOran": item.indirimOran,
         "isPriceChanged": false,
-        "stoklu": true
       })
     })
 
@@ -69,21 +64,28 @@ const AddModal = ({ setStatus }) => {
       fisNo: values.fisNo,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       saat: dayjs(values.saat).format("HH:mm:ss"),
-      girisDepoSiraNo: values.girisDepoSiraNo,
-      firmaId: values.firmaId,
-      lokasyonId: values.lokasyonId,
-      aracId: values.aracId,
-      islemTipiKodId: values.islemTipiKodId,
+      girisDepoSiraNo: values.girisDepoSiraNo || 0,
+      firmaId: values.firmaId || 0,
+      lokasyonId: values.lokasyonId || 0, 
+      aracId: values.aracId || 0,
+      islemTipiKodId: values.islemTipiKodId || 0,
       aciklama: values.aciklama,
       "araToplam": values.toplam_araToplam,
       "indirimliToplam": values.toplam_indirim,
       "kdvToplam": values.toplam_kdvToplam,
       "genelToplam": values.toplam_genelToplam,
-      // materialMovements
+      materialMovements
     };
 
-    console.log(body)
-    
+    GirisFisleriAddService(body).then(res => {
+      if (res?.data.statusCode === 200) {
+        setStatus(true)
+        setIsModalOpen(false)
+        reset(defaultValues)
+        setIsSuccess(true)
+      }
+    })
+    setStatus(false)
   })
 
   useEffect(() => {
@@ -146,7 +148,7 @@ const AddModal = ({ setStatus }) => {
         <FormProvider {...methods}>
           <form>
             <GeneralInfo />
-            <MalzemeLists setTableData={setTableData} tableData={tableData} />
+            <MalzemeLists setTableData={setTableData} tableData={tableData} isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
             <EkBilgiler />
           </form>
         </FormProvider>

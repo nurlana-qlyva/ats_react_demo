@@ -237,3 +237,7 @@ export const GirisFisleriListGetService = (page) => {
 export const GirisFisCodeGetService = () => {
   return http.get(`/Numbering/GetModuleCodeByCode?code=STOK_FIS_ALIS`)
 }
+
+export const GirisFisleriAddService = (data) => {
+  return http.post(`/MaterialReceipt/AddMaterialReceipt`, data)
+}
