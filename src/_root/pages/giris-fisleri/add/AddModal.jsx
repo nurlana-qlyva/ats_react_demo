@@ -82,6 +82,7 @@ const AddModal = ({ setStatus }) => {
         setStatus(true)
         setIsModalOpen(false)
         reset(defaultValues)
+        setTableData([])
         setIsSuccess(true)
       }
     })
@@ -126,6 +127,8 @@ const AddModal = ({ setStatus }) => {
       onClick={() => {
         setIsModalOpen(false);
         reset(defaultValues);
+        setTableData([])
+        setIsSuccess(true)
       }}
     >
       İptal

@@ -34,6 +34,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
+  const [record, setRecord] = useState(null);
 
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key.key);
@@ -122,6 +123,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         <Button
           onClick={() => {
             setEditModal(true)
+            setRecord(record)
             setValue("edit_malzemeTanimi", record.malzemeTanim)
             setValue("edit_miktar", record.miktar)
             setValue("birim", record.birim)
@@ -146,7 +148,13 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   useEffect(() => {
     if (isSuccess) {
       setDataSource([])
+      setTableData([])
+      setSelectedRowKeys([])
+      localStorage.setItem("selectedRowKeys", JSON.stringify([]))
+      setKeys([])
+      setRows([])
       setIsSuccess(false)
+  
     }
   }, [isSuccess])
 
@@ -182,15 +190,12 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     }
   }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
 
-
-
-
   const handleAdd = () => {
     const newRows = selectedRows.map(item => ({
       key: item.malzemeId,
       malzemeKod: item.malzemeKod,
       malzemeTanim: item.malzemeTipKodText,
-      miktar: null,
+      miktar: 1,
       birim: item.birim,
       fiyat: item.fiyat,
       araToplam: null,
@@ -249,7 +254,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   };
 
   const handleEdit = handleSubmit((values) => {
-    const key = selectedRows.malzemeId;
+    const key = record.key;
     const index = dataSource.findIndex(item => item.key === key);
     if (index !== -1) {
       const newData = [...dataSource];
