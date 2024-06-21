@@ -32,8 +32,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleDelete = (key) => {
-    const newData = dataSource.filter((item) => item.key !== key);
+    const newData = dataSource.filter((item) => item.key !== key.key);
     setDataSource(newData);
+    setTableData(newData)
   };
   const defaultColumns = [
     {
@@ -104,7 +105,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           title="Silmeye eminmisiniz?"
           okText={t("ok")}
           cancelText={t("cancel")}
-        // onConfirm={() => handleDelete(record)}
+          onConfirm={() => handleDelete(record)}
         >
           <DeleteOutlined style={{ color: "#dc3545" }} />
         </Popconfirm>
@@ -126,7 +127,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_kdvOrani", record.kdvOran)
             setValue("edit_toplam", record.toplam)
             setValue("edit_aciklama", record.aciklama)
-            
+
           }}
           style={{ border: "none", color: "#5B548B" }}
         >
@@ -179,7 +180,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
 
   const handleAdd = () => {
-    console.log(selectedRow)
     const newData = {
       key: selectedRow.malzemeId,
       malzemeKod: selectedRow.malzemeKod,
