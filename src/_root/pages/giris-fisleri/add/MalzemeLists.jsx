@@ -174,7 +174,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       const indirimOrani = watch("edit_indirimOrani");
       if (indirimOrani) {
         const indirimTutar = toplam * indirimOrani / 100;
-        console.log(indirimTutar)
         setValue("edit_indirimTutari", indirimTutar);
         toplam -= indirimTutar;
       }
@@ -182,6 +181,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       setValue("edit_toplam", toplam.toFixed(2));
     }
   }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
+
+
+
 
   const handleAdd = () => {
     const newRows = selectedRows.map(item => ({
@@ -197,16 +199,18 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       aciklama: item.aciklama,
       kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç"
     }));
-  
+
     const existingKeys = dataSource.map(item => item.key);
-    const hasDuplicate = newRows.some(newItem => existingKeys.includes(newItem.key));
-  
-    if (hasDuplicate) {
+
+    const hasDublicate = selectedRowKeys.some(key => existingKeys.includes(key))
+    const filteredNewRows = newRows.filter(item => !existingKeys.includes(item.key));
+
+    if (hasDublicate) {
       message.warning(`Seçilen malzeme listede mevcutdur`);
       return;
     }
-  
-    const updatedDataSource = [...dataSource, ...newRows];
+
+    const updatedDataSource = [...dataSource, ...filteredNewRows];
     setDataSource(updatedDataSource);
     setTableData(updatedDataSource);
     setIsModalOpen(false);
@@ -214,8 +218,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
     setKeys([]);
   };
-  
-  
 
   const columns = defaultColumns.map((col) => {
     if (!col.editable) {

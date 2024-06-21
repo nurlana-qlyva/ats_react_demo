@@ -68,6 +68,7 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
       setRows(filteredRows)
     }
   }
+
   useEffect(() => {
     localStorage.setItem('selectedRowKeys', JSON.stringify(keys))
   }, [keys])
