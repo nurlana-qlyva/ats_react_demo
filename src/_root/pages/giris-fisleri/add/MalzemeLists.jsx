@@ -199,10 +199,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     }));
   
     const existingKeys = dataSource.map(item => item.key);
-    const duplicatedKeys = newRows.filter(newItem => existingKeys.includes(newItem.key));
+    const hasDuplicate = newRows.some(newItem => existingKeys.includes(newItem.key));
   
-    if (duplicatedKeys.length > 0) {
-      const duplicateItems = duplicatedKeys.map(item => item.key).join(', ');
+    if (hasDuplicate) {
       message.warning(`Seçilen malzeme listede mevcutdur`);
       return;
     }
