@@ -20,9 +20,11 @@ const Firma = ({ field }) => {
             showSearch
             allowClear
             optionFilterProp="children"
-            filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input)}
+            filterOption={(input, option) =>
+                (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())
+            }
             filterSort={(optionA, optionB) =>
-                (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                (optionA?.label.toLowerCase() ?? '').localeCompare((optionB?.label.toLowerCase() ?? ''))
             }
             options={data.map((item) => ({
                 label: item.kod,
@@ -33,12 +35,10 @@ const Firma = ({ field }) => {
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
-                    const selectedOption = data.find(option => option.firmaId === e);
-                    if (!selectedOption) {
-                        setValue('tedarikciKod', "")
-                    }
+                    setValue('tedarikciKod', "")
+                    setValue('unvan', "")
                 } else {
-                    const selectedOption = data.find(option => option.firmaId === e);
+                    const selectedOption = data.find(option => option.firmaId === e)
                     if (selectedOption) {
                         setValue('tedarikciKod', selectedOption.kod)
                         setValue('unvan', selectedOption.unvan)
@@ -51,8 +51,8 @@ const Firma = ({ field }) => {
 
 Firma.propTypes = {
     field: PropTypes.shape({
-        onChange: PropTypes.func,
-    })
+        onChange: PropTypes.func.isRequired,
+    }).isRequired,
 }
 
 export default Firma

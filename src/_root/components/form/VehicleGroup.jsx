@@ -21,7 +21,7 @@ const VehicleGroup = ({ field }) => {
             showSearch
             allowClear
             optionFilterProp="children"
-            filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input)}
+            filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
             filterSort={(optionA, optionB) =>
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }

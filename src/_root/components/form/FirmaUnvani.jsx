@@ -20,9 +20,11 @@ const FirmaUnvani = ({ field }) => {
             showSearch
             allowClear
             optionFilterProp="children"
-            filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input)}
+            filterOption={(input, option) => 
+                (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())
+            }
             filterSort={(optionA, optionB) =>
-                (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                (optionA?.label.toLowerCase() ?? '').localeCompare(optionB?.label.toLowerCase() ?? '')
             }
             options={data.map((item) => ({
                 label: item.unvan,
