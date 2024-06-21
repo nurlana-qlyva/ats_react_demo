@@ -4,6 +4,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Modal,
   Popconfirm,
   Select,
@@ -29,7 +30,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     },
   });
   const [editModal, setEditModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRows, setSelectedRows] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [keys, setKeys] = useState([]);
+  const [rows, setRows] = useState([]);
 
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key.key);
@@ -180,24 +184,39 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
 
   const handleAdd = () => {
-    const newData = {
-      key: selectedRow.malzemeId,
-      malzemeKod: selectedRow.malzemeKod,
-      malzemeTanim: selectedRow.malzemeTipKodText,
+    const newRows = selectedRows.map(item => ({
+      key: item.malzemeId,
+      malzemeKod: item.malzemeKod,
+      malzemeTanim: item.malzemeTipKodText,
       miktar: null,
-      birim: selectedRow.birim,
-      fiyat: selectedRow.fiyat,
+      birim: item.birim,
+      fiyat: item.fiyat,
       araToplam: null,
-      kdvOran: selectedRow.kdvOran,
+      kdvOran: item.kdvOran,
       toplam: null,
-      aciklama: selectedRow.aciklama,
-      kdvDH: selectedRow.kdvDahilHaric ? "Dahil" : "Hariç"
-    };
-    setDataSource([...dataSource, newData]);
-    setTableData([...tableData, newData])
-
+      aciklama: item.aciklama,
+      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç"
+    }));
+  
+    const existingKeys = dataSource.map(item => item.key);
+    const duplicatedKeys = newRows.filter(newItem => existingKeys.includes(newItem.key));
+  
+    if (duplicatedKeys.length > 0) {
+      const duplicateItems = duplicatedKeys.map(item => item.key).join(', ');
+      message.warning(`Seçilen malzeme listede mevcutdur`);
+      return;
+    }
+  
+    const updatedDataSource = [...dataSource, ...newRows];
+    setDataSource(updatedDataSource);
+    setTableData(updatedDataSource);
     setIsModalOpen(false);
+    setSelectedRowKeys([]);
+    localStorage.setItem("selectedRowKeys", JSON.stringify([]));
+    setKeys([]);
   };
+  
+  
 
   const columns = defaultColumns.map((col) => {
     if (!col.editable) {
@@ -229,7 +248,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   };
 
   const handleEdit = handleSubmit((values) => {
-    const key = selectedRow.malzemeId;
+    const key = selectedRows.malzemeId;
     const index = dataSource.findIndex(item => item.key === key);
     if (index !== -1) {
       const newData = [...dataSource];
@@ -238,7 +257,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
-        birimId: values.edit_birim ? values.edit_birim : selectedRow.birimKodId,
+        birimId: values.edit_birim ? values.edit_birim : selectedRows.birimKodId,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
@@ -271,7 +290,12 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     <Button
       key="back"
       className="btn btn-min cancel-btn"
-      onClick={() => setIsModalOpen(false)}
+      onClick={() => {
+        setIsModalOpen(false)
+        setSelectedRowKeys([])
+        localStorage.setItem("selectedRowKeys", JSON.stringify([]))
+        setKeys([])
+      }}
     >
       {t("iptal")}
     </Button>,
@@ -323,7 +347,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         footer={footer}
         width={1000}
       >
-        <MalzemeTable setSelectedRow={setSelectedRow} />
+        <MalzemeTable setSelectedRows={setSelectedRows} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} keys={keys} rows={rows} setKeys={setKeys} setRows={setRows} />
       </Modal>
 
       <Modal
