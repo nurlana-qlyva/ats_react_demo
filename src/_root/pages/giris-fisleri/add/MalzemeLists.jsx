@@ -168,7 +168,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     if (araToplam) {
       let kdvTutar;
       if (kdvDH === "dahil") {
-        kdvTutar = araToplam / (1 + (kdvOrani/100));
+        kdvTutar = araToplam - (araToplam / (1 + (kdvOrani/100)));
       } else {
         kdvTutar = araToplam * (kdvOrani / 100);
       }
