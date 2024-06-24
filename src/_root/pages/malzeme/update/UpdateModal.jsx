@@ -227,10 +227,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
       setValue("yedekParca", res.data.yedekParca)
       setValue("unvan", res.data.tedarikci)
       setValue("kritikMiktar", res.data.kritikMiktar)
+      setValue("kdvDH", res.data.kdvDahilHaric ? "Dahil" : "Hariç")
     })
   }, [id, updateModal])
 
   const onSubmit = handleSubmit((values) => {
+    console.log(values)
     const body = {
       malzemeId: id,
       tanim: values.tanim,
@@ -261,6 +263,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
       // degistirme: values.degistirme,
       // aciklama: values.aciklama,
       olcu: values.olcu,
+      kdvDahilHaric: values.kdvDH === "dahil" ? true : false
     };
 
     MalzemeUpdateService(body).then(res => {

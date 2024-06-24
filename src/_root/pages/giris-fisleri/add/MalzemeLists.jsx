@@ -35,11 +35,12 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
   const [record, setRecord] = useState(null);
-
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key.key);
+    const newRows = selectedRows.filter((item) => item.malzemeId !== key.key);
     setDataSource(newData);
-    setTableData(newData)
+    setTableData(newData);
+    setSelectedRows([...newRows]);
   };
   const defaultColumns = [
     {
@@ -122,18 +123,18 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       render: (_, record) => (
         <Button
           onClick={() => {
-            setEditModal(true)
-            setRecord(record)
-            setValue("edit_malzemeTanimi", record.malzemeTanim)
-            setValue("edit_miktar", record.miktar)
-            setValue("birim", record.birim)
-            setValue("edit_birim", record.birimId)
-            setValue("edit_fiyat", record.fiyat)
-            setValue("edit_araToplam", record.araToplam)
-            setValue("edit_kdvOrani", record.kdvOran)
-            setValue("edit_toplam", record.toplam)
-            setValue("edit_aciklama", record.aciklama)
-
+            setEditModal(true);
+            setRecord(record);
+            setValue("edit_malzemeTanimi", record.malzemeTanim);
+            setValue("edit_miktar", record.miktar);
+            setValue("birim", record.birim);
+            setValue("edit_birim", record.birimId);
+            setValue("edit_fiyat", record.fiyat);
+            setValue("edit_araToplam", record.araToplam);
+            setValue("edit_kdvOrani", record.kdvOran);
+            setValue("edit_toplam", record.toplam);
+            setValue("edit_aciklama", record.aciklama);
+            setValue("edit_kdv", record.kdvDH);
           }}
           style={{ border: "none", color: "#5B548B" }}
         >
@@ -143,20 +144,21 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     },
   ];
 
-  useEffect(() => { setValue("edit_kdv", "dahil") }, [])
+  useEffect(() => {
+    setValue("edit_miktar", 1);
+  }, []);
 
   useEffect(() => {
     if (isSuccess) {
-      setDataSource([])
-      setTableData([])
-      setSelectedRowKeys([])
-      localStorage.setItem("selectedRowKeys", JSON.stringify([]))
-      setKeys([])
-      setRows([])
-      setIsSuccess(false)
-  
+      setDataSource([]);
+      setTableData([]);
+      setSelectedRowKeys([]);
+      localStorage.setItem("selectedRowKeys", JSON.stringify([]));
+      setKeys([]);
+      setRows([]);
+      setIsSuccess(false);
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
   useEffect(() => {
     const araToplam = watch("edit_araToplam");
@@ -181,34 +183,50 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
       const indirimOrani = watch("edit_indirimOrani");
       if (indirimOrani) {
-        const indirimTutar = toplam * indirimOrani / 100;
+        const indirimTutar = (toplam * indirimOrani) / 100;
         setValue("edit_indirimTutari", indirimTutar);
         toplam -= indirimTutar;
       }
 
       setValue("edit_toplam", toplam.toFixed(2));
     }
-  }, [watch("edit_araToplam"), watch("edit_kdvOrani"), watch("edit_kdv"), watch("edit_indirimOrani")]);
+  }, [
+    watch("edit_araToplam"),
+    watch("edit_kdvOrani"),
+    watch("edit_kdv"),
+    watch("edit_indirimOrani"),
+  ]);
 
+  useEffect(() => {
+    let araToplam = watch("edit_miktar") * watch("edit_fiyat");
+    setValue("edit_araToplam", araToplam);
+  }, [watch("edit_miktar")]);
   const handleAdd = () => {
-    const newRows = selectedRows.map(item => ({
+    const newRows = selectedRows.map((item) => ({
       key: item.malzemeId,
       malzemeKod: item.malzemeKod,
       malzemeTanim: item.malzemeTipKodText,
       miktar: 1,
       birim: item.birim,
       fiyat: item.fiyat,
-      araToplam: null,
+      araToplam: 1 * item.fiyat,
       kdvOran: item.kdvOran,
       toplam: null,
       aciklama: item.aciklama,
-      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç"
+      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
+      kdvTutar: item.kdvDahilHaric
+        ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
+        : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
     }));
 
-    const existingKeys = dataSource.map(item => item.key);
+    const existingKeys = dataSource.map((item) => item.key);
 
-    const hasDublicate = selectedRowKeys.some(key => existingKeys.includes(key))
-    const filteredNewRows = newRows.filter(item => !existingKeys.includes(item.key));
+    const hasDublicate = selectedRowKeys.some((key) =>
+      existingKeys.includes(key)
+    );
+    const filteredNewRows = newRows.filter(
+      (item) => !existingKeys.includes(item.key)
+    );
 
     if (hasDublicate) {
       message.warning(`Seçilen malzeme listede mevcutdur`);
@@ -222,6 +240,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     setSelectedRowKeys([]);
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
     setKeys([]);
+    setRows([]);
   };
 
   const columns = defaultColumns.map((col) => {
@@ -255,7 +274,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
   const handleEdit = handleSubmit((values) => {
     const key = record.key;
-    const index = dataSource.findIndex(item => item.key === key);
+    const index = dataSource.findIndex((item) => item.key === key);
     if (index !== -1) {
       const newData = [...dataSource];
       newData[index] = {
@@ -263,7 +282,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
-        birimId: values.edit_birim ? values.edit_birim : selectedRows.birimKodId,
+        birimId: values.edit_birim
+          ? values.edit_birim
+          : selectedRows.birimKodId,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
@@ -297,10 +318,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
-        setIsModalOpen(false)
-        setSelectedRowKeys([])
-        localStorage.setItem("selectedRowKeys", JSON.stringify([]))
-        setKeys([])
+        setIsModalOpen(false);
+        setSelectedRowKeys([]);
+        localStorage.setItem("selectedRowKeys", JSON.stringify([]));
+        setKeys([]);
       }}
     >
       {t("iptal")}
@@ -308,7 +329,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   ];
 
   const editModalFooter = [
-    <Button key="submit" className="btn primary-btn km-update" onClick={handleEdit}>
+    <Button
+      key="submit"
+      className="btn primary-btn km-update"
+      onClick={handleEdit}
+    >
       Güncelle
     </Button>,
     <Button
@@ -353,7 +378,15 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         footer={footer}
         width={1000}
       >
-        <MalzemeTable setSelectedRows={setSelectedRows} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} keys={keys} rows={rows} setKeys={setKeys} setRows={setRows} />
+        <MalzemeTable
+          setSelectedRows={setSelectedRows}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          keys={keys}
+          rows={rows}
+          setKeys={setKeys}
+          setRows={setRows}
+        />
       </Modal>
 
       <Modal
@@ -390,9 +423,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onPressEnter={e => {
-                      const result = watch("edit_fiyat") * e.target.value
-                      setValue("edit_araToplam", result)
+                    onPressEnter={(e) => {
+                      const result = watch("edit_fiyat") * e.target.value;
+                      setValue("edit_araToplam", result);
                     }}
                     // onBlur={e => {
                     //   const result = watch("edit_fiyat") * e.target.value
@@ -410,11 +443,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
               <Controller
                 name="edit_birim"
                 control={control}
-                render={({ field }) => (
-                  <Birim
-                    field={field}
-                  />
-                )}
+                render={({ field }) => <Birim field={field} />}
               />
             </div>
           </div>
@@ -428,9 +457,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onPressEnter={e => {
-                      const result = watch("edit_miktar") * e.target.value
-                      setValue("edit_araToplam", result)
+                    onPressEnter={(e) => {
+                      const result = watch("edit_miktar") * e.target.value;
+                      setValue("edit_araToplam", result);
                     }}
                     // onBlur={e => {
                     //   const result = watch("edit_miktar") * e.target.value
@@ -468,10 +497,14 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onPressEnter={e => {
-                      const result = watch("edit_toplam") * e.target.value / 100
-                      setValue("edit_indirimTutari", result)
-                      setValue("edit_toplam", +watch("edit_indirimTutari") + +watch("edit_toplam"))
+                    onPressEnter={(e) => {
+                      const result =
+                        (watch("edit_toplam") * e.target.value) / 100;
+                      setValue("edit_indirimTutari", result);
+                      setValue(
+                        "edit_toplam",
+                        +watch("edit_indirimTutari") + +watch("edit_toplam")
+                      );
                     }}
                     // onBlur={e => {
                     //   const result = watch("edit_toplam") * e.target.value / 100
@@ -530,7 +563,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                       { value: "dahil", label: <span>Dahil</span> },
                       { value: "haric", label: <span>Hariç</span> },
                     ]}
-                    onChange={e => field.onChange(e)}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />

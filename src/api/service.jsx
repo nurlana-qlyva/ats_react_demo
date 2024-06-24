@@ -241,3 +241,12 @@ export const GirisFisCodeGetService = () => {
 export const GirisFisleriAddService = (data) => {
   return http.post(`/MaterialReceipt/AddMaterialReceipt`, data)
 }
+
+// kod kontrolu 
+export const CodeItemValidateService = (data) => {
+  return http.post(`/TableCodeItem/IsCodeItemExist`, data)
+}
+
+export const GetLocationByDepoIdService = (id) => {
+  return http.get(`/Location/GetLocationById?locationId=${id}`)
+}

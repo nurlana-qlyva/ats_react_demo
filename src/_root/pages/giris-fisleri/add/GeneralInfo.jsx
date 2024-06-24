@@ -6,7 +6,7 @@ import "dayjs/locale/tr";
 import tr_TR from "antd/lib/locale/tr_TR";
 import { Input, ConfigProvider, DatePicker, TimePicker } from "antd";
 import { PlakaContext } from "../../../../context/plakaSlice";
-import { CustomCodeControlService } from "../../../../api/service";
+import { CustomCodeControlService, GetLocationByDepoIdService } from "../../../../api/service";
 import FirmaUnvani from "../../../components/form/FirmaUnvani";
 import Plaka from "../../../components/form/Plaka";
 import Location from "../../../components/form/Location";
@@ -15,8 +15,8 @@ import Depo from "../../../components/form/Depo";
 
 dayjs.locale("tr");
 
-const GeneralInfo = () => {
-  const { control } = useFormContext();
+const GeneralInfo = ({ isValid }) => {
+  const { control, setValue, watch } = useFormContext();
   const { setPlaka } = useContext(PlakaContext);
 
   useEffect(() => {
@@ -34,6 +34,17 @@ const GeneralInfo = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (watch("girisDepoSiraNo")) {
+      const id = watch("depoLokasyonId")
+      GetLocationByDepoIdService(id).then(res=> {
+        setValue("lokasyonId", res?.data.lokasyonId)
+        setValue("lokasyon", res?.data.lokasyonTanim)
+      })
+    }
+
+  }, [watch("girisDepoSiraNo")])
+
   return (
     <>
       <div className="grid gap-1 border p-20">
@@ -46,9 +57,37 @@ const GeneralInfo = () => {
               render={({ field }) => (
                 <Input
                   {...field}
+                  style={
+                    !isValid
+                      ? { borderColor: "#dc3545" }
+                      : isValid
+                      ? { borderColor: "#23b545" }
+                      : { color: "#000" }
+                  }
                   onChange={(e) => field.onChange(e.target.value)}
                 />
               )}
+            />
+          </div>
+        </div>
+        <div className="col-span-4">
+          <div className="flex flex-col gap-1">
+            <label>{t("firma")}</label>
+            <Controller
+              name="firmaId"
+              control={control}
+              render={({ field }) => <FirmaUnvani field={field} />}
+            />
+          </div>
+        </div>
+      
+        <div className="col-span-4">
+          <div className="flex flex-col gap-1">
+            <label>{t("girisDeposu")}</label>
+            <Controller
+              name="girisDepoSiraNo"
+              control={control}
+              render={({ field }) => <Depo field={field} />}
             />
           </div>
         </div>
@@ -71,26 +110,6 @@ const GeneralInfo = () => {
                   />
                 </ConfigProvider>
               )}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("girisDeposu")}</label>
-            <Controller
-              name="girisDepoSiraNo"
-              control={control}
-              render={({ field }) => <Depo field={field} />}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("firma")}</label>
-            <Controller
-              name="firmaId"
-              control={control}
-              render={({ field }) => <FirmaUnvani field={field} />}
             />
           </div>
         </div>

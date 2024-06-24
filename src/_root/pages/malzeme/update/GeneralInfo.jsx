@@ -24,6 +24,7 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
+                      readOnly
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}
@@ -55,6 +56,7 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
+                      readOnly
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}
@@ -119,7 +121,7 @@ const GeneralInfo = () => {
                   <div className="flex flex-col gap-1">
                     <label>{t("")}</label>
                     <Controller
-                      name=""
+                      name="kdvDH"
                       control={control}
                       render={({ field }) => (
                         <Select
@@ -127,8 +129,9 @@ const GeneralInfo = () => {
                           defaultValue="dahil"
                           options={[
                             { value: "dahil", label: <span>Dahil</span> },
-                            { value: "hariç", label: <span>Hariç</span> },
+                            { value: "haric", label: <span>Hariç</span> },
                           ]}
+                          onChange={(e) => field.onChange(e)}
                         />
                       )}
                     />

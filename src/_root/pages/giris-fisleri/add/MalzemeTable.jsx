@@ -15,24 +15,44 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
 
   const columns = [
     {
-      title: t("malzemeId"),
-      dataIndex: "malzemeId",
-      key: "malzemeId",
-    },
-    {
       title: t("malzemeKodu"),
       dataIndex: "malzemeKod",
       key: "malzemeKod",
     },
     {
-      title: t("fiyat"),
-      dataIndex: "fiyat",
-      key: "fiyat",
+      title: t("malzemeTanimi"),
+      dataIndex: "malzemeTipKodText",
+      key: "malzemeTipKodText",
     },
     {
-      title: t("kdvOrani"),
-      dataIndex: "kdvOran",
-      key: "kdvOran",
+      title: t("malzemeTipi"),
+      dataIndex: "malzemeTip",
+      key: "malzemeTip",
+    },
+    {
+      title: t("birim"),
+      dataIndex: "birim",
+      key: "birim",
+    },
+    {
+      title: t("marka"),
+      dataIndex: "marka",
+      key: "marka",
+    },
+    {
+      title: t("model"),
+      dataIndex: "model",
+      key: "model",
+    },
+    {
+      title: t("malzemeSinif"),
+      dataIndex: "malzemeSinif",
+      key: "malzemeSinif",
+    },
+    {
+      title: t("aciklama"),
+      dataIndex: "aciklama",
+      key: "aciklama",
     }
   ];
 
