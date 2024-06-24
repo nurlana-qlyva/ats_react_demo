@@ -17,7 +17,7 @@ const GeneralInfo = () => {
       <div className="grid gap-1">
         <div className="col-span-6 p-10">
           <div className="grid gap-1">
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("malzemeKodu")}</label>
                 <Controller
@@ -48,7 +48,7 @@ const GeneralInfo = () => {
                 />
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("tanimi")}</label>
                 <Controller
@@ -63,7 +63,7 @@ const GeneralInfo = () => {
                 />
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("birim")}</label>
                 <Controller
@@ -73,7 +73,7 @@ const GeneralInfo = () => {
                 />
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("malzemeTipi")}</label>
                 <Controller
@@ -83,7 +83,27 @@ const GeneralInfo = () => {
                 />
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
+              <div className="flex flex-col gap-1">
+                <label>{t("marka")}</label>
+                <Controller
+                  name=""
+                  control={control}
+                  render={({ field }) => <Input field={field} />}
+                />
+              </div>
+            </div>
+            <div className="col-span-4">
+              <div className="flex flex-col gap-1">
+                <label>{t("model")}</label>
+                <Controller
+                  name=""
+                  control={control}
+                  render={({ field }) => <Input field={field} />}
+                />
+              </div>
+            </div>
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("fiyat")}</label>
                 <Controller
@@ -99,9 +119,9 @@ const GeneralInfo = () => {
                 />
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="grid gap-1">
-                <div className="col-span-8">
+                <div className="col-span-6">
                   <div className="flex flex-col gap-1">
                     <label>{t("kdvOrani")}</label>
                     <Controller
@@ -117,12 +137,13 @@ const GeneralInfo = () => {
                     />
                   </div>
                 </div>
-                <div className="col-span-4 self-end">
+                <div className="col-span-6 self-end">
                   <Controller
                     name="kdvDahilHaric"
                     control={control}
                     render={({ field }) => (
                       <Select
+                      className="w-full"
                         {...field}
                         defaultValue="dahil"
                         options={[
@@ -136,7 +157,7 @@ const GeneralInfo = () => {
                 </div>
               </div>
             </div>
-            <div className="col-span-6">
+            <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("kritikStokMiktari")}</label>
                 <Controller

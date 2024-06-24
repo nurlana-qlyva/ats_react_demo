@@ -46,6 +46,26 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("malzemeKodu"),
       dataIndex: "malzemeKod",
+      render: (text, record) => (
+        <Button
+          onClick={() => {
+            setEditModal(true);
+            setRecord(record);
+            setValue("edit_malzemeTanimi", record.malzemeTanim);
+            setValue("edit_miktar", record.miktar);
+            setValue("birim", record.birim);
+            setValue("edit_birim", record.birimId);
+            setValue("edit_fiyat", record.fiyat);
+            setValue("edit_araToplam", record.araToplam);
+            setValue("edit_kdvOrani", record.kdvOran);
+            setValue("edit_toplam", record.toplam);
+            setValue("edit_aciklama", record.aciklama);
+            setValue("edit_kdv", record.kdvDH);
+          }}
+        >
+          {text}
+        </Button>
+      ),
     },
     {
       title: t("malzemeTanimi"),
@@ -117,31 +137,31 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         </Popconfirm>
       ),
     },
-    {
-      title: "",
-      dataIndex: "edit",
-      render: (_, record) => (
-        <Button
-          onClick={() => {
-            setEditModal(true);
-            setRecord(record);
-            setValue("edit_malzemeTanimi", record.malzemeTanim);
-            setValue("edit_miktar", record.miktar);
-            setValue("birim", record.birim);
-            setValue("edit_birim", record.birimId);
-            setValue("edit_fiyat", record.fiyat);
-            setValue("edit_araToplam", record.araToplam);
-            setValue("edit_kdvOrani", record.kdvOran);
-            setValue("edit_toplam", record.toplam);
-            setValue("edit_aciklama", record.aciklama);
-            setValue("edit_kdv", record.kdvDH);
-          }}
-          style={{ border: "none", color: "#5B548B" }}
-        >
-          <EditOutlined />
-        </Button>
-      ),
-    },
+    // {
+    //   title: "",
+    //   dataIndex: "edit",
+    //   render: (_, record) => (
+    //     <Button
+    //       onClick={() => {
+    //         setEditModal(true);
+    //         setRecord(record);
+    //         setValue("edit_malzemeTanimi", record.malzemeTanim);
+    //         setValue("edit_miktar", record.miktar);
+    //         setValue("birim", record.birim);
+    //         setValue("edit_birim", record.birimId);
+    //         setValue("edit_fiyat", record.fiyat);
+    //         setValue("edit_araToplam", record.araToplam);
+    //         setValue("edit_kdvOrani", record.kdvOran);
+    //         setValue("edit_toplam", record.toplam);
+    //         setValue("edit_aciklama", record.aciklama);
+    //         setValue("edit_kdv", record.kdvDH);
+    //       }}
+    //       style={{ border: "none", color: "#5B548B" }}
+    //     >
+    //       <EditOutlined />
+    //     </Button>
+    //   ),
+    // },
   ];
 
   useEffect(() => {
@@ -161,40 +181,49 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   }, [isSuccess]);
 
   useEffect(() => {
-    const araToplam = watch("edit_araToplam");
-    const kdvOrani = watch("edit_kdvOrani");
+    const indirimOrani = +watch("edit_indirimOrani");
+    const araToplam = +watch("edit_araToplam");
     const kdvDH = watch("edit_kdv");
+    const kdvOrani = +watch("edit_kdvOrani");
+    let toplam;
+    let result;
+    let kdvTutar;
+    let indirimTutar;
 
-    if (araToplam) {
-      let kdvTutar;
-      if (kdvDH === "dahil") {
-        kdvTutar = araToplam - (araToplam / (1 + (kdvOrani/100)));
+    if (kdvDH === "haric" || kdvDH === "Hariç") {
+      if (indirimOrani) {
+        indirimTutar = (araToplam * indirimOrani) / 100;
+        result = araToplam - indirimTutar;
+        kdvTutar = (result * kdvOrani) / 100;
+        toplam = +result + +kdvTutar;
       } else {
         kdvTutar = araToplam * (kdvOrani / 100);
-      }
-      setValue("edit_kdvTutar", kdvTutar.toFixed(2));
-
-      let toplam;
-      if (kdvDH === "dahil") {
-        toplam = araToplam;
-      } else {
         toplam = +araToplam + +kdvTutar;
       }
-
-      const indirimOrani = watch("edit_indirimOrani");
+    } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
       if (indirimOrani) {
-        const indirimTutar = (toplam * indirimOrani) / 100;
-        setValue("edit_indirimTutari", indirimTutar);
-        toplam -= indirimTutar;
+        kdvTutar = (araToplam - araToplam / (1 + kdvOrani / 100)).toFixed(2);
+        indirimTutar = (((araToplam - kdvTutar) * indirimOrani) / 100).toFixed(
+          2
+        );
+        result = araToplam - kdvTutar - indirimTutar;
+        toplam = +result.toFixed(2);
+      } else {
+        kdvTutar = (araToplam - araToplam / (1 + kdvOrani / 100)).toFixed(2);
+        toplam = +araToplam.toFixed(2);
       }
-
-      setValue("edit_toplam", toplam.toFixed(2));
     }
+
+    setValue("edit_indirimTutari", indirimTutar);
+    setValue("edit_kdvTutar", kdvTutar);
+    setValue("edit_toplam", toplam);
   }, [
+    watch("edit_indirimOrani"),
     watch("edit_araToplam"),
     watch("edit_kdvOrani"),
     watch("edit_kdv"),
-    watch("edit_indirimOrani"),
+    watch("edit_indirimTutari"),
+    watch("edit_toplam"),
   ]);
 
   useEffect(() => {
@@ -339,7 +368,13 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     <Button
       key="back"
       className="btn cancel-btn"
-      onClick={() => setEditModal(false)}
+      onClick={() => {
+        setEditModal(false);
+        setValue("edit_indirimOrani", null);
+        setValue("edit_indirimOrani", null);
+        setValue("edit_indirimTutari", null);
+        setValue("edit_miktar", 1);
+      }}
     >
       Kapat
     </Button>,
@@ -481,6 +516,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
+                    readOnly
                     onChange={(e) => field.onChange(e)}
                   />
                 )}
@@ -498,13 +534,12 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                     {...field}
                     className="w-full"
                     onPressEnter={(e) => {
-                      const result =
-                        (watch("edit_toplam") * e.target.value) / 100;
-                      setValue("edit_indirimTutari", result);
-                      setValue(
-                        "edit_toplam",
-                        +watch("edit_indirimTutari") + +watch("edit_toplam")
-                      );
+                      const indirimOrani = +watch("edit_indirimOrani");
+                      const araToplam = +watch("edit_araToplam");
+                      const indirimTutar = (araToplam * indirimOrani) / 100;
+                      setValue("edit_indirimTutari", indirimTutar);
+                      const toplam = araToplam - indirimTutar;
+                      setValue("edit_toplam", toplam);
                     }}
                     // onBlur={e => {
                     //   const result = watch("edit_toplam") * e.target.value / 100
@@ -527,7 +562,40 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      const araToplam = +watch("edit_araToplam");
+                      const kdvDH = watch("edit_kdv");
+                      const kdvOrani = +watch("edit_kdvOrani");
+                      let toplam;
+                      let result;
+                      let kdvTutar;
+                      let indirimOran;
+
+                      if (e) {
+                        if (kdvDH === "haric" || kdvDH === "Hariç") {
+                          indirimOran = (e * 100) / araToplam;
+                          result = araToplam - e;
+                          kdvTutar = (result * kdvOrani) / 100;
+                          toplam = +result + +kdvTutar;
+                        } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
+                          kdvTutar = (
+                            araToplam -
+                            araToplam / (1 + kdvOrani / 100)
+                          ).toFixed(2);
+                          indirimOran = (
+                            (100 * e) /
+                            (araToplam - kdvTutar)
+                          ).toFixed(2);
+                          result = araToplam - kdvTutar - e;
+                          toplam = +result.toFixed(2);
+                        }
+
+                        setValue("edit_indirimOrani", indirimOran);
+                        setValue("edit_kdvTutar", kdvTutar);
+                        setValue("edit_toplam", toplam);
+                      }
+                    }}
                   />
                 )}
               />
@@ -543,7 +611,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -579,7 +647,23 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      const araToplam = +watch("edit_araToplam");
+                      const kdvDH = watch("edit_kdv");
+                      const toplam = watch("edit_toplam");
+                      let kdvOran;
+
+                      if (e) {
+                        if (kdvDH === "haric" || kdvDH === "Hariç") {
+                          kdvOran = e * 100 / araToplam
+                        }
+                         else if (kdvDH === "dahil" || kdvDH == "Dahil") {
+                          kdvOran = (e * 100 / (toplam - e)).toFixed(2)
+                        }
+                        setValue("edit_kdvOrani", kdvOran);
+                      }
+                    }}
                   />
                 )}
               />
@@ -595,7 +679,8 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onChange={(e) => field.onChange(e.target.value)}
+                    readOnly
+                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
