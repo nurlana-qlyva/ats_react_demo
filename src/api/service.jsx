@@ -147,9 +147,17 @@ export const YakitGetService = (page) => {
   return http.get(`/Fuel/GetFuelList?page=${page}`)
 }
 
+export const YakitListSearchService = (page, parameter) => {
+  return http.get(`/Fuel/GetFuelList?page=${page}&parameter=${parameter}`)
+}
+
 // get list
 export const YakitGetByIdService = async (data, page) => {
   return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}`, data)
+}
+
+export const YakitListSearchByIdService = async (data, page, parameter) => {
+  return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}&parameter=${parameter}`, data)
 }
 
 // get data for one vehicle
@@ -209,6 +217,10 @@ export const MalzemeListGetService = (page) => {
   return http.post(`/Material/GetMaterialList?page=${page}`)
 }
 
+export const MalzemeListSearchService = (page, parameter) => {
+  return http.post(`/Material/GetMaterialList?page=${page}&parameter=${parameter}`)
+}
+
 export const MalzemeAddService = (data) => {
   return http.post(`/Material/AddMaterial`, data)
 }
@@ -232,6 +244,10 @@ export const MalzemeDataByIdGetService = (id) => {
 // giris fisleri
 export const GirisFisleriListGetService = (page) => {
   return http.post(`/MaterialReceipt/GetMaterialReceiptList?page=${page}`)
+}
+
+export const GirisFisleriListSearchService = (page, parameter) => {
+  return http.post(`/MaterialReceipt/GetMaterialReceiptList?page=${page}&parameter=${parameter}`)
 }
 
 export const GirisFisCodeGetService = () => {

@@ -20,7 +20,10 @@ import { Checkbox, Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import AddModal from "./add/AddModal";
-import { MalzemeListGetService } from "../../../api/service";
+import {
+  MalzemeListGetService,
+  MalzemeListSearchService,
+} from "../../../api/service";
 import dayjs from "dayjs";
 import UpdateModal from "./update/UpdateModal";
 
@@ -319,7 +322,37 @@ const MalzemeTanimlari = () => {
       });
       setLoading(false);
     });
-  }, [tableParams.pagination.current, status]);
+  }, [status]);
+
+  useEffect(() => {
+    if (search.length >= 3) {
+      MalzemeListSearchService(tableParams?.pagination.current, search).then(
+        (res) => {
+          setData(res?.data.materialList);
+          setTableParams({
+            ...tableParams,
+            pagination: {
+              ...tableParams.pagination,
+              total: res?.data.total_count,
+            },
+          });
+          setLoading(false);
+        }
+      );
+    } else {
+      MalzemeListGetService(tableParams?.pagination.current).then((res) => {
+        setData(res?.data.materialList);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.total_count,
+          },
+        });
+        setLoading(false);
+      });
+    }
+  }, [search, tableParams?.pagination.current]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -419,15 +452,6 @@ const MalzemeTanimlari = () => {
     () => localStorage.setItem("selectedRowKeys", JSON.stringify(keys)),
     [keys]
   );
-  // useEffect(() => {
-  //     let newPlakaEntries = [];
-  //     rows.forEach(vehicle => {
-  //         if (!newPlakaEntries.some(item => item.id === vehicle.malzemeId)) {
-  //             newPlakaEntries.push({ id: vehicle.malzemeId, plaka: vehicle.plaka });
-  //         }
-  //     });
-  //     // setPlaka(newPlakaEntries);
-  // }, [rows])
   useEffect(() => {
     const storedSelectedKeys = JSON.parse(
       localStorage.getItem("selectedRowKeys")
@@ -515,7 +539,7 @@ const MalzemeTanimlari = () => {
                 size="small"
                 onChange={handleTableChange}
                 scroll={{
-                  x: 2500,
+                  x: 2800,
                 }}
                 rowSelection={{
                   selectedRowKeys: selectedRowKeys,
