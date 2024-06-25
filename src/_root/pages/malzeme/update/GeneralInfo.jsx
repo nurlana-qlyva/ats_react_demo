@@ -429,9 +429,9 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("sonAlinanFirma")} -- ?</label>
+                <label>{t("sonAlinanFirma")}</label>
                 <Controller
-                  name=""
+                  name="sonAlinanFirma"
                   control={control}
                   render={({ field }) => (
                     <Input

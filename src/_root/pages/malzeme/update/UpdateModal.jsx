@@ -228,11 +228,16 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
       setValue("unvan", res.data.tedarikci)
       setValue("kritikMiktar", res.data.kritikMiktar)
       setValue("kdvDH", res.data.kdvDahilHaric ? "Dahil" : "Hariç")
+      setValue("girenMiktar", res.data.girenMiktar)
+      setValue("sonAlinanFirma", res.data.sonAlinanFirma)
+      setValue("cikanMiktar", res.data.cikanMiktar)
+      setValue("sonFiyat", res.data.sonFiyat)
+      setValue("stokMiktar", res.data.girenMiktar - res.data.cikanMiktar)
+      setValue("sonAlisTarih", dayjs(res.data.sonAlisTarih).format("DD.MM.YYYY"))
     })
   }, [id, updateModal])
 
   const onSubmit = handleSubmit((values) => {
-    console.log(values)
     const body = {
       malzemeId: id,
       tanim: values.tanim,
@@ -250,18 +255,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
       bolum: values.bolum,
       raf: values.raf,
       kritikMiktar: values.kritikMiktar || 0,
-      cikanMiktar: values.cikanMiktar || 0,
-      girenMiktar: values.girenMiktar || 0,
-      // sonAlisTarih: dayjs(values.sonAlisTarih).format("YYYY-MM-DD") || "",
       sonFiyat: values.sonFiyat || 0,
       kdvOran: values.kdvOran || 0,
       aktif: values.aktif,
       yedekParca: values.yedekParca,
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
-      // olusturma: values.olusturma,
-      // degistirme: values.degistirme,
-      // aciklama: values.aciklama,
       olcu: values.olcu,
       kdvDahilHaric: values.kdvDH === "dahil" ? true : false
     };
