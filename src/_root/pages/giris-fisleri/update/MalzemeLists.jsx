@@ -18,8 +18,15 @@ import Plaka from "../../../components/form/Plaka";
 import Birim from "../../../components/form/Birim";
 import MalzemeLokasyon from "../../../components/form/MalzemeLokasyon";
 import MalzemeTable from "./MalzemeTable";
+import MalzemePlaka from "../../../components/form/MalzemePlaka";
 
-const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
+const MalzemeLists = ({
+  setTableData,
+  tableData,
+  isSuccess,
+  setIsSuccess,
+  data,
+}) => {
   const { control, setValue, watch, handleSubmit } = useFormContext();
   const [dataSource, setDataSource] = useState([]);
   const [isOpen, setIsModalOpen] = useState(false);
@@ -42,33 +49,35 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     // setTableData(newData);
     setSelectedRows([...newRows]);
   };
-  
+
   useEffect(() => {
-    const newRows = tableData.map((item) => ({
+    const newRows = data.map((item) => ({
       key: item.malzemeId,
+      siraNo: item.siraNo,
       malzemeKod: item.malezemeKod,
       malzemeTanim: item.malezemeTanim,
       miktar: item.miktar,
       aciklama: item.aciklama,
       birim: item.birim,
       fiyat: item.fiyat,
+      plaka: item.plaka,
       araToplam: item.araToplam,
       kdvOran: item.kdvOran,
-      kdvTutar: item.kdvToplam,
       indirimOran: item.indirimOran,
       indirimTutar: item.indirim,
       lokasyon: item.lokasyon,
       lokasyonId: item.lokasyonId,
       toplam: item.toplam,
-      aciklama: item.aciklama,
       kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
       kdvTutar: item.kdvDahilHaric
         ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
         : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
+      isPriceChanged: false,
     }));
     setDataSource([...newRows]);
+    // setTableData([...newRows]);
     setSelectedRows([...newRows]);
-  }, [tableData]);
+  }, [data]);
 
   const defaultColumns = [
     {
@@ -89,6 +98,13 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_toplam", record.toplam);
             setValue("edit_aciklama", record.aciklama);
             setValue("edit_kdv", record.kdvDH);
+            setValue("malzeme_plaka", record.plaka);
+            setValue("edit_plakaId", record.mlzAracId);
+            setValue("edit_lokasyonId", record.lokasyonId);
+            setValue("edit_lokasyon", record.lokasyon);
+            setValue("edit_aciklama", record.aciklama);
+            setValue("edit_indirimOrani", record.indirimOran);
+            setValue("edit_indirimTutari", record.indirim);
           }}
         >
           {text}
@@ -249,6 +265,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       kdvTutar: item.kdvDahilHaric
         ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
         : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
+      isPriceChanged: false,
     }));
 
     const existingKeys = dataSource.map((item) => item.key);
@@ -267,7 +284,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
     const updatedDataSource = [...dataSource, ...filteredNewRows];
     setDataSource(updatedDataSource);
-    // setTableData(updatedDataSource);
+    setTableData(updatedDataSource);
     setIsModalOpen(false);
     setSelectedRowKeys([]);
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
@@ -308,6 +325,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     const key = record.key;
     const index = dataSource.findIndex((item) => item.key === key);
     if (index !== -1) {
+      const currentFiyat = values.edit_fiyat;
+      const originalFiyat = dataSource[index].fiyat;
+
       const newData = [...dataSource];
       newData[index] = {
         ...newData[index],
@@ -329,10 +349,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         plaka: values.plaka,
         lokasyonId: values.edit_lokasyonId,
         lokasyon: values.edit_lokasyon,
+        isPriceChanged: currentFiyat !== originalFiyat,
       };
 
       setDataSource(newData);
-      // setTableData(newData);
+      setTableData(newData);
     }
 
     setEditModal(false);
@@ -728,7 +749,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
               <Controller
                 name="edit_plakaId"
                 control={control}
-                render={({ field }) => <Plaka field={field} />}
+                render={({ field }) => <MalzemePlaka field={field} />}
               />
             </div>
           </div>
@@ -748,7 +769,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
               <Controller
                 name="edit_aciklama"
                 control={control}
-                render={({ field }) => <TextArea field={field} />}
+                render={({ field }) => <TextArea {...field} />}
               />
             </div>
           </div>

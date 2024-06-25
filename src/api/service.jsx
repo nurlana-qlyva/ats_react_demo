@@ -71,7 +71,8 @@ import {
   GirisFisleriListSearchService,
   GirisFisCodeGetService,
   GirisFisleriAddService,
-  GetMaterialReceiptByIdService
+  GetMaterialReceiptByIdService,
+  UpdateMaterialReceiptService
 } from "./services/girisfis_services";
 
 import {
@@ -164,6 +165,7 @@ export {
   GirisFisleriListSearchService,
   GirisFisCodeGetService,
   GirisFisleriAddService,
+  UpdateMaterialReceiptService,
   GetMaterialReceiptByIdService,
   DetailInfoGetService,
   DetailInfoUpdateService,

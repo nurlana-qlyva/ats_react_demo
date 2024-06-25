@@ -20,7 +20,12 @@ export const GirisFisleriAddService = async (data) => {
   return await http.post(`/MaterialReceipt/AddMaterialReceipt`, data);
 };
 
-// /MaterialReceipt/GetMaterialReceiptById?receiptId=12
 export const GetMaterialReceiptByIdService = async (id) => {
-  return await http.get(`/MaterialReceipt/GetMaterialReceiptById?receiptId=${id}`);
+  return await http.get(
+    `/MaterialReceipt/GetMaterialReceiptById?receiptId=${id}`
+  );
+};
+
+export const UpdateMaterialReceiptService = async (data) => {
+  return await http.post(`/MaterialReceipt/UpdateMaterialReceipt`, data);
 };
