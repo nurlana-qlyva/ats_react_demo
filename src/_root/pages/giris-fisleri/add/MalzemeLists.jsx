@@ -500,7 +500,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                     //   const result = watch("edit_miktar") * e.target.value
                     //   setValue("edit_araToplam", result)
                     // }}
-                    onChange={(e) => field.onChange(e)}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      const result = watch("edit_miktar") * e;
+                      setValue("edit_araToplam", result);
+                    }}
                   />
                 )}
               />
@@ -656,10 +660,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
                       if (e) {
                         if (kdvDH === "haric" || kdvDH === "Hariç") {
-                          kdvOran = e * 100 / araToplam
-                        }
-                         else if (kdvDH === "dahil" || kdvDH == "Dahil") {
-                          kdvOran = (e * 100 / (toplam - e)).toFixed(2)
+                          kdvOran = (e * 100) / araToplam;
+                        } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
+                          kdvOran = ((e * 100) / (toplam - e)).toFixed(2);
                         }
                         setValue("edit_kdvOrani", kdvOran);
                       }
