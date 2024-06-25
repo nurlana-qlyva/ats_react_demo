@@ -25,6 +25,7 @@ import {
   GirisFisleriListGetService,
   GirisFisleriListSearchService,
 } from "../../../api/service";
+import UpdateModal from "./update/UpdateModal";
 // import UpdateModal from './update/UpdateModal'
 
 const breadcrumb = [
@@ -131,19 +132,23 @@ const GirisFisleri = () => {
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
-  const [record, setRecord] = useState(false);
+  const [id, setId] = useState(null);
 
   const baseColumns = [
     {
-      title: t("tarih"),
-      dataIndex: "tarih",
-      key: 1,
-      render: (text) => dayjs(text).format("DD.MM.YYYY"),
-    },
-    {
       title: t("fisNo"),
       dataIndex: "fisNo",
+      key: 1,
+      render: (text, record) => <Button onClick={() => {
+        setUpdateModal(true)
+        setId(record.mlzFisId)
+      }}>{text}</Button>
+    },
+    {
+      title: t("tarih"),
+      dataIndex: "tarih",
       key: 2,
+      render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
       title: t("firmaTanimi"),
@@ -405,7 +410,13 @@ const GirisFisleri = () => {
           <div>{/* <OperationsInfo ids={selectedRowKeys} /> */}</div>
         </div>
       </div>
-      {/* <UpdateModal updateModal={updateModal} setUpdateModal={setUpdateModal} setStatus={setStatus} status={status} id={record.malzemeId} /> */}
+      <UpdateModal
+        updateModal={updateModal}
+        setUpdateModal={setUpdateModal}
+        setStatus={setStatus}
+        status={status}
+        id={id}
+      />
       <div className="content">
         <DndContext
           sensors={sensors}

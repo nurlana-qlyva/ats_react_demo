@@ -41,7 +41,6 @@ const AddModal = ({ setStatus }) => {
   });
 
   const { handleSubmit, reset, setValue, watch } = methods;
-
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -63,6 +62,7 @@ const AddModal = ({ setStatus }) => {
         girisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: false,
+        kdvDahilHaric: item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false
       });
     });
 

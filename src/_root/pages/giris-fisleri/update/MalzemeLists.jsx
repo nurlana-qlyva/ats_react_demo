@@ -39,9 +39,37 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     const newData = dataSource.filter((item) => item.key !== key.key);
     const newRows = selectedRows.filter((item) => item.malzemeId !== key.key);
     setDataSource(newData);
-    setTableData(newData);
+    // setTableData(newData);
     setSelectedRows([...newRows]);
   };
+  
+  useEffect(() => {
+    const newRows = tableData.map((item) => ({
+      key: item.malzemeId,
+      malzemeKod: item.malezemeKod,
+      malzemeTanim: item.malezemeTanim,
+      miktar: item.miktar,
+      aciklama: item.aciklama,
+      birim: item.birim,
+      fiyat: item.fiyat,
+      araToplam: item.araToplam,
+      kdvOran: item.kdvOran,
+      kdvTutar: item.kdvToplam,
+      indirimOran: item.indirimOran,
+      indirimTutar: item.indirim,
+      lokasyon: item.lokasyon,
+      lokasyonId: item.lokasyonId,
+      toplam: item.toplam,
+      aciklama: item.aciklama,
+      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
+      kdvTutar: item.kdvDahilHaric
+        ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
+        : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
+    }));
+    setDataSource([...newRows]);
+    setSelectedRows([...newRows]);
+  }, [tableData]);
+
   const defaultColumns = [
     {
       title: t("malzemeKodu"),
@@ -137,31 +165,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         </Popconfirm>
       ),
     },
-    // {
-    //   title: "",
-    //   dataIndex: "edit",
-    //   render: (_, record) => (
-    //     <Button
-    //       onClick={() => {
-    //         setEditModal(true);
-    //         setRecord(record);
-    //         setValue("edit_malzemeTanimi", record.malzemeTanim);
-    //         setValue("edit_miktar", record.miktar);
-    //         setValue("birim", record.birim);
-    //         setValue("edit_birim", record.birimId);
-    //         setValue("edit_fiyat", record.fiyat);
-    //         setValue("edit_araToplam", record.araToplam);
-    //         setValue("edit_kdvOrani", record.kdvOran);
-    //         setValue("edit_toplam", record.toplam);
-    //         setValue("edit_aciklama", record.aciklama);
-    //         setValue("edit_kdv", record.kdvDH);
-    //       }}
-    //       style={{ border: "none", color: "#5B548B" }}
-    //     >
-    //       <EditOutlined />
-    //     </Button>
-    //   ),
-    // },
   ];
 
   useEffect(() => {
@@ -234,7 +237,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     const newRows = selectedRows.map((item) => ({
       key: item.malzemeId,
       malzemeKod: item.malzemeKod,
-      malzemeTanim: item.malzemeTipKodText,
+      malzemeTanim: item.tanim,
       miktar: 1,
       birim: item.birim,
       fiyat: item.fiyat,
@@ -264,7 +267,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
     const updatedDataSource = [...dataSource, ...filteredNewRows];
     setDataSource(updatedDataSource);
-    setTableData(updatedDataSource);
+    // setTableData(updatedDataSource);
     setIsModalOpen(false);
     setSelectedRowKeys([]);
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
@@ -329,7 +332,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       };
 
       setDataSource(newData);
-      setTableData(newData);
+      // setTableData(newData);
     }
 
     setEditModal(false);
