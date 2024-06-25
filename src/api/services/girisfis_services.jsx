@@ -1,0 +1,21 @@
+import http from "../http";
+
+export const GirisFisleriListGetService = async (page) => {
+  return await http.post(
+    `/MaterialReceipt/GetMaterialReceiptList?page=${page}`
+  );
+};
+
+export const GirisFisleriListSearchService = async (page, parameter) => {
+  return await http.post(
+    `/MaterialReceipt/GetMaterialReceiptList?page=${page}&parameter=${parameter}`
+  );
+};
+
+export const GirisFisCodeGetService = async () => {
+  return await http.get(`/Numbering/GetModuleCodeByCode?code=STOK_FIS_ALIS`);
+};
+
+export const GirisFisleriAddService = async (data) => {
+  return await http.post(`/MaterialReceipt/AddMaterialReceipt`, data);
+};
