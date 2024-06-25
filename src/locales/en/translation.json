@@ -54,11 +54,6 @@
     "miktar": "Quantity",
     "tutar": "Amount",
     "tuketim": "Average Consumption",
-
-
-
-
-
     "malzemeKodu": "Material Code",
     "malzemeTanimi": "Malzeme Description",
     "malzemeTipi": "Malzeme Type",
@@ -80,8 +75,11 @@
     "barkodNo": "Barcode Number",
     "girenMiktar": "Entered Amount",
     "cikanMiktar": "Outputed Amount",
-    "yedekParca": "Yedek Parça",
-    "sarfMalz": "Sarf Malzeme",
+
+
+
+    "yedekParca": "Spare Part",
+    "sarfMalz": "Supplies",
     "demirbas": "Demirbaş",
     "olusturma": "Oluşturma",
     "degistirme": "Değiştirme",

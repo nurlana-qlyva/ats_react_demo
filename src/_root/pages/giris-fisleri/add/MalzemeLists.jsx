@@ -607,7 +607,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
-              <label>{t("kdvOrani")}</label>
+              <label>{t("kdvOrani")} %</label>
               <Controller
                 name="edit_kdvOrani"
                 control={control}
