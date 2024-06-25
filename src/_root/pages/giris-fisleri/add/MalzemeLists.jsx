@@ -462,10 +462,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                       const result = watch("edit_fiyat") * e.target.value;
                       setValue("edit_araToplam", result);
                     }}
-                    // onBlur={e => {
-                    //   const result = watch("edit_fiyat") * e.target.value
-                    //   setValue("edit_araToplam", result)
-                    // }}
                     onChange={(e) => field.onChange(e)}
                   />
                 )}
@@ -537,20 +533,51 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                   <InputNumber
                     {...field}
                     className="w-full"
-                    onPressEnter={(e) => {
-                      const indirimOrani = +watch("edit_indirimOrani");
+                    onChange={(e) => {
+                      field.onChange(e);
                       const araToplam = +watch("edit_araToplam");
-                      const indirimTutar = (araToplam * indirimOrani) / 100;
+                      const kdvDH = watch("edit_kdv");
+                      const kdvOrani = +watch("edit_kdvOrani");
+                      let toplam;
+                      let result;
+                      let kdvTutar;
+                      let indirimTutar;
+
+                      if (kdvDH === "haric" || kdvDH === "Hariç") {
+                        if (e) {
+                          indirimTutar = (araToplam * e) / 100;
+                          result = araToplam - indirimTutar;
+                          kdvTutar = (result * kdvOrani) / 100;
+                          toplam = +result + +kdvTutar;
+                        } else {
+                          kdvTutar = araToplam * (kdvOrani / 100);
+                          toplam = +araToplam + +kdvTutar;
+                        }
+                      } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
+                        if (e) {
+                          kdvTutar = (
+                            araToplam -
+                            araToplam / (1 + kdvOrani / 100)
+                          ).toFixed(2);
+                          indirimTutar = (
+                            ((araToplam - kdvTutar) * e) /
+                            100
+                          ).toFixed(2);
+                          result = araToplam - kdvTutar - indirimTutar;
+                          toplam = +result.toFixed(2);
+                        } else {
+                          kdvTutar = (
+                            araToplam -
+                            araToplam / (1 + kdvOrani / 100)
+                          ).toFixed(2);
+                          toplam = +araToplam.toFixed(2);
+                        }
+                      }
+
                       setValue("edit_indirimTutari", indirimTutar);
-                      const toplam = araToplam - indirimTutar;
+                      setValue("edit_kdvTutar", kdvTutar);
                       setValue("edit_toplam", toplam);
                     }}
-                    // onBlur={e => {
-                    //   const result = watch("edit_toplam") * e.target.value / 100
-                    //   setValue("edit_indirimTutari", result)
-                    //   setValue("edit_toplam", +watch("edit_indirimTutari") + +watch("edit_toplam"))
-                    // }}
-                    onChange={(e) => field.onChange(e)}
                   />
                 )}
               />
@@ -596,9 +623,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                         }
 
                         setValue("edit_indirimOrani", indirimOran);
-                        setValue("edit_kdvTutar", kdvTutar);
-                        setValue("edit_toplam", toplam);
+                      } else {
+                        setValue("edit_indirimOrani", null);
                       }
+                      setValue("edit_kdvTutar", kdvTutar);
+                      setValue("edit_toplam", toplam);
                     }}
                   />
                 )}

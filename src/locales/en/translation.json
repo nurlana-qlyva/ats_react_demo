@@ -75,12 +75,11 @@
     "barkodNo": "Barcode Number",
     "girenMiktar": "Entered Amount",
     "cikanMiktar": "Outputed Amount",
-
-
-
     "yedekParca": "Spare Part",
     "sarfMalz": "Supplies",
-    "demirbas": "Demirbaş",
+
+
+    "demirbas": "Fixture",
     "olusturma": "Oluşturma",
     "degistirme": "Değiştirme",
     "malzemeId": "Malzeme İD",
