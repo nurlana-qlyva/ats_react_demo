@@ -61,7 +61,7 @@ const AddModal = ({ setStatus }) => {
         kdvToplam: +values.toplam_kdvToplam || 0,
         girisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
-        isPriceChanged: item.fiyat,
+        isPriceChanged: item.isPriceChanged,
         kdvDahilHaric: item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false
       });
     });
