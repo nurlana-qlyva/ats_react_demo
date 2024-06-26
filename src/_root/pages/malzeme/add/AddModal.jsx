@@ -6,6 +6,7 @@ import PersonalFields from "../../../components/form/PersonalFields";
 import GeneralInfo from "./GeneralInfo";
 import dayjs from "dayjs";
 import {
+  CodeItemValidateService,
   MalzemeAddService,
   MalzemeCodeGetService,
 } from "../../../../api/service";
@@ -13,6 +14,7 @@ import { t } from "i18next";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
+  const [isValid, setIsValid] = useState("normal");
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -117,7 +119,19 @@ const AddModal = ({ setStatus }) => {
     defaultValues: defaultValues,
   });
 
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
+
+  useEffect(() => {
+    if (watch("malzemeKod")) {
+      const body = {
+        tableName: "Malzeme",
+        code: watch("malzemeKod"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    }
+  }, [watch("malzemeKod")]);
 
   const personalProps = {
     form: "MALZEME",
@@ -129,7 +143,7 @@ const AddModal = ({ setStatus }) => {
     {
       key: "1",
       label: "Genel Bilgiler",
-      children: <GeneralInfo />,
+      children: <GeneralInfo isValid={isValid} />,
     },
     {
       key: "2",
@@ -173,29 +187,29 @@ const AddModal = ({ setStatus }) => {
       // "degistirme": values.degistirme,
       // "aciklama": values.aciklama,
       olcu: values.olcu,
-      "ozelAlan1": values.ozelAlan1 || "",
-      "ozelAlan2": values.ozelAlan2 || "",
-      "ozelAlan3": values.ozelAlan3 || "",
-      "ozelAlan4": values.ozelAlan4 || "",
-      "ozelAlan5": values.ozelAlan5 || "",
-      "ozelAlan6": values.ozelAlan6 || "",
-      "ozelAlan7": values.ozelAlan7 || "",
-      "ozelAlan8": values.ozelAlan8 || "",
-      "ozelAlanKodId9": values.ozelAlanKodId9 || 0,
-      "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
-      "ozelAlan11": values.ozelAlan11 || 0,
-      "ozelAlan12": values.ozelAlan12 || 0,
-      kdvDahilHaric: values.kdvDahilHaric === "dahil" ? true : false
+      ozelAlan1: values.ozelAlan1 || "",
+      ozelAlan2: values.ozelAlan2 || "",
+      ozelAlan3: values.ozelAlan3 || "",
+      ozelAlan4: values.ozelAlan4 || "",
+      ozelAlan5: values.ozelAlan5 || "",
+      ozelAlan6: values.ozelAlan6 || "",
+      ozelAlan7: values.ozelAlan7 || "",
+      ozelAlan8: values.ozelAlan8 || "",
+      ozelAlanKodId9: values.ozelAlanKodId9 || 0,
+      ozelAlanKodId10: values.ozelAlanKodId10 || 0,
+      ozelAlan11: values.ozelAlan11 || 0,
+      ozelAlan12: values.ozelAlan12 || 0,
+      kdvDahilHaric: values.kdvDahilHaric === "dahil" ? true : false,
     };
 
     MalzemeAddService(body).then((res) => {
       if (res?.data.statusCode === 200) {
-        setStatus(true)
-        setIsModalOpen(false)
-        reset(defaultValues)
+        setStatus(true);
+        setIsModalOpen(false);
+        reset(defaultValues);
       }
     });
-    setStatus(false)
+    setStatus(false);
   });
 
   const footer = [
@@ -206,8 +220,8 @@ const AddModal = ({ setStatus }) => {
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
-        setIsModalOpen(false)
-        reset(defaultValues)
+        setIsModalOpen(false);
+        reset(defaultValues);
       }}
     >
       {t("iptal")}

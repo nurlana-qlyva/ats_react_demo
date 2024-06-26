@@ -7,7 +7,7 @@ import MalzemeTipi from "../../../components/form/MalzemeTipi";
 import Depo from "../../../components/form/Depo";
 import FirmaUnvani from "../../../components/form/FirmaUnvani";
 
-const GeneralInfo = () => {
+const GeneralInfo = ({ isValid }) => {
   const { control } = useFormContext();
 
   return (
@@ -24,6 +24,13 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
+                      style={
+                        isValid === "error"
+                          ? { borderColor: "#dc3545" }
+                          : isValid === "success"
+                          ? { borderColor: "#23b545" }
+                          : { color: "#000" }
+                      }
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}

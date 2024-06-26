@@ -7,10 +7,12 @@ import MalzemeTipi from "../../../components/form/MalzemeTipi";
 import Depo from "../../../components/form/Depo";
 import { useEffect } from "react";
 
-const GeneralInfo = () => {
+const GeneralInfo = ({isValid}) => {
   const { control, setValue } = useFormContext();
 
-  useEffect(() => {setValue("kdvDahilHaric", "dahil")}, [])
+  useEffect(() => {
+    setValue("kdvDahilHaric", "dahil");
+  }, []);
 
   return (
     <>
@@ -26,6 +28,13 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
+                      style={
+                        isValid === "error"
+                          ? { borderColor: "#dc3545" }
+                          : isValid === "success"
+                          ? { borderColor: "#23b545" }
+                          : { color: "#000" }
+                      }
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}
@@ -143,14 +152,14 @@ const GeneralInfo = () => {
                     control={control}
                     render={({ field }) => (
                       <Select
-                      className="w-full"
+                        className="w-full"
                         {...field}
                         defaultValue="dahil"
                         options={[
                           { value: "dahil", label: <span>Dahil</span> },
                           { value: "haric", label: <span>Hariç</span> },
                         ]}
-                        onChange={e => field.onChange(e)}
+                        onChange={(e) => field.onChange(e)}
                       />
                     )}
                   />

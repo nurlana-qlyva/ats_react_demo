@@ -4,14 +4,25 @@ import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { Button, message, Modal, Tabs } from "antd";
 import { uploadFile, uploadPhoto } from "../../../../utils/upload";
-import { MalzemeDataByIdGetService, MalzemeUpdateService } from "../../../../api/service";
+import {
+  CodeItemValidateService,
+  MalzemeDataByIdGetService,
+  MalzemeUpdateService,
+} from "../../../../api/service";
 import PersonalFields from "../../../components/form/PersonalFields";
 import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
 import GeneralInfo from "./GeneralInfo";
 import { t } from "i18next";
 
-const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => {
+const UpdateModal = ({
+  updateModal,
+  setUpdateModal,
+  setStatus,
+  status,
+  id,
+}) => {
+  const [isValid, setIsValid] = useState("normal");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -140,7 +151,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "MALZEME", images)
+      const data = uploadPhoto(id, "MALZEME", images);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -152,13 +163,25 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
   const uploadFiles = () => {
     try {
       setLoadingFiles(true);
-      uploadFile(id, "MALZEME", files)
+      uploadFile(id, "MALZEME", files);
     } catch (error) {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
       setLoadingFiles(false);
     }
   };
+
+  useEffect(() => {
+    if (watch("malzemeKod")) {
+      const body = {
+        tableName: "Malzeme",
+        code: watch("malzemeKod"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    }
+  }, [watch("malzemeKod")]);
 
   const personalProps = {
     form: "MALZEME",
@@ -170,7 +193,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
     {
       key: "1",
       label: "Genel Bilgiler",
-      children: <GeneralInfo />,
+      children: <GeneralInfo isValid={isValid} />,
     },
     {
       key: "2",
@@ -199,43 +222,46 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
         />
       ),
     },
-  ]
+  ];
 
   useEffect(() => {
-    MalzemeDataByIdGetService(id).then(res => {
-      setValue("malzemeKod", res.data.malzemeKod)
-      setValue("aktif", res.data.aktif)
-      setValue("barKodNo", res.data.barKodNo)
-      setValue("birim", res.data.birim)
-      setValue("birimKodId", res.data.birimKodId)
-      setValue("bolum", res.data.bolum)
-      setValue("demirBas", res.data.demirBas)
-      setValue("depo", res.data.depo)
-      setValue("depoId", res.data.depoId)
-      setValue("fiyat", res.data.fiyat)
-      setValue("kdvOran", res.data.kdvOran)
-      setValue("malzemeTipKodText", res.data.malzemeTipKodText)
-      setValue("malzemeTipKodId", res.data.malzemeTipKodId)
-      setValue("olcu", res.data.olcu)
-      setValue("raf", res.data.raf)
-      setValue("sarfMlz", res.data.sarfMlz)
-      setValue("seriNo", res.data.seriNo)
-      setValue("tanim", res.data.tanim)
-      setValue("firmaId", res.data.firmaId)
-      setValue("tedarikciFiyat", res.data.tedarikciFiyat)
-      setValue("tedarikciIskontoOran", res.data.tedarikciIskontoOran)
-      setValue("yedekParca", res.data.yedekParca)
-      setValue("unvan", res.data.tedarikci)
-      setValue("kritikMiktar", res.data.kritikMiktar)
-      setValue("kdvDH", res.data.kdvDahilHaric ? "Dahil" : "Hariç")
-      setValue("girenMiktar", res.data.girenMiktar)
-      setValue("sonAlinanFirma", res.data.sonAlinanFirma)
-      setValue("cikanMiktar", res.data.cikanMiktar)
-      setValue("sonFiyat", res.data.sonFiyat)
-      setValue("stokMiktar", res.data.girenMiktar - res.data.cikanMiktar)
-      setValue("sonAlisTarih", dayjs(res.data.sonAlisTarih).format("DD.MM.YYYY"))
-    })
-  }, [id, updateModal])
+    MalzemeDataByIdGetService(id).then((res) => {
+      setValue("malzemeKod", res.data.malzemeKod);
+      setValue("aktif", res.data.aktif);
+      setValue("barKodNo", res.data.barKodNo);
+      setValue("birim", res.data.birim);
+      setValue("birimKodId", res.data.birimKodId);
+      setValue("bolum", res.data.bolum);
+      setValue("demirBas", res.data.demirBas);
+      setValue("depo", res.data.depo);
+      setValue("depoId", res.data.depoId);
+      setValue("fiyat", res.data.fiyat);
+      setValue("kdvOran", res.data.kdvOran);
+      setValue("malzemeTipKodText", res.data.malzemeTipKodText);
+      setValue("malzemeTipKodId", res.data.malzemeTipKodId);
+      setValue("olcu", res.data.olcu);
+      setValue("raf", res.data.raf);
+      setValue("sarfMlz", res.data.sarfMlz);
+      setValue("seriNo", res.data.seriNo);
+      setValue("tanim", res.data.tanim);
+      setValue("firmaId", res.data.firmaId);
+      setValue("tedarikciFiyat", res.data.tedarikciFiyat);
+      setValue("tedarikciIskontoOran", res.data.tedarikciIskontoOran);
+      setValue("yedekParca", res.data.yedekParca);
+      setValue("unvan", res.data.tedarikci);
+      setValue("kritikMiktar", res.data.kritikMiktar);
+      setValue("kdvDH", res.data.kdvDahilHaric ? "Dahil" : "Hariç");
+      setValue("girenMiktar", res.data.girenMiktar);
+      setValue("sonAlinanFirma", res.data.sonAlinanFirma);
+      setValue("cikanMiktar", res.data.cikanMiktar);
+      setValue("sonFiyat", res.data.sonFiyat);
+      setValue("stokMiktar", res.data.girenMiktar - res.data.cikanMiktar);
+      setValue(
+        "sonAlisTarih",
+        dayjs(res.data.sonAlisTarih).format("DD.MM.YYYY")
+      );
+    });
+  }, [id, updateModal]);
 
   const onSubmit = handleSubmit((values) => {
     const body = {
@@ -262,20 +288,20 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, status, id }) => 
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
       olcu: values.olcu,
-      kdvDahilHaric: values.kdvDH === "dahil" ? true : false
+      kdvDahilHaric: values.kdvDH === "dahil" ? true : false,
     };
 
-    MalzemeUpdateService(body).then(res => {
-        if (res?.data.statusCode === 202) {
-          setStatus(true)
-          setUpdateModal(false)
-          reset(defaultValues)
-        }
-    })
-    setStatus(false)
+    MalzemeUpdateService(body).then((res) => {
+      if (res?.data.statusCode === 202) {
+        setStatus(true);
+        setUpdateModal(false);
+        reset(defaultValues);
+      }
+    });
+    setStatus(false);
 
-    uploadImages()
-    uploadFiles()
+    uploadImages();
+    uploadFiles();
   });
 
   const footer = [
