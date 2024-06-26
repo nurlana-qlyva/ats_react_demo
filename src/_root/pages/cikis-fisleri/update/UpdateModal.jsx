@@ -6,8 +6,8 @@ import { Button, Modal } from "antd";
 import {
   CodeItemValidateService,
 } from "../../../../api/service";
-import GeneralInfo from "../add/GeneralInfo";
-import EkBilgiler from "../add/EkBilgiler";
+import GeneralInfo from "./GeneralInfo";
+import EkBilgiler from "./EkBilgiler";
 import MalzemeLists from "./MalzemeLists";
 import { GetCikisMaterialReceiptByIdService, UpdateCikisMaterialReceiptService } from "../../../../api/services/cıkısfıs_services";
 
@@ -21,7 +21,8 @@ const UpdateModal = ({
   const [tableData, setTableData] = useState([]);
   const [data, setData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState("normal");
+
   const [record, setRecord] = useState(true);
 
   const defaultValues = {
@@ -83,9 +84,7 @@ const UpdateModal = ({
         code: watch("fisNo"),
       };
       CodeItemValidateService(body).then((res) => {
-        if (!res.data.status) {
-          setIsValid(false);
-        }
+        !res.data.status ? setIsValid("success") : setIsValid("error");
       });
       setIsValid(true);
     }

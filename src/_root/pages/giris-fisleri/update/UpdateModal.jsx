@@ -7,8 +7,8 @@ import {
   CodeItemValidateService,
   GetMaterialReceiptByIdService,
 } from "../../../../api/service";
-import GeneralInfo from "../add/GeneralInfo";
-import EkBilgiler from "../add/EkBilgiler";
+import GeneralInfo from "./GeneralInfo";
+import EkBilgiler from "./EkBilgiler";
 import MalzemeLists from "./MalzemeLists";
 import { UpdateMaterialReceiptService } from "../../../../api/services/girisfis_services";
 
@@ -78,25 +78,16 @@ const UpdateModal = ({
   }, [id, updateModal]);
 
   useEffect(() => {
-    let isMounted = true;
     if (watch("fisNo")) {
       const body = {
         tableName: "Fis",
         code: watch("fisNo"),
       };
       CodeItemValidateService(body).then((res) => {
-        if (!isMounted) {
-          console.log(res.data.status)
-          !res.data.status ?
-          setIsValid("success") :
-          setIsValid("error")
-        }
+        !res.data.status ? setIsValid("success") : setIsValid("error");
       });
     }
-    return () => {
-      isMounted = false;
-    };
-  }, [watch("fisNo")]);
+  }, [updateModal, watch("fisNo")]);
 
   useEffect(() => {
     if (tableData.length > 0) {

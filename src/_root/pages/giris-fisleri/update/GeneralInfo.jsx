@@ -21,7 +21,7 @@ dayjs.locale("tr");
 const GeneralInfo = ({ isValid }) => {
   const { control, setValue, watch } = useFormContext();
   const { setPlaka } = useContext(PlakaContext);
-console.log()
+
   useEffect(() => {
     CustomCodeControlService("Vehicle/GetVehiclePlates").then((res) => {
       const updatedData = res.data.map((item) => {
@@ -50,7 +50,7 @@ console.log()
   return (
     <>
       <div className="grid gap-1 border p-20">
-        <div>
+        <div style={{ display: "none" }} >
           <Controller
             name="mlzFisId"
             control={control}
@@ -81,7 +81,7 @@ console.log()
             />
           </div>
         </div>
-        <div className="col-span 6">
+        <div className="col-span-4">
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">

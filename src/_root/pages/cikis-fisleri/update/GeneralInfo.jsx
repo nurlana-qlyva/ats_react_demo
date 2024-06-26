@@ -50,7 +50,7 @@ const GeneralInfo = ({ isValid }) => {
   return (
     <>
       <div className="grid gap-1 border p-20">
-        <div>
+        <div style={{ display: "none" }}>
           <Controller
             name="mlzFisId"
             control={control}
@@ -67,11 +67,10 @@ const GeneralInfo = ({ isValid }) => {
               control={control}
               render={({ field }) => (
                 <Input
-                  {...field}
-                  style={
-                    !isValid
+                  {...field} style={
+                    isValid === "error"
                       ? { borderColor: "#dc3545" }
-                      : isValid
+                      : isValid === "success"
                       ? { borderColor: "#23b545" }
                       : { color: "#000" }
                   }
@@ -81,7 +80,7 @@ const GeneralInfo = ({ isValid }) => {
             />
           </div>
         </div>
-        <div className="col-span 6">
+        <div className="col-span-4">
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
