@@ -14,7 +14,6 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import TextArea from "antd/lib/input/TextArea";
-import Plaka from "../../../components/form/Plaka";
 import Birim from "../../../components/form/Birim";
 import MalzemeLokasyon from "../../../components/form/MalzemeLokasyon";
 import MalzemeTable from "./MalzemeTable";
@@ -453,7 +452,7 @@ const MalzemeLists = ({
         size="small"
       />
       <Modal
-        title="Fiş Giriş Detayı"
+        title="Fiş Çıkış Detayı"
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}

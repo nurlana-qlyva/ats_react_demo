@@ -2,13 +2,13 @@ import http from "../http";
 
 export const GirisFisleriListGetService = async (page) => {
   return await http.post(
-    `/MaterialReceipt/GetMaterialReceiptList?page=${page}`
+    `/MaterialReceipt/GetMaterialEntryReceiptList?page=${page}`
   );
 };
 
 export const GirisFisleriListSearchService = async (page, parameter) => {
   return await http.post(
-    `/MaterialReceipt/GetMaterialReceiptList?page=${page}&parameter=${parameter}`
+    `/MaterialReceipt/GetMaterialEntryReceiptList?page=${page}&parameter=${parameter}`
   );
 };
 
@@ -27,7 +27,7 @@ export const GetMaterialReceiptByIdService = async (id) => {
 };
 
 export const UpdateMaterialReceiptService = async (data) => {
-  return await http.post(`/MaterialReceipt/UpdateMaterialReceipt`, data);
+  return await http.post(`/MaterialReceipt/UpdateMaterialEntryReceipt`, data);
 };
 
 export const DeleteUpdatedMaterialReceiptService = async (id) => {

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Button,
+  Checkbox,
   Form,
   Input,
   InputNumber,
@@ -14,20 +15,12 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import TextArea from "antd/lib/input/TextArea";
-import Plaka from "../../../components/form/Plaka";
 import Birim from "../../../components/form/Birim";
 import MalzemeLokasyon from "../../../components/form/MalzemeLokasyon";
 import MalzemeTable from "./MalzemeTable";
 import MalzemePlaka from "../../../components/form/MalzemePlaka";
-import { DeleteUpdatedMaterialReceiptService } from "../../../../api/services/girisfis_services";
 
-const MalzemeLists = ({
-  setTableData,
-  tableData,
-  isSuccess,
-  setIsSuccess,
-  data,
-}) => {
+const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const { control, setValue, watch, handleSubmit } = useFormContext();
   const [dataSource, setDataSource] = useState([]);
   const [isOpen, setIsModalOpen] = useState(false);
@@ -49,40 +42,7 @@ const MalzemeLists = ({
     setDataSource(newData);
     setTableData(newData);
     setSelectedRows([...newRows]);
-    const deletedRow = dataSource.find(item => item.key === key.key)
-    DeleteUpdatedMaterialReceiptService(deletedRow.siraNo).then(res => console.log(res.data))
   };
-  useEffect(() => {
-    const newRows = data.map((item) => ({
-      key: item.malzemeId,
-      siraNo: item.siraNo,
-      malzemeKod: item.malezemeKod,
-      malzemeTanim: item.malezemeTanim,
-      malzemeTipKodText: item.malzemeTip,
-      miktar: item.miktar,
-      aciklama: item.aciklama,
-      birim: item.birim,
-      fiyat: item.fiyat,
-      plaka: item.plaka,
-      mlzAracId: item.mlzAracId,
-      araToplam: item.araToplam,
-      kdvOran: item.kdvOran,
-      indirimOran: item.indirimOran,
-      indirimTutar: item.indirim,
-      lokasyon: item.lokasyon,
-      lokasyonId: item.lokasyonId,
-      toplam: item.toplam,
-      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
-      kdvTutar: item.kdvDahilHaric
-        ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
-        : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
-      isPriceChanged: false,
-    }));
-    setDataSource([...newRows]);
-    // setTableData([...newRows]);
-    setSelectedRows([...newRows]);
-  }, [data]);
-
   const defaultColumns = [
     {
       title: t("malzemeKodu"),
@@ -92,10 +52,7 @@ const MalzemeLists = ({
           onClick={() => {
             setEditModal(true);
             setRecord(record);
-            console.log(record);
             setValue("edit_malzemeTanimi", record.malzemeTanim);
-            setValue("edit_malzemeKod", record.malzemeKod);
-            setValue("edit_malzemeTip", record.malzemeTipKodText);
             setValue("edit_miktar", record.miktar);
             setValue("birim", record.birim);
             setValue("edit_birim", record.birimId);
@@ -103,15 +60,12 @@ const MalzemeLists = ({
             setValue("edit_araToplam", record.araToplam);
             setValue("edit_kdvOrani", record.kdvOran);
             setValue("edit_toplam", record.toplam);
-            setValue("edit_aciklama", record.aciklama);
-            setValue("edit_kdv", record.kdvDH);
-            setValue("malzeme_plaka", record.plaka);
-            setValue("edit_plakaId", record.mlzAracId);
+            setValue("edit_malzemeKod", record.malzemeKod);
+            setValue("edit_malzemeTip", record.malzemeTipKodText);
+            setValue("edit_aciklama", record.malzemeTipKodText);
             setValue("edit_lokasyonId", record.lokasyonId);
             setValue("edit_lokasyon", record.lokasyon);
-            setValue("edit_aciklama", record.aciklama);
-            setValue("edit_indirimOrani", record.indirimOran);
-            setValue("edit_indirimTutari", record.indirim);
+            setValue("edit_kdv", record.kdvDH);
           }}
         >
           {text}
@@ -255,10 +209,12 @@ const MalzemeLists = ({
     watch("edit_indirimTutari"),
     watch("edit_toplam"),
   ]);
+
   useEffect(() => {
     let araToplam = watch("edit_miktar") * watch("edit_fiyat");
     setValue("edit_araToplam", araToplam);
   }, [watch("edit_miktar")]);
+
   const handleAdd = () => {
     const newRows = selectedRows.map((item) => ({
       key: item.malzemeId,
@@ -273,8 +229,6 @@ const MalzemeLists = ({
       toplam: null,
       aciklama: item.aciklama,
       kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
-      plaka: item.plaka,
-      mlzAracId: item.mlzAracId,
       lokasyonId: watch("lokasyonId"),
       lokasyon: watch("lokasyon"),
       kdvTutar: item.kdvDahilHaric
@@ -453,7 +407,7 @@ const MalzemeLists = ({
         size="small"
       />
       <Modal
-        title="Fiş Giriş Detayı"
+        title="Fiş Çıkış Detayı"
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
@@ -528,7 +482,6 @@ const MalzemeLists = ({
               />
             </div>
           </div>
-
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("birim")}</label>

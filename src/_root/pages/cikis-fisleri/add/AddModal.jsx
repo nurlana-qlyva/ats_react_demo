@@ -6,12 +6,9 @@ import GeneralInfo from "./GeneralInfo";
 import MalzemeLists from "./MalzemeLists";
 import EkBilgiler from "./EkBilgiler";
 import dayjs from "dayjs";
-import {
-  CodeItemValidateService,
-  GirisFisCodeGetService,
-  GirisFisleriAddService,
-} from "../../../../api/service";
 import { t } from "i18next";
+import { CikisFisCodeGetService, CikisFisleriAddService } from "../../../../api/services/cıkısfıs_services";
+import { CodeItemValidateService } from "../../../../api/service";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
@@ -24,8 +21,8 @@ const AddModal = ({ setStatus }) => {
     fisNo: "",
     tarih: dayjs(new Date()),
     saat: dayjs(new Date()),
-    girisDepoSiraNo: null,
-    girisDepo: "",
+    cikisDepoSiraNo: null,
+    cikisDepo: "",
     firmaId: null,
     lokasyonId: null,
     lokasyon: "",
@@ -59,11 +56,12 @@ const AddModal = ({ setStatus }) => {
         indirim: item.indirimTutar || 0,
         araToplam: item.araToplam || 0,
         kdvToplam: +values.toplam_kdvToplam || 0,
-        girisDepoSiraNo: values.girisDepoSiraNo || 0,
+        cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: item.isPriceChanged,
-        kdvDahilHaric: item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
-        gc: 1
+        kdvDahilHaric:
+          item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
+        gc: -1,
       });
     });
 
@@ -71,7 +69,7 @@ const AddModal = ({ setStatus }) => {
       fisNo: values.fisNo,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       saat: dayjs(values.saat).format("HH:mm:ss"),
-      girisDepoSiraNo: values.girisDepoSiraNo || 0,
+      cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
       firmaId: values.firmaId || 0,
       lokasyonId: values.lokasyonId || 0,
       aracId: values.aracId || 0,
@@ -82,11 +80,11 @@ const AddModal = ({ setStatus }) => {
       kdvToplam: values.toplam_kdvToplam,
       genelToplam: values.toplam_genelToplam,
       materialMovements,
-      gc: 1, 
-      fisTip: "MALZEME"
+      gc: -1,
+      fisTip: "MALZEME",
     };
 
-    GirisFisleriAddService(body).then((res) => {
+    CikisFisleriAddService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsModalOpen(false);
@@ -100,7 +98,7 @@ const AddModal = ({ setStatus }) => {
 
   useEffect(() => {
     if (isOpen && isFirstRender.current) {
-      GirisFisCodeGetService().then((res) => setValue("fisNo", res.data));
+      CikisFisCodeGetService().then((res) => setValue("fisNo", res.data));
     }
   }, [isOpen, setValue]);
 
@@ -173,14 +171,13 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> Ekle
       </Button>
       <Modal
-        title="Fiş Giriş Bilgisi Ekle"
+        title="Fiş Çıkış Bilgisi Ekle"
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
         footer={footer}
         width={1300}
         closeIcon={null}
-        // closable={false}
       >
         <FormProvider {...methods}>
           <form>
