@@ -198,7 +198,7 @@ const UpdateModal = ({
   return (
     <>
       <Modal
-        title={t("yakitBilgisiGuncelle")}
+        title="Fiş Giriş Bilgisi Güncelle"
         open={updateModal}
         onCancel={() => setUpdateModal(false)}
         maskClosable={false}

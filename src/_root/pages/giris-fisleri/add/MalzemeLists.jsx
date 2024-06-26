@@ -28,7 +28,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
-      pageSize: 3,
+      pageSize: 5,
     },
   });
   const [editModal, setEditModal] = useState(false);
@@ -61,7 +61,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_araToplam", record.araToplam);
             setValue("edit_kdvOrani", record.kdvOran);
             setValue("edit_toplam", record.toplam);
-            setValue("edit_aciklama", record.aciklama);
+            setValue("edit_malzemeKod", record.malzemeKod);
+            setValue("edit_malzemeTip", record.malzemeTipKodText);
+            setValue("edit_aciklama", record.malzemeTipKodText);
+            setValue("edit_lokasyonId", record.lokasyonId);
+            setValue("edit_lokasyon", record.lokasyon);
             setValue("edit_kdv", record.kdvDH);
           }}
         >
@@ -72,6 +76,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("malzemeTanimi"),
       dataIndex: "malzemeTanim",
+    },
+    {
+      title: t("malzemeTipi"),
+      dataIndex: "malzemeTipKodText",
     },
     {
       title: t("miktar"),
@@ -184,7 +192,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           2
         );
         result = araToplam - kdvTutar - indirimTutar;
-        toplam = +result.toFixed(2);
+        toplam = +result.toFixed(2) + +kdvTutar;
       } else {
         kdvTutar = (araToplam - araToplam / (1 + kdvOrani / 100)).toFixed(2);
         toplam = +araToplam.toFixed(2);
@@ -207,11 +215,13 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     let araToplam = watch("edit_miktar") * watch("edit_fiyat");
     setValue("edit_araToplam", araToplam);
   }, [watch("edit_miktar")]);
+
   const handleAdd = () => {
     const newRows = selectedRows.map((item) => ({
       key: item.malzemeId,
       malzemeKod: item.malzemeKod,
-      malzemeTanim: item.malzemeTipKodText,
+      malzemeTanim: item.tanim,
+      malzemeTipKodText: item.malzemeTipKodText,
       miktar: 1,
       birim: item.birim,
       fiyat: item.fiyat,
@@ -220,6 +230,8 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       toplam: null,
       aciklama: item.aciklama,
       kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
+      lokasyonId: watch("lokasyonId"),
+      lokasyon: watch("lokasyon"),
       kdvTutar: item.kdvDahilHaric
         ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
         : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
@@ -381,12 +393,19 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         bordered
         dataSource={dataSource}
         columns={columns}
-        pagination={tableParams.pagination}
+        pagination={{
+          ...tableParams.pagination,
+          showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+          locale: {
+            items_per_page: `/ ${t("sayfa")}`,
+          },
+        }}
         onChange={handleTableChange}
         scroll={{ x: 1800 }}
         locale={{
           emptyText: "Veri Bulunamadı",
         }}
+        size="small"
       />
       <Modal
         title="Fiş Giriş Detayı"
@@ -434,6 +453,48 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
+              <label>{t("malzemeKodu")}</label>
+              <Controller
+                name="edit_malzemeKod"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    readOnly
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+            </div>
+          </div>
+          <div className="col-span-4">
+            <div className="flex flex-col gap-1">
+              <label>{t("malzemeTipi")}</label>
+              <Controller
+                name="edit_malzemeTip"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    readOnly
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+            </div>
+          </div>
+          <div className="col-span-4">
+            <div className="flex flex-col gap-1">
+              <label>{t("birim")}</label>
+              <Controller
+                name="edit_birim"
+                control={control}
+                render={({ field }) => <Birim field={field} />}
+              />
+            </div>
+          </div>
+          <div className="col-span-4">
+            <div className="flex flex-col gap-1">
               <label>{t("miktar")}</label>
               <Controller
                 name="edit_miktar"
@@ -449,16 +510,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                     onChange={(e) => field.onChange(e)}
                   />
                 )}
-              />
-            </div>
-          </div>
-          <div className="col-span-4">
-            <div className="flex flex-col gap-1">
-              <label>{t("birim")}</label>
-              <Controller
-                name="edit_birim"
-                control={control}
-                render={({ field }) => <Birim field={field} />}
               />
             </div>
           </div>

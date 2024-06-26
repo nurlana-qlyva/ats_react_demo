@@ -170,7 +170,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> Ekle
       </Button>
       <Modal
-        title="Fiş Giriş Detayı"
+        title="Fiş Giriş Bilgisi Ekle"
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}

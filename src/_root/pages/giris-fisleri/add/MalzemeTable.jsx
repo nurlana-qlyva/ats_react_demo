@@ -33,13 +33,13 @@ const MalzemeTable = ({
     },
     {
       title: t("malzemeTanimi"),
-      dataIndex: "malzemeTipKodText",
-      key: "malzemeTipKodText",
+      dataIndex: "tanim",
+      key: "tanim",
     },
     {
       title: t("malzemeTipi"),
-      dataIndex: "malzemeTip",
-      key: "malzemeTip",
+      dataIndex: "malzemeTipKodText",
+      key: "malzemeTipKodText",
     },
     {
       title: t("birim"),

@@ -19,32 +19,24 @@ const EkBilgiler = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("indirim")}</label>
+                <label>{t("araToplam")}</label>
                 <Controller
-                  name="toplam_indirim"
+                  name="toplam_araToplam"
                   control={control}
                   render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
+                    <InputNumber {...field} className="w-full" readOnly />
                   )}
                 />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("araToplam")}</label>
+                <label>{t("indirim")}</label>
                 <Controller
-                  name="toplam_araToplam"
+                  name="toplam_indirim"
                   control={control}
                   render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
+                    <InputNumber {...field} className="w-full" readOnly />
                   )}
                 />
               </div>
@@ -56,11 +48,7 @@ const EkBilgiler = () => {
                   name="toplam_kdvToplam"
                   control={control}
                   render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
+                    <InputNumber {...field} className="w-full" readOnly />
                   )}
                 />
               </div>
@@ -72,11 +60,7 @@ const EkBilgiler = () => {
                   name="toplam_genelToplam"
                   control={control}
                   render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
+                    <InputNumber {...field} className="w-full" readOnly />
                   )}
                 />
               </div>
