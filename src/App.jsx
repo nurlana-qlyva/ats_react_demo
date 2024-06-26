@@ -12,6 +12,7 @@ import Yakit from './_root/pages/yakit/Yakit'
 import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
 import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
 import CikisFisleri from './_root/pages/cikis-fisleri/CikisFisleri'
+import Hareketler from './_root/pages/hareketler/Hareketler'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/malzeme-tanimlari" element={<MalzemeTanimlari />} />
         <Route path="/giris-fisleri" element={<GirisFisleri />} />
         <Route path="/cikis-fisleri" element={<CikisFisleri />} />
+        <Route path="/hareketler" element={<Hareketler />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
