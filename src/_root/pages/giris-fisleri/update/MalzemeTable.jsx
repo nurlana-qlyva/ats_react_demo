@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
-import { Table } from "antd";
-import { MalzemeListGetService } from "../../../../api/service";
+import { Input, Table } from "antd";
+import {
+  MalzemeListGetService,
+  MalzemeListSearchService,
+} from "../../../../api/service";
 import { t } from "i18next";
 
-const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, keys, rows, setKeys, setRows }) => {
+const MalzemeTable = ({
+  setSelectedRows,
+  selectedRowKeys,
+  setSelectedRowKeys,
+  keys,
+  rows,
+  setKeys,
+  setRows,
+}) => {
   const [data, setData] = useState([]);
+  const [search, setSearch] = useState("");
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -53,7 +65,7 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
       title: t("aciklama"),
       dataIndex: "aciklama",
       key: "aciklama",
-    }
+    },
   ];
 
   useEffect(() => {
@@ -69,7 +81,37 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
       });
       setLoading(false);
     });
-  }, [tableParams.pagination.current]);
+  }, []);
+
+  useEffect(() => {
+    if (search.length >= 3) {
+      MalzemeListSearchService(tableParams?.pagination.current, search).then(
+        (res) => {
+          setData(res?.data.materialList);
+          setTableParams({
+            ...tableParams,
+            pagination: {
+              ...tableParams.pagination,
+              total: res?.data.total_count,
+            },
+          });
+          setLoading(false);
+        }
+      );
+    } else {
+      MalzemeListGetService(tableParams?.pagination.current).then((res) => {
+        setData(res?.data.materialList);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.total_count,
+          },
+        });
+        setLoading(false);
+      });
+    }
+  }, [search, tableParams?.pagination.current]);
 
   const handleRowSelectionChange = (selectedRowKeys) => {
     setSelectedRowKeys(selectedRowKeys);
@@ -78,24 +120,26 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
   const handleHandleRowSelection = (row, selected) => {
     if (selected) {
       if (!keys.includes(row.malzemeId)) {
-        setKeys([...keys, row.malzemeId])
-        setRows([...rows, row])
+        setKeys([...keys, row.malzemeId]);
+        setRows([...rows, row]);
       }
     } else {
-      const filteredKeys = keys.filter(key => key !== row.malzemeId)
-      const filteredRows = rows.filter(item => item.malzemeId !== row.malzemeId)
-      setKeys(filteredKeys)
-      setRows(filteredRows)
+      const filteredKeys = keys.filter((key) => key !== row.malzemeId);
+      const filteredRows = rows.filter(
+        (item) => item.malzemeId !== row.malzemeId
+      );
+      setKeys(filteredKeys);
+      setRows(filteredRows);
     }
-  }
+  };
 
   useEffect(() => {
-    localStorage.setItem('selectedRowKeys', JSON.stringify(keys))
-  }, [keys])
+    localStorage.setItem("selectedRowKeys", JSON.stringify(keys));
+  }, [keys]);
 
   useEffect(() => {
     setSelectedRows(rows);
-  }, [rows])
+  }, [rows]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
@@ -110,17 +154,23 @@ const MalzemeTable = ({ setSelectedRows, selectedRowKeys, setSelectedRowKeys, ke
   };
 
   useEffect(() => {
-    const storedSelectedKeys = JSON.parse(localStorage.getItem('selectedRowKeys')) || [];
+    const storedSelectedKeys =
+      JSON.parse(localStorage.getItem("selectedRowKeys")) || [];
     setSelectedRowKeys(storedSelectedKeys);
-  }, [tableParams.pagination.current, localStorage.getItem('selectedRowKeys')]);
+  }, [tableParams.pagination.current, localStorage.getItem("selectedRowKeys")]);
 
   return (
     <>
+      <Input
+        placeholder={t("arama")}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{width: "30%"}}
+      />
       <Table
         rowSelection={{
           selectedRowKeys,
           onChange: handleRowSelectionChange,
-          onSelect: handleHandleRowSelection
+          onSelect: handleHandleRowSelection,
         }}
         columns={columns}
         dataSource={data}

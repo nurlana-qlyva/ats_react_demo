@@ -54,7 +54,9 @@ const GeneralInfo = ({ isValid }) => {
           <Controller
             name="mlzFisId"
             control={control}
-            render={({ field }) => <Input {...field} style={{ display: "none" }}/>}
+            render={({ field }) => (
+              <Input {...field} style={{ display: "none" }} />
+            )}
           />
         </div>
         <div className="col-span-4">
@@ -79,6 +81,51 @@ const GeneralInfo = ({ isValid }) => {
             />
           </div>
         </div>
+        <div className="col-span 6">
+          <div className="grid gap-1">
+            <div className="col-span-6">
+              <div className="flex flex-col gap-1">
+                <label>{t("tarih")}</label>
+                <Controller
+                  name="tarih"
+                  control={control}
+                  render={({ field }) => (
+                    <ConfigProvider locale={tr_TR}>
+                      <DatePicker
+                        {...field}
+                        placeholder=""
+                        locale={dayjs.locale("tr")}
+                        format="DD.MM.YYYY"
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                      />
+                    </ConfigProvider>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="col-span-6">
+              <div className="flex flex-col gap-1">
+                <label>{t("saat")}</label>
+                <Controller
+                  name="saat"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker
+                      {...field}
+                      placeholder=""
+                      format="HH:mm:ss"
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("firma")}</label>
@@ -89,7 +136,16 @@ const GeneralInfo = ({ isValid }) => {
             />
           </div>
         </div>
-
+        <div className="col-span-4">
+          <div className="flex flex-col gap-1">
+            <label>{t("islemTipi")}</label>
+            <Controller
+              name="islemTipiKodId"
+              control={control}
+              render={({ field }) => <IslemTipi field={field} />}
+            />
+          </div>
+        </div>
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("girisDeposu")}</label>
@@ -97,47 +153,6 @@ const GeneralInfo = ({ isValid }) => {
               name="girisDepoSiraNo"
               control={control}
               render={({ field }) => <Depo field={field} />}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("tarih")}</label>
-            <Controller
-              name="tarih"
-              control={control}
-              render={({ field }) => (
-                <ConfigProvider locale={tr_TR}>
-                  <DatePicker
-                    {...field}
-                    placeholder=""
-                    locale={dayjs.locale("tr")}
-                    format="DD.MM.YYYY"
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                  />
-                </ConfigProvider>
-              )}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("saat")}</label>
-            <Controller
-              name="saat"
-              control={control}
-              render={({ field }) => (
-                <TimePicker
-                  {...field}
-                  placeholder=""
-                  format="HH:mm:ss"
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                />
-              )}
             />
           </div>
         </div>
@@ -158,16 +173,6 @@ const GeneralInfo = ({ isValid }) => {
               name="aracId"
               control={control}
               render={({ field }) => <Plaka field={field} />}
-            />
-          </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col gap-1">
-            <label>{t("islemTipi")}</label>
-            <Controller
-              name="islemTipiKodId"
-              control={control}
-              render={({ field }) => <IslemTipi field={field} />}
             />
           </div>
         </div>

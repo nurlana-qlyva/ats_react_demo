@@ -75,7 +75,7 @@ const UpdateModal = ({
       setData(res?.data?.receipt.materialMovements);
       setRecord(res?.data?.receipt);
     });
-  }, [id]);
+  }, [id, updateModal]);
 
   useEffect(() => {
     if (updateModal && watch("fisNo")) {
@@ -91,7 +91,6 @@ const UpdateModal = ({
       setIsValid(true);
     }
   }, [watch("fisNo")]);
-
   useEffect(() => {
     if (tableData.length > 0) {
       const initialTotals = {
@@ -115,14 +114,13 @@ const UpdateModal = ({
       setValue("toplam_kdvToplam", totals.kdvToplam.toFixed(2));
     }
   }, [tableData, setValue]);
-
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
       materialMovements.push({
         mlzFisId: values.mlzFisId,
         siraNo: item.siraNo ? item.siraNo : 0,
-        mlzAracId: values.aracId || 0,
+        mlzAracId: item.mlzAracId || 0,
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.key,
@@ -163,9 +161,9 @@ const UpdateModal = ({
     };
 
     UpdateMaterialReceiptService(body).then((res) => {
-      if (res?.data.statusCode === 200) {
+      if (res?.data.statusCode === 202) {
         setStatus(true);
-        setIsModalOpen(false);
+        setUpdateModal(false);
         reset(defaultValues);
         setTableData([]);
         setIsSuccess(true);

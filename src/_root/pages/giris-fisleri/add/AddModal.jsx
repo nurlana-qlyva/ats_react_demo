@@ -45,7 +45,7 @@ const AddModal = ({ setStatus }) => {
     let materialMovements = [];
     tableData.map((item) => {
       materialMovements.push({
-        mlzAracId: values.aracId || 0,
+        mlzAracId: item.aracId || 0,
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.key,

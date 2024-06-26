@@ -46,10 +46,10 @@ const MalzemeLists = ({
     const newData = dataSource.filter((item) => item.key !== key.key);
     const newRows = selectedRows.filter((item) => item.malzemeId !== key.key);
     setDataSource(newData);
-    // setTableData(newData);
+    setTableData(newData);
+    setData(newData);
     setSelectedRows([...newRows]);
   };
-
   useEffect(() => {
     const newRows = data.map((item) => ({
       key: item.malzemeId,
@@ -61,6 +61,7 @@ const MalzemeLists = ({
       birim: item.birim,
       fiyat: item.fiyat,
       plaka: item.plaka,
+      mlzAracId: item.mlzAracId,
       araToplam: item.araToplam,
       kdvOran: item.kdvOran,
       indirimOran: item.indirimOran,
@@ -88,6 +89,7 @@ const MalzemeLists = ({
           onClick={() => {
             setEditModal(true);
             setRecord(record);
+            console.log(record)
             setValue("edit_malzemeTanimi", record.malzemeTanim);
             setValue("edit_miktar", record.miktar);
             setValue("birim", record.birim);
@@ -244,7 +246,6 @@ const MalzemeLists = ({
     watch("edit_indirimTutari"),
     watch("edit_toplam"),
   ]);
-
   useEffect(() => {
     let araToplam = watch("edit_miktar") * watch("edit_fiyat");
     setValue("edit_araToplam", araToplam);
@@ -262,6 +263,8 @@ const MalzemeLists = ({
       toplam: null,
       aciklama: item.aciklama,
       kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
+      plaka: item.plaka,
+      mlzAracId: item.mlzAracId,
       kdvTutar: item.kdvDahilHaric
         ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
         : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
@@ -346,7 +349,8 @@ const MalzemeLists = ({
         indirimTutar: values.edit_indirimTutari,
         kdvDH: values.edit_kdv,
         kdvTutar: values.edit_kdvTutar,
-        plaka: values.plaka,
+        plaka: values.malzeme_plaka,
+        mlzAracId: values.edit_plakaId,
         lokasyonId: values.edit_lokasyonId,
         lokasyon: values.edit_lokasyon,
         isPriceChanged: currentFiyat !== originalFiyat,

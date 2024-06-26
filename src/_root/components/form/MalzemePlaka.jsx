@@ -7,7 +7,7 @@ import { useFormContext } from 'react-hook-form'
 
 const MalzemePlaka = ({ field }) => {
     const { plaka, setData } = useContext(PlakaContext)
-    const { setValue } = useFormContext()
+    const { setValue, watch } = useFormContext()
 
     useEffect(() => {
         if (plaka.length === 1) {
@@ -36,6 +36,7 @@ const MalzemePlaka = ({ field }) => {
                 label: item.plaka,
                 value: item.id,
             }))}
+            value={watch('malzeme_plaka')}
             onChange={e => {
                 field.onChange(e)
                 handleChange(e)
