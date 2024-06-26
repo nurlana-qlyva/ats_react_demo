@@ -22,7 +22,7 @@ const UpdateModal = ({
   const [tableData, setTableData] = useState([]);
   const [data, setData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState("normal");
   const [record, setRecord] = useState(true);
 
   const defaultValues = {
@@ -78,19 +78,26 @@ const UpdateModal = ({
   }, [id, updateModal]);
 
   useEffect(() => {
-    if (updateModal && watch("fisNo")) {
+    let isMounted = true;
+    if (watch("fisNo")) {
       const body = {
         tableName: "Fis",
         code: watch("fisNo"),
       };
       CodeItemValidateService(body).then((res) => {
-        if (!res.data.status) {
-          setIsValid(false);
+        if (!isMounted) {
+          console.log(res.data.status)
+          !res.data.status ?
+          setIsValid("success") :
+          setIsValid("error")
         }
       });
-      setIsValid(true);
     }
+    return () => {
+      isMounted = false;
+    };
   }, [watch("fisNo")]);
+
   useEffect(() => {
     if (tableData.length > 0) {
       const initialTotals = {
@@ -176,7 +183,7 @@ const UpdateModal = ({
     <Button
       key="submit"
       className="btn btn-min primary-btn"
-      //   disabled={!isValid}
+      disabled={!isValid}
       onClick={onSubmit}
     >
       {t("guncelle")}

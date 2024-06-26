@@ -24,7 +24,6 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      readOnly
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}
@@ -56,7 +55,6 @@ const GeneralInfo = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      readOnly
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   )}

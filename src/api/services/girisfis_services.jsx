@@ -27,7 +27,7 @@ export const GetMaterialReceiptByIdService = async (id) => {
 };
 
 export const UpdateMaterialReceiptService = async (data) => {
-  return await http.post(`/MaterialReceipt/UpdateMaterialEntryReceipt`, data);
+  return await http.post(`/MaterialReceipt/UpdateMaterialReceipt`, data);
 };
 
 export const DeleteUpdatedMaterialReceiptService = async (id) => {

@@ -21,7 +21,7 @@ dayjs.locale("tr");
 const GeneralInfo = ({ isValid }) => {
   const { control, setValue, watch } = useFormContext();
   const { setPlaka } = useContext(PlakaContext);
-
+console.log()
   useEffect(() => {
     CustomCodeControlService("Vehicle/GetVehiclePlates").then((res) => {
       const updatedData = res.data.map((item) => {
@@ -69,9 +69,9 @@ const GeneralInfo = ({ isValid }) => {
                 <Input
                   {...field}
                   style={
-                    !isValid
+                    isValid === "error"
                       ? { borderColor: "#dc3545" }
-                      : isValid
+                      : isValid === "success"
                       ? { borderColor: "#23b545" }
                       : { color: "#000" }
                   }
