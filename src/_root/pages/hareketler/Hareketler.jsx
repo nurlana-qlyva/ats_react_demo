@@ -19,10 +19,12 @@ import {
 import { Checkbox, Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
-// import AddModal from "./add/AddModal";
 import dayjs from "dayjs";
-import { FilterHareketlerListService, GetHareketlerListService, SearchHareketlerListService } from "../../../api/services/malzeme_services";
-// import UpdateModal from "./update/UpdateModal";
+import {
+  FilterHareketlerListService,
+  GetHareketlerListService,
+  SearchHareketlerListService,
+} from "../../../api/services/malzeme_services";
 import Filter from "./filter/Filter";
 
 const breadcrumb = [
@@ -126,7 +128,7 @@ const Hareketler = () => {
     over: -1,
   });
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState(false);
+  const [filterData, setFilterData] = useState(null);
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [record, setRecord] = useState(false);
@@ -136,7 +138,7 @@ const Hareketler = () => {
       title: t("tarih"),
       dataIndex: "tarih",
       key: 1,
-      render: text => dayjs(text).format("DD.MM.YYYY")
+      render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
       title: t("malzemeKodu"),
@@ -232,23 +234,22 @@ const Hareketler = () => {
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
-  useEffect(() => {
+  const fetchData = () => {
     setLoading(true);
-    GetHareketlerListService(tableParams?.pagination.current).then((res) => {
-      setData(res?.data.list);
-      setTableParams({
-        ...tableParams,
-        pagination: {
-          ...tableParams.pagination,
-          total: res?.data.recordCount,
-        },
+    if (filterData) {
+      FilterHareketlerListService(search, tableParams.pagination.current, filterData).then((res) => {
+        setData(res?.data.list);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.recordCount,
+          },
+        });
+        setLoading(false);
       });
-      setLoading(false);
-    });
-  }, [status]);
-  useEffect(() => {
-    if (search.length >= 3) {
-      SearchHareketlerListService(search, tableParams?.pagination.current).then((res) => {
+    } else if (search.length >= 3) {
+      SearchHareketlerListService(search, tableParams.pagination.current).then((res) => {
         setData(res?.data.list);
         setTableParams({
           ...tableParams,
@@ -260,7 +261,7 @@ const Hareketler = () => {
         setLoading(false);
       });
     } else {
-      GetHareketlerListService(tableParams?.pagination.current).then((res) => {
+      GetHareketlerListService(tableParams.pagination.current).then((res) => {
         setData(res?.data.list);
         setTableParams({
           ...tableParams,
@@ -272,7 +273,11 @@ const Hareketler = () => {
         setLoading(false);
       });
     }
-  }, [search, tableParams?.pagination.current]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [status, search, tableParams.pagination.current, filterData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -319,8 +324,6 @@ const Hareketler = () => {
     }
   };
 
-
-
   const options = columns.map(({ key, title }) => ({
     label: title,
     value: key,
@@ -340,34 +343,26 @@ const Hareketler = () => {
     </>
   );
 
-  // get selected rows data
-  if (!localStorage.getItem("selectedRowKeys"))
-    localStorage.setItem("selectedRowKeys", JSON.stringify([]));
-  const [keys, setKeys] = useState([]);
-  const [rows, setRows] = useState([]);
-  const handleRowSelection = (row, selected) => {
-    if (selected) {
-      if (!keys.includes(row.malzemeId)) {
-        setKeys([...keys, row.malzemeId]);
-        setRows([...rows, row]);
-      }
-    } else {
-      const filteredKeys = keys.filter((key) => key !== row.malzemeId);
-      const filteredRows = rows.filter(
-        (item) => item.malzemeId !== row.malzemeId
-      );
-      setKeys(filteredKeys);
-      setRows(filteredRows);
-    }
-  };
-  useEffect(
-    () => localStorage.setItem("selectedRowKeys", JSON.stringify(keys)),
-    [keys]
-  );
+  // const handleRowSelection = (row, selected) => {
+  //   if (selected) {
+  //     if (!keys.includes(row.malzemeId)) {
+  //       setKeys([...keys, row.malzemeId]);
+  //       setRows([...rows, row]);
+  //     }
+  //   } else {
+  //     const filteredKeys = keys.filter((key) => key !== row.malzemeId);
+  //     const filteredRows = rows.filter((item) => item.malzemeId !== row.malzemeId);
+  //     setKeys(filteredKeys);
+  //     setRows(filteredRows);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   localStorage.setItem("selectedRowKeys", JSON.stringify(keys));
+  // }, [keys]);
+
   useEffect(() => {
-    const storedSelectedKeys = JSON.parse(
-      localStorage.getItem("selectedRowKeys")
-    );
+    const storedSelectedKeys = JSON.parse(localStorage.getItem("selectedRowKeys"));
     if (storedSelectedKeys && storedSelectedKeys.length) {
       setSelectedRowKeys(storedSelectedKeys);
     }
@@ -385,45 +380,24 @@ const Hareketler = () => {
   }, [tableParams.pagination.current, localStorage.getItem("selectedRowKeys")]);
 
   const filter = (data) => {
-    if (data) {
-      FilterHareketlerListService(search, tableParams.pagination.current, data).then(res => {
-        setData(res?.data.list)
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: res?.data.vehicleCount,
-          },
-        });
-      })
-    } else {
-      GetHareketlerListService(tableParams?.pagination.current).then((res) => {
-        setData(res?.data.list);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: res?.data.recordCount,
-          },
-        });
-      });
-    }
-  }
+    setFilterData(data);
+  };
 
   const clear = () => {
-    setLoading(true)
-    FilterHareketlerListService("").then(res => {
+    setFilterData(null);
+    setLoading(true);
+    GetHareketlerListService(tableParams?.pagination.current).then((res) => {
       setLoading(false);
-      setData(res?.data.list)
+      setData(res?.data.list);
       setTableParams({
         ...tableParams,
         pagination: {
           ...tableParams.pagination,
-          total: res?.data.vehicleCount,
+          total: res?.data.recordCount,
         },
       });
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -449,19 +423,11 @@ const Hareketler = () => {
               placeholder={t("arama")}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {/* <AddModal setStatus={setStatus} /> */}
             <Filter filter={filter} clearFilters={clear} />
           </div>
           <div>{/* <OperationsInfo ids={selectedRowKeys} /> */}</div>
         </div>
       </div>
-      {/* <UpdateModal
-        updateModal={updateModal}
-        setUpdateModal={setUpdateModal}
-        setStatus={setStatus}
-        status={status}
-        id={record.malzemeId}
-      /> */}
       <div className="content">
         <DndContext
           sensors={sensors}
@@ -476,7 +442,6 @@ const Hareketler = () => {
           >
             <DragIndexContext.Provider value={dragIndex}>
               <Table
-                // rowKey={(record) => record.malzemeId}
                 columns={columns}
                 dataSource={data}
                 pagination={{
@@ -494,11 +459,6 @@ const Hareketler = () => {
                 scroll={{
                   x: 2800,
                 }}
-                // rowSelection={{
-                //   selectedRowKeys: selectedRowKeys,
-                //   onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                //   onSelect: handleRowSelection,
-                // }}
                 components={{
                   header: {
                     cell: TableHeaderCell,

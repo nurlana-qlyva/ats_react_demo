@@ -20,7 +20,7 @@ const Filter = ({ filter, clearFilters }) => {
     const methods = useForm({
         defaultValues: defaultValues
     })
-    const { control, handleSubmit, reset, setValue } = methods
+    const { control, handleSubmit, reset } = methods
 
     const handleSearchFilters = handleSubmit((values) => {
         let hasValue = false;
@@ -34,7 +34,6 @@ const Filter = ({ filter, clearFilters }) => {
         let startDate = '';
         let endDate = '';
 
-        const currentDate = dayjs();
         switch (values.date) {
             case 'day':
                 startDate = dayjs().subtract(1, 'day').format("YYYY-MM-DD");
@@ -119,6 +118,7 @@ const Filter = ({ filter, clearFilters }) => {
                                     render={({ field }) => (
                                         <Input
                                             {...field}
+                                            allowClear
                                             onChange={(e) => {
                                                 field.onChange(e.target.value)
                                             }}
