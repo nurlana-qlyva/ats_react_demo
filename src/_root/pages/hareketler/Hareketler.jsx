@@ -21,7 +21,9 @@ import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 // import AddModal from "./add/AddModal";
 import dayjs from "dayjs";
+import { FilterHareketlerListService, GetHareketlerListService, SearchHareketlerListService } from "../../../api/services/malzeme_services";
 // import UpdateModal from "./update/UpdateModal";
+import Filter from "./filter/Filter";
 
 const breadcrumb = [
   {
@@ -50,11 +52,11 @@ const dragActiveStyle = (dragState, id) => {
     style =
       direction === "right"
         ? {
-            borderRight: "1px dashed gray",
-          }
+          borderRight: "1px dashed gray",
+        }
         : {
-            borderLeft: "1px dashed gray",
-          };
+          borderLeft: "1px dashed gray",
+        };
   }
   return style;
 };
@@ -87,10 +89,10 @@ const TableHeaderCell = (props) => {
     cursor: "move",
     ...(isDragging
       ? {
-          position: "relative",
-          zIndex: 9999,
-          userSelect: "none",
-        }
+        position: "relative",
+        zIndex: 9999,
+        userSelect: "none",
+      }
       : {}),
     ...dragActiveStyle(dragState, props.id),
   };
@@ -134,20 +136,21 @@ const Hareketler = () => {
       title: t("tarih"),
       dataIndex: "tarih",
       key: 1,
+      render: text => dayjs(text).format("DD.MM.YYYY")
     },
     {
       title: t("malzemeKodu"),
-      dataIndex: "malzemeKod",
+      dataIndex: "malezemeKod",
       key: 2,
     },
     {
       title: t("malzemeTanimi"),
-      dataIndex: "tanim",
+      dataIndex: "malezemeTanim",
       key: 3,
     },
     {
-      title: t("malzemeTipi"),
-      dataIndex: "malzemeTipKodText",
+      title: t("miktar"),
+      dataIndex: "miktar",
       key: 4,
     },
     {
@@ -186,8 +189,8 @@ const Hareketler = () => {
       key: 11,
     },
     {
-      title: t("bolge"),
-      dataIndex: "bolge",
+      title: t("lokasyon"),
+      dataIndex: "lokasyon",
       key: 12,
     },
     {
@@ -230,48 +233,45 @@ const Hareketler = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
   useEffect(() => {
-    // setLoading(true);
-    // MalzemeListGetService(tableParams?.pagination.current).then((res) => {
-    //   setData(res?.data.materialList);
-    //   setTableParams({
-    //     ...tableParams,
-    //     pagination: {
-    //       ...tableParams.pagination,
-    //       total: res?.data.total_count,
-    //     },
-    //   });
-    //   setLoading(false);
-    // });
+    setLoading(true);
+    GetHareketlerListService(tableParams?.pagination.current).then((res) => {
+      setData(res?.data.list);
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: res?.data.recordCount,
+        },
+      });
+      setLoading(false);
+    });
   }, [status]);
-
   useEffect(() => {
-    // if (search.length >= 3) {
-    //   MalzemeListSearchService(tableParams?.pagination.current, search).then(
-    //     (res) => {
-    //       setData(res?.data.materialList);
-    //       setTableParams({
-    //         ...tableParams,
-    //         pagination: {
-    //           ...tableParams.pagination,
-    //           total: res?.data.total_count,
-    //         },
-    //       });
-    //       setLoading(false);
-    //     }
-    //   );
-    // } else {
-    //   MalzemeListGetService(tableParams?.pagination.current).then((res) => {
-    //     setData(res?.data.materialList);
-    //     setTableParams({
-    //       ...tableParams,
-    //       pagination: {
-    //         ...tableParams.pagination,
-    //         total: res?.data.total_count,
-    //       },
-    //     });
-    //     setLoading(false);
-    //   });
-    // }
+    if (search.length >= 3) {
+      SearchHareketlerListService(search, tableParams?.pagination.current).then((res) => {
+        setData(res?.data.list);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.recordCount,
+          },
+        });
+        setLoading(false);
+      });
+    } else {
+      GetHareketlerListService(tableParams?.pagination.current).then((res) => {
+        setData(res?.data.list);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.recordCount,
+          },
+        });
+        setLoading(false);
+      });
+    }
   }, [search, tableParams?.pagination.current]);
 
   const sensors = useSensors(
@@ -319,10 +319,7 @@ const Hareketler = () => {
     }
   };
 
-  const newColumns = columns.map((col) => ({
-    ...col,
-    hidden: !checkedList.includes(col.key),
-  }));
+
 
   const options = columns.map(({ key, title }) => ({
     label: title,
@@ -387,6 +384,47 @@ const Hareketler = () => {
     }
   }, [tableParams.pagination.current, localStorage.getItem("selectedRowKeys")]);
 
+  const filter = (data) => {
+    if (data) {
+      FilterHareketlerListService(search, tableParams.pagination.current, data).then(res => {
+        setData(res?.data.list)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.vehicleCount,
+          },
+        });
+      })
+    } else {
+      GetHareketlerListService(tableParams?.pagination.current).then((res) => {
+        setData(res?.data.list);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res?.data.recordCount,
+          },
+        });
+      });
+    }
+  }
+
+  const clear = () => {
+    setLoading(true)
+    FilterHareketlerListService("").then(res => {
+      setLoading(false);
+      setData(res?.data.list)
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: res?.data.vehicleCount,
+        },
+      });
+    })
+  }
+
   return (
     <>
       <div className="content">
@@ -412,7 +450,7 @@ const Hareketler = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
             {/* <AddModal setStatus={setStatus} /> */}
-            {/* <Filter filter={filter} clearFilters={clear} /> */}
+            <Filter filter={filter} clearFilters={clear} />
           </div>
           <div>{/* <OperationsInfo ids={selectedRowKeys} /> */}</div>
         </div>
@@ -438,8 +476,8 @@ const Hareketler = () => {
           >
             <DragIndexContext.Provider value={dragIndex}>
               <Table
-                rowKey={(record) => record.malzemeId}
-                columns={newColumns}
+                // rowKey={(record) => record.malzemeId}
+                columns={columns}
                 dataSource={data}
                 pagination={{
                   ...tableParams.pagination,
@@ -456,11 +494,11 @@ const Hareketler = () => {
                 scroll={{
                   x: 2800,
                 }}
-                rowSelection={{
-                  selectedRowKeys: selectedRowKeys,
-                  onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                  onSelect: handleRowSelection,
-                }}
+                // rowSelection={{
+                //   selectedRowKeys: selectedRowKeys,
+                //   onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                //   onSelect: handleRowSelection,
+                // }}
                 components={{
                   header: {
                     cell: TableHeaderCell,

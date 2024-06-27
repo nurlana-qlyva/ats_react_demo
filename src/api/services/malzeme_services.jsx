@@ -29,3 +29,15 @@ export const MalzemeCodeGetService = async () => {
 export const MalzemeDataByIdGetService = async (id) => {
   return await http.get(`/Material/GetMaterialCardById?id=${id}`);
 };
+
+
+export const GetHareketlerListService = async (page) => {
+  return await http.post(`/MaterialMovements/GetMaterialMovementsList?page=${page}`);
+};
+export const SearchHareketlerListService = async (parameter, page, data) => {
+  return await http.post(`/MaterialMovements/GetMaterialMovementsList?parameter=${parameter}&page=${page}`, data);
+};
+
+export const FilterHareketlerListService = async (parameter, page, data) => {
+  return await http.post(`/MaterialMovements/GetMaterialMovementsList?parameter=${parameter}&page=${page}`, data);
+};

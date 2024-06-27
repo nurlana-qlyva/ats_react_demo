@@ -5,6 +5,7 @@ import { PiGearSixBold } from 'react-icons/pi'
 import { MdHealthAndSafety } from 'react-icons/md'
 import { Button, Dropdown, Space } from 'antd'
 import Ruhsat from './modals/Ruhsat'
+import Ekspertiz from './modals/Ekspertiz'
 
 const DetailInfo = ({ id }) => {
     const [selectedItem, setSelectedItem] = useState(null)
@@ -85,6 +86,8 @@ const DetailInfo = ({ id }) => {
             // // return <TeknikModal visible={selectedItem === '2'} onClose={() => setSelectedItem(null)} id={id} />;
             // case '3':
             // // return <DriversModal visible={selectedItem === '3'} onClose={() => setSelectedItem(null)} id={id} />;
+            case '4':
+                return <Ekspertiz visible={selectedItem === '4'} onClose={() => setSelectedItem(null)} id={id} />;
             // default:
             //     return null;
         }
