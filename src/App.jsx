@@ -13,6 +13,8 @@ import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
 import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
 import CikisFisleri from './_root/pages/cikis-fisleri/CikisFisleri'
 import Hareketler from './_root/pages/hareketler/Hareketler'
+import MarkaList from './_root/pages/sistem-tanimlari/marka-model/MarkaList'
+import Sehirler from './_root/pages/sistem-tanimlari/sehirler/Sehirler'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -42,6 +44,8 @@ const App = () => {
         <Route path="/giris-fisleri" element={<GirisFisleri />} />
         <Route path="/cikis-fisleri" element={<CikisFisleri />} />
         <Route path="/hareketler" element={<Hareketler />} />
+        <Route path="/arac-marka-ve-model" element={<MarkaList />} />
+        <Route path="/sehir-tanimlari" element={<Sehirler />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

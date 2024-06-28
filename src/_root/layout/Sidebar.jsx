@@ -100,6 +100,25 @@ const items = [
     },
     {
         key: 19,
+        icon: <CarOutlined />,
+        label: t("sistemTanimlari"),
+        children: [
+            {
+                key: 20,
+                label: (
+                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                ),
+            },
+            {
+                key: 21,
+                label: (
+                    <Link to={'/sehir-tanimlari'}>{t("seirTanimlari")}</Link>
+                ),
+            },
+        ],
+    },
+    {
+        key: 19,
         icon: <FastForwardOutlined />,
         label: (
             <Link to={'/hizli-km-guncelleme'}>{t("hizliKmGuncelleme")}</Link>

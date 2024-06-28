@@ -144,3 +144,7 @@
 .part:hover {
   fill: var(--light-blue);
 }
+
+.sistem .ant-layout-content {
+  max-height: 600px !important;
+}
