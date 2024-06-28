@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Layout, Menu, List, Button } from 'antd';
-import { GetMarkaListService, GetModelListByMarkaService } from '../../../../api/services/markamodel_services';
+import { useEffect, useState } from 'react';
+import { Layout, Menu, List, Button, Modal } from 'antd';
+import { DeleteMarkaService, GetMarkaListService, GetModelListByMarkaService } from '../../../../api/services/markamodel_services';
 import AddModal from './marka-modals/AddModal';
 import UpdateModalModal from './marka-modals/UpdateModal';
 import AddModelModal from './model-modals/AddModelModal';
@@ -13,26 +13,32 @@ const MarkaList = () => {
     const [markaList, setMarkaList] = useState([]);
     const [modelList, setModelList] = useState([]);
     const [marka, setMarka] = useState([]);
-    const [isOpen, setIsOpen] = useState(false)
-    const [isUpdateOpen, setIsUpdateOpen] = useState(false)
-    const [isModelAddOpen, setIsModelAddOpen] = useState(false)
-    const [isModelUpdateOpen, setIsUpdateModelOpen] = useState(false)
-    const [status, setStatus] = useState(false)
-    const [statusModel, setStatusModel] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
+    const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+    const [isModelAddOpen, setIsModelAddOpen] = useState(false);
+    const [isModelUpdateOpen, setIsUpdateModelOpen] = useState(false);
+    const [status, setStatus] = useState(false);
+    const [statusModel, setStatusModel] = useState(false);
     const [selectedModel, setSelectedModel] = useState(null);
+    const [bagliAracSayisi, setBagliAracSayisi] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
 
     useEffect(() => {
-        GetMarkaListService().then(res => setMarkaList(res.data))
-    }, [status])
+        GetMarkaListService().then(res => setMarkaList(res.data));
+    }, [status]);
 
     useEffect(() => {
-        GetModelListByMarkaService(selectedMarka).then(res => setModelList(res.data))
-    }, [selectedMarka, statusModel])
+        if (selectedMarka) {
+            GetModelListByMarkaService(selectedMarka).then(res => setModelList(res.data));
+        }
+    }, [selectedMarka, statusModel]);
 
     const handleMarkaClick = (id) => {
         setSelectedMarka(id);
-        const label = markaList.find(item => item.siraNo === +id)
-        setMarka(label.marka)
+        const item = markaList.find(item => item.siraNo === +id);
+        setMarka(item.marka);
+        setBagliAracSayisi(item.bagliAracSayisi);
         setSelectedModel(null);
     };
 
@@ -44,9 +50,32 @@ const MarkaList = () => {
         return {
             key: item.siraNo,
             label: item.marka,
+        };
+    });
+
+    const handleDelete = () => {
+        if (bagliAracSayisi > 0) {
+            setIsDeleteModalOpen(true);
+        } else {
+            setIsConfirmDeleteModalOpen(true);
         }
-    })
-    console.log(selectedModel)
+    };
+
+    const confirmDelete = () => {
+        DeleteMarkaService(selectedMarka).then(res => {
+            setStatus(!status);
+            setIsConfirmDeleteModalOpen(false);
+        });
+    };
+
+    const closeModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
+    const closeConfirmModal = () => {
+        setIsConfirmDeleteModalOpen(false);
+    };
+
     return (
         <div className="sistem">
             <Layout style={{ height: '90vh' }}>
@@ -61,7 +90,7 @@ const MarkaList = () => {
                     <div style={{ textAlign: 'center' }} className='mt-20'>
                         <Button onClick={() => setIsOpen(true)}>Add</Button>
                         <Button onClick={() => setIsUpdateOpen(true)}>Edit</Button>
-                        <Button onClick={() => console.log("Delete logic")}>Delete</Button>
+                        <Button onClick={handleDelete}>Delete</Button>
                     </div>
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
@@ -97,10 +126,39 @@ const MarkaList = () => {
 
             <AddModelModal isOpen={isModelAddOpen} setIsOpen={setIsModelAddOpen} setStatus={setStatusModel} markaId={selectedMarka} />
             <UpdateModelModal isOpen={isModelUpdateOpen} setIsOpen={setIsUpdateModelOpen} setStatus={setStatusModel} modelItem={selectedModel} />
-        </div>
 
+            <Modal
+                title="Delete Marka"
+                visible={isDeleteModalOpen}
+                onOk={closeModal}
+                onCancel={closeModal}
+                footer={[
+                    <Button key="ok" onClick={closeModal}>
+                        OK
+                    </Button>,
+                ]}
+            >
+                <p>[ {marka} ] markasına ait araç kayıtları bulunmaktadır. Kayıt silinemez.</p>
+            </Modal>
+
+            <Modal
+                title="Confirm Delete"
+                visible={isConfirmDeleteModalOpen}
+                onOk={confirmDelete}
+                onCancel={closeConfirmModal}
+                footer={[
+                    <Button key="cancel" onClick={closeConfirmModal}>
+                        Hayır
+                    </Button>,
+                    <Button key="confirm" type="primary" onClick={confirmDelete}>
+                        Evet
+                    </Button>,
+                ]}
+            >
+                <p>[ {marka} ] tanımlı marka ve bu markaya tanımlanmış tüm modeller silinecektir. Devam etmek istediğinizden emin misiniz?</p>
+            </Modal>
+        </div>
     );
 };
 
-
-export default MarkaList
+export default MarkaList;

@@ -9,7 +9,7 @@ export const AddModelService = async (data) => {
     return await http.post(`/Model/AddModelItem`, data);
 };
 
-export const UpdateModelService = async (data) => {
+export const UpdateModelService = async (data) => { 
     return await http.post(`/Model/UpdateModelItem`, data);
 };
 
