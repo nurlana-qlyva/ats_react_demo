@@ -2,7 +2,7 @@ import { Table, Select } from "antd"
 
 const { Option } = Select;
 
-const EkspertizTable = () => {
+const EkspertizTable = ({ onSelectChange, selectedOptions }) => {
     const data = [
         {
             key: '1',
@@ -76,22 +76,26 @@ const EkspertizTable = () => {
             title: 'Aksam',
             dataIndex: 'title',
             key: 'title',
-            render: (text) => <span>{text}</span>,
+            render: (text) => <span>{text}</span>
         },
         {
             title: 'Durum',
             dataIndex: 'options',
             key: 'options',
-            render: (options) => (
-                <Select style={{ width: 120 }}>
+            render: (options, record) => (
+                <Select
+                    style={{ width: 120 }}
+                    value={selectedOptions[record.title]}
+                    onChange={(value) => onSelectChange(record.title, value)}
+                >
                     {options.map((option, index) => (
                         <Option key={index} value={option}>
                             {option}
                         </Option>
                     ))}
                 </Select>
-            ),
-        },
+            )
+        }
     ];
 
     return <Table dataSource={data} columns={columns} pagination={false} size="small" />;

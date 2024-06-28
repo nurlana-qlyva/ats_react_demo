@@ -9,36 +9,16 @@ import TextArea from 'antd/es/input/TextArea'
 
 dayjs.locale('tr')
 
-const boya = {
-    width: "20px",
-    height: "20px",
-    background: "orangered",
-    borderRadius: "4px"
-}
-
-const cizik = {
-    width: "20px",
-    height: "20px",
-    background: "#17a2b8",
-    borderRadius: "4px"
-}
-
-const degisen = {
-    width: "20px",
-    height: "20px",
-    background: "#5b548b",
-    borderRadius: "4px"
-}
-
-const orjinal = {
-    width: "20px",
-    height: "20px",
-    background: "#6c757d",
-    borderRadius: "4px"
-}
+const colorStyles = {
+    'Boyalı': 'orangered',
+    'Çizik': '#17a2b8',
+    'Değişen': '#5b548b',
+    'Orjinal': '#6c757d'
+};
 
 const Ekspertiz = ({ visible, onClose, id }) => {
     const [status, setStatus] = useState(false)
+    const [selectedOptions, setSelectedOptions] = useState({});
 
     const defaultValues = {}
 
@@ -115,6 +95,10 @@ const Ekspertiz = ({ visible, onClose, id }) => {
         ]
     )
 
+    const handleSelectChange = (part, value) => {
+        setSelectedOptions(prevState => ({ ...prevState, [part]: value }));
+    };
+    
     return (
         <Modal
             title="Ekspertiz Bilgileri"
@@ -126,28 +110,18 @@ const Ekspertiz = ({ visible, onClose, id }) => {
         >
             <div className="grid gap-1">
                 <div className="col-span-7">
-                    <Car />
+                    <Car selectedOptions={selectedOptions} colorStyles={colorStyles} />
                     <div className="grid mt-10">
-                        <div className="col-span-3 flex gap-1">
-                            <div style={boya}></div>
-                            <p>Boyalı</p>
-                        </div>
-                        <div className="col-span-3 flex gap-1">
-                            <div style={cizik}></div>
-                            <p>Çizik</p>
-                        </div>
-                        <div className="col-span-3 flex gap-1">
-                            <div style={degisen}></div>
-                            <p>Değişen</p>
-                        </div>
-                        <div className="col-span-3 flex gap-1">
-                            <div style={orjinal}></div>
-                            <p>Orjinal</p>
-                        </div>
+                        {Object.keys(colorStyles).map(key => (
+                            <div className="col-span-3 flex gap-1" key={key}>
+                                <div style={{ width: "20px", height: "20px", background: colorStyles[key], borderRadius: "4px" }}></div>
+                                <p>{key}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className="col-span-5">
-                    <EkspertizTable />
+                    <EkspertizTable onSelectChange={handleSelectChange} selectedOptions={selectedOptions} />
                 </div>
                 <div className="col-span-6 mt-20">
                     <label>Ekspertiz Açıklama</label>

@@ -141,8 +141,6 @@
   height: 90%;
 }
 
-svg .sol-arka-teker:hover,
-svg .sol-on-teker:hover
-svg g:nth-child(35) path:hover  {
-  fill: red !important;
+.part:hover {
+  fill: var(--light-blue);
 }
