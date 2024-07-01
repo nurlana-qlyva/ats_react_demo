@@ -1,12 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Layout, Menu, List, Button, Modal } from 'antd';
-import { DeleteMarkaService, GetMarkaListService, GetModelListByMarkaService } from '../../../../api/services/markamodel_services';
+import { DeleteMarkaService, DeleteModelService, GetMarkaListService, GetModelListByMarkaService } from '../../../../api/services/markamodel_services';
 import AddModal from './marka-modals/AddModal';
 import UpdateModalModal from './marka-modals/UpdateModal';
 import AddModelModal from './model-modals/AddModelModal';
 import UpdateModelModal from './model-modals/UpdateModelModal';
+import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
+import {
+    HomeOutlined,
+} from "@ant-design/icons";
+import { t } from "i18next";
 
 const { Sider, Content } = Layout;
+
+const breadcrumb = [
+    {
+        href: "/",
+        title: <HomeOutlined />,
+    },
+    {
+        title: t("markaModelTanim"),
+    },
+];
+
+const markaTitle = {
+    background: '#fff',
+    textAlign: 'center',
+    padding: '10px',
+    fontWeight: "600",
+    fontSize: "24px",
+    color: "#f6970e"
+}
 
 const MarkaList = () => {
     const [selectedMarka, setSelectedMarka] = useState(null);
@@ -21,8 +45,11 @@ const MarkaList = () => {
     const [statusModel, setStatusModel] = useState(false);
     const [selectedModel, setSelectedModel] = useState(null);
     const [bagliAracSayisi, setBagliAracSayisi] = useState(null);
+    const [modelBagliAracSayisi, setModelBagliAracSayisi] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+    const [isDeleteModelModalOpen, setIsDeleteModelModalOpen] = useState(false);
+    const [isConfirmDeleteModelModalOpen, setIsConfirmDeleteModelModalOpen] = useState(false);
 
     useEffect(() => {
         GetMarkaListService().then(res => setMarkaList(res.data));
@@ -44,6 +71,7 @@ const MarkaList = () => {
 
     const handleModelClick = (model) => {
         setSelectedModel(model);
+        setModelBagliAracSayisi(model.bagliAracSayisi);
     };
 
     const updatedList = markaList.map(item => {
@@ -61,6 +89,14 @@ const MarkaList = () => {
         }
     };
 
+    const handleModelDelete = () => {
+        if (modelBagliAracSayisi > 0) {
+            setIsDeleteModelModalOpen(true);
+        } else {
+            setIsConfirmDeleteModelModalOpen(true);
+        }
+    };
+
     const confirmDelete = () => {
         DeleteMarkaService(selectedMarka).then(res => {
             setStatus(!status);
@@ -68,96 +104,138 @@ const MarkaList = () => {
         });
     };
 
+    const confirmModelDelete = () => {
+        DeleteModelService(selectedModel.siraNo).then(res => {
+            setStatusModel(!status);
+            setIsConfirmDeleteModelModalOpen(false);
+        });
+    };
+
     const closeModal = () => {
         setIsDeleteModalOpen(false);
+        setIsDeleteModelModalOpen(false);
     };
 
     const closeConfirmModal = () => {
         setIsConfirmDeleteModalOpen(false);
+        setIsConfirmDeleteModelModalOpen(false);
     };
 
     return (
-        <div className="sistem">
-            <Layout style={{ height: '90vh' }}>
-                <Sider width={200} style={{ background: "#fff", height: '100%' }}>
-                    <div style={{ height: '32px', background: '#fff', textAlign: 'center', lineHeight: '32px' }}>Marka</div>
-                    <Menu
-                        mode="inline"
-                        style={{ height: '70%', borderRight: 0, overflow: "auto" }}
-                        onClick={({ key }) => handleMarkaClick(key)}
-                        items={updatedList}
-                    />
-                    <div style={{ textAlign: 'center' }} className='mt-20'>
-                        <Button onClick={() => setIsOpen(true)}>Add</Button>
-                        <Button onClick={() => setIsUpdateOpen(true)}>Edit</Button>
-                        <Button onClick={handleDelete}>Delete</Button>
-                    </div>
-                </Sider>
-                <Layout style={{ padding: '0 24px 24px' }}>
-                    <Content style={{ padding: 24, margin: 0, minHeight: 280, overflow: 'auto' }}>
-                        {selectedMarka && (
-                            <>
-                                <div style={{ marginBottom: '16px', textAlign: 'center' }}>{marka}</div>
-                                <List
-                                    dataSource={modelList}
-                                    renderItem={(model) => (
-                                        <List.Item
-                                            onClick={() => handleModelClick(model)}
-                                            style={{ backgroundColor: selectedModel && selectedModel.siraNo === model.siraNo ? '#e6f7ff' : '#fff' }}
-                                        >
-                                            {model.modelDef}
-                                        </List.Item>
-                                    )}
-                                    style={{ backgroundColor: '#fff', padding: '10px', borderRadius: '5px' }}
-                                />
-                            </>
-                        )}
-                    </Content>
-                    <Content style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Button onClick={() => setIsModelAddOpen(true)} style={{ marginRight: '8px' }}>Add</Button>
-                        <Button onClick={() => setIsUpdateModelOpen(true)} style={{ marginRight: '8px' }}>Edit</Button>
-                        <Button onClick={() => console.log("Delete logic")}>Delete</Button>
-                    </Content>
+        <>
+            <div className="content">
+                <BreadcrumbComp items={breadcrumb} />
+            </div>
+            <div className="sistem">
+                <Layout style={{ height: '90vh' }}>
+                    <Sider width={200}>
+                        <div style={markaTitle}>Marka</div>
+                        <Menu
+                            mode="inline"
+                            style={{ height: '85%', borderRight: 0, overflow: "auto" }}
+                            onClick={({ key }) => handleMarkaClick(key)}
+                            items={updatedList}
+                        />
+                        <div className='mt-20 flex gap-1 justify-center'>
+                            <Button className='btn primary-btn' onClick={() => setIsOpen(true)}>{t("ekle")}</Button>
+                            <Button className='btn primary-btn' onClick={() => setIsUpdateOpen(true)}>{t("duzenle")}</Button>
+                            <Button className='btn primary-btn' onClick={handleDelete}>{t("sil")}</Button>
+                        </div>
+                    </Sider>
+                    <Layout style={{ padding: '0 24px 24px' }}>
+                        <Content style={{ padding: 24, margin: 0, minHeight: 280, overflow: 'auto' }}>
+                            {selectedMarka && (
+                                <>
+                                    <div className='title'>{marka}</div>
+                                    <List
+                                        dataSource={modelList}
+                                        renderItem={(model) => (
+                                            <List.Item
+                                                onClick={() => handleModelClick(model)}
+                                                style={{ backgroundColor: selectedModel && selectedModel.siraNo === model.siraNo ? '#e6f7ff' : '#fff' }}
+                                            >
+                                                {model.modelDef}
+                                            </List.Item>
+                                        )}
+                                        style={{ backgroundColor: '#fff', padding: '10px', borderRadius: '5px' }}
+                                    />
+                                </>
+                            )}
+                            <div className='model-buttons'>
+                                <Button className='btn primary-btn' onClick={() => setIsModelAddOpen(true)} style={{ marginRight: '8px' }}>{t("ekle")}</Button>
+                                <Button className='btn primary-btn' onClick={() => setIsUpdateModelOpen(true)} style={{ marginRight: '8px' }}>{t("duzenle")}</Button>
+                                <Button className='btn primary-btn' onClick={handleModelDelete}>{t("sil")}</Button>
+                            </div>
+                        </Content>
+                    </Layout>
                 </Layout>
-            </Layout>
 
-            <AddModal isOpen={isOpen} setIsOpen={setIsOpen} setStatus={setStatus} />
-            <UpdateModalModal isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} setStatus={setStatus} markaItem={{ siraNo: selectedMarka, marka: marka }} />
+                <AddModal isOpen={isOpen} setIsOpen={setIsOpen} setStatus={setStatus} />
+                <UpdateModalModal isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} setStatus={setStatus} markaItem={{ siraNo: selectedMarka, marka: marka }} />
 
-            <AddModelModal isOpen={isModelAddOpen} setIsOpen={setIsModelAddOpen} setStatus={setStatusModel} markaId={selectedMarka} />
-            <UpdateModelModal isOpen={isModelUpdateOpen} setIsOpen={setIsUpdateModelOpen} setStatus={setStatusModel} modelItem={selectedModel} />
+                <AddModelModal isOpen={isModelAddOpen} setIsOpen={setIsModelAddOpen} setStatus={setStatusModel} markaId={selectedMarka} />
+                <UpdateModelModal isOpen={isModelUpdateOpen} setIsOpen={setIsUpdateModelOpen} setStatus={setStatusModel} modelItem={selectedModel} />
 
-            <Modal
-                title="Delete Marka"
-                visible={isDeleteModalOpen}
-                onOk={closeModal}
-                onCancel={closeModal}
-                footer={[
-                    <Button key="ok" onClick={closeModal}>
-                        OK
-                    </Button>,
-                ]}
-            >
-                <p>[ {marka} ] markasına ait araç kayıtları bulunmaktadır. Kayıt silinemez.</p>
-            </Modal>
+                {/* marka */}
+                <Modal
+                    open={isDeleteModalOpen}
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    footer={[
+                        <Button key="ok" onClick={closeModal}>
+                            Tamam
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {marka} ] markasına ait araç kayıtları bulunmaktadır. Kayıt silinemez.</p>
+                </Modal>
+                <Modal
+                    open={isConfirmDeleteModalOpen}
+                    onOk={confirmDelete}
+                    onCancel={closeConfirmModal}
+                    footer={[
+                        <Button key="cancel" onClick={closeConfirmModal}>
+                            Hayır
+                        </Button>,
+                        <Button key="confirm" type="primary" onClick={confirmDelete}>
+                            Evet
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {marka} ] tanımlı marka ve bu markaya tanımlanmış tüm modeller silinecektir. Devam etmek istediğinizden emin misiniz?</p>
+                </Modal>
 
-            <Modal
-                title="Confirm Delete"
-                visible={isConfirmDeleteModalOpen}
-                onOk={confirmDelete}
-                onCancel={closeConfirmModal}
-                footer={[
-                    <Button key="cancel" onClick={closeConfirmModal}>
-                        Hayır
-                    </Button>,
-                    <Button key="confirm" type="primary" onClick={confirmDelete}>
-                        Evet
-                    </Button>,
-                ]}
-            >
-                <p>[ {marka} ] tanımlı marka ve bu markaya tanımlanmış tüm modeller silinecektir. Devam etmek istediğinizden emin misiniz?</p>
-            </Modal>
-        </div>
+                {/* model */}
+                <Modal
+                    open={isDeleteModelModalOpen}
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    footer={[
+                        <Button key="ok" onClick={closeModal}>
+                            Tamam
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {marka} ] markasına ait araç kayıtları bulunmaktadır. Kayıt silinemez.</p>
+                </Modal>
+                <Modal
+                    open={isConfirmDeleteModelModalOpen}
+                    onOk={confirmModelDelete}
+                    onCancel={closeConfirmModal}
+                    footer={[
+                        <Button key="cancel" onClick={closeConfirmModal}>
+                            Hayır
+                        </Button>,
+                        <Button key="confirm" type="primary" onClick={confirmModelDelete}>
+                            Evet
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {marka} ] tanımlı marka ve bu markaya tanımlanmış tüm modeller silinecektir. Devam etmek istediğinizden emin misiniz?</p>
+                </Modal>
+            </div>
+        </>
+
     );
 };
 

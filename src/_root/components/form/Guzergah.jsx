@@ -9,8 +9,8 @@ const Guzergah = ({ field }) => {
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        CustomCodeControlService('FuelRoute/GetFuelRoutesList ').then(res => {
-            setData(res.data)
+        CustomCodeControlService('FuelRoute/GetFuelRoutesList').then(res => {
+            setData(res.data.list)
         })
     }
 

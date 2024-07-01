@@ -106,13 +106,19 @@ const items = [
             {
                 key: 20,
                 label: (
-                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                    <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
                 ),
             },
             {
                 key: 21,
                 label: (
-                    <Link to={'/sehir-tanimlari'}>{t("seirTanimlari")}</Link>
+                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                ),
+            },
+            {
+                key: 22,
+                label: (
+                    <Link to={'/sehir-tanimlari'}>{t("sehirTanimlari")}</Link>
                 ),
             },
         ],

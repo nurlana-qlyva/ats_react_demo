@@ -174,5 +174,11 @@
     "guncelKmDzeltme": "Güncel Km Düzeltme",
     "kmSifirlama": "Km Sıfırlama",
     "guncelKmSifirlamaSoru": "Güncel Km Sıfırlamaya Eminmisiniz?",
-    "malzemeSinif": "Malzeme Sınıfı"
+    "malzemeSinif": "Malzeme Sınıfı",
+    "sistemTanimlari": "Sistem Tanımları",
+    "markaModel": "Markalar / Modeller",
+    "markaModelTanim": "Marka ve Model Tanımları",
+    "sehirTanimlari" : "Şehirler",
+    "sehirTanim" : "Şehir Tanımları",
+    "sil" : "Sil"
 }

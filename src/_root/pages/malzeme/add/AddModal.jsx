@@ -160,32 +160,20 @@ const AddModal = ({ setStatus }) => {
     const body = {
       malzemeKod: values.malzemeKod,
       tanim: values.tanim,
-      // "stokMiktar": values.stokMiktar,
       birimKodId: values.birimKodId || 0,
       malzemeTipKodId: values.malzemeTipKodId || 0,
       fiyat: values.fiyat || 0,
-      // "firmaId": values.firmaId || 0,
-      // "tedarikci": values.malzemtedarikcieKod,
-      // "tedarikciFiyat": values.tedarikciFiyat,
-      // "tedarikciIskontoOran": values.tedarikciIskontoOran,
       seriNo: values.seriNo,
       barKodNo: values.barKodNo,
       depoId: values.depoId || 0,
       bolum: values.bolum,
       raf: values.raf,
       kritikMiktar: values.kritikMiktar || 0,
-      // "cikanMiktar": values.cikanMiktar,
-      // "girenMiktar": values.girenMiktar,
-      // "sonAlisTarih": dayjs(values.sonAlisTarih).format("YYYY-MM-DD"),
-      // "sonFiyat": values.sonFiyat,
       kdvOran: values.kdvOran || 0,
       aktif: values.aktif,
       yedekParca: values.yedekParca,
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
-      // "olusturma": values.olusturma,
-      // "degistirme": values.degistirme,
-      // "aciklama": values.aciklama,
       olcu: values.olcu,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
@@ -213,7 +201,11 @@ const AddModal = ({ setStatus }) => {
   });
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid === "error"
+      ? true
+      : isValid === "success"
+          ? false
+          : false} >
       {t("kaydet")}
     </Button>,
     <Button

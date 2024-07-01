@@ -50,10 +50,10 @@ const AuthLayout = () => {
             {isError && <ErrorAlert />}
 
             <div className="grid h-full">
-                <div className="col-span-6 p-10 login-card">
+                <div className="col-span-5 login-card">
                     <img src="/images/ats_pro_logo.png" alt="ats logo" className='login-logo-img self-center' />
                     <div>
-                        <div className='mt-20'>
+                        <div className='mt-30'>
                             <Controller
                                 name='username'
                                 control={control}
@@ -62,7 +62,7 @@ const AuthLayout = () => {
                             />
                             {errors.username && <span className='error-message'>{errors.username.message}</span>}
                         </div>
-                        <div className='mt-20 mb-10'>
+                        <div className='mt-30 mb-20'>
                             <Controller
                                 name='password'
                                 control={control}
@@ -71,13 +71,15 @@ const AuthLayout = () => {
                             />
                             {errors.password && <span className='error-message'>{errors.password.message}</span>}
                         </div>
-                        <div className='flex justify-end mb-10'>
+                        <div className='flex justify-end mb-20'>
                             <Link to={''} className='login-forget-link'>Forgot Password?</Link>
                         </div>
                         <Button type="submit" onClick={handleSubmit(onSubmit)} className='login-btn btn mt-6'>{isLoading ? <Spin className='text-white' /> : "Giriş"}</Button>
                     </div>
                 </div>
-                <div className='login-bg-image col-span-6' />
+                <div className='login-bg-image col-span-7'>
+                    <div className="bg-overlay"></div>
+                </div>
             </div>
         </div>
     );

@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { CustomCodeControlService } from '../../../api/service'
 import { Select } from 'antd'
 import { SelectContext } from '../../../context/selectSlice'
 
-const Town = ({ field }) => {
+const TownVaris = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
-    const { setTownId } = useContext(SelectContext)
+    const { setVarisSehirID } = useContext(SelectContext)
 
     const handleClickSelect = () => {
         CustomCodeControlService("Town/GetTownList").then(res => {
@@ -30,7 +30,7 @@ const Town = ({ field }) => {
                 label: item.tanim,
                 value: item.sehirId,
             }))}
-            value={watch('sehir')}
+            value={watch('varisSehir')}
             onClick={handleClickSelect}
             onChange={e => {
                 field.onChange(e)
@@ -38,14 +38,14 @@ const Town = ({ field }) => {
                     field.onChange("")
                     const selectedOption = data.find(option => option.sehirId === e);
                     if (!selectedOption) {
-                        setValue("sehir", "")
-                        setTownId(0)
+                        setValue("varisSehir", "")
+                        setVarisSehirID(0)
                     }
                 } else {
                     const selectedOption = data.find(option => option.sehirId === e)
                     if (selectedOption) {
-                        setValue("sehir", selectedOption.tanim)
-                        setTownId(e)
+                        setValue("varisSehir", selectedOption.tanim)
+                        setVarisSehirID(e)
                     }
                 }
             }}
@@ -53,10 +53,10 @@ const Town = ({ field }) => {
     )
 }
 
-Town.propTypes = {
+TownVaris.propTypes = {
     field: PropTypes.shape({
         onChange: PropTypes.func,
     })
 }
 
-export default Town
+export default TownVaris

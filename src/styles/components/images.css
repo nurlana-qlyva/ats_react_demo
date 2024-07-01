@@ -8,4 +8,5 @@
         center/cover url("/images/ats_login_image.jpg") no-repeat;
     height: 100%;
     overflow: hidden;
+    position: relative;
 }

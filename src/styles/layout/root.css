@@ -145,6 +145,67 @@
   fill: var(--light-blue);
 }
 
+.sistem .ant-list {
+  max-height: 80% !important;
+  overflow: auto;
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+}
+
+.region .ant-list {
+  max-height: 50vh !important;
+  overflow: auto;
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+}
+
 .sistem .ant-layout-content {
-  max-height: 600px !important;
+  padding: 0 !important;
+  position: relative;
+}
+
+.br-8 {
+  border-radius: 8px;
+}
+
+.sistem .ant-layout-sider {
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff; 
+  flex: 0 0 250 !important;
+}
+
+.sistem {
+  height: 90%;
+}
+
+.sistem .ant-layout {
+  height: 100% !important;
+}
+
+.sistem .title {
+  margin-bottom: 16px;
+  text-align: center;
+  background-color: #fff;
+  padding: 20px 0;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.model-buttons {
+  position: absolute; 
+  bottom: 0;
+  left: 50%; 
+  transform: translateX(-50%);
+}
+
+.region .model-buttons {
+  position: absolute; 
+  bottom: 120px;
+  left: 50%; 
+  transform: translateX(-50%);
 }

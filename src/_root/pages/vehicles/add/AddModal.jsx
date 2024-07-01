@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { t } from 'i18next'
 import { Button, Modal, Tabs } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { NewVehicleAddService } from '../../../../api/service'
+import { CodeItemValidateService, NewVehicleAddService } from '../../../../api/service'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from '../../../components/form/PersonalFields'
 
 const AddModal = ({ setStatus }) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isValid, setIsValid] = useState("normal");
 
     const [fields, setFields] = useState([
         {
@@ -128,7 +129,19 @@ const AddModal = ({ setStatus }) => {
         defaultValues: defaultValues
     })
 
-    const { handleSubmit, reset } = methods
+    const { handleSubmit, reset, watch } = methods
+
+    useEffect(() => {
+        if (watch("plaka")) {
+            const body = {
+                tableName: "Arac",
+                code: watch("plaka"),
+            };
+            CodeItemValidateService(body).then((res) => {
+                !res.data.status ? setIsValid("success") : setIsValid("error");
+            });
+        }
+    }, [watch("plaka")]);
 
     const handleOk = handleSubmit(async (value) => {
         const kmLog = value.guncelKm ? {
@@ -190,7 +203,7 @@ const AddModal = ({ setStatus }) => {
         {
             key: '1',
             label: t('genelBilgiler'),
-            children: <GeneralInfo />,
+            children: <GeneralInfo isValid={isValid} />,
         },
         {
             key: '2',
@@ -201,7 +214,11 @@ const AddModal = ({ setStatus }) => {
 
     const footer = (
         [
-            <Button key="submit" className="btn btn-min primary-btn" onClick={handleOk}>
+            <Button key="submit" className="btn btn-min primary-btn" onClick={handleOk} disabled={isValid === "error"
+                ? true
+                : isValid === "success"
+                    ? false
+                    : false}>
                 {t('kaydet')}
             </Button>,
             <Button key="back" className="btn btn-min cancel-btn" onClick={() => setIsModalOpen(false)}>

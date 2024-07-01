@@ -16,14 +16,14 @@ import {
     SortableContext,
     useSortable,
 } from "@dnd-kit/sortable";
-import { Checkbox, Table, Popover, Button, Input, Popconfirm } from "antd";
+import { Checkbox, Table, Popover, Button, Input, Popconfirm, Modal } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteTownService, GetTownListService } from "../../../../api/services/sehirtanimleri_services";
+import { DeleteGuzergahService, GetGuzergahListService, SearchGuzergahListService } from "../../../../api/services/guzergah_services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 
@@ -33,7 +33,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: t("sehirTanim"),
+        title: t("guzergahTanim"),
     },
 ];
 
@@ -114,7 +114,7 @@ TableHeaderCell.propTypes = {
     style: PropTypes.object,
 };
 
-const Sehirler = () => {
+const Guzergah = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -132,34 +132,92 @@ const Sehirler = () => {
     const [openRowHeader, setOpenRowHeader] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [record, setRecord] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+    const [deletedGuzergah, setDeletedGuzergah] = useState(0);
+    const [guzergah, setGuzergah] = useState(0);
+    const [id, setId] = useState(0);
 
     useEffect(() => {
         setLoading(true);
-        GetTownListService().then((res) => {
-            setDataSource(res?.data);
+        GetGuzergahListService(tableParams.pagination.current).then((res) => {
+            setDataSource(res?.data.list);
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.recordCount,
+                },
+            });
             setLoading(false);
         });
-    }, [status]);
+    }, [status, tableParams.pagination.current]);
 
-    const handleDelete = (id) => {
-        DeleteTownService(id).then((res) => {
-          if (res?.data.statusCode === 202) {
-            setStatus(true);
-          }
-        });
-        setStatus(false);
+    const handleDelete = (count) => {
+        if (count > 0) {
+            setIsDeleteModalOpen(true);
+        } else {
+            setIsConfirmDeleteModalOpen(true);
+        }
     };
+
+    const confirmDelete = () => {
+        DeleteGuzergahService(deletedGuzergah).then(res => {
+            setStatus(!status);
+            setIsConfirmDeleteModalOpen(false);
+        });
+    };
+
+    const closeModal = () => {
+        setIsDeleteModalOpen(false);
+        setIsDeleteModalOpen(false);
+    };
+
+    const closeConfirmModal = () => {
+        setIsConfirmDeleteModalOpen(false);
+        setIsConfirmDeleteModalOpen(false);
+    };
+
+    useEffect(() => {
+        if (search.length >= 3) {
+            SearchGuzergahListService(tableParams?.pagination.current, search).then(
+                (res) => {
+                    setDataSource(res?.data.list);
+                    setTableParams({
+                        ...tableParams,
+                        pagination: {
+                            ...tableParams.pagination,
+                            total: res?.data.recordCount,
+                        },
+                    });
+                    setLoading(false);
+                }
+            );
+        } else {
+            GetGuzergahListService(tableParams?.pagination.current).then((res) => {
+                setDataSource(res?.data.list);
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res?.data.recordCount,
+                    },
+                });
+                setLoading(false);
+            });
+        }
+    }, [search, tableParams?.pagination.current]);
 
     const baseColumns = [
         {
-            title: t("sehir"),
-            dataIndex: "tanim",
+            title: t("guzergahKodu"),
+            dataIndex: "guzergahKodu",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setUpdateModal(true);
-                        setRecord(record);
+                        setId(record.guzergahId);
                     }}
                 >
                     {text}
@@ -167,20 +225,54 @@ const Sehirler = () => {
             ),
         },
         {
-            title: t("ulkeKod"),
-            dataIndex: "ulkeKod",
+            title: t("guzergah"),
+            dataIndex: "guzergah",
             key: 2,
+        },
+        {
+            title: t("mesafe"),
+            dataIndex: "mesafe",
+            key: 3,
+        },
+        {
+            title: t("aciklama"),
+            dataIndex: "aciklama",
+            key: 4,
+        },
+        {
+            title: t("sureSaat"),
+            dataIndex: "saat",
+            key: 5,
+        },
+        {
+            title: t("sureDakika"),
+            dataIndex: "dakika",
+            key: 6,
+        },
+        {
+            title: t("cikisYeri"),
+            dataIndex: "cikisYeri",
+            key: 7,
+        },
+        {
+            title: t("tuketimFarki"),
+            dataIndex: "tuketimOran",
+            key: 8,
         },
         {
             title: "",
             dataIndex: "delete",
-            key: 3,
+            key: 9,
             render: (_, record) => (
                 <Popconfirm
                     title={t("confirmQuiz")}
                     cancelText={t("cancel")}
                     okText={t("ok")}
-                    onConfirm={() => handleDelete(record.sehirId)}
+                    onConfirm={() => {
+                        handleDelete(record.bagliSeferSayisi)
+                        setDeletedGuzergah(record.guzergahId)
+                        setGuzergah(record.guzergah)
+                    }}
                 >
                     <DeleteOutlined style={{ color: "#dc3545" }} />
                 </Popconfirm>
@@ -292,7 +384,7 @@ const Sehirler = () => {
                             placeholder="Arama"
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <AddModal setStatus={setStatus}/>
+                        <AddModal setStatus={setStatus} />
                         {/* <Filter filter={filter} clearFilters={clear} /> */}
                     </div>
                 </div>
@@ -302,8 +394,7 @@ const Sehirler = () => {
                 updateModal={updateModal}
                 setUpdateModal={setUpdateModal}
                 setStatus={setStatus}
-                status={status}
-                record={record}
+                id={id}
             />
 
             <div className="content">
@@ -362,9 +453,37 @@ const Sehirler = () => {
                         </th>
                     </DragOverlay>
                 </DndContext>
+
+                <Modal
+                    open={isDeleteModalOpen}
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    footer={[
+                        <Button key="ok" onClick={closeModal}>
+                            Tamam
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {guzergah} ] güzergahına ait sefer hareketleri bulunmaktadır. Kayıt silinemez.</p>
+                </Modal>
+                <Modal
+                    open={isConfirmDeleteModalOpen}
+                    onOk={confirmDelete}
+                    onCancel={closeConfirmModal}
+                    footer={[
+                        <Button key="cancel" onClick={closeConfirmModal}>
+                            Hayır
+                        </Button>,
+                        <Button key="confirm" type="primary" onClick={confirmDelete}>
+                            Evet
+                        </Button>,
+                    ]}
+                >
+                    <p>[ {guzergah} ] tanımlı güzergah silinecektir. Devam etmek istediğinizden emin misiniz?</p>
+                </Modal>
             </div>
         </>
     );
 };
 
-export default Sehirler;
+export default Guzergah;

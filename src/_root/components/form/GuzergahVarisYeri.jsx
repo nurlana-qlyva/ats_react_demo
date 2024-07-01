@@ -1,19 +1,28 @@
-import { useContext, useEffect, useState } from 'react'
+// GuzergahVarisYeri
+
+import { useContext, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
-import { CustomCodeControlService } from '../../../api/service'
 import { Select } from 'antd'
+import { CustomCodeControlService } from '../../../api/service'
+import { GetGuzergahYerByTownIdService, GetGuzergahYerService } from '../../../api/services/guzergah_services'
 import { SelectContext } from '../../../context/selectSlice'
 
-const Town = ({ field }) => {
+const GuzergahVarisYeri = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
-    const { setTownId } = useContext(SelectContext)
+    const { varisSehirId } = useContext(SelectContext)
 
-    const handleClickSelect = () => {
-        CustomCodeControlService("Town/GetTownList").then(res => {
-            setData(res.data)
-        })
+    const handleClick = () => {
+        if (!varisSehirId) {
+            GetGuzergahYerService().then(res => {
+                setData(res.data)
+            })
+        } else {
+            GetGuzergahYerByTownIdService(varisSehirId).then(res => {
+                setData(res.data)
+            })
+        }
     }
 
     return (
@@ -28,24 +37,21 @@ const Town = ({ field }) => {
             }
             options={data.map((item) => ({
                 label: item.tanim,
-                value: item.sehirId,
+                value: item.sehirYerId,
             }))}
-            value={watch('sehir')}
-            onClick={handleClickSelect}
+            value={watch('varisYeri')}
+            onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
                 if (e === undefined) {
-                    field.onChange("")
-                    const selectedOption = data.find(option => option.sehirId === e);
+                    const selectedOption = data.find(option => option.sehirYerId === e);
                     if (!selectedOption) {
-                        setValue("sehir", "")
-                        setTownId(0)
+                        setValue('varisYeri', "")
                     }
                 } else {
-                    const selectedOption = data.find(option => option.sehirId === e)
+                    const selectedOption = data.find(option => option.sehirYerId === e);
                     if (selectedOption) {
-                        setValue("sehir", selectedOption.tanim)
-                        setTownId(e)
+                        setValue('varisYeri', selectedOption.tanim)
                     }
                 }
             }}
@@ -53,10 +59,10 @@ const Town = ({ field }) => {
     )
 }
 
-Town.propTypes = {
+GuzergahVarisYeri.propTypes = {
     field: PropTypes.shape({
         onChange: PropTypes.func,
     })
 }
 
-export default Town
+export default GuzergahVarisYeri
