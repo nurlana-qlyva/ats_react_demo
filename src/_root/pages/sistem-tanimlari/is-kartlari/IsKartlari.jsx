@@ -23,8 +23,8 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteGuzergahService, GetGuzergahListService, SearchGuzergahListService } from "../../../../api/services/guzergah_services";
-import AddModal from "./add/AddModal";
+import { DeleteIsKartiService, GetIsKartiListService, SearchIsKartiListService } from "../../../../api/services/isKartlari_services";
+import AddModal from "./add/AddModal"
 import UpdateModal from "./update/UpdateModal";
 
 const breadcrumb = [
@@ -33,7 +33,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: t("guzergahTanim"),
+        title: t("isKartlari"),
     },
 ];
 
@@ -114,7 +114,7 @@ TableHeaderCell.propTypes = {
     style: PropTypes.object,
 };
 
-const Guzergah = () => {
+const IsKartlari = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -131,15 +131,11 @@ const Guzergah = () => {
     const [status, setStatus] = useState(false);
     const [openRowHeader, setOpenRowHeader] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
-    const [deletedGuzergah, setDeletedGuzergah] = useState(0);
-    const [guzergah, setGuzergah] = useState(0);
     const [id, setId] = useState(0);
 
     useEffect(() => {
         setLoading(true);
-        GetGuzergahListService(tableParams.pagination.current).then((res) => {
+        GetIsKartiListService(tableParams.pagination.current).then((res) => {
             setDataSource(res?.data.list);
             setTableParams({
                 ...tableParams,
@@ -150,36 +146,11 @@ const Guzergah = () => {
             });
             setLoading(false);
         });
-    }, [status, tableParams.pagination.current]);
-
-    const handleDelete = (count) => {
-        if (count > 0) {
-            setIsDeleteModalOpen(true);
-        } else {
-            setIsConfirmDeleteModalOpen(true);
-        }
-    };
-
-    const confirmDelete = () => {
-        DeleteGuzergahService(deletedGuzergah).then(res => {
-            setStatus(!status);
-            setIsConfirmDeleteModalOpen(false);
-        });
-    };
-
-    const closeModal = () => {
-        setIsDeleteModalOpen(false);
-        setIsDeleteModalOpen(false);
-    };
-
-    const closeConfirmModal = () => {
-        setIsConfirmDeleteModalOpen(false);
-        setIsConfirmDeleteModalOpen(false);
-    };
+    }, [status]);
 
     useEffect(() => {
         if (search.length >= 3) {
-            SearchGuzergahListService(tableParams?.pagination.current, search).then(
+            SearchIsKartiListService(tableParams?.pagination.current, search).then(
                 (res) => {
                     setDataSource(res?.data.list);
                     setTableParams({
@@ -193,7 +164,7 @@ const Guzergah = () => {
                 }
             );
         } else {
-            GetGuzergahListService(tableParams?.pagination.current).then((res) => {
+            GetIsKartiListService(tableParams?.pagination.current).then((res) => {
                 setDataSource(res?.data.list);
                 setTableParams({
                     ...tableParams,
@@ -209,14 +180,14 @@ const Guzergah = () => {
 
     const baseColumns = [
         {
-            title: t("guzergahKodu"),
-            dataIndex: "guzergahKodu",
+            title: t("tanim"),
+            dataIndex: "tanim",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setUpdateModal(true);
-                        setId(record.guzergahId);
+                        setId(record.isTanimId);
                     }}
                 >
                     {text}
@@ -224,39 +195,29 @@ const Guzergah = () => {
             ),
         },
         {
-            title: t("guzergah"),
-            dataIndex: "guzergah",
+            title: t("isTipi"),
+            dataIndex: "isTip",
             key: 2,
         },
         {
-            title: t("mesafe"),
-            dataIndex: "mesafe",
+            title: t("bakimDepartman"),
+            dataIndex: "bakimDepartman",
             key: 3,
-        },
-        {
-            title: t("aciklama"),
-            dataIndex: "aciklama",
-            key: 4,
         },
         {
             title: t("sureSaat"),
             dataIndex: "saat",
-            key: 5,
+            key: 4,
         },
         {
             title: t("sureDakika"),
             dataIndex: "dakika",
+            key: 5,
+        },
+        {
+            title: t("ucret"),
+            dataIndex: "ucret",
             key: 6,
-        },
-        {
-            title: t("cikisYeri"),
-            dataIndex: "cikisYeri",
-            key: 7,
-        },
-        {
-            title: t("tuketimFarki"),
-            dataIndex: "tuketimOran",
-            key: 8,
         },
         {
             title: "",
@@ -267,11 +228,7 @@ const Guzergah = () => {
                     title={t("confirmQuiz")}
                     cancelText={t("cancel")}
                     okText={t("ok")}
-                    onConfirm={() => {
-                        handleDelete(record.bagliSeferSayisi)
-                        setDeletedGuzergah(record.guzergahId)
-                        setGuzergah(record.guzergah)
-                    }}
+                    onConfirm={() => handleDelete(record.isTanimId)}
                 >
                     <DeleteOutlined style={{ color: "#dc3545" }} />
                 </Popconfirm>
@@ -357,6 +314,15 @@ const Guzergah = () => {
             over: over?.id,
             direction: overIndex > activeIndex ? "right" : "left",
         });
+    };
+
+    const handleDelete = (id) => {
+        DeleteIsKartiService(id).then(res => {
+            if(res.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        setStatus(false)
     };
 
     return (
@@ -452,37 +418,9 @@ const Guzergah = () => {
                         </th>
                     </DragOverlay>
                 </DndContext>
-
-                <Modal
-                    open={isDeleteModalOpen}
-                    onOk={closeModal}
-                    onCancel={closeModal}
-                    footer={[
-                        <Button key="ok" onClick={closeModal}>
-                            Tamam
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {guzergah} ] güzergahına ait sefer hareketleri bulunmaktadır. Kayıt silinemez.</p>
-                </Modal>
-                <Modal
-                    open={isConfirmDeleteModalOpen}
-                    onOk={confirmDelete}
-                    onCancel={closeConfirmModal}
-                    footer={[
-                        <Button key="cancel" onClick={closeConfirmModal}>
-                            Hayır
-                        </Button>,
-                        <Button key="confirm" type="primary" onClick={confirmDelete}>
-                            Evet
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {guzergah} ] tanımlı güzergah silinecektir. Devam etmek istediğinizden emin misiniz?</p>
-                </Modal>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Guzergah;
+export default IsKartlari

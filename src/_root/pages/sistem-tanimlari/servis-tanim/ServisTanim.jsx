@@ -23,7 +23,7 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteGuzergahService, GetGuzergahListService, SearchGuzergahListService } from "../../../../api/services/guzergah_services";
+import { DeleteServisService, GetServisListService, SearchServisListService } from "../../../../api/services/servistanim_services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 
@@ -33,7 +33,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: t("guzergahTanim"),
+        title: t("servisTanim"),
     },
 ];
 
@@ -114,7 +114,7 @@ TableHeaderCell.propTypes = {
     style: PropTypes.object,
 };
 
-const Guzergah = () => {
+const ServisTanim = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -133,13 +133,13 @@ const Guzergah = () => {
     const [updateModal, setUpdateModal] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
-    const [deletedGuzergah, setDeletedGuzergah] = useState(0);
-    const [guzergah, setGuzergah] = useState(0);
+    const [deletedServis, setDeletedServis] = useState(0);
+    const [servis, setServis] = useState(0);
     const [id, setId] = useState(0);
 
     useEffect(() => {
         setLoading(true);
-        GetGuzergahListService(tableParams.pagination.current).then((res) => {
+        GetServisListService(tableParams.pagination.current).then((res) => {
             setDataSource(res?.data.list);
             setTableParams({
                 ...tableParams,
@@ -150,7 +150,7 @@ const Guzergah = () => {
             });
             setLoading(false);
         });
-    }, [status, tableParams.pagination.current]);
+    }, [status]);
 
     const handleDelete = (count) => {
         if (count > 0) {
@@ -161,7 +161,7 @@ const Guzergah = () => {
     };
 
     const confirmDelete = () => {
-        DeleteGuzergahService(deletedGuzergah).then(res => {
+        DeleteServisService(deletedServis).then(res => {
             setStatus(!status);
             setIsConfirmDeleteModalOpen(false);
         });
@@ -179,7 +179,7 @@ const Guzergah = () => {
 
     useEffect(() => {
         if (search.length >= 3) {
-            SearchGuzergahListService(tableParams?.pagination.current, search).then(
+            SearchServisListService(tableParams?.pagination.current, search).then(
                 (res) => {
                     setDataSource(res?.data.list);
                     setTableParams({
@@ -193,7 +193,7 @@ const Guzergah = () => {
                 }
             );
         } else {
-            GetGuzergahListService(tableParams?.pagination.current).then((res) => {
+            GetServisListService(tableParams?.pagination.current).then((res) => {
                 setDataSource(res?.data.list);
                 setTableParams({
                     ...tableParams,
@@ -209,14 +209,14 @@ const Guzergah = () => {
 
     const baseColumns = [
         {
-            title: t("guzergahKodu"),
-            dataIndex: "guzergahKodu",
+            title: t("bakimKodu"),
+            dataIndex: "bakimKodu",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setUpdateModal(true);
-                        setId(record.guzergahId);
+                        setId(record.bakimId);
                     }}
                 >
                     {text}
@@ -224,53 +224,49 @@ const Guzergah = () => {
             ),
         },
         {
-            title: t("guzergah"),
-            dataIndex: "guzergah",
+            title: t("tanim"),
+            dataIndex: "tanim",
             key: 2,
         },
         {
-            title: t("mesafe"),
-            dataIndex: "mesafe",
+            title: t("km"),
+            dataIndex: "km",
             key: 3,
+        },
+        {
+            title: t("gun"),
+            dataIndex: "gun",
+            key: 4,
+        },
+        {
+            title: t("servisTipi"),
+            dataIndex: "servisTipi",
+            key: 5,
+        },
+        {
+            title: t("periyodik"),
+            dataIndex: "periyodik",
+            key: 6,
+            render: text => <Checkbox checked={text} />
         },
         {
             title: t("aciklama"),
             dataIndex: "aciklama",
-            key: 4,
-        },
-        {
-            title: t("sureSaat"),
-            dataIndex: "saat",
-            key: 5,
-        },
-        {
-            title: t("sureDakika"),
-            dataIndex: "dakika",
-            key: 6,
-        },
-        {
-            title: t("cikisYeri"),
-            dataIndex: "cikisYeri",
             key: 7,
-        },
-        {
-            title: t("tuketimFarki"),
-            dataIndex: "tuketimOran",
-            key: 8,
         },
         {
             title: "",
             dataIndex: "delete",
-            key: 9,
+            key: 8,
             render: (_, record) => (
                 <Popconfirm
                     title={t("confirmQuiz")}
                     cancelText={t("cancel")}
                     okText={t("ok")}
                     onConfirm={() => {
-                        handleDelete(record.bagliSeferSayisi)
-                        setDeletedGuzergah(record.guzergahId)
-                        setGuzergah(record.guzergah)
+                        handleDelete(record.bagliServisler)
+                        setDeletedServis(record.bakimId)
+                        setServis(record.tanim)
                     }}
                 >
                     <DeleteOutlined style={{ color: "#dc3545" }} />
@@ -463,7 +459,7 @@ const Guzergah = () => {
                         </Button>,
                     ]}
                 >
-                    <p>[ {guzergah} ] güzergahına ait sefer hareketleri bulunmaktadır. Kayıt silinemez.</p>
+                    <p>[ {servis} ] bakımına ait servis kayıtları bulunmaktadır. Kayıt silinemez.</p>
                 </Modal>
                 <Modal
                     open={isConfirmDeleteModalOpen}
@@ -478,11 +474,11 @@ const Guzergah = () => {
                         </Button>,
                     ]}
                 >
-                    <p>[ {guzergah} ] tanımlı güzergah silinecektir. Devam etmek istediğinizden emin misiniz?</p>
+                    <p>[ {servis} ] bakımı silinecektir. Devam etmek istediğinizden emin misiniz?</p>
                 </Modal>
             </div>
         </>
     );
 };
 
-export default Guzergah;
+export default ServisTanim;

@@ -16,6 +16,10 @@ import Hareketler from './_root/pages/hareketler/Hareketler'
 import MarkaList from './_root/pages/sistem-tanimlari/marka-model/MarkaList'
 import Sehirler from './_root/pages/sistem-tanimlari/sehirler/Sehirler'
 import Guzergah from './_root/pages/sistem-tanimlari/guzergah/Guzergah'
+import IsKartlari from './_root/pages/sistem-tanimlari/is-kartlari/IsKartlari'
+import LastikTanim from './_root/pages/sistem-tanimlari/lastik-tanim/LastikTanim'
+import CezaTanim from './_root/pages/sistem-tanimlari/ceza-tanim/CezaTanim'
+import ServisTanim from './_root/pages/sistem-tanimlari/servis-tanim/ServisTanim'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -48,6 +52,10 @@ const App = () => {
         <Route path="/arac-marka-ve-model" element={<MarkaList />} />
         <Route path="/sehir-tanimlari" element={<Sehirler />} />
         <Route path="/guzergah-tanimlari" element={<Guzergah />} />
+        <Route path="/is-kartlari" element={<IsKartlari />} />
+        <Route path="/lastik-tanimlari" element={<LastikTanim />} />
+        <Route path="/ceza-tanimlari" element={<CezaTanim />} />
+        <Route path="/servis-tanimlari" element={<ServisTanim />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

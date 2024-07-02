@@ -146,7 +146,7 @@
 }
 
 .sistem .ant-list {
-  max-height: 80% !important;
+  max-height: 70% !important;
   overflow: auto;
   box-shadow: var(--shadow);
   border-radius: 8px;

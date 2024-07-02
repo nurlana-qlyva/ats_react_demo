@@ -1,16 +1,17 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
-import { FuelTankContext } from '../../../context/fuelTankSlice'
+import { CodeControlService } from '../../../api/service'
 
-const ServisType = ({ field }) => {
+const BakimDepartman = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
-    const { setId } = useContext(FuelTankContext)
 
-    const handleClickSelect = () => {
-        // MaterialListSelectService('YAKIT').then(res => setData(res.data))
+    const handleClick = () => {
+        CodeControlService(114).then(res => {
+            setData(res.data)
+        })
     }
 
     return (
@@ -24,24 +25,22 @@ const ServisType = ({ field }) => {
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={data.map((item) => ({
-                label: item.tanim,
-                value: item.malzemeId,
+                label: item.codeText,
+                value: item.siraNo,
             }))}
-            value={watch('yakitTip')}
-            onClick={handleClickSelect}
+            value={watch('bakimDepartman')}
+            onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
-                setId(e)
                 if (e === undefined) {
-                    field.onChange("")
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue("yakitTip", "")
+                        setValue('bakimDepartman', "")
                     }
                 } else {
-                    const selectedOption = data.find(option => option.malzemeId === e);
+                    const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue("yakitTip", selectedOption.tanim)
+                        setValue('bakimDepartman', selectedOption.codeText)
                     }
                 }
             }}
@@ -49,10 +48,10 @@ const ServisType = ({ field }) => {
     )
 }
 
-ServisType.propTypes = {
+BakimDepartman.propTypes = {
     field: PropTypes.shape({
         onChange: PropTypes.func,
-    }),
+    })
 }
 
-export default ServisType
+export default BakimDepartman

@@ -1,8 +1,12 @@
 import http from "../http";
 
 
-export const GetTownListService = async () => {
-    return await http.get(`/Town/GetTownList`);
+export const GetTownListService = async (page) => {
+    return await http.get(`/Town/GetTownList?page=${page}`);
+};
+
+export const SearchTownListService = async (page, parameter) => {
+    return await http.get(`/Town/GetTownList?page=${page}&parameter=${parameter}`);
 };
 
 export const AddTownService = async (data) => {

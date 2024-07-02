@@ -13,7 +13,7 @@ export const CikisFisleriListSearchService = async (page, parameter) => {
 };
 
 export const CikisFisCodeGetService = async () => {
-  return await http.get(`/Numbering/GetModuleCodeByCode?code=STOK_FIS_ALIS`);
+  return await http.get(`/Numbering/GetModuleCodeByCode?code=STOK_FIS_SATIS`);
 };
 
 export const CikisFisleriAddService = async (data) => {

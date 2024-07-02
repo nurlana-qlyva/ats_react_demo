@@ -106,19 +106,43 @@ const items = [
             {
                 key: 20,
                 label: (
-                    <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
+                    <Link to={'/servis-tanimlari'}>{t("servis")}</Link>
                 ),
             },
             {
                 key: 21,
                 label: (
-                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                    <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
                 ),
             },
             {
                 key: 22,
                 label: (
+                    <Link to={'/lastik-tanimlari'}>{t("lastik")}</Link>
+                ),
+            },
+            {
+                key: 23,
+                label: (
+                    <Link to={'/ceza-tanimlari'}>{t("ceza")}</Link>
+                ),
+            },
+            {
+                key: 24,
+                label: (
+                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                ),
+            },
+            {
+                key: 25,
+                label: (
                     <Link to={'/sehir-tanimlari'}>{t("sehirTanimlari")}</Link>
+                ),
+            },
+            {
+                key: 26,
+                label: (
+                    <Link to={'/is-kartlari'}>{t("isKartlari")}</Link>
                 ),
             },
         ],

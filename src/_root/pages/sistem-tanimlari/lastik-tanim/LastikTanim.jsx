@@ -16,15 +16,15 @@ import {
     SortableContext,
     useSortable,
 } from "@dnd-kit/sortable";
-import { Checkbox, Table, Popover, Button, Input, Popconfirm, Modal } from "antd";
+import { Checkbox, Table, Popover, Button, Input, Popconfirm } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteGuzergahService, GetGuzergahListService, SearchGuzergahListService } from "../../../../api/services/guzergah_services";
-import AddModal from "./add/AddModal";
+import { DeleteLastikService, GetLastikListService, SearchLastikListService } from "../../../../api/services/lastiktanim_services";
+import AddModal from "./add/AddModal"
 import UpdateModal from "./update/UpdateModal";
 
 const breadcrumb = [
@@ -33,7 +33,7 @@ const breadcrumb = [
         title: <HomeOutlined />,
     },
     {
-        title: t("guzergahTanim"),
+        title: t("lastikTanim"),
     },
 ];
 
@@ -114,7 +114,7 @@ TableHeaderCell.propTypes = {
     style: PropTypes.object,
 };
 
-const Guzergah = () => {
+const LastikTanim = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -131,15 +131,11 @@ const Guzergah = () => {
     const [status, setStatus] = useState(false);
     const [openRowHeader, setOpenRowHeader] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
-    const [deletedGuzergah, setDeletedGuzergah] = useState(0);
-    const [guzergah, setGuzergah] = useState(0);
     const [id, setId] = useState(0);
 
     useEffect(() => {
         setLoading(true);
-        GetGuzergahListService(tableParams.pagination.current).then((res) => {
+        GetLastikListService(tableParams.pagination.current).then((res) => {
             setDataSource(res?.data.list);
             setTableParams({
                 ...tableParams,
@@ -150,36 +146,11 @@ const Guzergah = () => {
             });
             setLoading(false);
         });
-    }, [status, tableParams.pagination.current]);
-
-    const handleDelete = (count) => {
-        if (count > 0) {
-            setIsDeleteModalOpen(true);
-        } else {
-            setIsConfirmDeleteModalOpen(true);
-        }
-    };
-
-    const confirmDelete = () => {
-        DeleteGuzergahService(deletedGuzergah).then(res => {
-            setStatus(!status);
-            setIsConfirmDeleteModalOpen(false);
-        });
-    };
-
-    const closeModal = () => {
-        setIsDeleteModalOpen(false);
-        setIsDeleteModalOpen(false);
-    };
-
-    const closeConfirmModal = () => {
-        setIsConfirmDeleteModalOpen(false);
-        setIsConfirmDeleteModalOpen(false);
-    };
+    }, [status]);
 
     useEffect(() => {
         if (search.length >= 3) {
-            SearchGuzergahListService(tableParams?.pagination.current, search).then(
+            SearchLastikListService(tableParams?.pagination.current, search).then(
                 (res) => {
                     setDataSource(res?.data.list);
                     setTableParams({
@@ -193,7 +164,7 @@ const Guzergah = () => {
                 }
             );
         } else {
-            GetGuzergahListService(tableParams?.pagination.current).then((res) => {
+            GetLastikListService(tableParams?.pagination.current).then((res) => {
                 setDataSource(res?.data.list);
                 setTableParams({
                     ...tableParams,
@@ -209,14 +180,14 @@ const Guzergah = () => {
 
     const baseColumns = [
         {
-            title: t("guzergahKodu"),
-            dataIndex: "guzergahKodu",
+            title: t("tanim"),
+            dataIndex: "tanim",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setUpdateModal(true);
-                        setId(record.guzergahId);
+                        setId(record.siraNo);
                     }}
                 >
                     {text}
@@ -224,38 +195,38 @@ const Guzergah = () => {
             ),
         },
         {
-            title: t("guzergah"),
-            dataIndex: "guzergah",
+            title: t("marka"),
+            dataIndex: "marka",
             key: 2,
         },
         {
-            title: t("mesafe"),
-            dataIndex: "mesafe",
+            title: t("model"),
+            dataIndex: "model",
             key: 3,
         },
         {
-            title: t("aciklama"),
-            dataIndex: "aciklama",
+            title: t("tip"),
+            dataIndex: "tip",
             key: 4,
         },
         {
-            title: t("sureSaat"),
-            dataIndex: "saat",
+            title: t("ebat"),
+            dataIndex: "ebat",
             key: 5,
         },
         {
-            title: t("sureDakika"),
-            dataIndex: "dakika",
+            title: t("disDerinlik"),
+            dataIndex: "disDerinlik",
             key: 6,
         },
         {
-            title: t("cikisYeri"),
-            dataIndex: "cikisYeri",
+            title: t("lastikOmru"),
+            dataIndex: "lastikOmru",
             key: 7,
         },
         {
-            title: t("tuketimFarki"),
-            dataIndex: "tuketimOran",
+            title: t("basinc"),
+            dataIndex: "basinc",
             key: 8,
         },
         {
@@ -267,11 +238,7 @@ const Guzergah = () => {
                     title={t("confirmQuiz")}
                     cancelText={t("cancel")}
                     okText={t("ok")}
-                    onConfirm={() => {
-                        handleDelete(record.bagliSeferSayisi)
-                        setDeletedGuzergah(record.guzergahId)
-                        setGuzergah(record.guzergah)
-                    }}
+                    onConfirm={() => handleDelete(record.siraNo)}
                 >
                     <DeleteOutlined style={{ color: "#dc3545" }} />
                 </Popconfirm>
@@ -357,6 +324,15 @@ const Guzergah = () => {
             over: over?.id,
             direction: overIndex > activeIndex ? "right" : "left",
         });
+    };
+
+    const handleDelete = (id) => {
+        DeleteLastikService(id).then(res => {
+            if (res.data.statusCode === 202) {
+                setStatus(true)
+            }
+        })
+        setStatus(false)
     };
 
     return (
@@ -452,37 +428,9 @@ const Guzergah = () => {
                         </th>
                     </DragOverlay>
                 </DndContext>
-
-                <Modal
-                    open={isDeleteModalOpen}
-                    onOk={closeModal}
-                    onCancel={closeModal}
-                    footer={[
-                        <Button key="ok" onClick={closeModal}>
-                            Tamam
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {guzergah} ] güzergahına ait sefer hareketleri bulunmaktadır. Kayıt silinemez.</p>
-                </Modal>
-                <Modal
-                    open={isConfirmDeleteModalOpen}
-                    onOk={confirmDelete}
-                    onCancel={closeConfirmModal}
-                    footer={[
-                        <Button key="cancel" onClick={closeConfirmModal}>
-                            Hayır
-                        </Button>,
-                        <Button key="confirm" type="primary" onClick={confirmDelete}>
-                            Evet
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {guzergah} ] tanımlı güzergah silinecektir. Devam etmek istediğinizden emin misiniz?</p>
-                </Modal>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Guzergah;
+export default LastikTanim

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Layout, Menu, List, Button, Modal } from 'antd';
+import { Layout, Menu, List, Button, Modal, Input } from 'antd';
 import { DeleteMarkaService, DeleteModelService, GetMarkaListService, GetModelListByMarkaService } from '../../../../api/services/markamodel_services';
 import AddModal from './marka-modals/AddModal';
 import UpdateModalModal from './marka-modals/UpdateModal';
@@ -50,6 +50,8 @@ const MarkaList = () => {
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
     const [isDeleteModelModalOpen, setIsDeleteModelModalOpen] = useState(false);
     const [isConfirmDeleteModelModalOpen, setIsConfirmDeleteModelModalOpen] = useState(false);
+    const [searchMarka, setSearchMarka] = useState("");
+    const [searchModel, setSearchModel] = useState("");
 
     useEffect(() => {
         GetMarkaListService().then(res => setMarkaList(res.data));
@@ -74,7 +76,16 @@ const MarkaList = () => {
         setModelBagliAracSayisi(model.bagliAracSayisi);
     };
 
-    const updatedList = markaList.map(item => {
+    const filteredMarkaList = markaList.filter(item =>
+        item.marka.toLowerCase().includes(searchMarka.toLowerCase())
+    );
+
+
+    const filteredModelList = modelList.filter(model =>
+        model.modelDef.toLowerCase().includes(searchModel.toLowerCase())
+    );
+
+    const updatedList = filteredMarkaList.map(item => {
         return {
             key: item.siraNo,
             label: item.marka,
@@ -128,11 +139,16 @@ const MarkaList = () => {
             </div>
             <div className="sistem">
                 <Layout style={{ height: '90vh' }}>
-                    <Sider width={200}>
+                    <Sider width={200} style={{ padding: "10px" }}>
                         <div style={markaTitle}>Marka</div>
+                        <Input
+                            value={searchMarka}
+                            onChange={e => setSearchMarka(e.target.value)}
+                            placeholder={t("arama")}
+                        />
                         <Menu
                             mode="inline"
-                            style={{ height: '85%', borderRight: 0, overflow: "auto" }}
+                            style={{ height: '78%', borderRight: 0, overflow: "auto" }}
                             onClick={({ key }) => handleMarkaClick(key)}
                             items={updatedList}
                         />
@@ -147,8 +163,15 @@ const MarkaList = () => {
                             {selectedMarka && (
                                 <>
                                     <div className='title'>{marka}</div>
+                                    <div className="m-20">
+                                        <Input
+                                            value={searchModel}
+                                            onChange={e => setSearchModel(e.target.value)}
+                                            placeholder={t("arama")}
+                                        />
+                                    </div>
                                     <List
-                                        dataSource={modelList}
+                                        dataSource={filteredModelList}
                                         renderItem={(model) => (
                                             <List.Item
                                                 onClick={() => handleModelClick(model)}

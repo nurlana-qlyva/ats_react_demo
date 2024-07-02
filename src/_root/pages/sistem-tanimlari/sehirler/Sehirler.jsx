@@ -23,7 +23,7 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteTownService, GetTownListService } from "../../../../api/services/sehirtanimleri_services";
+import { DeleteTownService, GetTownListService, SearchTownListService } from "../../../../api/services/sehirtanimleri_services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 
@@ -135,11 +135,48 @@ const Sehirler = () => {
 
     useEffect(() => {
         setLoading(true);
-        GetTownListService().then((res) => {
-            setDataSource(res?.data);
+        GetTownListService(tableParams?.pagination.current).then((res) => {
+            setDataSource(res?.data.towns);
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res?.data.recordCount,
+                },
+            });
             setLoading(false);
         });
     }, [status]);
+
+    useEffect(() => {
+        if (search.length >= 3) {
+            SearchTownListService(tableParams?.pagination.current, search).then(
+                (res) => {
+                    setDataSource(res?.data.towns);
+                    setTableParams({
+                        ...tableParams,
+                        pagination: {
+                            ...tableParams.pagination,
+                            total: res?.data.recordCount,
+                        },
+                    });
+                    setLoading(false);
+                }
+            );
+        } else {
+            GetTownListService(tableParams?.pagination.current).then((res) => {
+                setDataSource(res?.data.towns);
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res?.data.recordCount,
+                    },
+                });
+                setLoading(false);
+            });
+        }
+    }, [search, tableParams?.pagination.current]);
 
     const handleDelete = (id) => {
         DeleteTownService(id).then((res) => {

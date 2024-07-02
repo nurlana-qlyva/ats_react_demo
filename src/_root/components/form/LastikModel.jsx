@@ -1,16 +1,17 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
-import { FuelTankContext } from '../../../context/fuelTankSlice'
+import { CodeControlService } from '../../../api/service'
 
-const ServisType = ({ field }) => {
+const LastikModel = ({ field }) => {
     const [data, setData] = useState([])
     const { setValue, watch } = useFormContext()
-    const { setId } = useContext(FuelTankContext)
 
-    const handleClickSelect = () => {
-        // MaterialListSelectService('YAKIT').then(res => setData(res.data))
+    const handleClick = () => {
+        CodeControlService(701).then(res => {
+            setData(res.data)
+        })
     }
 
     return (
@@ -24,24 +25,22 @@ const ServisType = ({ field }) => {
                 (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={data.map((item) => ({
-                label: item.tanim,
-                value: item.malzemeId,
+                label: item.codeText,
+                value: item.siraNo,
             }))}
-            value={watch('yakitTip')}
-            onClick={handleClickSelect}
+            value={watch('model')}
+            onClick={handleClick}
             onChange={e => {
                 field.onChange(e)
-                setId(e)
                 if (e === undefined) {
-                    field.onChange("")
                     const selectedOption = data.find(option => option.siraNo === e);
                     if (!selectedOption) {
-                        setValue("yakitTip", "")
+                        setValue('model', "")
                     }
                 } else {
-                    const selectedOption = data.find(option => option.malzemeId === e);
+                    const selectedOption = data.find(option => option.siraNo === e);
                     if (selectedOption) {
-                        setValue("yakitTip", selectedOption.tanim)
+                        setValue('model', selectedOption.codeText)
                     }
                 }
             }}
@@ -49,10 +48,10 @@ const ServisType = ({ field }) => {
     )
 }
 
-ServisType.propTypes = {
+LastikModel.propTypes = {
     field: PropTypes.shape({
         onChange: PropTypes.func,
-    }),
+    })
 }
 
-export default ServisType
+export default LastikModel
