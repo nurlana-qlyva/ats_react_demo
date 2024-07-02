@@ -12,7 +12,7 @@ const TownVaris = ({ field }) => {
 
     const handleClickSelect = () => {
         CustomCodeControlService("Town/GetTownList").then(res => {
-            setData(res.data)
+            setData(res.data.towns)
         })
     }
 
