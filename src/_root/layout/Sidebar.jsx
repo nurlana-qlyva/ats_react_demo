@@ -106,41 +106,47 @@ const items = [
             {
                 key: 20,
                 label: (
-                    <Link to={'/servis-tanimlari'}>{t("servis")}</Link>
-                ),
-            },
-            {
-                key: 21,
-                label: (
-                    <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
-                ),
-            },
-            {
-                key: 22,
-                label: (
-                    <Link to={'/lastik-tanimlari'}>{t("lastik")}</Link>
-                ),
-            },
-            {
-                key: 23,
-                label: (
-                    <Link to={'/ceza-tanimlari'}>{t("ceza")}</Link>
+                    <Link to={'/firma-tanimlari'}>{t("firma")}</Link>
                 ),
             },
             {
                 key: 24,
                 label: (
-                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                    <Link to={'/servis-tanimlari'}>{t("servis")}</Link>
                 ),
             },
             {
                 key: 25,
                 label: (
-                    <Link to={'/sehir-tanimlari'}>{t("sehirTanimlari")}</Link>
+                    <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
                 ),
             },
             {
                 key: 26,
+                label: (
+                    <Link to={'/lastik-tanimlari'}>{t("lastik")}</Link>
+                ),
+            },
+            {
+                key: 27,
+                label: (
+                    <Link to={'/ceza-tanimlari'}>{t("ceza")}</Link>
+                ),
+            },
+            {
+                key: 28,
+                label: (
+                    <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
+                ),
+            },
+            {
+                key: 29,
+                label: (
+                    <Link to={'/sehir-tanimlari'}>{t("sehirTanimlari")}</Link>
+                ),
+            },
+            {
+                key: 30,
                 label: (
                     <Link to={'/is-kartlari'}>{t("isKartlari")}</Link>
                 ),
@@ -148,31 +154,31 @@ const items = [
         ],
     },
     {
-        key: 19,
+        key: 31,
         icon: <FastForwardOutlined />,
         label: (
             <Link to={'/hizli-km-guncelleme'}>{t("hizliKmGuncelleme")}</Link>
         ),
     },
     {
-        key: 20,
+        key: 32,
         icon: <FaGears />,
         label: 'Sistem Ayarları',
         children: [
             {
-                key: 21,
+                key: 33,
                 label: (
                     <Link to={'/ayarlar'}>{t("ayarlar")}</Link>
                 ),
             },
             {
-                key: 22,
+                key: 34,
                 label: (
                     <Link to={`/kullanici-tanimlari`}>{t("kullaniciTanimlari")}</Link>
                 ),
             },
             {
-                key: 23,
+                key: 35,
                 label: (
                     <Link to={`/kullanici-tanimlari`}>{t("dokumanYoneticisi")}</Link>
 
