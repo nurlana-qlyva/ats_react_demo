@@ -22,6 +22,7 @@ import CezaTanim from './_root/pages/sistem-tanimlari/ceza-tanim/CezaTanim'
 import ServisTanim from './_root/pages/sistem-tanimlari/servis-tanim/ServisTanim'
 import FirmaTanim from './_root/pages/sistem-tanimlari/firma-tanim/FirmaTanim'
 import PersonelTanim from './_root/pages/sistem-tanimlari/personel-tanim/PersonelTanim'
+import Transferler from './_root/pages/transferler/Transferler'
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -60,6 +61,7 @@ const App = () => {
         <Route path="/servis-tanimlari" element={<ServisTanim />} />
         <Route path="/firma-tanimlari" element={<FirmaTanim />} />
         <Route path="/personel-tanimlari" element={<PersonelTanim />} />
+        <Route path="/transferler" element={<Transferler />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
