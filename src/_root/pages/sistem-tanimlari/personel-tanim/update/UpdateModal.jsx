@@ -4,15 +4,16 @@ import PropTypes from 'prop-types'
 import { t } from 'i18next'
 import { Button, Modal, Tabs } from 'antd'
 import { CodeItemValidateService } from '../../../../../api/service'
-import { GetFirmaByIdService, UpdateFirmaService } from '../../../../../api/services/firma_services'
 import GeneralInfo from './GeneralInfo'
 import Iletisim from './Iletisim'
 import PersonalFields from '../../../../components/form/PersonalFields'
-import FinansBilgileri from './FinansBilgileri'
+import { GetEmployeeByIdService, UpdateEmployeeService } from '../../../../../api/services/personel_services'
+import dayjs from 'dayjs'
+import KisiselBilgiler from '../add/KisiselBilgiler'
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     const [isValid, setIsValid] = useState("normal");
-    const [firmaId, setFirmaId] = useState(0);
+    const [personelId, setPersonelId] = useState(0);
     const [fields, setFields] = useState([
         {
             label: "ozelAlan1",
@@ -99,52 +100,54 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     const { handleSubmit, reset, setValue, watch } = methods;
 
     useEffect(() => {
-        if (watch("kod")) {
+        if (watch("personelKod")) {
             const body = {
-                tableName: "FirmaTanimlari",
-                code: watch("kod"),
+                tableName: "PersonelTanimlari",
+                code: watch("personelKod"),
             };
             CodeItemValidateService(body).then((res) => {
                 !res.data.status ? setIsValid("success") : setIsValid("error");
             });
         }
-    }, [watch("kod")]);
+    }, [watch("personelKod")]);
 
     useEffect(() => {
-        GetFirmaByIdService(id).then(res => {
-            setValue("web", res.data.web)
-            setValue("vno", res.data.vno)
-            setValue("vd", res.data.vd)
+        GetEmployeeByIdService(id).then(res => {
+            setValue("personelKod", res.data.personelKod)
+            setValue("isim", res.data.isim)
+            setValue("lokasyonId", res.data.lokasyonId)
+            setValue("lokasyon", res.data.lokasyon)
+            setValue("unvanKodId", res.data.unvanKodId)
             setValue("unvan", res.data.unvan)
-            setValue("tipTedarikci", res.data.tipTedarikci)
-            setValue("tipSigorta", res.data.tipSigorta)
-            setValue("tipServis", res.data.tipServis)
-            setValue("tipMusteri", res.data.tipMusteri)
-            setValue("tipKiralama", res.data.tipKiralama)
-            setValue("tipDiger", res.data.tipDiger)
-            setValue("tipAkaryakitIst", res.data.tipAkaryakitIst)
-            setValue("terminSure", res.data.terminSure)
-            setValue("tel_2", res.data.tel_2)
-            setValue("tel_1", res.data.tel_1)
-            setValue("sektor", res.data.sektor)
-            setValue("kod", res.data.kod)
-            setValue("indirimOran", res.data.indirimOran)
-            setValue("ilgili_2", res.data.ilgili_2)
-            setValue("ilgili_1", res.data.ilgili_1)
+            setValue("personelTipiKodId", res.data.personelTipiKodId)
+            setValue("personelTipi", res.data.personelTipi)
+            setValue("departmanKodId", res.data.departmanKodId)
+            setValue("departman", res.data.departman)
+            setValue("gorevKodId", res.data.gorevKodId)
+            setValue("gorev", res.data.gorev)
+            setValue("sskNo", res.data.sskNo)
+            setValue("ehliyet", res.data.ehliyet)
+            setValue("ehliyetSinifi", res.data.ehliyetSinifi)
+            setValue("ehliyetNo", res.data.ehliyetNo)
+            setValue("kanGrubu", res.data.kanGrubu)
+            setValue("dogumTarihi", dayjs(res.data.dogumTarihi))
+            setValue("anneAdi", res.data.anneAdi)
+            setValue("babaAdi", res.data.babaAdi)
+            setValue("tcKimlikNo", res.data.tcKimlikNo)
+            setValue("beden", res.data.beden)
+            setValue("ayakKabiNo", res.data.ayakKabiNo)
+            setValue("adres", res.data.adres)
             setValue("ilce", res.data.ilce)
             setValue("il", res.data.il)
-            setValue("firmaTipiKodId", res.data.firmaTipiKodId)
-            setValue("firmaTipi", res.data.firmaTipi)
+            setValue("tel1", res.data.tel1)
+            setValue("tel2", res.data.tel2)
             setValue("gsm", res.data.gsm)
             setValue("fax", res.data.fax)
             setValue("email", res.data.email)
-            setValue("borc", res.data.borc)
-            setValue("bakiye", res.data.bakiye)
-            setValue("alacak", res.data.alacak)
+            setValue("iseBaslamaTarihi", dayjs(res.data.iseBaslamaTarihi))
+            setValue("isetenAyrilmaTarihi", dayjs(res.data.isetenAyrilmaTarihi))
             setValue("aktif", res.data.aktif)
-            setValue("adres_2", res.data.adres_2)
-            setValue("adres_1", res.data.adres_1)
-            setFirmaId(res.data.firmaId)
+            setPersonelId(res.data.personelId)
             setValue("ozelAlan1", res?.data.ozelAlan1)
             setValue("ozelAlan2", res?.data.ozelAlan2)
             setValue("ozelAlan3", res?.data.ozelAlan3)
@@ -164,39 +167,38 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
     const onSubmit = handleSubmit((values) => {
         const body = {
-            "firmaId": firmaId,
-            "unvan": values.unvan,
-            "kod": values.kod,
-            "tel_1": values.tel_1,
-            "tel_2": values.tel_2,
+            "firmaId": personelId,
+            "personelKod": values.personelKod,
+            "isim": values.isim,
+            "lokasyonId": values.lokasyonId || -1,
+            "unvanKodId": values.unvanKodId || -1,
+            "personelTipiKodId": values.personelTipiKodId || -1,
+            "departmanKodId": values.departmanKodId || -1,
+            "gorevKodId": values.gorevKodId || -1,
+            "sskNo": values.sskNo,
+            "ehliyet": values.ehliyet,
+            "ehliyetSinifi": values.ehliyetSinifi,
+            "ehliyetNo": values.ehliyetNo,
+            "kanGrubu": values.kanGrubu,
+            "dogumTarihi": dayjs(values.dogumTarihi).format("YYYY-MM-DD"),
+            "anneAdi": values.anneAdi,
+            "babaAdi": values.babaAdi,
+            "tcKimlikNo": values.tcKimlikNo,
+            "beden": values.beden,
+            "ayakKabiNo": values.ayakKabiNo,
+            "adres": values.adres,
             "il": values.il,
             "ilce": values.ilce,
-            "vno": values.vno,
-            "vd": values.vd,
-            "sektor": values.sektor,
-            "terminSure": values.terminSure,
-            "adres_1": values.adres_1,
-            "ilgili_1": values.ilgili_1,
-            "adres_2": values.adres_2,
-            "ilgili_2": values.ilgili_2,
-            "aciklama": values.aciklama,
-            "firmaTipiKodId": values.firmaTipiKodId || -1,
-            "borc": values.borc || 0,
-            "alacak": values.alacak || 0,
-            "bakiye": values.bakiye || 0,
-            "indirimOran": values.indirimOran || 0,
-            "tipServis": values.tipServis,
-            "tipDiger": values.tipDiger,
-            "tipMusteri": values.tipMusteri,
-            "tipSigorta": values.tipSigorta,
-            "tipAkaryakitIst": values.tipAkaryakitIst,
-            "tipTedarikci": values.tipTedarikci,
-            "tipKiralama": values.tipKiralama,
-            "aktif": values.aktif,
             "email": values.email,
             "web": values.web,
+            "tel1": values.tel1,
+            "tel2": values.tel2,
             "fax": values.fax,
+            "aciklama": values.aciklama,
             "gsm": values.gsm,
+            "aktif": values.aktif,
+            "iseBaslamaTarihi": dayjs(values.iseBaslamaTarihi).format("YYYY-MM-DD"),
+            "isetenAyrilmaTarihi": dayjs(values.isetenAyrilmaTarihi).format("YYYY-MM-DD"),
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",
             ozelAlan3: values.ozelAlan3 || "",
@@ -211,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
             ozelAlan12: values.ozelAlan12 || 0,
         }
 
-        UpdateFirmaService(body).then(res => {
+        UpdateEmployeeService(body).then(res => {
             if (res.data.statusCode === 202) {
                 setUpdateModal(false)
                 setStatus(true)
@@ -240,8 +242,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         },
         {
             key: '3',
-            label: t('finansBilgileri'),
-            children: <FinansBilgileri />,
+            label: t('KisiselBilgiler'),
+            children: <KisiselBilgiler />,
         },
         {
             key: '4',

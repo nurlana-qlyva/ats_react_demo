@@ -110,6 +110,12 @@ const items = [
                 ),
             },
             {
+                key: 23,
+                label: (
+                    <Link to={'/personel-tanimlari'}>{t("personel")}</Link>
+                ),
+            },
+            {
                 key: 24,
                 label: (
                     <Link to={'/servis-tanimlari'}>{t("servis")}</Link>

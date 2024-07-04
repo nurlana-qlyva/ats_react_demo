@@ -6,8 +6,11 @@ import { t } from "i18next";
 import { CodeItemValidateService } from "../../../../../api/service";
 import PersonalFields from "../../../../components/form/PersonalFields";
 import GeneralInfo from "./GeneralInfo";
-import { AddFirmaService, GetFirmaCodeService } from "../../../../../api/services/firma_services";
 import Iletisim from "./Iletisim";
+import { AddEmployeeService, GetPersonelCodeService } from "../../../../../api/services/personel_services"
+import dayjs from 'dayjs'
+import KisiselBilgiler from "./KisiselBilgiler";
+
 
 const AddModal = ({ setStatus }) => {
     const [openModal, setopenModal] = useState(false);
@@ -101,57 +104,56 @@ const AddModal = ({ setStatus }) => {
 
     useEffect(() => {
         if (openModal && isFirstRender.current) {
-            GetFirmaCodeService().then((res) => setValue("kod", res.data));
+            GetPersonelCodeService().then((res) => setValue("personelKod", res.data));
         }
     }, [openModal, setValue]);
 
     useEffect(() => {
-        if (watch("kod")) {
+        if (watch("personelKod")) {
             const body = {
-                tableName: "FirmaTanimlari",
-                code: watch("kod"),
+                tableName: "PersonelTanimlari",
+                code: watch("personelKod"),
             };
             CodeItemValidateService(body).then((res) => {
                 !res.data.status ? setIsValid("success") : setIsValid("error");
             });
         }
-    }, [watch("kod")]);
+    }, [watch("personelKod")]);
 
 
     const onSubmit = handleSubmit((values) => {
         const body = {
-            "unvan": values.unvan,
-            "kod": values.kod,
-            "tel_1": values.tel_1,
-            "tel_2": values.tel_2,
+            "personelKod": values.personelKod,
+            "isim": values.isim,
+            "lokasyonId": values.lokasyonId || -1,
+            "unvanKodId": values.unvanKodId || -1,
+            "personelTipiKodId": values.personelTipiKodId || -1,
+            "departmanKodId": values.departmanKodId || -1,
+            "gorevKodId": values.gorevKodId || -1,
+            "sskNo": values.sskNo,
+            "ehliyet": values.ehliyet,
+            "ehliyetSinifi": values.ehliyetSinifi,
+            "ehliyetNo": values.ehliyetNo,
+            "kanGrubu": values.kanGrubu,
+            "dogumTarihi": dayjs(values.dogumTarihi).format("YYYY-MM-DD"),
+            "anneAdi": values.anneAdi,
+            "babaAdi": values.babaAdi,
+            "tcKimlikNo": values.tcKimlikNo,
+            "beden": values.beden,
+            "ayakKabiNo": values.ayakKabiNo,
+            "adres": values.adres,
             "il": values.il,
             "ilce": values.ilce,
-            "vno": values.vno,
-            "vd": values.vd,
-            "sektor": values.sektor,
-            "terminSure": values.terminSure,
-            "adres_1": values.adres_1,
-            "ilgili_1": values.ilgili_1,
-            "adres_2": values.adres_2,
-            "ilgili_2": values.ilgili_2,
-            "aciklama": values.aciklama,
-            "firmaTipiKodId": values.firmaTipiKodId || -1,
-            "borc": values.borc || 0,
-            "alacak": values.alacak || 0,
-            "bakiye": values.bakiye || 0,
-            "indirimOran": values.indirimOran || 0,
-            "tipServis": values.tipServis,
-            "tipDiger": values.tipDiger,
-            "tipMusteri": values.tipMusteri,
-            "tipSigorta": values.tipSigorta,
-            "tipAkaryakitIst": values.tipAkaryakitIst,
-            "tipTedarikci": values.tipTedarikci,
-            "tipKiralama": values.tipKiralama,
-            "aktif": values.aktif,
             "email": values.email,
             "web": values.web,
+            "tel1": values.tel1,
+            "tel2": values.tel2,
             "fax": values.fax,
+            "aciklama": values.aciklama,
             "gsm": values.gsm,
+            "aktif": values.aktif,
+            "iseBaslamaTarihi": dayjs(values.iseBaslamaTarihi).format("YYYY-MM-DD"),
+            "isetenAyrilmaTarihi": dayjs(values.isetenAyrilmaTarihi).format("YYYY-MM-DD"),
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",
             ozelAlan3: values.ozelAlan3 || "",
@@ -167,7 +169,7 @@ const AddModal = ({ setStatus }) => {
         }
 
 
-        AddFirmaService(body).then(res => {
+        AddEmployeeService(body).then(res => {
             if (res.data.statusCode === 200) {
                 setStatus(true)
                 reset(defaultValues)
@@ -179,7 +181,7 @@ const AddModal = ({ setStatus }) => {
     })
 
     const personalProps = {
-        form: "Firma",
+        form: "Personel",
         fields,
         setFields
     }
@@ -197,6 +199,11 @@ const AddModal = ({ setStatus }) => {
         },
         {
             key: '3',
+            label: t('kisiselBilgiler'),
+            children: <KisiselBilgiler />,
+        },
+        {
+            key: '4',
             label: t('ozelAlanlar'),
             children: <PersonalFields personalProps={personalProps} />
         },
@@ -234,7 +241,7 @@ const AddModal = ({ setStatus }) => {
                 <PlusOutlined /> {t("ekle")}
             </Button>
             <Modal
-                title={t("yeniServisGirisi")}
+                title={t("yeniPersonelGirisi")}
                 open={openModal}
                 onCancel={() => setopenModal(false)}
                 maskClosable={false}
