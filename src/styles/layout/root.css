@@ -168,6 +168,14 @@
   border-radius: 8px;
 }
 
+.ant-layout-sider {
+  overflow: auto;
+}
+
+.ant-layout-sider::-webkit-scrollbar {
+  background-color: transparent;
+}
+
 .sistem .ant-layout-sider {
   box-shadow: var(--shadow);
   overflow: hidden;

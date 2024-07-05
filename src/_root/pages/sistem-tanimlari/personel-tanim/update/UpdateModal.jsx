@@ -167,7 +167,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
     const onSubmit = handleSubmit((values) => {
         const body = {
-            "firmaId": personelId,
+            "personelId": personelId,
             "personelKod": values.personelKod,
             "isim": values.isim,
             "lokasyonId": values.lokasyonId || -1,

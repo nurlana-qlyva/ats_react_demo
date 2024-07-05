@@ -1,158 +1,165 @@
-import { Link } from 'react-router-dom'
-import { Menu } from 'antd'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu } from 'antd';
 import {
     PieChartOutlined,
     CarOutlined,
     FastForwardOutlined
-} from '@ant-design/icons'
-import { FaGears } from 'react-icons/fa6'
+} from '@ant-design/icons';
+import { FaGears } from 'react-icons/fa6';
 import { t } from 'i18next';
 
 const items = [
     {
-        key: 1,
+        key: '1',
         icon: <PieChartOutlined />,
         label: (
             <Link to={'/'}>{t("dashboard")}</Link>
         ),
     },
     {
-        key: 2,
+        key: '2',
         icon: <CarOutlined />,
         label: 'Araç Yönetimi',
         children: [
             {
-                key: 3,
+                key: '3',
                 label: (
                     <Link to={'/araclar'}>{t("araclar")}</Link>
                 ),
             },
             {
-                key: 4,
+                key: '4',
                 label: (
                     <Link to={'/yakit-islemleri'}>{t("yakitIslemleri")}</Link>
                 )
             },
             {
-                key: 5,
+                key: '5',
                 label: <Link to={'/servis-islemleri'}>{t("servisIslemleri")}</Link>,
             },
             {
-                key: 6,
+                key: '6',
                 label: <Link to={'/gorevler'}>{t("gorevler")}</Link>,
             },
             {
-                key: 7,
+                key: '7',
                 label: <Link to={'/sigortalar'}>{t("sigortalar")}</Link>,
             },
             {
-                key: 8,
+                key: '8',
                 label: <Link to={'/harcamalar'}>{t("harcamalar")}</Link>,
             },
             {
-                key: 9,
+                key: '9',
                 label: <Link to={'/kazalar'}>{t("kazalar")}</Link>,
             },
             {
-                key: 10,
+                key: '10',
                 label: <Link to={'/cezalar'}>{t("cezalar")}</Link>,
             },
             {
-                key: 11,
+                key: '11',
                 label: <Link to={'/lokasyonlar'}>{t("lokasyonlar")}</Link>,
             },
         ],
     },
     {
-        key: 12,
+        key: '12',
         icon: <CarOutlined />,
         label: t("malzemeDepo"),
         children: [
             {
-                key: 13,
+                key: '13',
                 label: (
                     <Link to={'/malzeme-tanimlari'}>{t("malzemeTanimlari")}</Link>
                 ),
             },
             {
-                key: 14,
+                key: '14',
                 label: (
                     <Link to={'giris-fisleri'}>{t("girisFisleri")}</Link>
                 )
             },
             {
-                key: 15,
+                key: '15',
                 label: <Link to={'cikis-fisleri'}>{t("cikisFisleri")}</Link>,
             },
             {
-                key: 16,
+                key: '16',
                 label: <Link to={'transferler'}>{t("transferler")}</Link>,
             },
             {
-                key: 17,
+                key: '17',
                 label: <Link to={'talepler'}>{t("talepler")}</Link>,
             },
             {
-                key: 18,
+                key: '18',
                 label: <Link to={'hareketler'}>{t("hareketler")}</Link>,
             },
         ],
     },
     {
-        key: 19,
+        key: '19',
         icon: <CarOutlined />,
         label: t("sistemTanimlari"),
         children: [
             {
-                key: 20,
+                key: '20',
                 label: (
                     <Link to={'/firma-tanimlari'}>{t("firma")}</Link>
                 ),
             },
             {
-                key: 23,
+                key: '21',
+                label: (
+                    <Link to={'/surucu-tanimlari'}>{t("surucu")}</Link>
+                ),
+            },
+            {
+                key: '23',
                 label: (
                     <Link to={'/personel-tanimlari'}>{t("personel")}</Link>
                 ),
             },
             {
-                key: 24,
+                key: '24',
                 label: (
                     <Link to={'/servis-tanimlari'}>{t("servis")}</Link>
                 ),
             },
             {
-                key: 25,
+                key: '25',
                 label: (
                     <Link to={'/guzergah-tanimlari'}>{t("guzergah")}</Link>
                 ),
             },
             {
-                key: 26,
+                key: '26',
                 label: (
                     <Link to={'/lastik-tanimlari'}>{t("lastik")}</Link>
                 ),
             },
             {
-                key: 27,
+                key: '27',
                 label: (
                     <Link to={'/ceza-tanimlari'}>{t("ceza")}</Link>
                 ),
             },
             {
-                key: 28,
+                key: '28',
                 label: (
                     <Link to={'/arac-marka-ve-model'}>{t("markaModel")}</Link>
                 ),
             },
             {
-                key: 29,
+                key: '29',
                 label: (
                     <Link to={'/sehir-tanimlari'}>{t("sehirTanimlari")}</Link>
                 ),
             },
             {
-                key: 30,
+                key: '30',
                 label: (
                     <Link to={'/is-kartlari'}>{t("isKartlari")}</Link>
                 ),
@@ -160,31 +167,31 @@ const items = [
         ],
     },
     {
-        key: 31,
+        key: '31',
         icon: <FastForwardOutlined />,
         label: (
             <Link to={'/hizli-km-guncelleme'}>{t("hizliKmGuncelleme")}</Link>
         ),
     },
     {
-        key: 32,
+        key: '32',
         icon: <FaGears />,
         label: 'Sistem Ayarları',
         children: [
             {
-                key: 33,
+                key: '33',
                 label: (
                     <Link to={'/ayarlar'}>{t("ayarlar")}</Link>
                 ),
             },
             {
-                key: 34,
+                key: '34',
                 label: (
                     <Link to={`/kullanici-tanimlari`}>{t("kullaniciTanimlari")}</Link>
                 ),
             },
             {
-                key: 35,
+                key: '35',
                 label: (
                     <Link to={`/kullanici-tanimlari`}>{t("dokumanYoneticisi")}</Link>
 
@@ -195,6 +202,13 @@ const items = [
 ];
 
 const Sidebar = () => {
+    const [openKeys, setOpenKeys] = useState([]);
+
+    const onOpenChange = (keys) => {
+        const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+        setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    };
+
     return (
         <>
             <div className="flex justify-center w-full py-20 text-center">
@@ -203,14 +217,14 @@ const Sidebar = () => {
                 </Link>
             </div>
             <Menu
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
                 mode="inline"
                 theme="dark"
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
                 items={items}
             />
         </>
     )
 }
 
-export default Sidebar
+export default Sidebar;

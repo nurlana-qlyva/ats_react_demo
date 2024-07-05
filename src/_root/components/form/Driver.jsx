@@ -9,7 +9,7 @@ const Driver = ({ field }) => {
     const { watch, setValue } = useFormContext()
 
     const handleClickSelect = () => {
-        CustomCodeControlService("Driver/GetDriverListForInput").then(res => {
+        CustomCodeControlService("Driver/GetDriverList").then(res => {
             setData(res.data)
         })
     }

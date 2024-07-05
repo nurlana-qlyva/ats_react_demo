@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FileDownloadService } from '../../../api/service'
+import { DownloadDocumentByIdService } from '../../../api/services/upload/services'
 import { InboxOutlined, FileOutlined } from '@ant-design/icons'
 import { Button, message, Spin, Upload } from 'antd'
 
@@ -24,7 +24,7 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
             "fileName": file.dosyaAd
         }
 
-        FileDownloadService(data).then(res => {
+        DownloadDocumentByIdService(data).then(res => {
             const link = document.createElement("a")
             link.href = window.URL.createObjectURL(res.data)
             link.download = file.dosyaAd

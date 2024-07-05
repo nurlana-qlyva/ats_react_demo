@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { PhotoDownloadService } from '../../../api/service'
+import { DownloadPhotoByIdService } from '../../../api/services/upload/services'
 import { InboxOutlined, UserOutlined } from '@ant-design/icons'
 import { Image, message, Spin, Upload } from 'antd'
 
@@ -16,7 +16,7 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
                         extension: img.rsmUzanti,
                         fileName: img.rsmAd,
                     };
-                    return PhotoDownloadService(data)
+                    return DownloadPhotoByIdService(data)
                 });
 
                 const responses = await Promise.all(requests);

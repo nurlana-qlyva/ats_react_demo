@@ -4,11 +4,15 @@ import { getItemWithExpiration } from './utils/expireToken'
 import AuthLayout from './_auth/AuthLayout'
 import RootLayout from './_root/RootLayout'
 import Dashboard from './_root/pages/dashboard/Dashboard'
-import Vehicles from './_root/pages/vehicles/Vehicles'
-import DetailUpdate from './_root/pages/vehicles-detail/DetailUpdate'
+import Vehicles from './_root/pages/vehicles-control/vehicles/Vehicles'
+import DetailUpdate from './_root/pages/vehicles-control/vehicle-detail/DetailUpdate'
+import Yakit from './_root/pages/vehicles-control/yakit/Yakit'
+import Suruculer from './_root/pages/sistem-tanimlari/surucu/SurucuTanim'
+
+
+
 import KmUpdate from './_root/pages/km-update/KmUpdate'
 import Settings from './_root/pages/settings/Settings'
-import Yakit from './_root/pages/yakit/Yakit'
 import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
 import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
 import CikisFisleri from './_root/pages/cikis-fisleri/CikisFisleri'
@@ -23,6 +27,8 @@ import ServisTanim from './_root/pages/sistem-tanimlari/servis-tanim/ServisTanim
 import FirmaTanim from './_root/pages/sistem-tanimlari/firma-tanim/FirmaTanim'
 import PersonelTanim from './_root/pages/sistem-tanimlari/personel-tanim/PersonelTanim'
 import Transferler from './_root/pages/transferler/Transferler'
+
+
 
 const App = () => {
   const [hasToken, setHasToken] = useState(false)
@@ -62,6 +68,7 @@ const App = () => {
         <Route path="/firma-tanimlari" element={<FirmaTanim />} />
         <Route path="/personel-tanimlari" element={<PersonelTanim />} />
         <Route path="/transferler" element={<Transferler />} />
+        <Route path="/surucu-tanimlari" element={<Suruculer />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

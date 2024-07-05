@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { t } from 'i18next'
-import { Checkbox, Input, InputNumber } from 'antd'
+import { Checkbox, Input } from 'antd'
 import Location from '../../../../components/form/Location'
 import Departman from '../../../../components/form/Departman'
 import PersonelTip from '../../../../components/form/PersonelTip'

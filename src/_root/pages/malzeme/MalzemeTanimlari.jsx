@@ -20,7 +20,7 @@ import { Checkbox, Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
 import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
 import AddModal from "./add/AddModal";
-import {
+import { 
   MalzemeListGetService,
   MalzemeListSearchService,
 } from "../../../api/service";
