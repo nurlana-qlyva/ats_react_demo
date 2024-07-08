@@ -5,14 +5,13 @@ import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { t } from 'i18next'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, Modal } from 'antd'
-import { GetVehicleDetailsInfo, UpdateVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
+import { GetVehicleDetailsInfoService, UpdateVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
 import CodeControl from '../../../../../../components/form/selects/CodeControl'
 import Towns from '../../../../../../components/form/selects/Towns'
 import TextInput from '../../../../../../components/form/inputs/TextInput'
 import DateInput from '../../../../../../components/form/date/DateInput'
 import Textarea from '../../../../../../components/form/inputs/Textarea'
 import CheckboxInput from '../../../../../../components/form/checkbox/CheckboxInput'
-
 
 dayjs.locale('tr')
 
@@ -67,7 +66,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
     const { control, handleSubmit, setValue } = methods
 
     useEffect(() => {
-        GetVehicleDetailsInfo(id).then(res => {
+        GetVehicleDetailsInfoService(id, 2).then(res => {
             setValue("aciklama", res?.data.aciklama)
             setValue("aracCinsi", res?.data.aracCinsi)
             setValue("aracCinsiKodId", res?.data.aracCinsiKodId)

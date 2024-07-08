@@ -247,7 +247,7 @@ const DetailUpdate = () => {
     const uploadFiles = () => {
         try {
             setLoadingFiles(true);
-            uploadFile(id, "Arac", files)
+            uploadFile(+id, "Arac", files)
         } catch (error) {
             message.error("Dosya yüklenemedi. Yeniden deneyin.");
         } finally {

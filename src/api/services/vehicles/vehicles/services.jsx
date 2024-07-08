@@ -20,8 +20,8 @@ export const UpdateVehicleService = async (data) => {
     return await http.post(`/Vehicle/UpdateVehicle`, data);
 };
 
-export const GetVehicleDetailsInfo = async (id) => {
-    return await http.get(`/VehicleDetail/GetVehicleDetailsInfo?vehicleId=${id}`);
+export const GetVehicleDetailsInfoService = async (id, type) => {
+    return await http.get(`/VehicleDetail/GetVehicleDetailsInfo?vehicleId=${id}&type=${type}`);
 };
 
 export const UpdateVehicleDetailsInfoService = async (data) => {

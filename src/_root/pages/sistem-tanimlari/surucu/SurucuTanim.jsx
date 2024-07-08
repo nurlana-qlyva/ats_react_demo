@@ -351,6 +351,9 @@ const Suruculer = () => {
                 cell: SortableHeaderCell,
               },
             }}
+            scroll={{
+              x: 1500,
+            }}
           />
         </DragAndDropContext>
       </div>

@@ -80,6 +80,7 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
                     if (isImage && isLt2M) {
                         handleUpload(file);
                     }
+                    
                     handleUpload(file);
                     return false;
                 }}>

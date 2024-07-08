@@ -217,3 +217,23 @@
   left: 50%; 
   transform: translateX(-50%);
 }
+
+.ant-upload-list-item-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+.ant-upload-wrapper {
+  height: 100% !important;
+}
+
+.ant-upload-list.ant-upload-list-picture-card {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+.ant-upload.ant-upload-select {
+  height: 100% !important;
+  width: 100% !important;
+}

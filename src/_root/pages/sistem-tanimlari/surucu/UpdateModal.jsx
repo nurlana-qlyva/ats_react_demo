@@ -5,20 +5,22 @@ import { t } from "i18next";
 import dayjs from "dayjs";
 import { Button, Modal, Tabs } from "antd";
 import { CodeItemValidateService } from "../../../../api/service";
-import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
-import GeneralInfo from "./tabs/GeneralInfo";
-import KisiselBilgiler from "./tabs/KisiselBilgiler";
-import KimlikBilgiler from "./tabs/KimlikBilgiler";
-import EhliyetBilgiler from "./tabs/EhliyetBilgiler";
-import MeslekiYeterlilik from "./tabs/MeslekiYeterlilik";
 import {
   GetDriverByIdService,
   UpdateDriverService,
 } from "../../../../api/services/sistem-tanimlari/surucu_services";
+import { uploadPhoto } from "../../../../utils/upload";
+import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
+import GeneralInfoUpdate from "./tabs/GeneralInfoUpdate";
+import KisiselBilgiler from "./tabs/KisiselBilgiler";
+import KimlikBilgiler from "./tabs/KimlikBilgiler";
+import EhliyetBilgiler from "./tabs/EhliyetBilgiler";
+import MeslekiYeterlilik from "./tabs/MeslekiYeterlilik";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const [isValid, setIsValid] = useState("normal");
   const [surucuId, setSurucuId] = useState(0);
+  const [images, setImages] = useState([]);
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -121,96 +123,96 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       try {
         const res = await GetDriverByIdService(id);
 
-        if (res?.data.statusCode === 200) {
-          setValue("surucuKod", res.data.surucuKod);
-          setValue("isim", res.data.isim);
-          setValue("lokasyonId", res.data.lokasyonId);
-          setValue("lokasyon", res.data.lokasyon);
-          setValue("adres", res.data.adres);
-          setValue("surucuTipKodId", res.data.surucuTipKodId);
-          setValue("surucuTip", res.data.surucuTip);
-          setValue("gorevKodId", res.data.gorevKodId);
-          setValue("gorev", res.data.gorev);
-          setValue("ilce", res.data.ilce);
-          setValue("il", res.data.il);
-          setValue("telefon1", res.data.telefon1);
-          setValue("telefon2", res.data.telefon2);
-          setValue("gsm", res.data.gsm);
-          setValue("fax", res.data.fax);
-          setValue("aktif", res.data.aktif);
-          setValue("departmanKodId", res.data.departmanKodId);
-          setValue("departman", res.data.departman);
-          setValue("cezaPuani", res.data.cezaPuani);
-          setValue("sifre", res.data.sifre);
-          setValue("kanGrubu", res.data.kanGrubu);
-          setValue("sskNo", res.data.sskNo);
-          setValue("vergiNo", res.data.vergiNo);
-          setValue("egitimDurumu", res.data.egitimDurumu);
-          setValue("mezunOlduguOkul", res.data.mezunOlduguOkul);
-          setValue("mezunOlduguBolum", res.data.mezunOlduguBolum);
-          setValue("tcKimlikNo", res.data.tcKimlikNo);
-          setValue("kimlikSeriNo", res.data.kimlikSeriNo);
-          setValue("iseBaslamaTarih", dayjs(res.data.iseBaslamaTarih));
-          setValue("istenAyrilmaTarih", dayjs(res.data.istenAyrilmaTarih));
-          setValue("mezuniyetTarih", dayjs(res.data.mezuniyetTarih));
-          setValue("babaAdi", res.data.babaAdi);
-          setValue("anaAdi", res.data.anaAdi);
-          setValue("dogumYeri", res.data.dogumYeri);
-          setValue("dini", res.data.dini);
-          setValue("kimlikKayitNo", res.data.kimlikKayitNo);
-          setValue("kayitliOlduguIl", res.data.kayitliOlduguIl);
-          setValue("medeniHali", res.data.medeniHali);
-          setValue("dogumTarihi", dayjs(res.data.dogumTarihi));
-          setValue("kayitliOlduguIlce", res.data.kayitliOlduguIlce);
-          setValue("mahalleKoy", res.data.mahalleKoy);
-          setValue("kimlikCiltNo", res.data.kimlikCiltNo);
-          setValue("kimlikAileSiraNo", res.data.kimlikAileSiraNo);
-          setValue("kimlikSiraNo", res.data.kimlikSiraNo);
-          setValue("kimlikVerildigiYer", res.data.kimlikVerildigiYer);
-          setValue("kimlikVerilisNedeni", res.data.kimlikVerilisNedeni);
-          setValue("kimlikVerilisTarihi", dayjs(res.data.kimlikVerilisTarihi));
-          setValue("myb", res.data.myb);
-          setValue("mybBelgeNo", res.data.mybBelgeNo);
-          setValue("mybKapsadigiDigerMyb", res.data.mybKapsadigiDigerMyb);
-          setValue("mybTuru", res.data.mybTuru);
-          setValue("mybVerilisTarih", dayjs(res.data.mybVerilisTarih));
-          setValue("mybBitisTarih", dayjs(res.data.mybBitisTarih));
-          setValue(
-            "srcPiskoteknikVerilisTarihi",
-            dayjs(res.data.srcPiskoteknikVerilisTarihi)
-          );
-          setValue(
-            "srcPiskoteknikBitisTarihi",
-            dayjs(res.data.srcPiskoteknikBitisTarihi)
-          );
-          setValue("srcPiskoteknik", res.data.srcPiskoteknik);
-          setValue("srcPiskoteknikBelgeNo", res.data.srcPiskoteknikBelgeNo);
-          setValue("aciklama", res.data.aciklama);
-          setValue("sinif", res.data.sinif);
-          setValue("ehliyetVerildigiIlIlce", res.data.ehliyetVerildigiIlIlce);
-          setValue("ehliyetBelgeTarihi", dayjs(res.data.ehliyetBelgeTarihi));
-          setValue("ehliyetSeriNo", res.data.ehliyetSeriNo);
-          setValue(
-            "ehliyetKullandigiChiazProtez",
-            res.data.ehliyetKullandigiChiazProtez
-          );
-          setValue("ehliyetNo", res.data.ehliyetNo);
-          setSurucuId(res.data.surucuId);
-          setValue("ozelAlan1", res?.data.ozelAlan1);
-          setValue("ozelAlan2", res?.data.ozelAlan2);
-          setValue("ozelAlan3", res?.data.ozelAlan3);
-          setValue("ozelAlan4", res?.data.ozelAlan4);
-          setValue("ozelAlan5", res?.data.ozelAlan5);
-          setValue("ozelAlan6", res?.data.ozelAlan6);
-          setValue("ozelAlan7", res?.data.ozelAlan7);
-          setValue("ozelAlan8", res?.data.ozelAlan8);
-          setValue("ozelAlanKodId9", res?.data.ozelAlanKodId9);
-          setValue("ozelAlan9", res?.data.ozelAlan9);
-          setValue("ozelAlan10", res?.data.ozelAlan10);
-          setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10);
-          setValue("ozelAlan11", res?.data.ozelAlan11);
-          setValue("ozelAlan12", res?.data.ozelAlan12);
-        }
+        setValue("surucuKod", res.data.surucuKod);
+        setValue("isim", res.data.isim);
+        setValue("lokasyonId", res.data.lokasyonId);
+        setValue("lokasyon", res.data.lokasyon);
+        setValue("adres", res.data.adres);
+        setValue("surucuTipKodId", res.data.surucuTipKodId);
+        setValue("surucuTip", res.data.surucuTip);
+        setValue("gorevKodId", res.data.gorevKodId);
+        setValue("gorev", res.data.gorev);
+        setValue("ilce", res.data.ilce);
+        setValue("il", res.data.il);
+        setValue("telefon1", res.data.telefon1);
+        setValue("telefon2", res.data.telefon2);
+        setValue("gsm", res.data.gsm);
+        setValue("fax", res.data.fax);
+        setValue("aktif", res.data.aktif);
+        setValue("departmanKodId", res.data.departmanKodId);
+        setValue("departman", res.data.departman);
+        setValue("cezaPuani", res.data.cezaPuani);
+        setValue("sifre", res.data.sifre);
+        setValue("kanGrubu", res.data.kanGrubu);
+        setValue("sskNo", res.data.sskNo);
+        setValue("vergiNo", res.data.vergiNo);
+        setValue("egitimDurumu", res.data.egitimDurumu);
+        setValue("mezunOlduguOkul", res.data.mezunOlduguOkul);
+        setValue("mezunOlduguBolum", res.data.mezunOlduguBolum);
+        setValue("tcKimlikNo", res.data.tcKimlikNo);
+        setValue("kimlikSeriNo", res.data.kimlikSeriNo);
+        setValue("iseBaslamaTarih", dayjs(res.data.iseBaslamaTarih));
+        setValue("istenAyrilmaTarih", dayjs(res.data.istenAyrilmaTarih));
+        setValue("mezuniyetTarih", dayjs(res.data.mezuniyetTarih));
+        setValue("babaAdi", res.data.babaAdi);
+        setValue("anaAdi", res.data.anaAdi);
+        setValue("dogumYeri", res.data.dogumYeri);
+        setValue("dini", res.data.dini);
+        setValue("kimlikKayitNo", res.data.kimlikKayitNo);
+        setValue("kayitliOlduguIl", res.data.kayitliOlduguIl);
+        setValue("medeniHali", res.data.medeniHali);
+        setValue("dogumTarihi", dayjs(res.data.dogumTarihi));
+        setValue("kayitliOlduguIlce", res.data.kayitliOlduguIlce);
+        setValue("mahalleKoy", res.data.mahalleKoy);
+        setValue("kimlikCiltNo", res.data.kimlikCiltNo);
+        setValue("kimlikAileSiraNo", res.data.kimlikAileSiraNo);
+        setValue("kimlikSiraNo", res.data.kimlikSiraNo);
+        setValue("kimlikVerildigiYer", res.data.kimlikVerildigiYer);
+        setValue("kimlikVerilisNedeni", res.data.kimlikVerilisNedeni);
+        setValue("kimlikVerilisTarihi", dayjs(res.data.kimlikVerilisTarihi));
+        setValue("myb", res.data.myb);
+        setValue("mybBelgeNo", res.data.mybBelgeNo);
+        setValue("mybKapsadigiDigerMyb", res.data.mybKapsadigiDigerMyb);
+        setValue("mybTuru", res.data.mybTuru);
+        setValue("mybVerilisTarih", dayjs(res.data.mybVerilisTarih));
+        setValue("mybBitisTarih", dayjs(res.data.mybBitisTarih));
+        setValue(
+          "srcPiskoteknikVerilisTarihi",
+          dayjs(res.data.srcPiskoteknikVerilisTarihi)
+        );
+        setValue(
+          "srcPiskoteknikBitisTarihi",
+          dayjs(res.data.srcPiskoteknikBitisTarihi)
+        );
+        setValue("srcPiskoteknik", res.data.srcPiskoteknik);
+        setValue("srcPiskoteknikBelgeNo", res.data.srcPiskoteknikBelgeNo);
+        setValue("aciklama", res.data.aciklama);
+        setValue("sinif", res.data.sinif);
+        setValue("ehliyetVerildigiIlIlce", res.data.ehliyetVerildigiIlIlce);
+        setValue("ehliyetBelgeTarihi", dayjs(res.data.ehliyetBelgeTarihi));
+        setValue("ehliyetSeriNo", res.data.ehliyetSeriNo);
+        setValue(
+          "ehliyetKullandigiChiazProtez",
+          res.data.ehliyetKullandigiChiazProtez
+        );
+        setValue("ehliyetNo", res.data.ehliyetNo);
+        setSurucuId(res.data.surucuId);
+        setValue("ozelAlan1", res?.data.ozelAlan1);
+        setValue("ozelAlan2", res?.data.ozelAlan2);
+        setValue("ozelAlan3", res?.data.ozelAlan3);
+        setValue("ozelAlan4", res?.data.ozelAlan4);
+        setValue("ozelAlan5", res?.data.ozelAlan5);
+        setValue("ozelAlan6", res?.data.ozelAlan6);
+        setValue("ozelAlan7", res?.data.ozelAlan7);
+        setValue("ozelAlan8", res?.data.ozelAlan8);
+        setValue("ozelAlanKodId9", res?.data.ozelAlanKodId9);
+        setValue("ozelAlan9", res?.data.ozelAlan9);
+        setValue("ozelAlan10", res?.data.ozelAlan10);
+        setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10);
+        setValue("ozelAlan11", res?.data.ozelAlan11);
+        setValue("ozelAlan12", res?.data.ozelAlan12);
+
+        setImages([...images, res.data.defPhotoInfo]);
       } catch (error) {
         console.error("Error updating driver:", error);
       }
@@ -219,6 +221,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     if (updateModal) {
       fetchData();
     }
+
   }, [id, updateModal]);
 
   const onSubmit = handleSubmit((values) => {
@@ -311,6 +314,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         reset(defaultValues);
       }
     });
+
+    uploadPhoto(surucuId, "SURUCU", images, true);
     setStatus(false);
   });
 
@@ -324,7 +329,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: <GeneralInfo isValid={isValid} />,
+      children: <GeneralInfoUpdate isValid={isValid} setImages={setImages} images={images} />,
     },
     {
       key: "2",
@@ -363,6 +368,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       onClick={() => {
         setUpdateModal(false);
         reset(defaultValues);
+        setImages([])
       }}
     >
       {t("iptal")}
