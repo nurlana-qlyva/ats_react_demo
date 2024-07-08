@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { Checkbox, Table, Popover, Button, Input, Popconfirm } from "antd";
@@ -21,7 +21,6 @@ const breadcrumb = [
 ];
 
 const Yakit = () => {
-  const isMounted = useRef(false);
   const [dataSource, setDataSource] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -192,24 +191,8 @@ const Yakit = () => {
       }));
     };
 
-    if (isMounted.current) {
       fetchData();
-    } else {
-      isMounted.current = true;
-    }
   }, [search, tableParams.pagination.current, status, filterData]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      setTableParams(prevParams => ({
-        ...prevParams,
-        pagination: {
-          ...prevParams.pagination,
-          current: 1,
-        },
-      }));
-    }
-  }, [search]);
 
   const handleDelete = (data) => {
     DeleteFuelCardService(data.siraNo).then((res) => {

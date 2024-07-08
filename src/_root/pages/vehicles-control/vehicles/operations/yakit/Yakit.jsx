@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
@@ -17,13 +17,15 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { DeleteYakitService, GetYakitListByIdService } from "../../../../../../api/services/vehicles/yakit/services"
+import {
+  DeleteYakitService,
+  GetYakitListByIdService,
+} from "../../../../../../api/services/vehicles/yakit/services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 
 const Yakit = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
-  const isMounted = useRef(false);
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -42,7 +44,11 @@ const Yakit = ({ visible, onClose, ids }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetYakitListByIdService(search, tableParams.pagination.current, ids);
+      const res = await GetYakitListByIdService(
+        search,
+        tableParams.pagination.current,
+        ids
+      );
       setLoading(false);
       setDataSource(res?.data.fuel_list);
       setTotal({
@@ -60,24 +66,8 @@ const Yakit = ({ visible, onClose, ids }) => {
       });
     };
 
-    if (isMounted.current) {
-      fetchData();
-    } else {
-      isMounted.current = true;
-    }
+    fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      setTableParams(prevParams => ({
-        ...prevParams,
-        pagination: {
-          ...prevParams.pagination,
-          current: 1,
-        },
-      }));
-    }
-  }, [search]);
 
   const handleDelete = (data) => {
     DeleteYakitService(data.siraNo).then((res) => {
@@ -235,11 +225,10 @@ const Yakit = ({ visible, onClose, ids }) => {
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
-  const options = columns
-    .map(({ key, title }) => ({
-      label: title,
-      value: key,
-    }));
+  const options = columns.map(({ key, title }) => ({
+    label: title,
+    value: key,
+  }));
 
   const filteredColumns = columns.filter((column) =>
     checkedList.includes(column.key)

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
@@ -19,7 +19,12 @@ import {
 import { ArrowUpOutlined, CheckOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../context/plakaSlice";
 import { SelectContext } from "../../../../../context/selectSlice";
-import { GetKmRangeBeforeDateService, GetLastThreeFuelRecordService, GetMaterialPriceService, ValidateFuelInfoInsertionService } from "../../../../../api/services/vehicles/yakit/services";
+import {
+  GetKmRangeBeforeDateService,
+  GetLastThreeFuelRecordService,
+  GetMaterialPriceService,
+  ValidateFuelInfoInsertionService,
+} from "../../../../../api/services/vehicles/yakit/services";
 import { UpdateVehicleDetailsInfoService } from "../../../../../api/services/vehicles/vehicles/services";
 import { CodeControlByUrlService } from "../../../../../api/services/code/services";
 import Plaka from "../../../../components/form/selects/Plaka";
@@ -29,11 +34,9 @@ import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
 import YakitTank from "../../../../components/form/selects/YakitlTank";
 import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
 
-
 dayjs.locale("tr");
 
 const GeneralInfo = ({ setIsValid, response, setResponse }) => {
-  const isMounted = useRef(false);
   const [, contextHolder] = message.useMessage();
   const { control, setValue, watch } = useFormContext();
   const { data, history, setHistory, setPlaka } = useContext(PlakaContext);
@@ -60,9 +63,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
           dayjs(watch("saat")).format("HH:mm:ss")
         ).then((res) => setHistory(res.data));
       }
-
     }
-
   }, [data]);
 
   useEffect(() => {
@@ -80,15 +81,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
       setPlaka(updatedData);
     };
 
-    if (isMounted.current) {
-      fetchData();
-    } else {
-      isMounted.current = true;
-    }
+    fetchData();
   }, []);
 
   useEffect(() => {
-    if (!watch('yakitTipId')) return;
+    if (!watch("yakitTipId")) return;
 
     GetMaterialPriceService(watch("yakitTipId")).then((res) => {
       setValue("litreFiyat", res?.data.price);
@@ -492,7 +489,11 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-12">
               <div className="flex flex-col gap-1">
                 <label>{t("yakitTip")}</label>
-                <MaterialType name="yakitTip" codeName="yakitTipId" type="YAKIT" />
+                <MaterialType
+                  name="yakitTip"
+                  codeName="yakitTipId"
+                  type="YAKIT"
+                />
               </div>
             </div>
             <div className="col-span-6 flex flex-col">
@@ -555,8 +556,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         response === "error"
                           ? { borderColor: "#dc3545" }
                           : response === "success"
-                            ? { borderColor: "#23b545" }
-                            : { color: "#000" }
+                          ? { borderColor: "#23b545" }
+                          : { color: "#000" }
                       }
                       {...field}
                       onPressEnter={(e) => {

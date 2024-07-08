@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { t } from "i18next";
 import { Table, Popover, Button, Input, Checkbox } from "antd";
@@ -20,7 +20,6 @@ const breadcrumb = [
 
 const Vehicles = () => {
   const { setPlaka } = useContext(PlakaContext);
-  const isMounted = useRef(false);
   const [dataSource, setDataSource] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -106,7 +105,6 @@ const Vehicles = () => {
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
-
   useEffect(() => {
     const fetchData = async () => {
       DemoService().then((res) => res.data);
@@ -128,24 +126,8 @@ const Vehicles = () => {
       }));
     };
 
-    if (isMounted.current) {
-      fetchData();
-    } else {
-      isMounted.current = true;
-    }
+    fetchData();
   }, [search, tableParams.pagination.current, status, filterData]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      setTableParams((prevParams) => ({
-        ...prevParams,
-        pagination: {
-          ...prevParams.pagination,
-          current: 1,
-        },
-      }));
-    }
-  }, [search]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setLoading(true);
