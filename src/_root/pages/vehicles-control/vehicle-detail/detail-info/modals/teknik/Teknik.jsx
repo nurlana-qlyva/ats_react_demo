@@ -13,10 +13,7 @@ import {
   Input,
   Modal,
 } from "antd";
-import {
-  GetVehicleDetailsInfo,
-  UpdateVehicleDetailsInfoService,
-} from "../../../../../../../api/services/vehicles/vehicles/services";
+import { GetVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
 import Towns from "../../../../../../components/form/selects/Towns";
 import TextInput from "../../../../../../components/form/inputs/TextInput";
@@ -30,7 +27,7 @@ const Teknik = () => {
   const [status, setStatus] = useState(false);
 
   useEffect(() => {
-    GetVehicleDetailsInfo(id, 1).then((res) => {
+    GetVehicleDetailsInfoService(id, 1).then((res) => {
   
     });
   }, [id, status]);

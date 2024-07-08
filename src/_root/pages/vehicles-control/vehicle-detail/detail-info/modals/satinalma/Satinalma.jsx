@@ -13,10 +13,8 @@ import {
   Input,
   Modal,
 } from "antd";
-import {
-  GetVehicleDetailsInfo,
-  UpdateVehicleDetailsInfoService,
-} from "../../../../../../../api/services/vehicles/vehicles/services";
+import { GetVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
+
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
 import Towns from "../../../../../../components/form/selects/Towns";
 import TextInput from "../../../../../../components/form/inputs/TextInput";
@@ -30,7 +28,7 @@ const Satinalma = () => {
   const [status, setStatus] = useState(false);
 
   useEffect(() => {
-    GetVehicleDetailsInfo(id, 4).then((res) => {});
+    GetVehicleDetailsInfoService(id, 4).then((res) => {});
   }, [id, status]);
 
   return <div></div>;
