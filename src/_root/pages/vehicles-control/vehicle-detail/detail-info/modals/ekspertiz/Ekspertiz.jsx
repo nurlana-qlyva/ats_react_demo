@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal } from 'antd'
-import { GetVehicleDetailsInfo } from '../../../../../../../api/services/vehicles/vehicles/services'
+import { GetVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
 import Car from './svg/Car'
 import EkspertizTable from './components/EkspertizTable'
 import Textarea from '../../../../../../components/form/inputs/Textarea'
@@ -30,7 +30,7 @@ const Ekspertiz = ({ visible, onClose, id }) => {
     const { control, handleSubmit, setValue } = methods
 
     useEffect(() => {
-        GetVehicleDetailsInfo(id).then(res => {
+        GetVehicleDetailsInfoService(id).then(res => {
 
         })
     }, [id, status])
