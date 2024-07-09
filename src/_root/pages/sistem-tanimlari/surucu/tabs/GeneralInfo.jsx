@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
 import { t } from "i18next";
-import { Upload } from "antd";
-import ImgCrop from "antd-img-crop";
 import Location from "../../../../components/form/tree/Location";
 import ValidationInput from "../../../../components/form/inputs/ValidationInput";
 import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
@@ -10,7 +8,7 @@ import TextInput from "../../../../components/form/inputs/TextInput";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 
-const GeneralInfo = ({ isValid, setImages, images }) => {
+const GeneralInfo = ({ isValid }) => {
   const validateStyle = {
     borderColor:
       isValid === "error"

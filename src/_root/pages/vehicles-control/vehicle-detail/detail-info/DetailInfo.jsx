@@ -23,6 +23,7 @@ import Satinalma from "./modals/satinalma/Satinalma";
 import Satis from "./modals/satis/Satis";
 import Garanti from "./modals/garanti/Garanti";
 import TasitKarti from "./modals/tasit-karti/TasitKarti";
+// import Kapasite from "./modals/kapasite/Kapasite";
 
 const DetailInfo = ({ id }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -169,7 +170,14 @@ const DetailInfo = ({ id }) => {
             id={id}
           />
         );
-
+      // case "10":
+      //   return (
+      //     <Kapasite
+      //       visible={selectedItem === "10"}
+      //       onClose={() => setSelectedItem(null)}
+      //       id={id}
+      //     />
+      //   );
       case "12":
         return (
           <Satis

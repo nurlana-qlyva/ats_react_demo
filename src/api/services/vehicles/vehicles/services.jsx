@@ -31,3 +31,8 @@ export const UpdateVehicleDetailsInfoService = async (type, data) => {
 export const UpdateKmLogService = async (data) => {
     return await http.post(`/KmLog/UpdateKmLog`, data);
 };
+
+// kapasite
+export const GetCapacityListByVehicleIdService = async (id, search, page) => {
+    return await http.get(`/Capacity/GetCapacityListByVehicleId?vehicleId=${id}&parameter=${search}&page=${page}`);
+};
