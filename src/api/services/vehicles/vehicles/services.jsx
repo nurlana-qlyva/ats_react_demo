@@ -24,8 +24,8 @@ export const GetVehicleDetailsInfoService = async (id, type) => {
     return await http.get(`/VehicleDetail/GetVehicleDetailsInfo?vehicleId=${id}&type=${type}`);
 };
 
-export const UpdateVehicleDetailsInfoService = async (data) => {
-    return await http.post(`/VehicleDetail/UpdateVehicleDetailsInfo`, data);
+export const UpdateVehicleDetailsInfoService = async (type, data) => {
+    return await http.post(`/VehicleDetail/UpdateVehicleDetailsInfo?type=${type}`, data);
 };
 
 export const UpdateKmLogService = async (data) => {

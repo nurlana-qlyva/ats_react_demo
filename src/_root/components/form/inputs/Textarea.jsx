@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import TextArea from "antd/es/input/TextArea"
 
 
-const Textarea = ({ name }) => {
+const Textarea = ({ name, checked }) => {
     const { control } = useFormContext()
 
     return (
@@ -11,7 +11,7 @@ const Textarea = ({ name }) => {
             name={name}
             control={control}
             render={({ field }) => (
-                <TextArea {...field} onChange={(e => field.onChange(e.target.value))} />
+                <TextArea {...field} readOnly={checked} onChange={(e => field.onChange(e.target.value))} />
             )}
         />
     )
@@ -19,6 +19,7 @@ const Textarea = ({ name }) => {
 
 Textarea.propTypes = {
     name: PropTypes.string,
+    checked: PropTypes.bool,
 }
 
 export default Textarea

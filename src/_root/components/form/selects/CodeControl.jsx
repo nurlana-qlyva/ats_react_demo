@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Select } from 'antd'
 import { CodeControlByIdService } from '../../../../api/services/code/services'
 
-const CodeControl = ({ name, codeName, id }) => {
+const CodeControl = ({ name, codeName, id, checked }) => {
     const [data, setData] = useState([])
     const { setValue, watch, control } = useFormContext()
 
@@ -24,6 +24,7 @@ const CodeControl = ({ name, codeName, id }) => {
                     showSearch
                     allowClear
                     optionFilterProp="children"
+                    disabled={checked}
                     filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
                     filterSort={(optionA, optionB) =>
                         (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
@@ -59,6 +60,7 @@ CodeControl.propTypes = {
     name: PropTypes.string,
     codeName: PropTypes.string,
     id: PropTypes.number,
+    checked: PropTypes.bool,
 }
 
 export default CodeControl

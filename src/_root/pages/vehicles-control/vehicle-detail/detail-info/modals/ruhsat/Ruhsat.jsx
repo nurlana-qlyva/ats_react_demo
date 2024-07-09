@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
@@ -147,7 +147,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
             "vergiDaire": values.vergiDaire,
         }
 
-        UpdateVehicleDetailsInfoService(body).then(res => {
+        UpdateVehicleDetailsInfoService(2, body).then(res => {
             if (res.data.statusCode === 202) {
                 setStatus(true)
                 onClose()
@@ -175,262 +175,265 @@ const Ruhsat = ({ visible, onClose, id }) => {
             footer={footer}
             width={1200}
         >
-            <div className="grid gap-1 mt-14">
-                <div className="col-span-9 border p-10">
-                    <div className="grid gap-1">
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Ruhsat Sahibi</label>
-                                <CodeControl name="ruhsatSahibi" codeName="ruhsatSahibiKodId" id={115} />
+            <FormProvider {...methods}>
+                <div className="grid gap-1 mt-14">
+                    <div className="col-span-9 border p-10">
+                        <div className="grid gap-1">
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Ruhsat Sahibi</label>
+                                    <CodeControl name="ruhsatSahibi" codeName="ruhsatSahibiKodId" id={115} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label htmlFor="aracTipId">{t("verdigiIl")}</label>
-                                <Towns />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label htmlFor="aracTipId">{t("verdigiIl")}</label>
+                                    <Towns />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Verdiği İlçe</label>
-                                <TextInput name="ilce" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Verdiği İlçe</label>
+                                    <TextInput name="ilce" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Tescil Sıra No</label>
-                                <TextInput name="tescilNo" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Tescil Sıra No</label>
+                                    <TextInput name="tescilNo" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>İlk Tescil Tarihi</label>
-                                <DateInput name="trafikciktarih" />
-                            </div>
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>İlk Tescil Tarihi</label>
+                                    <DateInput name="trafikciktarih" />
+                                </div>
 
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Tescil Tarihi</label>
-                                <DateInput name="tescilTarih" />
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Belge Seri No</label>
-                                <TextInput name="belgeSeriNo" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Tescil Tarihi</label>
+                                    <DateInput name="tescilTarih" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Araç Sınıfı</label>
-                                <TextInput name="aracSinifi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Belge Seri No</label>
+                                    <TextInput name="belgeSeriNo" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Araç Cinsi</label>
-                                <CodeControl name="aracCinsi" codeName="aracCinsiKodId" id={107} />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Araç Sınıfı</label>
+                                    <TextInput name="aracSinifi" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Ticari Adı</label>
-                                <TextInput name="ticariAdi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Araç Cinsi</label>
+                                    <CodeControl name="aracCinsi" codeName="aracCinsiKodId" id={107} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Azami Yüklü Ağırlığı</label>
-                                <TextInput name="azamiYukluAgirligi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Ticari Adı</label>
+                                    <TextInput name="ticariAdi" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Koltuk Sayısı</label>
-                                <TextInput name="koltukSayisi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Azami Yüklü Ağırlığı</label>
+                                    <TextInput name="azamiYukluAgirligi" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Ayakta Yolcu Sayısı</label>
-                                <TextInput name="ayaktaYolcuSayisi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Koltuk Sayısı</label>
+                                    <TextInput name="koltukSayisi" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Onay No</label>
-                                <TextInput name="onayNo" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Ayakta Yolcu Sayısı</label>
+                                    <TextInput name="ayaktaYolcuSayisi" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Vergi No/TC No</label>
-                                <TextInput name="vergiNo" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Onay No</label>
+                                    <TextInput name="onayNo" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Vergi Dairesi</label>
-                                <TextInput name="vergiDaire" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Vergi No/TC No</label>
+                                    <TextInput name="vergiNo" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="flex flex-col gap-1">
-                                <label>Kullanım Amacı</label>
-                                <TextInput name="kullanimAmaci" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Vergi Dairesi</label>
+                                    <TextInput name="vergiDaire" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="grid gap-1">
-                                <div className="col-span-6">
-                                    <div className="flex flex-col gap-1">
-                                        <label>İstiap Haddi</label>
-                                        <TextInput name="istiapHaddi" />
+                            <div className="col-span-3">
+                                <div className="flex flex-col gap-1">
+                                    <label>Kullanım Amacı</label>
+                                    <TextInput name="kullanimAmaci" />
+                                </div>
+                            </div>
+                            <div className="col-span-3">
+                                <div className="grid gap-1">
+                                    <div className="col-span-6">
+                                        <div className="flex flex-col gap-1">
+                                            <label>İstiap Haddi</label>
+                                            <TextInput name="istiapHaddi" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-span-6 self-end">
-                                    <div className="flex flex-col gap-1">
-                                        <CodeControl name="istiapHaddiBirim" codeName="istiapHaddiBirimKodId" id={109} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-span-3">
-                            <div className="grid gap-1">
-                                <div className="col-span-12">
-                                    <label>R.Azami Yüklü Ağırlığı</label>
-                                </div>
-                                <div className="col-span-6 self-end">
-                                    <div className="flex flex-col gap-1">
-                                        <TextInput name="rAzamiYuklu" />
-                                    </div>
-                                </div>
-                                <div className="col-span-6 self-end">
-                                    <div className="flex flex-col gap-1">
-                                        <CodeControl name="rAzamiIstiapHaddiBirim" codeName="rAzamiIstiapHaddiBirimKodId" id={109} />
+                                    <div className="col-span-6 self-end">
+                                        <div className="flex flex-col gap-1">
+                                            <CodeControl name="istiapHaddiBirim" codeName="istiapHaddiBirimKodId" id={109} />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-span-12">
-                            <div className="flex flex-col gap-1">
-                                <label>Açıklama</label>
-                                <Textarea name="aciklama" />
+                            <div className="col-span-3">
+                                <div className="grid gap-1">
+                                    <div className="col-span-12">
+                                        <label>R.Azami Yüklü Ağırlığı</label>
+                                    </div>
+                                    <div className="col-span-6 self-end">
+                                        <div className="flex flex-col gap-1">
+                                            <TextInput name="rAzamiYuklu" />
+                                        </div>
+                                    </div>
+                                    <div className="col-span-6 self-end">
+                                        <div className="flex flex-col gap-1">
+                                            <CodeControl name="rAzamiIstiapHaddiBirim" codeName="rAzamiIstiapHaddiBirimKodId" id={109} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-12">
+                                <div className="flex flex-col gap-1">
+                                    <label>Açıklama</label>
+                                    <Textarea name="aciklama" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="col-span-3 border p-10">
-                    <div className="grid">
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="taksiMetre">Taksimetre</label>
-                            <CheckboxInput name="taksiMetre" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="yukNakli">Yüklü Nakli</label>
-                            <CheckboxInput name="yukNakli" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="tokograf">Takograf</label>
-                            <CheckboxInput name="tokograf" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="ticari">Ticari</label>
-                            <CheckboxInput name="ticari" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="romok">Römork Takar</label>
-                            <CheckboxInput name="romok" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="resmi">Resmi</label>
-                            <CheckboxInput name="resmi" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="yolcuNakli">Yolcu Nakli</label>
-                            <CheckboxInput name="yolcuNakli" />
-                        </div>
-                        <div className="col-span-6 flex flex-col">
-                            <label htmlFor="hususi">Hüsusi</label>
-                            <CheckboxInput name="hususi" />
-                        </div>
-                        <div className="col-span-12">
-                            <Divider />
-                        </div>
-                        <div className="col-span-12 flex gap-1 mb-10">
-                            <Controller
-                                control={control}
-                                name='hakMahrumiyet'
-                                render={({ field }) => <Checkbox {...field} className='mr-10' checked={field.value} onChange={e => {
-                                    field.onChange(e.target.checked)
-                                    setHakMahrumiyetChecked(e.target.checked)
-                                }} />}
-                            />
-                            <label htmlFor="">Hak Mahrumiyeti</label>
-                        </div>
-                        <div className="col-span-12">
-                            <div className="flex flex-col gap-1">
-                                <label>Açıklama</label>
-                                <Controller
-                                    name="hakMahrumiyetAciklama"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            disabled={!hakMahrumiyetChecked}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                    <div className="col-span-3 border p-10">
+                        <div className="grid">
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="taksiMetre">Taksimetre</label>
+                                <CheckboxInput name="taksiMetre" />
                             </div>
-                        </div>
-                        <div className="col-span-12">
-                            <div className="flex flex-col gap-1">
-                                <label>Makam/Kurum</label>
-                                <Controller
-                                    name="hakMahrumiyetDurum"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            disabled={!hakMahrumiyetChecked}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="yukNakli">Yüklü Nakli</label>
+                                <CheckboxInput name="yukNakli" />
                             </div>
-                        </div>
-                        <div className="col-span-12">
-                            <div className="flex flex-col gap-1">
-                                <label>Tarih</label>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="tokograf">Takograf</label>
+                                <CheckboxInput name="tokograf" />
+                            </div>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="ticari">Ticari</label>
+                                <CheckboxInput name="ticari" />
+                            </div>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="romok">Römork Takar</label>
+                                <CheckboxInput name="romok" />
+                            </div>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="resmi">Resmi</label>
+                                <CheckboxInput name="resmi" />
+                            </div>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="yolcuNakli">Yolcu Nakli</label>
+                                <CheckboxInput name="yolcuNakli" />
+                            </div>
+                            <div className="col-span-6 flex flex-col">
+                                <label htmlFor="hususi">Hüsusi</label>
+                                <CheckboxInput name="hususi" />
+                            </div>
+                            <div className="col-span-12">
+                                <Divider />
+                            </div>
+                            <div className="col-span-12 flex gap-1 mb-10">
                                 <Controller
-                                    name="hakMahrumiyettarih"
                                     control={control}
-                                    render={({ field }) => (
-                                        <ConfigProvider locale={tr_TR}>
-                                            <DatePicker
+                                    name='hakMahrumiyet'
+                                    render={({ field }) => <Checkbox {...field} className='mr-10' checked={field.value} onChange={e => {
+                                        field.onChange(e.target.checked)
+                                        setHakMahrumiyetChecked(e.target.checked)
+                                    }} />}
+                                />
+                                <label htmlFor="">Hak Mahrumiyeti</label>
+                            </div>
+                            <div className="col-span-12">
+                                <div className="flex flex-col gap-1">
+                                    <label>Açıklama</label>
+                                    <Controller
+                                        name="hakMahrumiyetAciklama"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
                                                 {...field}
-                                                placeholder=""
                                                 disabled={!hakMahrumiyetChecked}
-                                                locale={dayjs.locale("tr")}
-                                                format="DD.MM.YYYY"
-                                                onChange={e => {
-                                                    field.onChange(e)
+                                                onChange={(e) => {
+                                                    field.onChange(e.target.value)
                                                 }}
                                             />
-                                        </ConfigProvider>
-                                    )}
-                                />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-12">
+                                <div className="flex flex-col gap-1">
+                                    <label>Makam/Kurum</label>
+                                    <Controller
+                                        name="hakMahrumiyetDurum"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                disabled={!hakMahrumiyetChecked}
+                                                onChange={(e) => {
+                                                    field.onChange(e.target.value)
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-12">
+                                <div className="flex flex-col gap-1">
+                                    <label>Tarih</label>
+                                    <Controller
+                                        name="hakMahrumiyettarih"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <ConfigProvider locale={tr_TR}>
+                                                <DatePicker
+                                                    {...field}
+                                                    placeholder=""
+                                                    disabled={!hakMahrumiyetChecked}
+                                                    locale={dayjs.locale("tr")}
+                                                    format="DD.MM.YYYY"
+                                                    onChange={e => {
+                                                        field.onChange(e)
+                                                    }}
+                                                />
+                                            </ConfigProvider>
+                                        )}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </FormProvider>
+
         </Modal>
     )
 }

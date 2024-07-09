@@ -1,8 +1,8 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
-import { Input } from 'antd'
+import { InputNumber } from 'antd'
 
-const NumberInput = ({ name }) => {
+const NumberInput = ({ name, checked }) => {
     const { control, setValue } = useFormContext()
 
     return (
@@ -10,9 +10,10 @@ const NumberInput = ({ name }) => {
             name={name}
             control={control}
             render={({ field }) => (
-                <Input
+                <InputNumber
                     {...field}
                     className='w-full'
+                    readOnly={checked}
                     onChange={(e) => {
                         field.onChange(e)
                         if (e === null) {
@@ -27,6 +28,7 @@ const NumberInput = ({ name }) => {
 
 NumberInput.propTypes = {
     name: PropTypes.string,
+    checked: PropTypes.bool,
 }
 
 export default NumberInput
