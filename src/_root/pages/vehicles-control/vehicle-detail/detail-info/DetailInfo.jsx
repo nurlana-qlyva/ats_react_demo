@@ -19,6 +19,7 @@ import { Button, Dropdown, Space } from "antd";
 import Ruhsat from "./modals/ruhsat/Ruhsat";
 import Ekspertiz from "./modals/ekspertiz/Ekspertiz";
 import Teknik from "./modals/teknik/Teknik";
+import Satinalma from "./modals/satinalma/Satinalma";
 
 const DetailInfo = ({ id }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -141,6 +142,14 @@ const DetailInfo = ({ id }) => {
       //         id={id}
       //       />
       //     );
+      case "7":
+        return (
+          <Satinalma
+            visible={selectedItem === "7"}
+            onClose={() => setSelectedItem(null)}
+            id={id}
+          />
+        );
       // default:
       //     return null;
     }

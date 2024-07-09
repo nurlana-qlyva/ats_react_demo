@@ -2,7 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Input } from 'antd'
 
-const ReadonlyInput = ({ name, checked = true }) => {
+const ReadonlyInput = ({ name, checked }) => {
     const { control } = useFormContext()
 
     return (
