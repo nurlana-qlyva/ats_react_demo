@@ -9,8 +9,8 @@ const Firma = ({ name, codeName, checked }) => {
     const { setValue, watch, control } = useFormContext()
 
     const handleClick = () => {
-        CodeControlByUrlService('Company/GetCompaniesList').then(res => {
-            setData(res?.data.list)
+        CodeControlByUrlService('Company/GetCompanyListForSelectInput').then(res => {
+            setData(res?.data)
         })
     }
 

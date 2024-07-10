@@ -11,8 +11,8 @@ const TownVaris = ({ field }) => {
     const { setVarisSehirID } = useContext(SelectContext)
 
     const handleClickSelect = () => {
-        CustomCodeControlService("Town/GetTownList").then(res => {
-            setData(res.data.towns)
+        CustomCodeControlService("Town/GetTownListForSelectInput").then(res => {
+            setData(res.data)
         })
     }
 

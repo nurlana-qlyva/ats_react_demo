@@ -695,7 +695,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                           {t("ortalamaTuketim")}{" "}
                           <ArrowUpOutlined style={{ color: "red" }} />
                         </label>
-                        <ReadonlyInput name="tuketim" />
+                        <ReadonlyInput name="tuketim" checked={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">

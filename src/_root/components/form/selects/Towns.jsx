@@ -9,8 +9,8 @@ const Towns = () => {
     const { setValue, watch, control } = useFormContext()
 
     const handleClickSelect = () => {
-        CodeControlByUrlService("Town/GetTownList").then(res => {
-            setData(res.data.towns)
+        CodeControlByUrlService("Town/GetTownListForSelectInput").then(res => {
+            setData(res.data)
         })
     }
 

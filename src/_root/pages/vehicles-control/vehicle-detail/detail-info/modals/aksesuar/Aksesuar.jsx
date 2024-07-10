@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
+import dayjs from "dayjs";
 import { MenuOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Input, Modal, Popover, Table } from "antd";
 import DragAndDropContext from "../../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../../components/drag-drop-table/SortableHeaderCell";
-import { GetCapacityListByVehicleIdService } from "../../../../../../../api/services/vehicles/vehicles/services";
+import { GetAccListByVehicleIdService } from "../../../../../../../api/services/vehicles/vehicles/services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 
-const Kapasite = ({ visible, onClose, id }) => {
+const Aksesuar = ({ visible, onClose, id }) => {
   const [dataSource, setDataSource] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -22,27 +23,49 @@ const Kapasite = ({ visible, onClose, id }) => {
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
-  const [kpId, setKpId] = useState(0)
+  const [accId, setAccId] = useState(0);
 
   const baseColumns = [
     {
-      title: t("aciklama"),
-      dataIndex: "tanim",
+      title: t("aksesuarKod"),
+      dataIndex: "aksesuarKod",
       key: 1,
-      render: (text, record) => <Button onClick={() => {
-        setKpId(record.siraNo)
-        setUpdateModal(true)
-      }}>{text}</Button>,
+      render: (text, record) => (
+        <Button
+          onClick={() => {
+            setAccId(record.siraNo);
+            setUpdateModal(true);
+          }}
+        >
+          {text}
+        </Button>
+      ),
+    },
+    {
+      title: t("aksesuarTanim"),
+      dataIndex: "aksesuar",
+      key: 2,
     },
     {
       title: t("miktar"),
       dataIndex: "miktar",
-      key: 2,
+      key: 3,
     },
     {
-      title: t("birim"),
-      dataIndex: "birim",
-      key: 3,
+      title: t("fiyat"),
+      dataIndex: "fiyat",
+      key: 4,
+    },
+    {
+      title: t("ureticiKod"),
+      dataIndex: "miktar",
+      key: 5,
+    },
+    {
+      title: t("degistirmeTarih"),
+      dataIndex: "degistirmeTarih",
+      key: 6,
+      render: text => dayjs(text).format("DD.MM.YYYY")
     },
   ];
 
@@ -62,7 +85,7 @@ const Kapasite = ({ visible, onClose, id }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetCapacityListByVehicleIdService(
+      const res = await GetAccListByVehicleIdService(
         id,
         search,
         tableParams.pagination.current
@@ -126,7 +149,7 @@ const Kapasite = ({ visible, onClose, id }) => {
 
   return (
     <Modal
-      title={t("kapasiteBilgiler")}
+      title={t("aksesuarBilgiler")}
       open={visible}
       onCancel={onClose}
       maskClosable={false}
@@ -158,7 +181,7 @@ const Kapasite = ({ visible, onClose, id }) => {
         setUpdateModal={setUpdateModal}
         setStatus={setStatus}
         status={status}
-        id={kpId}
+        id={accId}
       />
       <div className="mt-20">
         <DragAndDropContext items={columns} setItems={setColumns}>
@@ -189,10 +212,10 @@ const Kapasite = ({ visible, onClose, id }) => {
   );
 };
 
-Kapasite.propTypes = {
+Aksesuar.propTypes = {
   id: PropTypes.number,
   visible: PropTypes.bool,
   onClose: PropTypes.func,
 };
 
-export default Kapasite;
+export default Aksesuar;

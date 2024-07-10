@@ -348,7 +348,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="plaka">{t("plaka")}</label>
-                                <ReadonlyInput name="plaka" />
+                                <ReadonlyInput name="plaka" checked={true} />
                             </div>
                         </div>
                         <div className="col-span-6">
@@ -404,7 +404,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("sonAlinanKm")}</label>
-                                <ReadonlyInput name="sonAlinanKm" />
+                                <ReadonlyInput name="sonAlinanKm" checked={true} />
                             </div>
                         </div>
                         <div className="col-span-6">
@@ -544,7 +544,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <div className="col-span-10">
                                             <div className="flex flex-col gap-1">
                                                 <label className='text-danger'>{t("ortalamaTuketim")} <ArrowUpOutlined style={{ color: 'red' }} /></label>
-                                                <ReadonlyInput name="tuketim" />
+                                                <ReadonlyInput name="tuketim" checked={true} />
                                             </div>
                                         </div>
                                         <div className="col-span-2 self-end">
@@ -612,7 +612,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("kdvTutar")}</label>
-                                <ReadonlyInput name="kdv" />
+                                <ReadonlyInput name="kdv" checked={true} />
                             </div>
                         </div>
                     </div>
@@ -656,7 +656,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("masrafMerkezi")} -- ?</label>
-                                <ReadonlyInput name="" />
+                                <ReadonlyInput name="" checked={true} />
                             </div>
                         </div>
                         <div className="col-span-4">

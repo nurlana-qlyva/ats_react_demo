@@ -8,8 +8,8 @@ const Guzergah = () => {
     const { setValue, watch, control } = useFormContext()
 
     const handleClick = () => {
-        CodeControlByUrlService('FuelRoute/GetFuelRoutesList').then(res => {
-            setData(res.data.list)
+        CodeControlByUrlService('FuelRoute/GetFuelRouteListForSelectInput').then(res => {
+            setData(res.data)
         })
     }
 

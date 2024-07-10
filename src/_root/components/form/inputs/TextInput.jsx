@@ -2,7 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Input } from 'antd'
 
-const TextInput = ({ name, length }) => {
+const TextInput = ({ name, length, style }) => {
     const { control } = useFormContext()
 
     return (
@@ -13,6 +13,7 @@ const TextInput = ({ name, length }) => {
                 <Input
                     {...field}
                     maxLength={length}
+                    style={style}
                     onChange={(e) => {
                         field.onChange(e.target.value)
                     }}

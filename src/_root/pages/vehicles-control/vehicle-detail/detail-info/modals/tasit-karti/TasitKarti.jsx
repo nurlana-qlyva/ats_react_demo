@@ -36,6 +36,7 @@ const TasitKarti = ({ visible, onClose, id }) => {
       setValue("tkAciklama", res.data.tkAciklama)
       setValue("tkYbNo", res.data.tkYbNo)
       setValue("ykTuruKodId", res.data.ykTuruKodId)
+      setValue("tkYkturu", res.data.tkYkturu)
       setValue("tkVerilisTarih", res.data.tkVerilisTarih !== "0001-01-01T00:00:00" && dayjs(res.data.tkVerilisTarih))
       setValue("tkBitisTarih", res.data.tkBitisTarih !== "0001-01-01T00:00:00" && dayjs(res.data.tkBitisTarih))
       setValue("tkIptalTarih", res.data.tkIptalTarih !== "0001-01-01T00:00:00" && dayjs(res.data.tkIptalTarih))
@@ -123,14 +124,13 @@ const TasitKarti = ({ visible, onClose, id }) => {
                   <DateInput name="tkYbVerilisTarih" checked={!watch("dtyYetkiBelgesi")} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-6">
                 <div className="flex flex-col gap-1">
                   <label>{t("belgeTuru")}</label>
-                  <CodeControl name="ykTuru" codeName="ykTuruKodId" id={108} checked={!watch("dtyYetkiBelgesi")} />
-                  <TextInput name="belgeTuru" checked={!watch("dtyYetkiBelgesi")} />
+                  <CodeControl name="tkYkturu" codeName="ykTuruKodId" id={108} checked={!watch("dtyYetkiBelgesi")} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-6">
                 <div className="flex flex-col gap-1">
                   <label>{t("belgeNo")}</label>
                   <TextInput name="tkYbNo" checked={!watch("dtyYetkiBelgesi")} />

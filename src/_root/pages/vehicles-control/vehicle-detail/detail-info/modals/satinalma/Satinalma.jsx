@@ -231,19 +231,19 @@ const Satinalma = ({ visible, onClose, id }) => {
                 <div className="col-span-12">
                   <div className="flex flex-col gap-1">
                     <label>{t("amorTismanTutar")} -- ?</label>
-                    <ReadonlyInput name="" />
+                    <ReadonlyInput name="" checked={true} />
                   </div>
                 </div>
                 <div className="col-span-12">
                   <div className="flex flex-col gap-1">
                     <label>{t("netAktifDeger")} -- ?</label>
-                    <ReadonlyInput name="" />
+                    <ReadonlyInput name="" checked={true}/>
                   </div>
                 </div>
                 <div className="col-span-12">
                   <div className="flex flex-col gap-1">
                     <label>{t("kalanSure")} -- ?</label>
-                    <ReadonlyInput name="" />
+                    <ReadonlyInput name="" checked={true}/>
                   </div>
                 </div>
               </div>

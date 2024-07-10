@@ -5,7 +5,6 @@ import 'dayjs/locale/tr'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { ConfigProvider, DatePicker } from 'antd'
 
-
 dayjs.locale('tr')
 
 const DateInput = ({ name, checked }) => {

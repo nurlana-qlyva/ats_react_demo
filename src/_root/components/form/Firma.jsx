@@ -9,7 +9,7 @@ const Firma = ({ field }) => {
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        CustomCodeControlService('Company/GetCompaniesList').then(res => {
+        CustomCodeControlService('Company/GetCompanyListForSelectInput').then(res => {
             setData(res.data)
         })
     }

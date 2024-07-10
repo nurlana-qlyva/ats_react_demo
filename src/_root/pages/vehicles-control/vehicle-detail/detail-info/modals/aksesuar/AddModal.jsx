@@ -5,9 +5,12 @@ import { t } from "i18next";
 import { Button, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../../context/plakaSlice";
-import { AddCapacityByVehicleIdService } from "../../../../../../../api/services/vehicles/vehicles/services";
+import { AddAccItemService } from "../../../../../../../api/services/vehicles/vehicles/services";
 import TextInput from "../../../../../../components/form/inputs/TextInput";
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
+import dayjs from "dayjs";
+import NumberInput from "../../../../../../components/form/inputs/NumberInput";
+import DateInput from "../../../../../../components/form/date/DateInput";
 
 const AddModal = ({ setStatus }) => {
   const { plaka, aracId } = useContext(PlakaContext);
@@ -24,14 +27,18 @@ const AddModal = ({ setStatus }) => {
 
   const handleOk = handleSubmit(async (values) => {
     const body = {
-      kapAracId: aracId,
+      aksAracId: aracId,
       plaka: plaka,
-      tanim: values.tanim,
+      aksesuarKodId: values.aksesuarKodId || -1,
+      ureticiKod: values.ureticiKod,
       miktar: values.miktar,
-      birimKodId: values.birimKodId || -1,
+      aksesuarKod: values.aksesuarKod,
+      fiyat: values.fiyat,
+      degistirmeTarih:
+        dayjs(values.degistirmeTarih).format("YYYY-MM-DD") || null,
     };
 
-    AddCapacityByVehicleIdService(body).then((res) => {
+    AddAccItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setIsModalOpen(false);
         setStatus(true);
@@ -70,16 +77,28 @@ const AddModal = ({ setStatus }) => {
         <FormProvider {...methods}>
           <form>
             <div className="flex flex-col gap-1">
-              <label>{t("aciklama")}</label>
-              <TextInput name="tanim" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("miktar")}</label>
-              <TextInput name="miktar" />
+              <label>{t("aksesuarKod")}</label>
+              <TextInput name="aksesuarKod" />
             </div>
             <div className="flex flex-col gap-1">
               <label>{t("birim")}</label>
-              <CodeControl name="birim" codeName="birimKodId" id={110} />
+              <CodeControl name="aksesuar" codeName="aksesuarKodId" id={105} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label>{t("miktar")}</label>
+              <NumberInput name="miktar" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label>{t("fiyat")}</label>
+              <NumberInput name="fiyat" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label>{t("ureticiKod")}</label>
+              <TextInput name="ureticiKod" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label>{t("degistirmeTarih")}</label>
+              <DateInput name="degistirmeTarih" />
             </div>
           </form>
         </FormProvider>

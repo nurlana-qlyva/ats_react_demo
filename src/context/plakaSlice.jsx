@@ -5,10 +5,11 @@ export const PlakaContext = createContext();
 
 export const PlakaProvider = ({ children }) => {
     const [plaka, setPlaka] = useState([]);
+    const [aracId, setAracId] = useState([]);
     const [data, setData] = useState([]);
     const [history, setHistory] = useState(false);
 
-    const values = { plaka, setPlaka, data, setData, setHistory, history };
+    const values = { plaka, setPlaka, data, setData, setHistory, history, aracId, setAracId };
 
     return (
         <PlakaContext.Provider value={values}>

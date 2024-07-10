@@ -218,7 +218,7 @@
   transform: translateX(-50%);
 }
 
-.ant-upload-list-item-container {
+/* .ant-upload-list-item-container {
   width: 100% !important;
   height: 100% !important;
 }
@@ -236,4 +236,4 @@
 .ant-upload.ant-upload-select {
   height: 100% !important;
   width: 100% !important;
-}
+} */
