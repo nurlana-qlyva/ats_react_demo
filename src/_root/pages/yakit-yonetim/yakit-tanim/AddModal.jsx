@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import PersonalFields from "../../../components/form/PersonalFields";
-import GeneralInfo from "./GeneralInfo";
-import {
-  CodeItemValidateService,
-  MalzemeAddService,
-  MalzemeCodeGetService,
-} from "../../../../api/service";
 import { t } from "i18next";
+import { GetModuleCodeByCode, CodeItemValidateService } from "../../../../api/services/code/services";
+import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
+import GeneralInfo from "./tabs/GeneralInfo";
+import { AddMaterialService } from "../../../../api/services/yakit-yonetimi/services";
 
 const AddModal = ({ setStatus }) => {
+  const isFirstRender = useRef(true);
+
   const [isOpen, setIsModalOpen] = useState(false);
   const [isValid, setIsValid] = useState("normal");
   const [fields, setFields] = useState([
@@ -68,7 +67,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 869,
+      code: 865,
       name2: "ozelAlanKodId9",
     },
     {
@@ -76,7 +75,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 870,
+      code: 866,
       name2: "ozelAlanKodId10",
     },
     {
@@ -121,6 +120,14 @@ const AddModal = ({ setStatus }) => {
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
+    if (isOpen && isFirstRender.current) {
+      GetModuleCodeByCode("YAKIT_KOD").then((res) =>
+        setValue("malzemeKod", res.data)
+      );
+    }
+  }, [isOpen, setValue]);
+
+  useEffect(() => {
     if (watch("malzemeKod")) {
       const body = {
         tableName: "Malzeme",
@@ -151,30 +158,16 @@ const AddModal = ({ setStatus }) => {
     },
   ];
 
-  useEffect(() => {
-    MalzemeCodeGetService().then((res) => setValue("malzemeKod", res.data));
-  }, [isOpen]);
-
   const onSubmit = handleSubmit((values) => {
     const body = {
       malzemeKod: values.malzemeKod,
-      tanim: values.tanim,
-      birimKodId: values.birimKodId || 0,
-      malzemeTipKodId: values.malzemeTipKodId || 0,
-      fiyat: values.fiyat || 0,
-      seriNo: values.seriNo,
-      barKodNo: values.barKodNo,
-      depoId: values.depoId || 0,
-      bolum: values.bolum,
-      raf: values.raf,
-      kritikMiktar: values.kritikMiktar || 0,
-      kdvOran: values.kdvOran || 0,
-      aktif: values.aktif,
-      yedekParca: values.yedekParca,
-      sarfMlz: values.sarfMlz,
-      demirBas: values.demirBas,
-      olcu: values.olcu,
-      "malzemeTip": "MALZEME",
+      "tanim": values.tanim,
+      "aktif": values.aktif,
+      "birimKodId": values.birimKodId || -1,
+      "malzemeTipKodId": values.malzemeTipKodId || -1,
+      "fiyat": values.fiyat || 0,
+      "kdvOran": values.kdvOran || 0,
+      "malzemeTip": "YAKIT",
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -187,10 +180,9 @@ const AddModal = ({ setStatus }) => {
       ozelAlanKodId10: values.ozelAlanKodId10 || 0,
       ozelAlan11: values.ozelAlan11 || 0,
       ozelAlan12: values.ozelAlan12 || 0,
-      kdvDahilHaric: values.kdvDahilHaric === "dahil" ? true : false,
     };
 
-    MalzemeAddService(body).then((res) => {
+    AddMaterialService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsModalOpen(false);
@@ -204,8 +196,8 @@ const AddModal = ({ setStatus }) => {
     <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid === "error"
       ? true
       : isValid === "success"
-          ? false
-          : false} >
+        ? false
+        : false} >
       {t("kaydet")}
     </Button>,
     <Button

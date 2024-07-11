@@ -78,7 +78,7 @@ const items = [
             {
                 key: '14',
                 label: (
-                    <Link to={'/'}>{t("yakitIslemleri")}</Link>
+                    <Link to={'/yakit-tanimlari'}>{t("yakitTanimlari")}</Link>
                 ),
             },
             {
