@@ -48,7 +48,7 @@ const breadcrumb = [
 const DetailUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { setPlaka, setAracId } = useContext(PlakaContext);
+  const { setPlaka, setAracId, setPrintData } = useContext(PlakaContext);
 
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -187,6 +187,7 @@ const DetailUpdate = () => {
     setLoading(true);
     GetVehicleByIdService(id).then((res) => {
       setLoading(false);
+      setPrintData(res.data)
       setDataSource(res.data);
       setValue("plaka", res?.data.plaka);
       setPlaka(res?.data.plaka)
@@ -487,7 +488,7 @@ const DetailUpdate = () => {
                     <div className="col-span-10">
                       <div className="flex flex-col gap-1">
                         <label htmlFor="guncelKm">{t("guncelKm")}</label>
-                        <ReadonlyInput name="guncelKm" checked={true}/>
+                        <ReadonlyInput name="guncelKm" checked={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">

@@ -82,7 +82,7 @@ const AddModal = ({ setStatus }) => {
       kdvToplam: values.toplam_kdvToplam,
       genelToplam: values.toplam_genelToplam,
       materialMovements,
-      gc: 1, 
+      gc: 1,
       fisTip: "MALZEME"
     };
 
@@ -153,6 +153,7 @@ const AddModal = ({ setStatus }) => {
       Kaydet
     </Button>,
     <Popconfirm
+      key="back"
       title="Bilgileri Kaydetmeden Çıkılsın mı?"
       okText={t("ok")}
       cancelText={t("cancel")}
@@ -180,7 +181,7 @@ const AddModal = ({ setStatus }) => {
         footer={footer}
         width={1300}
         closeIcon={null}
-        // closable={false}
+      // closable={false}
       >
         <FormProvider {...methods}>
           <form>

@@ -3,8 +3,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { Button, Modal } from "antd";
 import {
   GetDriverSubstitutionByIdService,
@@ -20,13 +18,14 @@ import DateInput from "../../../../../../components/form/date/DateInput";
 import TimeInput from "../../../../../../components/form/date/TimeInput";
 import Driver from "../../../../../../components/form/selects/Driver";
 import Textarea from "../../../../../../components/form/inputs/Textarea";
-import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
-import { pdfTemplate } from "./tutanak";
+import Tutanak from "./Tutanak";
+import { PlakaContext } from "../../../../../../../context/plakaSlice";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
+  const { printData } = useContext(PlakaContext)
   const [isValid, setIsValid] = useState("normal");
   const [surucuIsValid, setSurucuIsValid] = useState(false);
-  const [showPDF, setShowPDF] = useState(false);
+  const [data, setData] = useState(null)
 
   const defaultValues = {};
   const methods = useForm({
@@ -70,6 +69,23 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     }
   }, [id, updateModal]);
 
+  useEffect(() => {
+    const data = {
+      marka: printData.marka,
+      model: printData.model,
+      plaka: printData.plaka,
+      km: watch("km"),
+      ogs: printData.ogs,
+      tasit: "",
+      diger: "",
+      teslimTarih: dayjs(watch("teslimTarih")).format("DD.MM.YYYY"),
+      teslimEden: watch("surucuTeslimEden"),
+      teslimAlan: watch("surucuTeslimAlan")
+    }
+
+    setData(data)
+  }, [watch("teslimTarih"), watch("surucuTeslimEden"), watch("surucuTeslimAlan"), watch("km"), printData])
+
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
@@ -86,37 +102,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setUpdateModal(false);
         setStatus(true);
         reset(defaultValues);
-        if (values.checked) {
-          generatePDF(values);
-        }
       }
     });
 
     setStatus(false);
   });
 
-  const generatePDF = (values) => {
-    const doc = new jsPDF({
-      orientation: "portrait", // or "landscape"
-      unit: "px",
-      format: "a4",
-    });
-  
-    // Generate PDF from the template
-    doc.html(pdfTemplate, {
-      x: 10,
-      y: 10,
-      width: 595, // A4 width in px
-      callback: (doc) => {
-        const pdfOutput = doc.output("bloburl");
-        window.open(pdfOutput, "_blank");
-      },
-    });
-  };
-
   useEffect(() => {
     !watch("surucuTeslimAlanId") ||
-    watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId")
+      watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId")
       ? setSurucuIsValid(true)
       : setSurucuIsValid(false);
   }, [watch("surucuTeslimEdenId"), watch("surucuTeslimAlanId")]);
@@ -126,8 +120,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       isValid === "error"
         ? "#dc3545"
         : isValid === "success"
-        ? "#23b545"
-        : "#000",
+          ? "#23b545"
+          : "#000",
   };
 
   const footer = [
@@ -154,7 +148,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   return (
     <Modal
       title={t("kapasiteGuncelle")}
-      open={updateModal}
+      visible={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
       footer={footer}
@@ -205,11 +199,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
                 <Textarea name="aciklama" />
               </div>
             </div>
-            <div className="col-span-12">
-              <div className="flex gap-1">
-                <CheckboxInput name="checked" />
-                <label>{t("teslimTutanagiYazdir")}</label>
-              </div>
+            <div className="col-span-12 mt-14">
+              <Tutanak data={data} />
             </div>
           </div>
         </form>
