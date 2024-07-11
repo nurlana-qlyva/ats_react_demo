@@ -21,6 +21,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const [isValid, setIsValid] = useState("normal");
   const [surucuId, setSurucuId] = useState(0);
   const [images, setImages] = useState([]);
+  const [imagesURL, setImagesURL] = useState([]);
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -212,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setValue("ozelAlan11", res?.data.ozelAlan11);
         setValue("ozelAlan12", res?.data.ozelAlan12);
 
-        setImages([...images, res.data.defPhotoInfo]);
+        setImagesURL([...images, res.data.defPhotoInfo]);
       } catch (error) {
         console.error("Error updating driver:", error);
       }
@@ -316,6 +317,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     });
 
     uploadPhoto(surucuId, "SURUCU", images, true);
+    setImages([])
+    setImagesURL([])
     setStatus(false);
   });
 
@@ -329,7 +332,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: <GeneralInfoUpdate isValid={isValid} setImages={setImages} images={images} />,
+      children: <GeneralInfoUpdate isValid={isValid} setImages={setImages} urls={imagesURL} />,
     },
     {
       key: "2",
@@ -369,6 +372,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setUpdateModal(false);
         reset(defaultValues);
         setImages([])
+        setImagesURL([])
       }}
     >
       {t("iptal")}
@@ -397,8 +401,7 @@ UpdateModal.propTypes = {
   updateModal: PropTypes.bool,
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
-  record: PropTypes.object,
-  status: PropTypes.bool,
+  id: PropTypes.number,
 };
 
 export default UpdateModal;

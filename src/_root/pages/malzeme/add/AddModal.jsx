@@ -175,6 +175,7 @@ const AddModal = ({ setStatus }) => {
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
       olcu: values.olcu,
+      "malzemeTip": "MALZEME",
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",

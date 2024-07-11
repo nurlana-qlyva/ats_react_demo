@@ -233,7 +233,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     });
 
     uploadPhoto(personelId, "PERSONEL", images, true);
-
+    setImages([])
+    setImagesURL([])
     setStatus(false);
   });
 
@@ -279,6 +280,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setUpdateModal(false);
         reset(defaultValues);
         setImages([])
+        setImagesURL([])
       }}
     >
       {t("iptal")}

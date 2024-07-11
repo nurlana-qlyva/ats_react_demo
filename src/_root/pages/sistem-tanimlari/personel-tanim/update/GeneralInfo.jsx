@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { t } from "i18next";
-import { Checkbox, Input, Upload } from "antd";
+import { Checkbox, Input, message, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
 import Location from "../../../../components/form/Location";
 import Departman from "../../../../components/form/Departman";
@@ -13,9 +13,9 @@ import { DownloadPhotoByIdService } from "../../../../../api/services/upload/ser
 const GeneralInfo = ({ isValid, setImages, urls }) => {
   const { control } = useFormContext();
   const [fileList, setFileList] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
-    console.log(urls)
     const fetchImages = async () => {
       try {
         if (urls[0]) {
@@ -34,6 +34,7 @@ const GeneralInfo = ({ isValid, setImages, urls }) => {
             name: response.data.fileName,
           }));
           setFileList(objectUrls);
+          setProfileImage(objectUrls[0]?.url);
         } else {
           setFileList([]);
         }
@@ -45,22 +46,30 @@ const GeneralInfo = ({ isValid, setImages, urls }) => {
     fetchImages();
 
     return () => {
-        urls.forEach((url) => URL.revokeObjectURL(url));
+      urls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [urls]);
 
   const beforeUpload = (file) => {
-    setFileList([
-      { uid: file.uid, url: URL.createObjectURL(file), name: file.name },
-    ]);
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
     const formData = new FormData();
-    formData.append("images", file);
+    formData.append('images', file);
     setImages(formData);
-    return false;
+    return isJpgOrPng;
   };
 
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    if (newFileList.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImage(e.target.result);
+      };
+      reader.readAsDataURL(newFileList[newFileList.length - 1].originFileObj);
+    }
   };
 
   return (
@@ -81,8 +90,8 @@ const GeneralInfo = ({ isValid, setImages, urls }) => {
                         isValid === "error"
                           ? { borderColor: "#dc3545" }
                           : isValid === "success"
-                          ? { borderColor: "#23b545" }
-                          : { color: "#000" }
+                            ? { borderColor: "#23b545" }
+                            : { color: "#000" }
                       }
                       onChange={(e) => {
                         field.onChange(e.target.value);
@@ -163,21 +172,24 @@ const GeneralInfo = ({ isValid, setImages, urls }) => {
           </div>
         </div>
         <div className="col-span-4 p-10">
-          <ImgCrop>
-            <Upload
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              beforeUpload={beforeUpload}
-              showUploadList={{
-                showPreviewIcon: true,
-                showRemoveIcon: true,
-                showDownloadIcon: false,
-              }}
-            >
-              {fileList.length === 0 && "+ Upload"}
-            </Upload>
-          </ImgCrop>
+          <div className="flex flex-col gap-2 align-center justify-evenly h-full">
+            <img
+              src={profileImage || "/default-profile-image.png"}
+              alt="Profile"
+              style={{ width: "60%", height: "60%" }}
+            />
+            <ImgCrop>
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                beforeUpload={beforeUpload}
+                showUploadList={false}
+              >
+                Resim yukle
+              </Upload>
+            </ImgCrop>
+          </div>
         </div>
       </div>
     </>

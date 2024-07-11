@@ -1,5 +1,4 @@
 export const uploadPhoto = async (id, group, files, isForDefault) => {
-  console.log(id)
   const token = JSON.parse(localStorage.getItem("token"));
   if (!token) {
     throw new Error("Authentication token not found.");

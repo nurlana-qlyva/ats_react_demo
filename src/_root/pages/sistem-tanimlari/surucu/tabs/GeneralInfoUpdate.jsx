@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
-import { Upload } from "antd";
+import { message, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
 import { DownloadPhotoByIdService } from "../../../../../api/services/upload/services";
 import Location from "../../../../components/form/tree/Location";
@@ -12,14 +12,15 @@ import TextInput from "../../../../components/form/inputs/TextInput";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 
-const GeneralInfo = ({ isValid, setImages, images }) => {
+const GeneralInfoUpdate = ({ isValid, setImages, urls }) => {
   const [fileList, setFileList] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        if (images[0]) {
-          const requests = images.map((img) => {
+        if (urls[0]) {
+          const requests = urls.map((img) => {
             const data = {
               photoId: img.tbResimId,
               extension: img.rsmUzanti,
@@ -34,6 +35,7 @@ const GeneralInfo = ({ isValid, setImages, images }) => {
             name: response.data.fileName,
           }));
           setFileList(objectUrls);
+          setProfileImage(objectUrls[0]?.url);
         } else {
           setFileList([]);
         }
@@ -45,22 +47,30 @@ const GeneralInfo = ({ isValid, setImages, images }) => {
     fetchImages();
 
     return () => {
-      images.forEach((url) => URL.revokeObjectURL(url));
+      urls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [images]);
+  }, [urls]);
 
   const beforeUpload = (file) => {
-    setFileList([
-      { uid: file.uid, url: URL.createObjectURL(file), name: file.name },
-    ]);
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
     const formData = new FormData();
-    formData.append("images", file);
+    formData.append('images', file);
     setImages(formData);
-    return false;
+    return isJpgOrPng;
   };
 
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    if (newFileList.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImage(e.target.result);
+      };
+      reader.readAsDataURL(newFileList[newFileList.length - 1].originFileObj);
+    }
   };
 
   const validateStyle = {
@@ -68,8 +78,8 @@ const GeneralInfo = ({ isValid, setImages, images }) => {
       isValid === "error"
         ? "#dc3545"
         : isValid === "success"
-        ? "#23b545"
-        : "#000",
+          ? "#23b545"
+          : "#000",
   };
 
   return (
@@ -178,21 +188,24 @@ const GeneralInfo = ({ isValid, setImages, images }) => {
           </div>
         </div>
         <div className="col-span-4">
-          <ImgCrop>
-            <Upload
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              beforeUpload={beforeUpload}
-              showUploadList={{
-                showPreviewIcon: true,
-                showRemoveIcon: true,
-                showDownloadIcon: false,
-              }}
-            >
-              {fileList.length === 0 && "+ Upload"}
-            </Upload>
-          </ImgCrop>
+          <div className="flex flex-col gap-2 align-center justify-evenly h-full">
+            <img
+              src={profileImage || "/default-profile-image.png"}
+              alt="Profile"
+              style={{ width: "60%", height: "60%" }}
+            />
+            <ImgCrop>
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                beforeUpload={beforeUpload}
+                showUploadList={false}
+              >
+                Resim yukle
+              </Upload>
+            </ImgCrop>
+          </div>
         </div>
         <div className="col-span-12">
           <div className="col-span-6">
@@ -207,9 +220,10 @@ const GeneralInfo = ({ isValid, setImages, images }) => {
   );
 };
 
-GeneralInfo.propTypes = {
+GeneralInfoUpdate.propTypes = {
   isValid: PropTypes.string,
   setImages: PropTypes.func,
+  images: PropTypes.array,
 };
 
-export default GeneralInfo;
+export default GeneralInfoUpdate;
