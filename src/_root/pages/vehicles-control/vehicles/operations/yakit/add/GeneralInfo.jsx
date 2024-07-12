@@ -30,7 +30,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     const [errorMessage, setErrorMessage] = useState("")
     const [content, setContent] = useState(null)
     const [logError, setLogError] = useState(false)
-    console.log(data)
 
     useEffect(() => {
         if (data.length === 0) return;

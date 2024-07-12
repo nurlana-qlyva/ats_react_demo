@@ -5,6 +5,7 @@ import { t } from "i18next";
 import dayjs from "dayjs";
 import { HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, message, Modal, Spin, Tabs } from "antd";
+import { PlakaContext } from "../../../../context/plakaSlice";
 import {
   GetVehicleByIdService,
   UpdateVehicleService,
@@ -29,20 +30,11 @@ import MaterialType from "../../../components/form/selects/MaterialType";
 import KmLog from "../../../components/table/KmLog";
 import GeneralInfo from "./tabs/GeneralInfo";
 import DetailInfo from "./detail-info/DetailInfo";
-import { PlakaContext } from "../../../../context/plakaSlice";
 
 const breadcrumb = [
-  {
-    href: "/",
-    title: <HomeOutlined />,
-  },
-  {
-    href: "/araclar",
-    title: t("araclar"),
-  },
-  {
-    title: t("aracDetayKarti"),
-  },
+  { href: "/", title: <HomeOutlined /> },
+  { href: "/araclar", title: t("araclar") },
+  { title: t("aracDetayKarti") },
 ];
 
 const DetailUpdate = () => {
@@ -187,11 +179,11 @@ const DetailUpdate = () => {
     setLoading(true);
     GetVehicleByIdService(id).then((res) => {
       setLoading(false);
-      setPrintData(res.data)
+      setPrintData(res.data);
       setDataSource(res.data);
       setValue("plaka", res?.data.plaka);
-      setPlaka(res?.data.plaka)
-      setAracId(res?.data.aracId)
+      setPlaka(res?.data.plaka);
+      setAracId(res?.data.aracId);
       setValue("guncelKm", res?.data.guncelKm);
       setValue("aracTipId", res?.data.aracTipId ? res?.data.aracTipId : null);
       setValue("aracTip", res?.data.aracTip);

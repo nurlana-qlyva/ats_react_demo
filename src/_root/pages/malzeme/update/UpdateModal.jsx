@@ -19,7 +19,6 @@ const UpdateModal = ({
   updateModal,
   setUpdateModal,
   setStatus,
-  status,
   id,
 }) => {
   const [isValid, setIsValid] = useState("normal");

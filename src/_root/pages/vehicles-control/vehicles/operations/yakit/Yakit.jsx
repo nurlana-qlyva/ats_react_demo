@@ -37,7 +37,7 @@ const Yakit = ({ visible, onClose, ids }) => {
     },
   });
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [yakitTipId, setYakitTipId] = useState(0);
+  const [id, setId] = useState(0);
   const [search, setSearch] = useState("");
   const [openRowHeader, setOpenRowHeader] = useState(false);
 
@@ -87,7 +87,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         <Button
           onClick={() => {
             setUpdateModalOpen(true);
-            setYakitTipId(record.siraNo);
+            setId(record.siraNo);
           }}
         >
           {text}
@@ -147,7 +147,7 @@ const Yakit = ({ visible, onClose, ids }) => {
       ),
     },
     {
-      title: t("kmBasinaMaliyet"),
+      title: `${t("kmBasinaMaliyet")} --?`,
       dataIndex: "",
       key: 9,
     },
@@ -250,7 +250,7 @@ const Yakit = ({ visible, onClose, ids }) => {
 
   return (
     <Modal
-      title={`${t("yakitBilgileri")} ${t("plaka")}: [${plakaData}]`}
+      title={`${t("yakitBilgileri")} - ${t("plaka")}: [${plakaData}]`}
       open={visible}
       onCancel={onClose}
       maskClosable={false}
@@ -280,7 +280,7 @@ const Yakit = ({ visible, onClose, ids }) => {
       <UpdateModal
         updateModal={updateModalOpen}
         setUpdateModal={setUpdateModalOpen}
-        id={yakitTipId}
+        id={id}
         setStatus={setStatus}
         status={status}
       />
@@ -290,7 +290,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         dataSource={dataSource}
         pagination={{
           ...tableParams.pagination,
-          showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+          showTotal: (total) => <p className="text-info">[{total} {t("kayit")}]</p>,
         }}
         loading={loading}
         size="small"
@@ -303,7 +303,7 @@ const Yakit = ({ visible, onClose, ids }) => {
       <div className="grid gap-1 mt-10 text-center">
         <div className="col-span-3 p-10 border">
           <h3 className="text-secondary">{t("toplamMaliyet")}</h3>
-          <p>{total?.total_cost} TL</p>
+          <p>{total?.total_cost} {t("tl")}</p>
         </div>
         <div className="col-span-3 p-10 border">
           <h3 className="text-secondary">{t("toplamMiktar")}</h3>

@@ -267,7 +267,7 @@ const Vehicles = () => {
             pagination={{
               ...tableParams.pagination,
               showTotal: (total) => (
-                <p className="text-info">[{total} kayıt]</p>
+                <p className="text-info">[{total} {t("kayit")}]</p>
               ),
               locale: {
                 items_per_page: `/ ${t("sayfa")}`,

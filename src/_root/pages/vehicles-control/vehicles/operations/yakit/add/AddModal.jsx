@@ -187,8 +187,8 @@ const AddModal = ({ setStatus }) => {
             "ozelAlan6": values.ozelAlan6 || "",
             "ozelAlan7": values.ozelAlan7 || "",
             "ozelAlan8": values.ozelAlan8 || "",
-            "ozelAlanKodId9": values.ozelAlanKodId9 || 0,
-            "ozelAlanKodId10": values.ozelAlanKodId10 || 0,
+            "ozelAlanKodId9": values.ozelAlanKodId9 || -1,
+            "ozelAlanKodId10": values.ozelAlanKodId10 || -1,
             "ozelAlan11": values.ozelAlan11 || 0,
             "ozelAlan12": values.ozelAlan12 || 0,
             "hasToInsertKmLog": values.engelle ? values.engelle : false

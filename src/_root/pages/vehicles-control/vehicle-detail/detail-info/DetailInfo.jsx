@@ -26,68 +26,69 @@ import TasitKarti from "./modals/tasit-karti/TasitKarti";
 import Kapasite from "./modals/kapasite/Kapasite";
 import Aksesuar from "./modals/aksesuar/Aksesuar";
 import Surucu from "./modals/surucu/Surucu";
+import { t } from "i18next";
 
 const DetailInfo = ({ id }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const items = [
     {
-      label: "Ruhsat Bilgileri",
+      label: t("ruhsatBilgileri"),
       key: "1",
       icon: <IdcardOutlined className="text-info" />,
     },
     {
-      label: "Teknik Bilgiler",
+      label: t("teknikBilgiler"),
       key: "2",
       icon: <BranchesOutlined className="text-info" />,
     },
     {
-      label: "Araç Sürücüler",
+      label: t("aracSuruculeri"),
       key: "3",
       icon: <UserOutlined className="text-info" />,
     },
     {
-      label: "Ekspertiz Bilgileri",
+      label: t("ekspertizBilgiler"),
       key: "4",
       icon: <CarOutlined className="text-info" />,
     },
     {
-      label: "Üst Yapı Bilgileri",
+      label: t("ustYapiBilgiler"),
       key: "5",
       icon: <ApartmentOutlined className="text-info" />,
     },
     {
-      label: "Aksesuarlar",
+      label: t("aksesuarlar"),
       key: "6",
       icon: <ApiOutlined className="text-info" />,
     },
     {
-      label: "Satınalma & Kiralama Bilgileri",
+      label: t("satinalmaKiralamaBilgiler"),
       key: "7",
       icon: <CreditCardOutlined className="text-info" />,
     },
     {
-      label: "Garanti Bilgileri",
+      label: t("garantiBilgiler"),
       key: "8",
       icon: <MdHealthAndSafety className="text-info" />,
     },
     {
-      label: "Taşıt Kartı ve Yetki Bilgileri",
+      label: t("tasitKartiYetkiBilgiler"),
       key: "9",
       icon: <SolutionOutlined className="text-info" />,
     },
     {
-      label: "Kapasite Bilgileri",
+      label: t("kapasiteBilgiler"),
       key: "10",
       icon: <DatabaseOutlined className="text-info" />,
     },
     {
-      label: "Lastik Bilgisi",
+      label: t("lastikBilgiler"),
       key: "11",
       icon: <PiGearSixBold className="text-info" />,
     },
     {
-      label: " Araç Satış Bilgileri",
+      label: t("aracSatisBilgiler"),
       key: "12",
       icon: <ShoppingCartOutlined className="text-info" />,
     },
@@ -198,7 +199,7 @@ const DetailInfo = ({ id }) => {
       <Dropdown menu={menuProps}>
         <Button className="detail-info">
           <Space>
-            Detay Bilgileri
+            {t("detayBilgiler")}
             <DownOutlined />
           </Space>
         </Button>
