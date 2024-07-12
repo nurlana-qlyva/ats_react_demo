@@ -31,6 +31,7 @@ import PersonelTanim from './_root/pages/sistem-tanimlari/personel-tanim/Persone
 import Transferler from './_root/pages/transferler/Transferler'
 import YakitTanimlar from './_root/pages/yakit-yonetim/yakit-tanim/YakitTanimlar'
 import YakitCikisFisleri from './_root/pages/yakit-yonetim/cikis-fis/YakitCikisFisleri'
+import YakitTransferler from './_root/pages/yakit-yonetim/transferler/YakitTransferler'
 
 
 
@@ -76,6 +77,7 @@ const App = () => {
         <Route path="/yakit-tanimlari" element={<YakitTanimlar />} />
         <Route path="/yakit-giris-fisleri" element={<YakitGirisFisleri />} />
         <Route path="/yakit-cikis-fisleri" element={<YakitCikisFisleri />} />
+        <Route path="/yakit-transferler" element={<YakitTransferler />} />
 
       </Route>
       {hasToken && (

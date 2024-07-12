@@ -48,3 +48,10 @@ export const GetFuelReleaseReceiptListService = async (search, page, data) => {
     data
   );
 };
+
+// transfer
+export const GetFuelTransferReceiptListService = async (search, page, data) => {
+  return await http.post(
+    `/MaterialReceipt/GetFuelTransferReceiptList?page=${page}&parameter=${search}`, data
+  );
+};

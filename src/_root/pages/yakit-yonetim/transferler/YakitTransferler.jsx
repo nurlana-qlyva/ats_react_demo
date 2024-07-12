@@ -1,22 +1,22 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { Checkbox, Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
-import { GetFuelReleaseReceiptListService } from "../../../../api/services/yakit-yonetimi/services";
+import {
+  GetFuelEntryReceiptListService,
+  GetFuelTransferReceiptListService,
+} from "../../../../api/services/yakit-yonetimi/services";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
-import AddModal from "./AddModal";
-import UpdateModal from "./UpdateModal";
 
 const breadcrumb = [
   { href: "/", title: <HomeOutlined /> },
-  { title: t("cikisFisleri") },
+  { title: t("transferler") },
 ];
 
-const YakitCikisFisleri = () => {
+const YakitTransferler = () => {
   const [dataSource, setDataSource] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -43,8 +43,8 @@ const YakitCikisFisleri = () => {
       render: (text, record) => (
         <Button
           onClick={() => {
+            setRecord(record);
             setUpdateModal(true);
-            setId(record.mlzFisId);
           }}
         >
           {text}
@@ -65,20 +65,15 @@ const YakitCikisFisleri = () => {
     {
       title: t("plaka"),
       dataIndex: "plaka",
-      key: 3,
-    },
-    {
-      title: t("islemTipi"),
-      dataIndex: "islemTipi",
       key: 4,
     },
     {
-      title: t("girisDeposu"),
+      title: t("girisDepo"),
       dataIndex: "girisDepo",
       key: 5,
     },
     {
-      title: t("cikisDeposu"),
+      title: t("cikisDepo"),
       dataIndex: "cikisDepo",
       key: 6,
     },
@@ -97,13 +92,8 @@ const YakitCikisFisleri = () => {
       dataIndex: "genelToplam",
       key: 9,
     },
-    {
-      title: t("faturaIrsaliyeNo"),
-      dataIndex: "faturaIrsaliyeNo",
-      key: 10,
-    },
   ];
-  
+
   const [columns, setColumns] = useState(() =>
     baseColumns.map((column, i) => ({
       ...column,
@@ -123,7 +113,7 @@ const YakitCikisFisleri = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetFuelReleaseReceiptListService( 
+      const res = await GetFuelTransferReceiptListService(
         search,
         tableParams.pagination.current,
         filterData
@@ -254,18 +244,10 @@ const YakitCikisFisleri = () => {
               placeholder={t("arama")}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <AddModal setStatus={setStatus} />
             {/* <Filter filter={filter} clearFilters={clear} /> */}
           </div>
         </div>
       </div>
-      <UpdateModal
-        updateModal={updateModal}
-        setUpdateModal={setUpdateModal}
-        setStatus={setStatus}
-        status={status}
-        id={id}
-      />
       <div className="content">
         <DragAndDropContext items={columns} setItems={setColumns}>
           <Table
@@ -303,4 +285,4 @@ const YakitCikisFisleri = () => {
   );
 };
 
-export default YakitCikisFisleri;
+export default YakitTransferler;

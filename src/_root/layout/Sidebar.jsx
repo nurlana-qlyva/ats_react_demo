@@ -93,7 +93,7 @@ const items = [
             },
             {
                 key: '17',
-                label: <Link to={'/'}>{t("transferler")}</Link>,
+                label: <Link to={'/yakit-transferler'}>{t("transferler")}</Link>,
             },
             {
                 key: '18',
