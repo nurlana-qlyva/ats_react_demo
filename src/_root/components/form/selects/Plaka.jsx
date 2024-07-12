@@ -1,65 +1,70 @@
-import { useContext, useEffect } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
-import { Select } from 'antd'
-import { PlakaContext } from '../../../../context/plakaSlice'
-import { GetFuelCardContentByIdService } from '../../../../api/services/vehicles/yakit/services'
+import { useContext, useEffect } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import { Select } from "antd";
+import { PlakaContext } from "../../../../context/plakaSlice";
+import { GetFuelCardContentByIdService } from "../../../../api/services/vehicles/yakit/services";
 
-const Plaka = () => {
-    const { plaka, setData } = useContext(PlakaContext)
-    const { setValue, control } = useFormContext()
+const Plaka = ({ name, codeName }) => {
+  const { plaka, setData } = useContext(PlakaContext);
+  const { setValue, control, watch } = useFormContext();
 
-    useEffect(() => {
-        if (plaka.length === 1) {
-            GetFuelCardContentByIdService(plaka[0].id).then(res => {
-                setData(res.data)
-            })
-        }
-    }, [plaka])
-
-
-    const handleChange = (e) => {
-        GetFuelCardContentByIdService(e).then(res => setData(res.data))
+  useEffect(() => {
+    if (plaka.length === 1) {
+      GetFuelCardContentByIdService(plaka[0].id).then((res) => {
+        setData(res.data);
+      });
     }
+  }, [plaka]);
 
-    return (
-        <Controller
-            name="plaka"
-            control={control}
-            render={({ field }) => (
-                <Select
-                    {...field}
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
-                    filterSort={(optionA, optionB) =>
-                        (optionA?.label.toLowerCase() ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                    }
-                    options={plaka.map((item) => ({
-                        label: item.plaka,
-                        value: item.id,
-                    }))}
-                    onChange={e => {
-                        field.onChange(e)
-                        handleChange(e)
-                        if (e === undefined) {
-                            const selectedOption = plaka.find(option => option.id === e);
-                            if (!selectedOption) {
-                                setValue('plaka', "")
-                            }
-                        } else {
-                            const selectedOption = plaka.find(option => option.id === e);
-                            if (selectedOption) {
-                                setValue('plaka', selectedOption.plaka)
-                            }
-                        }
-                    }}
-                    disabled={plaka.length === 1}
-                />
-            )}
+  const handleChange = (e) => {
+    GetFuelCardContentByIdService(e).then((res) => setData(res.data));
+  };
+  return (
+    <Controller
+      name={codeName ? codeName : "plaka"}
+      control={control}
+      render={({ field }) => (
+        <Select
+          {...field}
+          showSearch
+          allowClear
+          optionFilterProp="children"
+          value={name && watch(name)}
+          filterOption={(input, option) =>
+            (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())
+          }
+          filterSort={(optionA, optionB) =>
+            (optionA?.label.toLowerCase() ?? "")
+              .toLowerCase()
+              .localeCompare((optionB?.label ?? "").toLowerCase())
+          }
+          options={plaka.map((item) => ({
+            label: item.plaka,
+            value: item.id,
+          }))}
+          onChange={(e) => {
+            field.onChange(e);
+            handleChange(e);
+            if (e === undefined) {
+              const selectedOption = plaka.find((option) => option.id === e);
+              if (!selectedOption) {
+                name ? setValue(name, "") : setValue("plaka", "");
+                setValue(codeName, -1);
+              }
+            } else {
+              const selectedOption = plaka.find((option) => option.id === e);
+              if (selectedOption) {
+                name
+                  ? setValue(name, selectedOption.plaka)
+                  : setValue("plaka", selectedOption.plaka);
+              }
+            }
+          }}
+          disabled={plaka.length === 1}
         />
+      )}
+    />
+  );
+};
 
-    )
-}
-
-export default Plaka
+export default Plaka;

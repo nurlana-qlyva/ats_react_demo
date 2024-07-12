@@ -58,11 +58,9 @@ const Firma = ({ name, codeName, checked }) => {
                 setValue("tedarikciKod", selectedOption.kod);
                 setValue("unvan", selectedOption.unvan);
 
-                if (selectedOption) {
-                  name
-                    ? setValue(name, selectedOption.unvan)
-                    : setValue("unvan", selectedOption.unvan);
-                }
+                name
+                  ? setValue(name, selectedOption.unvan)
+                  : setValue("unvan", selectedOption.unvan);
               }
             }
           }}

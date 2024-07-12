@@ -111,7 +111,7 @@ const GeneralInfo = ({ isValid }) => {
                         field.onChange(e);
                       }}
                     />
-                  )}
+                  )} 
                 />
               </div>
             </div>

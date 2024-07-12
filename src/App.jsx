@@ -8,6 +8,8 @@ import Vehicles from './_root/pages/vehicles-control/vehicles/Vehicles'
 import DetailUpdate from './_root/pages/vehicles-control/vehicle-detail/DetailUpdate'
 import Yakit from './_root/pages/vehicles-control/yakit/Yakit'
 import Suruculer from './_root/pages/sistem-tanimlari/surucu/SurucuTanim'
+import YakitGirisFisleri from './_root/pages/yakit-yonetim/giris-fis/YakitGirisFisleri'
+
 
 
 
@@ -71,6 +73,8 @@ const App = () => {
         <Route path="/transferler" element={<Transferler />} />
         <Route path="/surucu-tanimlari" element={<Suruculer />} />
         <Route path="/yakit-tanimlari" element={<YakitTanimlar />} />
+        <Route path="/yakit-giris-fisleri" element={<YakitGirisFisleri />} />
+
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
