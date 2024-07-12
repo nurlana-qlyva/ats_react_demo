@@ -32,9 +32,19 @@ export const AddMaterialReceiptService = async (data) => {
 };
 
 export const GetMaterialReceiptByIdService = async (id) => {
-  return await http.get(`/MaterialReceipt/GetMaterialReceiptById?receiptId=${id}`);
+  return await http.get(
+    `/MaterialReceipt/GetMaterialReceiptById?receiptId=${id}`
+  );
 };
 
 export const UpdateMaterialReceiptService = async (data) => {
   return await http.post(`/MaterialReceipt/UpdateMaterialReceipt`, data);
+};
+
+// cikis fis
+export const GetFuelReleaseReceiptListService = async (search, page, data) => {
+  return await http.post(
+    `/MaterialReceipt/GetFuelReleaseReceiptList?page=${page}&parameter=${search}`,
+    data
+  );
 };

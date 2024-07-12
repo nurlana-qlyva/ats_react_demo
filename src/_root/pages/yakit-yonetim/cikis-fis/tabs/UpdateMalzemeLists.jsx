@@ -9,7 +9,12 @@ import Plaka from "../../../../components/form/selects/Plaka";
 import Location from "../../../../components/form/tree/Location";
 import Textarea from "../../../../components/form/inputs/Textarea";
 
-const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
+const UpdateMalzemeLists = ({
+  setTableData,
+  tableData,
+  isSuccess,
+  setIsSuccess,
+}) => {
   const { control, setValue, watch, handleSubmit } = useFormContext();
   const [editModal, setEditModal] = useState(false);
   const [record, setRecord] = useState(null);
@@ -17,15 +22,18 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   const defaultColumns = [
     {
       title: t("malzemeKodu"),
-      dataIndex: "malzemeKod",
+      dataIndex: "malezemeKod",
       render: (text, record) => (
         <Button
           onClick={() => {
             setEditModal(true);
             setRecord(record);
-            setValue("edit_plakaId", record.mlzAracId);
+            setValue("edit_indirimTutari", record.mlzAracId);
             setValue("malzeme_plaka", record.plaka);
-            setValue("edit_malzemeTanimi", record.tanim);
+            setValue("edit_malzemeTanimi", record.malezemeTanim);
+            setValue("edit_indirimOrani", record.indirimOran);
+            setValue("edit_indirimTutari", record.indirim);
+            setValue("edit_malzemeKod", record.malezemeKod);
             setValue("edit_miktar", record.miktar ? record.miktar : 1);
             setValue("birim", record.birim);
             setValue("edit_birim", record.birimKodId);
@@ -35,9 +43,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
               record.miktar ? record.miktar : 1 * record.fiyat
             );
             setValue("edit_kdvOrani", record.kdvOran);
+            setValue("edit_kdvTutar", record.kdvTutar);
             setValue("edit_toplam", record.toplam);
-            setValue("edit_malzemeKod", record.malzemeKod);
-            setValue("edit_malzemeTip", record.malzemeTipKodText);
+            setValue("edit_malzemeTip", record.malzemeTip);
             setValue("edit_aciklama", record.aciklama);
             setValue("edit_lokasyonId", record.lokasyonId);
             setValue("edit_lokasyon", record.lokasyon);
@@ -50,16 +58,15 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     },
     {
       title: t("malzemeTanimi"),
-      dataIndex: "tanim",
+      dataIndex: "malezemeTanim",
     },
     {
       title: t("malzemeTipi"),
-      dataIndex: "malzemeTipKodText",
+      dataIndex: "malzemeTip",
     },
     {
       title: t("miktar"),
       dataIndex: "miktar",
-      render: () => 1,
     },
     {
       title: t("birim"),
@@ -79,7 +86,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     },
     {
       title: t("indirimTutari"),
-      dataIndex: "indirimTutar",
+      dataIndex: "indirim",
     },
     {
       title: t("kdvOrani"),
@@ -87,7 +94,8 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     },
     {
       title: `${t("kdv")} D/H`,
-      dataIndex: "kdvDH",
+      dataIndex: "kdvDahilHaric",
+      render: (text) => (text ? "Dahil" : "Hariç"),
     },
     {
       title: t("kdvTutar"),
@@ -114,7 +122,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   useEffect(() => {
     setValue("edit_miktar", 1);
   }, []);
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -174,7 +181,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       let araToplam = watch("edit_miktar") * watch("edit_fiyat");
       setValue("edit_araToplam", araToplam);
     }
-  }, [watch("edit_miktar")]);
+  }, [watch("edit_miktar"), watch("edit_fiyat")]);
 
   const columns = defaultColumns.map((col) => {
     if (!col.editable) {
@@ -198,7 +205,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     if (index !== -1) {
       const currentFiyat = values.edit_fiyat;
       const originalFiyat = tableData[index].fiyat;
-
       const newData = [...tableData];
       newData[index] = {
         ...newData[index],
@@ -216,7 +222,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         toplam: values.edit_toplam,
         aciklama: values.edit_aciklama,
         indirimOran: values.edit_indirimOrani,
-        indirimTutar: values.edit_indirimTutari,
+        indirim: values.edit_indirimTutari,
         kdvDH: values.edit_kdv,
         kdvTutar: values.edit_kdvTutar,
         plaka: values.malzeme_plaka,
@@ -254,7 +260,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       {t("iptal")}
     </Button>,
   ];
-
+console.log(tableData)
   return (
     <div className="border p-20 mt-20 relative">
       <Table
@@ -550,4 +556,4 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   );
 };
 
-export default MalzemeLists;
+export default UpdateMalzemeLists;

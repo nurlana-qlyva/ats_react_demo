@@ -62,6 +62,7 @@ const AddModal = ({ setStatus }) => {
         kdvDahilHaric:
           item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
         gc: -1,
+
       });
     });
 

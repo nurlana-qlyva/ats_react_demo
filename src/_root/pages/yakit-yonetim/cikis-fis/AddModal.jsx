@@ -44,7 +44,6 @@ const AddModal = ({ setStatus }) => {
   });
 
   const { handleSubmit, reset, setValue, watch } = methods;
-
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -52,7 +51,7 @@ const AddModal = ({ setStatus }) => {
         mlzAracId: item.aracId || 0,
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
-        malzemeId: item.yakitId,
+        malzemeId: item.malzemeId,
         birimKodId: item.birimKodId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
@@ -63,13 +62,13 @@ const AddModal = ({ setStatus }) => {
         indirim: item.indirimTutar || 0,
         araToplam: item.araToplam || 0,
         kdvToplam: +values.toplam_kdvToplam || 0,
-        cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
+        kdvTutar: +item.kdvTutar || 0,
+        cikisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: item.isPriceChanged,
         kdvDahilHaric:
           item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
         gc: -1,
-        fisTip: "YAKIT",
       });
     });
 
@@ -77,7 +76,7 @@ const AddModal = ({ setStatus }) => {
       fisNo: values.fisNo,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       saat: dayjs(values.saat).format("HH:mm:ss"),
-      cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
+      cikisDepoSiraNo: values.girisDepoSiraNo || 0,
       firmaId: values.firmaId || 0,
       lokasyonId: values.lokasyonId || 0,
       aracId: values.aracId || 0,
@@ -106,7 +105,7 @@ const AddModal = ({ setStatus }) => {
 
   useEffect(() => {
     if (isOpen && isFirstRender.current) {
-      GetModuleCodeByCode("YAKIT_FIS_ALIS ").then((res) =>
+      GetModuleCodeByCode("YAKIT_FIS_SATIS").then((res) =>
         setValue("fisNo", res.data)
       );
     }
@@ -149,14 +148,14 @@ const AddModal = ({ setStatus }) => {
   }, [tableData, setValue]);
 
   useEffect(() => {
-    if (watch("cikisDepoSiraNo")) {
+    if (watch("girisDepoSiraNo")) {
       const fetchData = async () => {
         const res = await GetMaterialCardByIdService(watch("malzemeId"));
         setTableData([...tableData, res?.data]);
       };
       fetchData();
     }
-  }, [watch("cikisDepoSiraNo")]);
+  }, [watch("girisDepoSiraNo")]);
 
   const footer = [
     <Button

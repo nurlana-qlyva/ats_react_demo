@@ -35,15 +35,14 @@ const GeneralInfo = ({ isValid }) => {
   }, []);
 
   useEffect(() => {
-    if (watch("cikisDepoSiraNo")) {
+    if (watch("girisDepoSiraNo")) {
       const id = watch("depoLokasyonId");
       GetLocationByDepoIdService(id).then((res) => {
         setValue("lokasyonId", res?.data.lokasyonId);
         setValue("lokasyon", res?.data.lokasyonTanim);
       });
-
     }
-  }, [watch("cikisDepoSiraNo")]);
+  }, [watch("girisDepoSiraNo")]);
 
   const validateStyle = {
     borderColor:
@@ -106,7 +105,7 @@ const GeneralInfo = ({ isValid }) => {
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("plaka")}</label>
-            <Plaka />
+            <Plaka codeName="aracId" name="plaka" />
           </div>
         </div>
       </div>

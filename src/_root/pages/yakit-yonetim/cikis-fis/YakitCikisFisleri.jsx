@@ -4,7 +4,7 @@ import { t } from "i18next";
 import dayjs from "dayjs";
 import { Checkbox, Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
-import { GetFuelEntryReceiptListService } from "../../../../api/services/yakit-yonetimi/services";
+import { GetFuelReleaseReceiptListService } from "../../../../api/services/yakit-yonetimi/services";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
@@ -123,7 +123,7 @@ const YakitCikisFisleri = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetFuelEntryReceiptListService(
+      const res = await GetFuelReleaseReceiptListService( 
         search,
         tableParams.pagination.current,
         filterData

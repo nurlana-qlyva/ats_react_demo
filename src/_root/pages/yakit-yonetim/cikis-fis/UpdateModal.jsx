@@ -8,17 +8,15 @@ import {
   GetModuleCodeByCode,
 } from "../../../../api/services/code/services";
 import GeneralInfo from "./tabs/GeneralInfo";
-import MalzemeLists from "./tabs/MalzemeLists";
+import UpdateMalzemeLists from "./tabs/UpdateMalzemeLists";
 import EkBilgiler from "./tabs/EkBilgiler";
 import {
-  GetMaterialCardByIdService,
   GetMaterialReceiptByIdService,
   UpdateMaterialReceiptService,
 } from "../../../../api/services/yakit-yonetimi/services";
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const [tableData, setTableData] = useState([]);
-  const [data, setData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValid, setIsValid] = useState("normal");
   const [record, setRecord] = useState(true);
@@ -28,7 +26,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     tarih: dayjs(record.tarih),
     saat: dayjs(record.saat, "HH:mm:ss"),
     cikisDepoSiraNo: record.cikisDepoSiraNo,
-    girisDepo: record.girisDepo,
+    cikisDepo: record.cikisDepo,
     firmaId: record.firmaId,
     lokasyonId: record.lokasyonId,
     lokasyon: record.lokasyon,
@@ -54,7 +52,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       setValue("toplam_araToplam", res?.data?.receipt.araToplam);
       setValue("fisNo", res?.data?.receipt.fisNo);
       setValue("toplam_genelToplam", res?.data?.receipt.genelToplam);
-      setValue("cikisDepoSiraNo", res?.data?.receipt.cikisDepoSiraNo);
+      setValue("girisDepoSiraNo", res?.data?.receipt.cikisDepoSiraNo);
       setValue("depo", res?.data?.receipt.cikisDepo);
       setValue("toplam_indirim", res?.data?.receipt.indirimliToplam);
       setValue("islemTipiKodId", res?.data?.receipt.islemTipiKodId);
@@ -70,7 +68,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       setValue("mlzFisId", res?.data?.receipt.mlzFisId);
       setValue("saat", dayjs(res?.data?.receipt.saat, "HH:mm:ss"));
       setValue("tarih", dayjs(res?.data?.receipt.tarih));
-      setData(res?.data?.receipt.materialMovements);
+      setTableData(res?.data?.receipt.materialMovements);
       setRecord(res?.data?.receipt);
     });
   }, [id, updateModal]);
@@ -120,18 +118,19 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         mlzAracId: item.mlzAracId || 0,
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
-        malzemeId: item.key,
-        birimKodId: item.birimId || 0,
+        malzemeId: item.malzemeId,
+        birimKodId: item.birimKodId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,
         toplam: +item.toplam || 0,
-        aciklama: item.aciklama,
+        aciklama: values.aciklama,
         kdvOran: item.kdvOran || 0,
-        indirim: item.indirimTutar || 0,
+        indirim: item.indirim || 0,
         araToplam: item.araToplam || 0,
         kdvToplam: +values.toplam_kdvToplam || 0,
-        cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
+        kdvTutar: +item.kdvTutar || 0,
+        cikisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: item.isPriceChanged,
         kdvDahilHaric:
@@ -144,7 +143,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       fisNo: values.fisNo,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       saat: dayjs(values.saat).format("HH:mm:ss"),
-      cikisDepoSiraNo: values.cikisDepoSiraNo || 0,
+      cikisDepoSiraNo: values.girisDepoSiraNo || 0,
       firmaId: values.firmaId || 0,
       lokasyonId: values.lokasyonId || 0,
       aracId: values.aracId || 0,
@@ -205,9 +204,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         <FormProvider {...methods}>
           <form>
             <GeneralInfo isValid={isValid} />
-            <MalzemeLists
+            <UpdateMalzemeLists
               setTableData={setTableData}
-              tableData={data}
+              tableData={tableData} 
               isSuccess={isSuccess}
               setIsSuccess={setIsSuccess}
             />

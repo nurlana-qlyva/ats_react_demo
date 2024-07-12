@@ -30,6 +30,7 @@ import FirmaTanim from './_root/pages/sistem-tanimlari/firma-tanim/FirmaTanim'
 import PersonelTanim from './_root/pages/sistem-tanimlari/personel-tanim/PersonelTanim'
 import Transferler from './_root/pages/transferler/Transferler'
 import YakitTanimlar from './_root/pages/yakit-yonetim/yakit-tanim/YakitTanimlar'
+import YakitCikisFisleri from './_root/pages/yakit-yonetim/cikis-fis/YakitCikisFisleri'
 
 
 
@@ -74,6 +75,7 @@ const App = () => {
         <Route path="/surucu-tanimlari" element={<Suruculer />} />
         <Route path="/yakit-tanimlari" element={<YakitTanimlar />} />
         <Route path="/yakit-giris-fisleri" element={<YakitGirisFisleri />} />
+        <Route path="/yakit-cikis-fisleri" element={<YakitCikisFisleri />} />
 
       </Route>
       {hasToken && (
