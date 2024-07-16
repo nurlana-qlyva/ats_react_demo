@@ -21,7 +21,7 @@ import DragAndDropContext from "../../../../../components/drag-drop-table/DragAn
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
 import { GetVehicleFinesListByVehicleIdService } from "../../../../../../api/services/vehicles/ceza/services";
 import AddModal from "./add/AddModal";
-// import UpdateModal from "./update/UpdateModal";
+import UpdateModal from "./update/UpdateModal";
 
 const Ceza = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
@@ -279,13 +279,12 @@ const Ceza = ({ visible, onClose, ids }) => {
         <AddModal setStatus={setStatus} />
       </div>
 
-      {/* <UpdateModal
+      <UpdateModal
         updateModal={updateModalOpen}
         setUpdateModal={setUpdateModalOpen}
         id={id}
         setStatus={setStatus}
-        status={status}
-      /> */}
+      />
 
       <DragAndDropContext items={columns} setItems={setColumns}>
         <Table

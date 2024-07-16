@@ -104,7 +104,7 @@ const AddModal = ({ setStatus }) => {
     defaultValues: defaultValues,
   });
   const { handleSubmit, reset, setValue, watch } = methods;
-  console.log(watch("plaka"));
+
   useEffect(() => {
     if (plaka.length === 1) {
       setValue("plaka", plaka[0].plaka);
@@ -133,7 +133,6 @@ const AddModal = ({ setStatus }) => {
       surucuOder: values.surucuOder,
       tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
       indirimOran: values.indirimOran || 0,
-
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
