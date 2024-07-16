@@ -29,7 +29,7 @@ const Plaka = ({ name, codeName }) => {
           showSearch
           allowClear
           optionFilterProp="children"
-          value={name && watch(name)}
+          value={watch("plaka") || watch(codeName)}
           filterOption={(input, option) =>
             (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())
           }
@@ -49,7 +49,6 @@ const Plaka = ({ name, codeName }) => {
               const selectedOption = plaka.find((option) => option.id === e);
               if (!selectedOption) {
                 name ? setValue(name, "") : setValue("plaka", "");
-                setValue(codeName, -1);
               }
             } else {
               const selectedOption = plaka.find((option) => option.id === e);

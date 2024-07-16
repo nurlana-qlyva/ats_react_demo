@@ -7,15 +7,6 @@ import UpdateModal from './components/sehir-yer/UpdateModal';
 
 const { Sider, Content } = Layout;
 
-const markaTitle = {
-    background: '#fff',
-    textAlign: 'center',
-    padding: '10px',
-    fontWeight: "600",
-    fontSize: "24px",
-    color: "#f6970e"
-}
-
 const SehirYer = () => {
     const [selectedSehir, setSelectedSehir] = useState(null);
     const [sehirList, setSehirList] = useState([]);
@@ -26,11 +17,6 @@ const SehirYer = () => {
     const [selectedYer, setSelectedYer] = useState(null);
     const [isUpdateOpen, setIsUpdateOpen] = useState(false);
     const [isAddOpen, setAddOpen] = useState(false);
-    const [isModelUpdateOpen, setIsUpdateModelOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
-    const [isDeleteModelModalOpen, setIsDeleteModelModalOpen] = useState(false);
-    const [isConfirmDeleteModelModalOpen, setIsConfirmDeleteModelModalOpen] = useState(false);
 
     useEffect(() => {
         GetSehirListService().then(res => setSehirList(res.data));

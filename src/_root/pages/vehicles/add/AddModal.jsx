@@ -184,6 +184,7 @@ const AddModal = ({ setStatus }) => {
             ozelAlan11: value.ozelAlan11 || 0,
             ozelAlan12: value.ozelAlan12 || 0,
         }
+        
         NewVehicleAddService(data).then(res => {
             if (res?.data.statusCode === 201) {
                 setIsModalOpen(false)

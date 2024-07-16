@@ -266,6 +266,8 @@ const DetailUpdate = () => {
       setValue("ozelAlan8", res?.data.ozelAlan8);
       setValue("ozelAlanKodId9", res?.data.ozelAlanKodId9);
       setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10);
+      setValue("ozelAlan9", res?.data.ozelAlan9);
+      setValue("ozelAlan10", res?.data.ozelAlan10);
       setValue("ozelAlan11", res?.data.ozelAlan11);
       setValue("ozelAlan12", res?.data.ozelAlan12);
     });
@@ -281,7 +283,7 @@ const DetailUpdate = () => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "Arac", images);
+      const data = uploadPhoto(id, "Arac", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -327,9 +329,9 @@ const DetailUpdate = () => {
       sozlesmeTarih: values?.sozlesmeTarih
         ? dayjs(values?.sozlesmeTarih).format("YYYY-MM-DD")
         : null,
-      yakitTipId: values.yakitTipId || -1,
+      yakitTipId: values.yakitTipId || 0,
       tts: values.tts,
-      durumKodId: values.durumKodId || -1,
+      durumKodId: values.durumKodId || 0,
       aktif: true,
       havuzGrup: values.havuzGrup,
       onGorulenMin: values.onGorulenMin,
@@ -343,8 +345,8 @@ const DetailUpdate = () => {
       ozelAlan6: values.ozelAlan6,
       ozelAlan7: values.ozelAlan7,
       ozelAlan8: values.ozelAlan8,
-      ozelAlanKodId9: values.ozelAlanKodId9,
-      ozelAlanKodId10: values.ozelAlanKodId10,
+      ozelAlanKodId9: values.ozelAlanKodId9  || 0,
+      ozelAlanKodId10: values.ozelAlanKodId10  || 0,
       ozelAlan11: values.ozelAlan11,
       ozelAlan12: values.ozelAlan12,
     };

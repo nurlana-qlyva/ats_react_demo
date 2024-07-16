@@ -46,7 +46,6 @@ const Driver = ({ name, codeName }) => {
               );
               if (!selectedOption) {
                 name ? setValue(name, "") : setValue("surucu", "");
-                codeName ? setValue(codeName, -1) : setValue("surucuId", -1);
               }
             } else {
               const selectedOption = data.find(

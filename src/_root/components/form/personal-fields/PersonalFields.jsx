@@ -132,7 +132,6 @@ const PersonalFields = ({ personalProps }) => {
                                             field.onChange(e)
                                             if (e === undefined) {
                                                 setValue(item.label, "")
-                                                setValue(item.name2, -1)
                                             } else {
                                                 setValue(item.name2, e)
                                             }
