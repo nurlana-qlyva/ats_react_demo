@@ -55,7 +55,10 @@ const AddModal = ({ setStatus }) => {
     <Button
       key="back"
       className="btn btn-min cancel-btn"
-      onClick={() => setIsModalOpen(false)}
+      onClick={() => {
+        setIsModalOpen(false)
+        reset()
+      }}
     >
       {t("iptal")}
     </Button>,
@@ -67,6 +70,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
+        title={t("yeniAksesuarBilgisi")}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
@@ -77,28 +81,34 @@ const AddModal = ({ setStatus }) => {
         <FormProvider {...methods}>
           <form>
             <div className="flex flex-col gap-1">
-              <label>{t("aksesuarKod")}</label>
-              <TextInput name="aksesuarKod" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("birim")}</label>
-              <CodeControl name="aksesuar" codeName="aksesuarKodId" id={105} />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("miktar")}</label>
-              <NumberInput name="miktar" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("fiyat")}</label>
-              <NumberInput name="fiyat" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("ureticiKod")}</label>
-              <TextInput name="ureticiKod" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label>{t("degistirmeTarih")}</label>
-              <DateInput name="degistirmeTarih" />
+              <div className="flex flex-col gap-1">
+                <label>{t("aksesuarKod")}</label>
+                <TextInput name="aksesuarKod" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label>{t("tanim")}</label>
+                <CodeControl
+                  name="aksesuar"
+                  codeName="aksesuarKodId"
+                  id={105}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label>{t("miktar")}</label>
+                <NumberInput name="miktar" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label>{t("fiyat")}</label>
+                <NumberInput name="fiyat" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label>{t("ureticiKod")}</label>
+                <TextInput name="ureticiKod" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label>{t("degistirmeTarih")}</label>
+                <DateInput name="degistirmeTarih" />
+              </div>
             </div>
           </form>
         </FormProvider>

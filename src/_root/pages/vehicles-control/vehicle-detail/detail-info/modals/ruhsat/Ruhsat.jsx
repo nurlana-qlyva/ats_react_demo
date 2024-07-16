@@ -181,7 +181,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                         <div className="grid gap-1">
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Ruhsat Sahibi</label>
+                                    <label>{t("ruhsatSahibi")}</label>
                                     <CodeControl name="ruhsatSahibi" codeName="ruhsatSahibiKodId" id={115} />
                                 </div>
                             </div>
@@ -193,92 +193,92 @@ const Ruhsat = ({ visible, onClose, id }) => {
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Verdiği İlçe</label>
+                                    <label>{t("verdigiIlce")}</label>
                                     <TextInput name="ilce" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Tescil Sıra No</label>
+                                    <label>{t("tescilSiraNo")}</label>
                                     <TextInput name="tescilNo" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>İlk Tescil Tarihi</label>
+                                    <label>{t("ilkTescilSiraNo")}</label>
                                     <DateInput name="trafikciktarih" />
                                 </div>
 
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Tescil Tarihi</label>
+                                    <label>{t("tescilTarihi")}</label>
                                     <DateInput name="tescilTarih" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Belge Seri No</label>
+                                    <label>{t("belgeSiraNo")}</label>
                                     <TextInput name="belgeSeriNo" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Araç Sınıfı</label>
+                                    <label>{t("aracSinifi")}</label>
                                     <TextInput name="aracSinifi" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Araç Cinsi</label>
+                                    <label>{t("aracCinsi")}</label>
                                     <CodeControl name="aracCinsi" codeName="aracCinsiKodId" id={107} />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Ticari Adı</label>
+                                    <label>{t("ticariAdi")}</label>
                                     <TextInput name="ticariAdi" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Azami Yüklü Ağırlığı</label>
+                                    <label>{t("azamiYukluAgirligi")}</label>
                                     <TextInput name="azamiYukluAgirligi" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Koltuk Sayısı</label>
+                                    <label>{t("koltukSayisi")}</label>
                                     <TextInput name="koltukSayisi" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Ayakta Yolcu Sayısı</label>
+                                    <label>{t("ayaktaYolcuSayisi")}</label>
                                     <TextInput name="ayaktaYolcuSayisi" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Onay No</label>
+                                    <label>{t("onayNo")}</label>
                                     <TextInput name="onayNo" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Vergi No/TC No</label>
+                                    <label>{t("vergiNoTcNo")}</label>
                                     <TextInput name="vergiNo" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Vergi Dairesi</label>
+                                    <label>{t("vergiDairesi")}</label>
                                     <TextInput name="vergiDaire" />
                                 </div>
                             </div>
                             <div className="col-span-3">
                                 <div className="flex flex-col gap-1">
-                                    <label>Kullanım Amacı</label>
+                                    <label>{t("kullanimAmaci")}</label>
                                     <TextInput name="kullanimAmaci" />
                                 </div>
                             </div>
@@ -286,7 +286,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                                 <div className="grid gap-1">
                                     <div className="col-span-6">
                                         <div className="flex flex-col gap-1">
-                                            <label>İstiap Haddi</label>
+                                            <label>{t("istiapHaddi")}</label>
                                             <TextInput name="istiapHaddi" />
                                         </div>
                                     </div>
@@ -300,7 +300,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                             <div className="col-span-3">
                                 <div className="grid gap-1">
                                     <div className="col-span-12">
-                                        <label>R.Azami Yüklü Ağırlığı</label>
+                                        <label>{t("rAzamiYukluAgirligi")}</label>
                                     </div>
                                     <div className="col-span-6 self-end">
                                         <div className="flex flex-col gap-1">
@@ -316,7 +316,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                             </div>
                             <div className="col-span-12">
                                 <div className="flex flex-col gap-1">
-                                    <label>Açıklama</label>
+                                    <label>{t("aciklama")}</label>
                                     <Textarea name="aciklama" />
                                 </div>
                             </div>
@@ -325,35 +325,35 @@ const Ruhsat = ({ visible, onClose, id }) => {
                     <div className="col-span-3 border p-10">
                         <div className="grid">
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="taksiMetre">Taksimetre</label>
+                                <label htmlFor="taksiMetre">{t("taksimetre")}</label>
                                 <CheckboxInput name="taksiMetre" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="yukNakli">Yüklü Nakli</label>
+                                <label htmlFor="yukNakli">{t("yukluNakli")}</label>
                                 <CheckboxInput name="yukNakli" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="tokograf">Takograf</label>
+                                <label htmlFor="tokograf">{t("takograf")}</label>
                                 <CheckboxInput name="tokograf" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="ticari">Ticari</label>
+                                <label htmlFor="ticari">{t("ticari")}</label>
                                 <CheckboxInput name="ticari" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="romok">Römork Takar</label>
+                                <label htmlFor="romok">{t("romorkTakar")}</label>
                                 <CheckboxInput name="romok" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="resmi">Resmi</label>
+                                <label htmlFor="resmi">{t("resmi")}</label>
                                 <CheckboxInput name="resmi" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="yolcuNakli">Yolcu Nakli</label>
+                                <label htmlFor="yolcuNakli">{t("yolcuNakli")}</label>
                                 <CheckboxInput name="yolcuNakli" />
                             </div>
                             <div className="col-span-6 flex flex-col">
-                                <label htmlFor="hususi">Hüsusi</label>
+                                <label htmlFor="hususi">{t("hususi")}</label>
                                 <CheckboxInput name="hususi" />
                             </div>
                             <div className="col-span-12">
@@ -368,11 +368,11 @@ const Ruhsat = ({ visible, onClose, id }) => {
                                         setHakMahrumiyetChecked(e.target.checked)
                                     }} />}
                                 />
-                                <label htmlFor="">Hak Mahrumiyeti</label>
+                                <label htmlFor="">{t("hakMahrumiyeti")}</label>
                             </div>
                             <div className="col-span-12">
                                 <div className="flex flex-col gap-1">
-                                    <label>Açıklama</label>
+                                    <label>{t("aciklama")}</label>
                                     <Controller
                                         name="hakMahrumiyetAciklama"
                                         control={control}
@@ -390,7 +390,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                             </div>
                             <div className="col-span-12">
                                 <div className="flex flex-col gap-1">
-                                    <label>Makam/Kurum</label>
+                                    <label>{t("makamKurum")}</label>
                                     <Controller
                                         name="hakMahrumiyetDurum"
                                         control={control}
@@ -408,7 +408,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
                             </div>
                             <div className="col-span-12">
                                 <div className="flex flex-col gap-1">
-                                    <label>Tarih</label>
+                                    <label>{t("tarih")}</label>
                                     <Controller
                                         name="hakMahrumiyettarih"
                                         control={control}

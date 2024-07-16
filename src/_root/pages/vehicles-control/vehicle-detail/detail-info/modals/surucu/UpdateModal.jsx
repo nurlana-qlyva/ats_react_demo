@@ -4,14 +4,12 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { Button, Modal } from "antd";
+import { PlakaContext } from "../../../../../../../context/plakaSlice";
 import {
   GetDriverSubstitutionByIdService,
   UpdateDriverSubstitutionItemService,
 } from "../../../../../../../api/services/vehicles/vehicles/services";
-import {
-  CodeItemValidateService,
-  GetModuleCodeByCode,
-} from "../../../../../../../api/services/code/services";
+import { CodeItemValidateService } from "../../../../../../../api/services/code/services";
 import TextInput from "../../../../../../components/form/inputs/TextInput";
 import NumberInput from "../../../../../../components/form/inputs/NumberInput";
 import DateInput from "../../../../../../components/form/date/DateInput";
@@ -19,13 +17,13 @@ import TimeInput from "../../../../../../components/form/date/TimeInput";
 import Driver from "../../../../../../components/form/selects/Driver";
 import Textarea from "../../../../../../components/form/inputs/Textarea";
 import Tutanak from "./Tutanak";
-import { PlakaContext } from "../../../../../../../context/plakaSlice";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
-  const { printData } = useContext(PlakaContext)
+  const { printData } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState("normal");
   const [surucuIsValid, setSurucuIsValid] = useState(false);
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
+  const [code, setCode] = useState("normal");
 
   const defaultValues = {};
   const methods = useForm({
@@ -34,7 +32,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
-    if (watch("tutanakNo")) {
+    if (code !== watch("tutanakNo")) {
       const body = {
         tableName: "TutanakNo",
         code: watch("tutanakNo"),
@@ -42,8 +40,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    } else {
+      setIsValid("normal");
     }
-  }, [watch("tutanakNo")]);
+  }, [watch("tutanakNo"), code]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +56,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setValue("aciklama", res?.data.aciklama);
         setValue("km", res?.data.km);
         setValue("tutanakNo", res?.data.tutanakNo);
+        setCode(res?.data.tutanakNo);
         setValue("checked", true);
         setValue("teslimTarih", dayjs(res?.data.teslimTarih));
         setValue("teslimSaat", dayjs(res?.data.teslimSaat, "HH:mm:ss"));
@@ -80,11 +81,17 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       diger: "",
       teslimTarih: dayjs(watch("teslimTarih")).format("DD.MM.YYYY"),
       teslimEden: watch("surucuTeslimEden"),
-      teslimAlan: watch("surucuTeslimAlan")
-    }
+      teslimAlan: watch("surucuTeslimAlan"),
+    };
 
-    setData(data)
-  }, [watch("teslimTarih"), watch("surucuTeslimEden"), watch("surucuTeslimAlan"), watch("km"), printData])
+    setData(data);
+  }, [
+    watch("teslimTarih"),
+    watch("surucuTeslimEden"),
+    watch("surucuTeslimAlan"),
+    watch("km"),
+    printData,
+  ]);
 
   const onSubmit = handleSubmit((values) => {
     const body = {
@@ -110,7 +117,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
   useEffect(() => {
     !watch("surucuTeslimAlanId") ||
-      watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId")
+    watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId")
       ? setSurucuIsValid(true)
       : setSurucuIsValid(false);
   }, [watch("surucuTeslimEdenId"), watch("surucuTeslimAlanId")]);
@@ -120,8 +127,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       isValid === "error"
         ? "#dc3545"
         : isValid === "success"
-          ? "#23b545"
-          : "#000",
+        ? "#23b545"
+        : "#000",
   };
 
   const footer = [
@@ -129,7 +136,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       key="submit"
       className="btn btn-min primary-btn"
       onClick={onSubmit}
-      disabled={surucuIsValid}
+      disabled={
+        isValid === "success" && !surucuIsValid
+          ? false
+          : isValid === "error" || surucuIsValid
+          ? true
+          : false
+      }
     >
       {t("guncelle")}
     </Button>,
@@ -147,8 +160,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
   return (
     <Modal
-      title={t("kapasiteGuncelle")}
-      visible={updateModal}
+      title={t("surucuGuncelle")}
+      open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
       footer={footer}

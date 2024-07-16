@@ -17,14 +17,15 @@ import Textarea from "../../../../../../components/form/inputs/Textarea";
 import DateInput from "../../../../../../components/form/date/DateInput";
 import TimeInput from "../../../../../../components/form/date/TimeInput";
 import Driver from "../../../../../../components/form/selects/Driver";
-import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
+import Tutanak from "./Tutanak";
 
 const AddModal = ({ setStatus }) => {
-  const { plaka, aracId } = useContext(PlakaContext);
+  const { plaka, aracId, printData } = useContext(PlakaContext);
   const isFirstRender = useRef(true);
   const [isValid, setIsValid] = useState("normal");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [surucuIsValid, setSurucuIsValid] = useState(false);
+  const [data, setData] = useState(null);
 
   const defaultValues = {
     checked: true,
@@ -51,7 +52,7 @@ const AddModal = ({ setStatus }) => {
         code: watch("tutanakNo"),
       };
       CodeItemValidateService(body).then((res) => {
-        res.data.status ? setIsValid("success") : setIsValid("error");
+        !res.data.status ? setIsValid("success") : setIsValid("error");
       });
     }
   }, [watch("tutanakNo")]);
@@ -80,8 +81,34 @@ const AddModal = ({ setStatus }) => {
   });
 
   useEffect(() => {
-    !watch("surucuTeslimAlanId") || watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId") ? setSurucuIsValid(true) : setSurucuIsValid(false)
-  }, [watch("surucuTeslimEdenId"), watch("surucuTeslimAlanId")])
+    const data = {
+      marka: printData.marka,
+      model: printData.model,
+      plaka: printData.plaka,
+      km: watch("km"),
+      ogs: printData.ogs,
+      tasit: "",
+      diger: "",
+      teslimTarih: dayjs(watch("teslimTarih")).format("DD.MM.YYYY"),
+      teslimEden: watch("surucuTeslimEden"),
+      teslimAlan: watch("surucuTeslimAlan"),
+    };
+
+    setData(data);
+  }, [
+    watch("teslimTarih"),
+    watch("surucuTeslimEden"),
+    watch("surucuTeslimAlan"),
+    watch("km"),
+    printData,
+  ]);
+
+  useEffect(() => {
+    !watch("surucuTeslimAlanId") ||
+    watch("surucuTeslimAlanId") === watch("surucuTeslimEdenId")
+      ? setSurucuIsValid(true)
+      : setSurucuIsValid(false);
+  }, [watch("surucuTeslimEdenId"), watch("surucuTeslimAlanId")]);
 
   const footer = [
     <Button
@@ -89,7 +116,11 @@ const AddModal = ({ setStatus }) => {
       className="btn btn-min primary-btn"
       onClick={handleOk}
       disabled={
-        isValid === "success" ? true : isValid === "error" ? false : false || surucuIsValid
+        isValid === "success" && !surucuIsValid
+          ? false
+          : isValid === "error" || surucuIsValid
+          ? true
+          : false
       }
     >
       {t("kaydet")}
@@ -97,7 +128,10 @@ const AddModal = ({ setStatus }) => {
     <Button
       key="back"
       className="btn btn-min cancel-btn"
-      onClick={() => setIsModalOpen(false)}
+      onClick={() => {
+        setIsModalOpen(false);
+        reset();
+      }}
     >
       {t("iptal")}
     </Button>,
@@ -105,9 +139,9 @@ const AddModal = ({ setStatus }) => {
 
   const validateStyle = {
     borderColor:
-      isValid === "success"
+      isValid === "error"
         ? "#dc3545"
-        : isValid === "error"
+        : isValid === "success"
         ? "#23b545"
         : "#000",
   };
@@ -118,6 +152,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
+        title={t("yeniSurucuBilgi")}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
@@ -176,11 +211,8 @@ const AddModal = ({ setStatus }) => {
                   <Textarea name="aciklama" />
                 </div>
               </div>
-              <div className="col-span-12">
-                <div className="flex gap-1">
-                  <CheckboxInput name="checked" />
-                  <label>{t("teslimTutanagiYazdir")}</label>
-                </div>
+              <div className="col-span-12 mt-14">
+                <Tutanak data={data} />
               </div>
             </div>
           </form>

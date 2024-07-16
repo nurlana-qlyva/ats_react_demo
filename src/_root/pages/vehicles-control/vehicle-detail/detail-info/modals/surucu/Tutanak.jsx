@@ -6,8 +6,6 @@ class ComponentToPrint extends React.Component {
     render() {
         const { data } = this.props;
 
-        console.log(data)
-
         return (
             <div style={{ padding: "20px 40px" }}>
                 <h1 style={{ textAlign: "center", marginBottom: 20 }}>Araç Teslim Tutanağı</h1>

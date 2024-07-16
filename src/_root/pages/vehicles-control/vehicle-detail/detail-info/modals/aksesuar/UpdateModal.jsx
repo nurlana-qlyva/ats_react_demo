@@ -83,7 +83,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
   return (
     <Modal
-      title={t("kapasiteGuncelle")}
+      title={t("aksesuarGuncelle")}
       open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
@@ -97,7 +97,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
             <TextInput name="aksesuarKod" />
           </div>
           <div className="flex flex-col gap-1">
-            <label>{t("birim")}</label>
+            <label>{t("tanim")}</label>
             <CodeControl name="aksesuar" codeName="aksesuarKodId" id={105} />
           </div>
           <div className="flex flex-col gap-1">
@@ -126,8 +126,7 @@ UpdateModal.propTypes = {
   updateModal: PropTypes.bool,
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
-  record: PropTypes.object,
-  status: PropTypes.bool,
+  id: PropTypes.number,
 };
 
 export default UpdateModal;

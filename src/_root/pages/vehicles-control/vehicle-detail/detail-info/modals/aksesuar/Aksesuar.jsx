@@ -42,7 +42,7 @@ const Aksesuar = ({ visible, onClose, id }) => {
       ),
     },
     {
-      title: t("aksesuarTanim"),
+      title: t("tanim"),
       dataIndex: "aksesuar",
       key: 2,
     },
@@ -58,7 +58,7 @@ const Aksesuar = ({ visible, onClose, id }) => {
     },
     {
       title: t("ureticiKod"),
-      dataIndex: "miktar",
+      dataIndex: "ureticiKod",
       key: 5,
     },
     {
@@ -170,7 +170,7 @@ const Aksesuar = ({ visible, onClose, id }) => {
             </Button>
           </Popover>
           <Input
-            placeholder="Arama"
+            placeholder={t("arama")}
             onChange={(e) => setSearch(e.target.value)}
           />
           <AddModal setStatus={setStatus} />
@@ -191,7 +191,7 @@ const Aksesuar = ({ visible, onClose, id }) => {
             pagination={{
               ...tableParams.pagination,
               showTotal: (total) => (
-                <p className="text-info">[{total} kayıt]</p>
+                <p className="text-info">[{total} {t("kayit")}]</p>
               ),
               locale: {
                 items_per_page: `/ ${t("sayfa")}`,
