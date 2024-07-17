@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
-import tr_TR from "antd/lib/locale/tr_TR";
 import { t } from "i18next";
-import { Button, Divider, Modal } from "antd";
+import { Button, Modal } from "antd";
 
 import Plaka from "../../../../../../components/form/selects/Plaka";
 import Driver from "../../../../../../components/form/selects/Driver";
@@ -22,9 +21,21 @@ import CezaMaddesiTable from "./CezaMaddesi";
 dayjs.locale("tr");
 
 const GeneralInfo = () => {
-  const { setValue } = useFormContext();
+  const { setValue, watch } = useFormContext();
   const [open, setOpen] = useState(false);
   const [madde, setMadde] = useState(false);
+
+  useEffect(() => {
+    if (watch("tutar") && watch("indirimOran")) {
+      const toplam = watch("tutar") - watch("indirimOran")
+      setValue("toplamTutar", toplam)
+    }
+
+    if (watch("tutar") && watch("gecikmeTutar")) {
+      const toplam = watch("tutar") + watch("gecikmeTutar")
+      setValue("toplamTutar", toplam)
+    }
+  }, [watch("tutar"), watch("gecikmeTutar"), watch("indirimOran")])
 
   const footer = [
     <Button

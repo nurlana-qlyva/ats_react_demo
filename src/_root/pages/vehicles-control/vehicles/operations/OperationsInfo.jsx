@@ -17,6 +17,7 @@ import {
 } from "react-icons/md";
 import Yakit from "./yakit/Yakit";
 import Ceza from "./ceza/Ceza";
+import Harcama from "./harcama/Harcama";
 // import Bakim from './bakim/Bakim'
 
 const OperationsInfo = ({ ids }) => {
@@ -90,6 +91,14 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Yakit
             visible={selectedItem === "2"}
+            onClose={() => setSelectedItem(null)}
+            ids={ids}
+          />
+        );
+      case "4":
+        return (
+          <Harcama
+            visible={selectedItem === "4"}
             onClose={() => setSelectedItem(null)}
             ids={ids}
           />

@@ -23,5 +23,9 @@ export const GetPenaltyDefListService = async (search, page) => {
 };
 
 export const GetVehicleFineItemService = async (id) => {
-  return await http.get(`/PenaltyDef/GetVehicleFineItem?id=${id}`);
+  return await http.get(`/VehicleFines/GetVehicleFineItem?id=${id}`);
+};
+
+export const UpdateVehicleFineItemService = async (data) => {
+  return await http.post(`/VehicleFines/UpdateVehicleFineItem`, data);
 };

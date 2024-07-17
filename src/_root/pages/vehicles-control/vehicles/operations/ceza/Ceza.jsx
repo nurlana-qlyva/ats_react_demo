@@ -14,7 +14,6 @@ import {
 import {
   DeleteOutlined,
   MenuOutlined,
-  ArrowUpOutlined,
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
@@ -62,15 +61,6 @@ const Ceza = ({ visible, onClose, ids }) => {
     };
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
-
-  const handleDelete = (data) => {
-    // DeleteYakitService(data.siraNo).then((res) => {
-    //   if (res?.data.statusCode === 202) {
-    //     setStatus(true);
-    //   }
-    // });
-    // setStatus(false);
-  };
 
   const baseColumns = [
     {
@@ -135,21 +125,21 @@ const Ceza = ({ visible, onClose, ids }) => {
       dataIndex: "aciklama",
       key: 10,
     },
-    {
-      title: "",
-      dataIndex: "delete",
-      key: 11,
-      render: (_, record) => (
-        <Popconfirm
-          title={t("confirmQuiz")}
-          cancelText={t("cancel")}
-          okText={t("ok")}
-          onConfirm={() => handleDelete(record)}
-        >
-          <DeleteOutlined style={{ color: "#dc3545" }} />
-        </Popconfirm>
-      ),
-    },
+    // {
+    //   title: "",
+    //   dataIndex: "delete",
+    //   key: 11,
+    //   render: (_, record) => (
+    //     <Popconfirm
+    //       title={t("confirmQuiz")}
+    //       cancelText={t("cancel")}
+    //       okText={t("ok")}
+    //       onConfirm={() => handleDelete(record)}
+    //     >
+    //       <DeleteOutlined style={{ color: "#dc3545" }} />
+    //     </Popconfirm>
+    //   ),
+    // },
   ];
 
   const [columns, setColumns] = useState(() =>

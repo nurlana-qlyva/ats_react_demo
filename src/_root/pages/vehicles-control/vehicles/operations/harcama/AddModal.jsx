@@ -5,10 +5,10 @@ import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { PlakaContext } from "../../../../../../../context/plakaSlice";
-import GeneralInfo from "./GeneralInfo";
-import PersonalFields from "../../../../../../components/form/personal-fields/PersonalFields";
-import { AddVehicleFineItemService } from "../../../../../../../api/services/vehicles/ceza/services";
+import { PlakaContext } from "../../../../../../context/plakaSlice";
+import { AddExpenseItemService } from "../../../../../../api/services/vehicles/operations_services";
+import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields"
+import GeneralInfo from "./tabs/GeneralInfo";
 
 const AddModal = ({ setStatus }) => {
   const { data, plaka, setHistory } = useContext(PlakaContext);
@@ -70,7 +70,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 879,
+      code: 877,
       name2: "ozelAlanKodId9",
     },
     {
@@ -78,7 +78,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 880,
+      code: 878,
       name2: "ozelAlanKodId10",
     },
     {
@@ -111,24 +111,13 @@ const AddModal = ({ setStatus }) => {
     const body = {
       aracId: data.aracId,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
-      saat: dayjs(values.saat).format("HH:mm:ss"),
-      cezaTuruKodId: values.cezaTuruKodId || 0,
-      tutar: values.tutar || 0,
-      cezaPuan: values.cezaPuan || 0,
-      toplamTutar: values.toplamTutar || 0,
-      gecikmeTutar: values.gecikmeTutar || 0,
       surucuId: values.surucuId || 0,
-      odemeTarih: dayjs(values.odemeTarih).format("YYYY-MM-DD"),
-      odeme: values.odeme,
-      cezaMaddesiId: values.cezaMaddesiId || 0,
-      aciklama: values.aciklama,
-      belgeNo: values.belgeNo,
-      bankaHesap: values.bankaHesap,
       lokasyonId: values.lokasyonId || 0,
-      aracKm: values.aracKm || 0,
-      surucuOder: values.surucuOder,
-      tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
-      indirimOran: values.indirimOran || 0,
+      maliyet: values.maliyet,
+      ozel: values.ozel,
+      aciklama: values.aciklama,
+      harcamaKodId: values.harcamaKodId || 0,
+      tutar: values.tutar || 0,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -143,7 +132,7 @@ const AddModal = ({ setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
-    AddVehicleFineItemService(body).then((res) => {
+    AddExpenseItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setResponse("normal");
@@ -161,7 +150,7 @@ const AddModal = ({ setStatus }) => {
   });
 
   const personalProps = {
-    form: "CEZA",
+    form: "HARCAMA",
     fields,
     setFields,
   };
