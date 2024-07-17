@@ -40,7 +40,7 @@ const items = [
             },
             {
                 key: '6',
-                label: <Link to={'/'}>{t("seferler")}</Link>,
+                label: <Link to={'/sefer-islemleri'}>{t("seferler")}</Link>,
             },
             {
                 key: '7',
@@ -48,7 +48,7 @@ const items = [
             },
             {
                 key: '8',
-                label: <Link to={'/'}>{t("harcamalar")}</Link>,
+                label: <Link to={'/harcama-islemleri'}>{t("harcamalar")}</Link>,
             },
             {
                 key: '9',
@@ -56,7 +56,7 @@ const items = [
             },
             {
                 key: '10',
-                label: <Link to={'/'}>{t("cezalar")}</Link>,
+                label: <Link to={'/ceza-islemleri'}>{t("cezalar")}</Link>,
             },
             {
                 key: '11',

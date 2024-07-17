@@ -18,11 +18,11 @@ import {
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
-import { GetVehicleFinesListByVehicleIdService } from "../../../../../../api/services/vehicles/ceza/services";
-import AddModal from "./add/AddModal";
-import UpdateModal from "./update/UpdateModal";
+import { GetExpeditionsListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
+import AddModal from "./AddModal";
+import UpdateModal from "./UpdateModal";
 
-const Ceza = ({ visible, onClose, ids }) => {
+const Sefer = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ const Ceza = ({ visible, onClose, ids }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetVehicleFinesListByVehicleIdService(
+      const res = await GetExpeditionsListByVehicleIdService(
         ids,
         search,
         tableParams.pagination.current
@@ -58,14 +58,14 @@ const Ceza = ({ visible, onClose, ids }) => {
           total: res?.data.recordCount,
         },
       });
-    }; 
+    };
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
 
   const baseColumns = [
     {
-      title: t("plaka"),
-      dataIndex: "plaka",
+      title: t("surucu"),
+      dataIndex: "surucuIsim1",
       key: 1,
       render: (text, record) => (
         <Button
@@ -79,51 +79,57 @@ const Ceza = ({ visible, onClose, ids }) => {
       ),
     },
     {
-      title: t("tarih"),
-      dataIndex: "tarih",
+      title: t("seferAdedi"),
+      dataIndex: "seferAdedi",
       key: 2,
-      render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
-      title: t("saat"),
-      dataIndex: "saat",
+      title: t("guzergah"),
+      dataIndex: "guzergah",
       key: 3,
     },
     {
-      title: t("cezaTuru"),
-      dataIndex: "cezaTuru",
+      title: t("cikisTarih"),
+      dataIndex: "cikisTarih",
       key: 4,
+      render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
-      title: t("cezaTutar"),
-      dataIndex: "tutar",
+      title: t("cikisSaat"),
+      dataIndex: "cikisSaat",
       key: 5,
     },
     {
-      title: t("cezaPuan"),
-      dataIndex: "cezaPuan",
+      title: t("varisTarih"),
+      dataIndex: "varisTarih",
       key: 6,
+      render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
-      title: t("surucuAdi"),
-      dataIndex: "surucuIsim",
+      title: t("varisSaat"),
+      dataIndex: "varisSaat",
       key: 7,
     },
     {
-      title: "odemeTarihi",
-      dataIndex: "odemeTarih",
+      title: "cikisKm",
+      dataIndex: "cikisKm",
       key: 8,
       render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
-      title: t("cezaMaddesi"),
-      dataIndex: "cezaMaddesi",
+      title: t("varisKm"),
+      dataIndex: "varisKm",
       key: 9,
+    },
+    {
+      title: t("farkKm"),
+      dataIndex: "farkKm",
+      key: 10,
     },
     {
       title: t("aciklama"),
       dataIndex: "aciklama",
-      key: 10,
+      key: 12,
     },
     // {
     //   title: "",
@@ -314,10 +320,10 @@ const Ceza = ({ visible, onClose, ids }) => {
   );
 };
 
-Ceza.propTypes = {
+Sefer.propTypes = {
   ids: PropTypes.array,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
 };
 
-export default Ceza;
+export default Sefer;

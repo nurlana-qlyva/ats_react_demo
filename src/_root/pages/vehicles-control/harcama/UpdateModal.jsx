@@ -1,18 +1,18 @@
 import { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { t } from "i18next";
-import { PlakaContext } from "../../../../../../../context/plakaSlice";
-import { GetVehicleFineItemService, UpdateVehicleFineItemService } from "../../../../../../../api/services/vehicles/ceza/services";
+import { PlakaContext } from "../../../../context/plakaSlice";
+import { GetExpenseByIdService, UpdateExpenseItemService } from "../../../../api/services/vehicles/operations_services";
 import {
   GetDocumentsByRefGroupService,
-  GetPhotosByRefGroupService,
-} from "../../../../../../../api/services/upload/services";
-import { uploadFile } from "../../../../../../../utils/upload";
+} from "../../../../api/services/upload/services";
+import { uploadFile } from "../../../../utils/upload";
 import { message, Modal, Tabs, Button } from "antd";
-import GeneralInfo from "./GeneralInfo";
-import PersonalFields from "../../../../../../components/form/personal-fields/PersonalFields";
-import FileUpload from "../../../../../../components/upload/FileUpload";
+import GeneralInfo from "./tabs/GeneralInfo";
+import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
+import FileUpload from "../../../components/upload/FileUpload";
 import dayjs from "dayjs";
+
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { data, plaka } = useContext(PlakaContext);
@@ -75,7 +75,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 879,
+      code: 877,
       name2: "ozelAlanKodId9",
     },
     {
@@ -83,7 +83,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 880,
+      code: 878,
       name2: "ozelAlanKodId10",
     },
     {
@@ -108,31 +108,20 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
   useEffect(() => {
     if (updateModal) {
-      GetVehicleFineItemService(id).then((res) => {
+      GetExpenseByIdService(id).then((res) => {
         setValue("aracId", res?.data.aracId);
         setValue("plaka", res?.data.plaka);
         setValue("tarih", dayjs(res?.data.tarih));
-        setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"));
         setValue("aciklama", res?.data.aciklama);
-        setValue("aracKm", res?.data.aracKm);
-        setValue("bankaHesap", res?.data.bankaHesap);
-        setValue("belgeNo", res?.data.belgeNo);
-        setValue("cezaMaddesi", res?.data.cezaMaddesi);
-        setValue("cezaPuan", res?.data.cezaPuan);
-        setValue("cezaTuru", res?.data.cezaTuru);
-        setValue("cezaTuruKodId", res?.data.cezaTuruKodId);
-        setValue("gecikmeTutar", res?.data.gecikmeTutar);
-        setValue("indirimOran", res?.data.indirimOran);
         setValue("lokasyon", res?.data.lokasyon);
         setValue("lokasyonId", res?.data.lokasyonId);
-        setValue("odeme", res?.data.odeme);
-        setValue("odemeTarih", dayjs(res?.data.odemeTarih));
-        setValue("tebligTarih", dayjs(res?.data.tebligTarih));
         setValue("surucuId", res?.data.surucuId);
         setValue("surucu", res?.data.surucuIsim);
-        setValue("surucuOder", res?.data.surucuOder);
-        setValue("toplamTutar", res?.data.toplamTutar);
         setValue("tutar", res?.data.tutar);
+        setValue("harcama", res?.data.harcama);
+        setValue("harcamaKodId", res?.data.harcamaKodId);
+        setValue("maliyet", res?.data.maliyet);
+        setValue("ozel", res?.data.ozel);
         setValue("ozelAlan1", res?.data.ozelAlan1);
         setValue("ozelAlan2", res?.data.ozelAlan2);
         setValue("ozelAlan3", res?.data.ozelAlan3);
@@ -170,24 +159,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     const body = {
       siraNo: id,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
-      saat: dayjs(values.saat).format("HH:mm:ss"),
-      cezaTuruKodId: values.cezaTuruKodId || 0,
-      tutar: values.tutar || 0,
-      cezaPuan: values.cezaPuan || 0,
-      toplamTutar: values.toplamTutar || 0,
-      gecikmeTutar: values.gecikmeTutar || 0,
       surucuId: values.surucuId || 0,
-      odemeTarih: dayjs(values.odemeTarih).format("YYYY-MM-DD"),
-      odeme: values.odeme,
-      cezaMaddesiId: values.cezaMaddesiId || 0,
-      aciklama: values.aciklama,
-      belgeNo: values.belgeNo,
-      bankaHesap: values.bankaHesap,
       lokasyonId: values.lokasyonId || 0,
-      aracKm: values.aracKm || 0,
-      surucuOder: values.surucuOder,
-      tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
-      indirimOran: values.indirimOran || 0,
+      maliyet: values.maliyet,
+      ozel: values.ozel,
+      aciklama: values.aciklama,
+      harcamaKodId: values.harcamaKodId || 0,
+      tutar: values.tutar || 0,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -202,7 +180,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     }
 
-    UpdateVehicleFineItemService(body).then((res) => {
+    UpdateExpenseItemService(body).then((res) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);

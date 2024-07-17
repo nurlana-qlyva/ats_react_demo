@@ -29,3 +29,8 @@ export const GetVehicleFineItemService = async (id) => {
 export const UpdateVehicleFineItemService = async (data) => {
   return await http.post(`/VehicleFines/UpdateVehicleFineItem`, data);
 };
+
+export const GetVehicleFinesListService = async (search, page, data) => {
+  return await http.get(`/VehicleFines/GetVehicleFinesList?page=${page}&parameter=${search}`, data);
+};
+

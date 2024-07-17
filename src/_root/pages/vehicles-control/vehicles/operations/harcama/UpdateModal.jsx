@@ -109,7 +109,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   useEffect(() => {
     if (updateModal) {
       GetExpenseByIdService(id).then((res) => {
-        setValue("aracId", res?.data.aracId);
         setValue("plaka", res?.data.plaka);
         setValue("tarih", dayjs(res?.data.tarih));
         setValue("aciklama", res?.data.aciklama);
@@ -138,7 +137,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("ozelAlan12", res?.data.ozelAlan12);
       });
 
-      GetDocumentsByRefGroupService(id, "CEZA").then((res) =>
+      GetDocumentsByRefGroupService(id, "HARCAMA").then((res) =>
         setFilesUrl(res.data)
       );
     }
@@ -147,7 +146,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadFiles = () => {
     try {
       setLoadingFiles(true);
-      uploadFile(id, "CEZA", files);
+      uploadFile(id, "HARCAMA", files);
     } catch (error) {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
@@ -158,7 +157,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
-      aracId: data.aracId,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       surucuId: values.surucuId || 0,
       lokasyonId: values.lokasyonId || 0,
@@ -200,7 +198,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
 
   const personalProps = {
-    form: "CEZA",
+    form: "HARCAMA",
     fields,
     setFields,
   };

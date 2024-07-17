@@ -18,6 +18,7 @@ import {
 import Yakit from "./yakit/Yakit";
 import Ceza from "./ceza/Ceza";
 import Harcama from "./harcama/Harcama";
+import Sefer from "./sefer/Sefer";
 // import Bakim from './bakim/Bakim'
 
 const OperationsInfo = ({ ids }) => {
@@ -70,6 +71,11 @@ const OperationsInfo = ({ ids }) => {
       icon: <FaTruckFast className="text-info" />,
     },
     {
+      label: t("seferler"),
+      key: "10",
+      icon: <FaTruckFast className="text-info" />,
+    },
+    {
       label: t("parcalar"),
       key: "10",
       icon: <MdSettingsInputComponent className="text-info" />,
@@ -107,6 +113,14 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Ceza
             visible={selectedItem === "6"}
+            onClose={() => setSelectedItem(null)}
+            ids={ids}
+          />
+        );
+      case "10":
+        return (
+          <Sefer
+            visible={selectedItem === "10"}
             onClose={() => setSelectedItem(null)}
             ids={ids}
           />

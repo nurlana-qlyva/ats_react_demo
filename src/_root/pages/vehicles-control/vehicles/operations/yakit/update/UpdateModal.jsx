@@ -248,7 +248,6 @@ const UpdateModal = ({
 
     const body = {
       siraNo: id,
-      aracId: values.aracId,
       plaka: values.plaka,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),

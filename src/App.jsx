@@ -11,8 +11,6 @@ import Suruculer from './_root/pages/sistem-tanimlari/surucu/SurucuTanim'
 import YakitGirisFisleri from './_root/pages/yakit-yonetim/giris-fis/YakitGirisFisleri'
 
 
-
-
 import KmUpdate from './_root/pages/km-update/KmUpdate'
 import Settings from './_root/pages/settings/Settings'
 import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
@@ -32,6 +30,9 @@ import Transferler from './_root/pages/transferler/Transferler'
 import YakitTanimlar from './_root/pages/yakit-yonetim/yakit-tanim/YakitTanimlar'
 import YakitCikisFisleri from './_root/pages/yakit-yonetim/cikis-fis/YakitCikisFisleri'
 import YakitTransferler from './_root/pages/yakit-yonetim/transferler/YakitTransferler'
+import Ceza from './_root/pages/vehicles-control/ceza/Ceza'
+import Harcama from './_root/pages/vehicles-control/harcama/Harcama'
+import Sefer from './_root/pages/vehicles-control/sefer/Sefer'
 
 
 
@@ -78,7 +79,9 @@ const App = () => {
         <Route path="/yakit-giris-fisleri" element={<YakitGirisFisleri />} />
         <Route path="/yakit-cikis-fisleri" element={<YakitCikisFisleri />} />
         <Route path="/yakit-transferler" element={<YakitTransferler />} />
-
+        <Route path="/ceza-islemleri" element={<Ceza />} />
+        <Route path="/harcama-islemleri" element={<Harcama />} />
+        <Route path="/sefer-islemleri" element={<Sefer />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
