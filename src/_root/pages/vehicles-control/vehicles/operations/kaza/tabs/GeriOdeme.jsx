@@ -30,7 +30,7 @@ const GeriOdeme = () => {
                 <div className="col-span-3">
                     <div className="flex flex-col gap-1">
                         <label>{t("banka")}</label>
-                        <CodeControl name="banka" codeName="bankaKodId" checked={!watch("geriOdeme")} />
+                        <CodeControl name="banka" codeName="bankaKodId" id={116} checked={!watch("geriOdeme")} />
                     </div>
                 </div>
                 <div className="col-span-3">
