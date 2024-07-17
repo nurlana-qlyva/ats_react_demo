@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
@@ -13,13 +13,33 @@ import Textarea from "../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import Guzergah from "../../../../components/form/selects/Guzergah";
 import VehicleList from "./VehiclesList";
+import { CodeControlByUrlService } from "../../../../../api/services/code/services";
+import { PlakaContext } from "../../../../../context/plakaSlice";
 
 const GeneralInfo = () => {
+  const { setPlaka } = useContext(PlakaContext)
   const { setValue } = useFormContext();
   const [open, setOpen] = useState(false);
   const [dorse, setDorse] = useState(false);
 
-console.log(dorse)
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
+      const updatedData = res.data.map((item) => {
+        if ("aracId" in item && "plaka" in item) {
+          return {
+            ...item,
+            id: item.aracId,
+          };
+        }
+        return item;
+      });
+      setPlaka(updatedData);
+    };
+
+    fetchData();
+  }, []);
+
   const footer = [
     <Button
       key="submit"

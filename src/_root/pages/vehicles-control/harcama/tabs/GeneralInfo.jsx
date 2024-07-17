@@ -8,8 +8,32 @@ import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
 import CodeControl from "../../../../components/form/selects/CodeControl";
+import { CodeControlByUrlService } from "../../../../../api/services/code/services";
+import { useContext, useEffect } from "react";
+import { PlakaContext } from "../../../../../context/plakaSlice";
 
 const GeneralInfo = () => {
+  const { setPlaka } = useContext(PlakaContext)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
+      const updatedData = res.data.map((item) => {
+        if ("aracId" in item && "plaka" in item) {
+          return {
+            ...item,
+            id: item.aracId,
+          };
+        }
+        return item;
+      });
+      setPlaka(updatedData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="grid gap-1">

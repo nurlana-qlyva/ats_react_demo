@@ -100,13 +100,9 @@ const AddModal = ({ setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset } = methods;
 
-  useEffect(() => {
-    if (plaka.length === 1) {
-      setValue("plaka", plaka[0].plaka);
-    }
-  }, [plaka]);
+
 
   const onSubmit = handleSubmit((values) => {
     const body = {

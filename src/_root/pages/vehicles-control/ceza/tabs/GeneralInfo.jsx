@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
@@ -16,11 +16,33 @@ import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import CezaMaddesiTable from "./CezaMaddesi";
+import { PlakaContext } from "../../../../../context/plakaSlice";
+import { CodeControlByUrlService } from "../../../../../api/services/code/services";
 
 const GeneralInfo = () => {
   const { setValue, watch } = useFormContext();
   const [open, setOpen] = useState(false);
   const [madde, setMadde] = useState(false);
+  const { setPlaka } = useContext(PlakaContext)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
+      const updatedData = res.data.map((item) => {
+        if ("aracId" in item && "plaka" in item) {
+          return {
+            ...item,
+            id: item.aracId,
+          };
+        }
+        return item;
+      });
+      setPlaka(updatedData);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (watch("tutar") && watch("indirimOran")) {
