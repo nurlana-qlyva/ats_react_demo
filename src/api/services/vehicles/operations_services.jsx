@@ -57,3 +57,33 @@ export const UpdateExpeditionItemService = async (data) => {
 export const GetExpeditionsListService = async (search, page, data) => {
     return await http.get(`/Expeditions/GetExpeditionsList?page=${page}&parameter=${search}`, data);
 };
+
+
+// kazalar
+export const GetAccidentsListByVehicleIdService = async (
+    id,
+    search,
+    page,
+    data
+) => {
+    return await http.get(
+        `/Accident/GetAccidentsListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+        data
+    );
+};
+
+export const AddAccidentItemService = async (data) => {
+    return await http.post(`/Accident/AddAccidentItem`, data);
+};
+
+export const GetAccidentItemByIdService = async (id) => {
+    return await http.get(`/Accident/GetAccidentItemById?id=${id}`);
+};
+
+export const UpdateAccidentItemService = async (data) => {
+    return await http.post(`/Accident/UpdateAccidentItem`, data);
+};
+
+export const GetAccidentsListService = async (search, page, data) => {
+    return await http.get(`/Accident/GetAccidentsList?page=${page}&parameter=${search}`, data);
+};

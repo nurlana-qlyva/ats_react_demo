@@ -19,6 +19,7 @@ import Yakit from "./yakit/Yakit";
 import Ceza from "./ceza/Ceza";
 import Harcama from "./harcama/Harcama";
 import Sefer from "./sefer/Sefer";
+import Kaza from "./kaza/Kaza";
 // import Bakim from './bakim/Bakim'
 
 const OperationsInfo = ({ ids }) => {
@@ -105,6 +106,14 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Harcama
             visible={selectedItem === "4"}
+            onClose={() => setSelectedItem(null)}
+            ids={ids}
+          />
+        );
+      case "5":
+        return (
+          <Kaza
+            visible={selectedItem === "5"}
             onClose={() => setSelectedItem(null)}
             ids={ids}
           />
