@@ -46,6 +46,9 @@ const Firma = ({ name, codeName, checked }) => {
             if (e === undefined) {
               setValue("tedarikciKod", "");
               setValue("unvan", "");
+              const selectedOption = data.find(
+                (option) => option.firmaId === e
+              );
               if (!selectedOption) {
                 name ? setValue(name, "") : setValue("unvan", "");
               }

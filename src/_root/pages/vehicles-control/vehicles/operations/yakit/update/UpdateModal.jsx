@@ -10,7 +10,7 @@ import {
   GetFuelCardContentByIdService,
   GetFuelCardInfoByFuelIdService,
   UpdateFuelService,
-} from "../../../../../../../api/services/vehicles/yakit/services";
+} from "../../../../../../../api/services/vehicles/operations_services";
 import {
   GetDocumentsByRefGroupService,
   GetPhotosByRefGroupService,
@@ -174,8 +174,12 @@ const UpdateModal = ({
         setValue("fullDepo", res?.data.fullDepo);
         setValue("stokKullanimi", res?.data.stokKullanimi);
         setValue("aciklama", res?.data.aciklama);
-        setValue("faturaTarih", dayjs(res?.data.faturaTarih));
-        setValue("tarih", dayjs(res?.data.tarih));
+        setValue("faturaTarih", res?.data.faturaTarih && res?.data.faturaTarih !== "1901-01-01T00:00:00"
+          ? dayjs(res?.data.faturaTarih)
+          : null);
+        setValue("tarih", res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+          ? dayjs(res?.data.tarih)
+          : null);
         setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"));
         setValue("ozelAlan1", res?.data.ozelAlan1);
         setValue("ozelAlan2", res?.data.ozelAlan2);
@@ -233,17 +237,17 @@ const UpdateModal = ({
   const onSubmit = handleSubmit((values) => {
     const kmLog = !watch("engelle")
       ? {
-          siraNo: watch("kmLogId"),
-          kmAracId: watch("aracId"),
-          plaka: watch("plaka"),
-          tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-          saat: dayjs(watch("saat")).format("HH:mm:ss"),
-          yeniKm: watch("alinanKm"),
-          eskiKm: watch("eskiKm"),
-          dorse: false,
-          kaynak: "YAKIT",
-          lokasyonId: watch("lokasyonId"),
-        }
+        siraNo: watch("kmLogId"),
+        kmAracId: watch("aracId"),
+        plaka: watch("plaka"),
+        tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+        saat: dayjs(watch("saat")).format("HH:mm:ss"),
+        yeniKm: watch("alinanKm"),
+        eskiKm: watch("eskiKm"),
+        dorse: false,
+        kaynak: "YAKIT",
+        lokasyonId: watch("lokasyonId"),
+      }
       : null;
 
     const body = {
@@ -343,7 +347,7 @@ const UpdateModal = ({
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: 
+      children:
         <GeneralInfo
           setIsValid={setIsValid}
           response={response}
@@ -427,7 +431,6 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
-  status: PropTypes.bool,
 };
 
 export default UpdateModal;

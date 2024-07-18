@@ -11,10 +11,8 @@ import PersonalFields from "../../../../../components/form/personal-fields/Perso
 import GeneralInfo from "./tabs/GeneralInfo";
 
 const AddModal = ({ setStatus }) => {
-  const { data, plaka, setHistory } = useContext(PlakaContext);
+  const { data, plaka } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [response, setResponse] = useState("normal");
 
   const [fields, setFields] = useState([
     {
@@ -135,7 +133,6 @@ const AddModal = ({ setStatus }) => {
     AddExpenseItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
-        setResponse("normal");
         setIsOpen(false);
         if (plaka.length === 1) {
           reset();
@@ -160,11 +157,7 @@ const AddModal = ({ setStatus }) => {
       key: "1",
       label: t("genelBilgiler"),
       children: (
-        <GeneralInfo
-          setIsValid={setIsValid}
-          response={response}
-          setResponse={setResponse}
-        />
+        <GeneralInfo />
       ),
     },
     {
@@ -187,7 +180,6 @@ const AddModal = ({ setStatus }) => {
       key="submit"
       className="btn btn-min primary-btn"
       onClick={onSubmit}
-      disabled={isValid}
     >
       {t("kaydet")}
     </Button>,
@@ -197,8 +189,6 @@ const AddModal = ({ setStatus }) => {
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setResponse("normal");
-        setHistory([]);
       }}
     >
       {t("iptal")}
@@ -211,7 +201,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniCezaGirisi")}
+        title={t("yeniHarcamaGirisi")}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
         maskClosable={false}

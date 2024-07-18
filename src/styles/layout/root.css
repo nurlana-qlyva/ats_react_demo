@@ -242,3 +242,8 @@ a .btn {
   color: var(--info) !important;
   border: 1px solid var(--info);
 }
+
+.active-row,
+.active-row button {
+  color: var(--success);
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import PropTypes from "prop-types";
 import { Input, Table } from "antd";
 import { t } from "i18next";
 import { GetPenaltyDefListService } from "../../../../../../../api/services/vehicles/ceza/services";
@@ -43,12 +43,12 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       key: 5,
     },
     {
-      title: t("aciklama1"),
+      title: `${t("aciklama")} 1`,
       dataIndex: "aciklama1",
       key: 6,
     },
     {
-      title: t("aciklama2"),
+      title: `${t("aciklama")} 2`,
       dataIndex: "aciklama2",
       key: 7,
     },
@@ -132,6 +132,11 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       </div>
     </>
   );
+};
+
+CezaMaddesiTable.propTypes = {
+  open: PropTypes.bool,
+  setMadde: PropTypes.func,
 };
 
 export default CezaMaddesiTable;

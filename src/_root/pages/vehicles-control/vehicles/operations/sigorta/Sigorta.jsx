@@ -18,13 +18,13 @@ import {
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
-import { GetAccidentsListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
+import { GetInsuranceListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
 
-const Kaza = ({ visible, onClose, ids }) => {
+const Sigorta = ({ visible, onClose, ids }) => {
     const { plaka } = useContext(PlakaContext);
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ const Kaza = ({ visible, onClose, ids }) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const res = await GetAccidentsListByVehicleIdService(
+            const res = await GetInsuranceListByVehicleIdService(
                 ids,
                 search,
                 tableParams.pagination.current
@@ -66,8 +66,8 @@ const Kaza = ({ visible, onClose, ids }) => {
 
     const baseColumns = [
         {
-            title: t("tarih"),
-            dataIndex: "kazaTarih",
+            title: t("sigorta"),
+            dataIndex: "sigorta",
             key: 1,
             render: (text, record) => (
                 <Button
@@ -76,50 +76,78 @@ const Kaza = ({ visible, onClose, ids }) => {
                         setId(record.siraNo);
                     }}
                 >
-                    {dayjs(text).format("DD.MM.YYYY")}
+                    {text}
                 </Button>
             ),
         },
         {
-            title: t("surucu"),
-            dataIndex: "surucuIsim",
+            title: t("aktif"),
+            dataIndex: "aktif",
             key: 2,
+            render: text => <Checkbox checked={text} />
         },
         {
-            title: t("kazaTuru"),
-            dataIndex: "kazaTuru",
-            key: 2,
-        },
-        {
-            title: t("kazaSekli"),
-            dataIndex: "kazaSekli",
+            title: t("baslangicTarih"),
+            dataIndex: "baslangicTarih",
             key: 3,
+            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("karsiPlaka"),
-            dataIndex: "karsiPlaka",
+            title: t("bitisTarih"),
+            dataIndex: "bitisTarih",
             key: 4,
+            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("faturaTarih"),
-            dataIndex: "faturaTarih",
+            title: t("policeNo"),
+            dataIndex: "policeNo",
             key: 5,
-            render: text => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: t("faturaTutar"),
-            dataIndex: "faturaTutar",
+            title: t("tutar"),
+            dataIndex: "tutar",
             key: 6,
         },
         {
-            title: t("aciklama"),
-            dataIndex: "aciklama",
+            title: t("firma"),
+            dataIndex: "firma",
             key: 7,
+        },
+        {
+            title: t("acenta"),
+            dataIndex: "acenta",
+            key: 8,
+        },
+        {
+            title: t("yetkili"),
+            dataIndex: "yetkili",
+            key: 9,
+        },
+        {
+            title: t("ruhsatBelgeSeriNo"),
+            dataIndex: "ruhsatBelgeSeriNo",
+            key: 10,
+        },
+        {
+            title: t("aracBedeli"),
+            dataIndex: "aracBedeli",
+            key: 11,
+        },
+        {
+            title: t("hasarsizlikIndirim"),
+            dataIndex: "hasarIndirimi",
+            key: 12,
+        },
+        {
+            title: t("varsayilan"),
+            dataIndex: "varsayilan",
+            key: 13,
+            render: text => <Checkbox checked={text} />
         },
         // {
         //   title: "",
         //   dataIndex: "delete",
-        //   key: 8,
+        //   key: 7,
         //   render: (_, record) => (
         //     <Popconfirm
         //       title={t("confirmQuiz")}
@@ -237,7 +265,7 @@ const Kaza = ({ visible, onClose, ids }) => {
 
     return (
         <Modal
-            title={`${t("kazaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
+            title={`${t("sigortaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
             open={visible}
             onCancel={onClose}
             maskClosable={false}
@@ -273,7 +301,7 @@ const Kaza = ({ visible, onClose, ids }) => {
 
             <DragAndDropContext items={columns} setItems={setColumns}>
                 <Table
-                    rowKey="siraNo"
+                    rowKey={(record) => record.siraNo}
                     columns={newColumns}
                     dataSource={dataSource}
                     pagination={{
@@ -303,16 +331,17 @@ const Kaza = ({ visible, onClose, ids }) => {
                             cell: SortableHeaderCell,
                         },
                     }}
+                    rowClassName={(record) => (record.aktif ? "active-row" : "")}
                 />
             </DragAndDropContext>
         </Modal>
     );
 };
 
-Kaza.propTypes = {
+Sigorta.propTypes = {
     ids: PropTypes.array,
     onClose: PropTypes.func,
     visible: PropTypes.bool,
 };
 
-export default Kaza;
+export default Sigorta;

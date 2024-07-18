@@ -2,8 +2,9 @@ import { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
+import dayjs from "dayjs";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { GetAccidentItemByIdService, UpdateAccidentItemService, } from "../../../../../../api/services/vehicles/operations_services";
+import { GetVehicleFineItemService, UpdateVehicleFineItemService } from "../../../../../../api/services/vehicles/ceza/services";
 import {
   GetDocumentsByRefGroupService,
   GetPhotosByRefGroupService,
@@ -13,11 +14,7 @@ import { message, Modal, Tabs, Button } from "antd";
 import GeneralInfo from "./tabs/GeneralInfo";
 import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields";
 import FileUpload from "../../../../../components/upload/FileUpload";
-import dayjs from "dayjs";
-import GeriOdeme from "./tabs/GeriOdeme";
-import SigortaBilgileri from "./tabs/SigortaBilgileri";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
-
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
@@ -84,7 +81,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 883,
+      code: 879,
       name2: "ozelAlanKodId9",
     },
     {
@@ -92,7 +89,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 884,
+      code: 880,
       name2: "ozelAlanKodId10",
     },
     {
@@ -117,48 +114,37 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
   useEffect(() => {
     if (updateModal) {
-      GetAccidentItemByIdService(id).then((res) => {
-        setValue("aracKm", res?.data.aracKm);
-        setValue("asliKusur", res?.data.asliKusur);
-        setValue("asliKusurKodId", res?.data.asliKusurKodId);
-        setValue("banka", res?.data.banka);
-        setValue("bankaHesap", res?.data.bankaHesap);
-        setValue("bankaKodId", res?.data.bankaKodId);
-        setValue("belgeNo", res?.data.belgeNo);
-        setValue("faturaTarih", res?.data.faturaTarih && res?.data.faturaTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.faturaTarih)
-          : null);
-        setValue("geriOdemeTarih", res?.data.geriOdemeTarih && res?.data.geriOdemeTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.geriOdemeTarih)
-          : null);
-        setValue("kazaTarih", res?.data.kazaTarih && res?.data.kazaTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.kazaTarih)
-          : null);
-        setValue("aciklama", res?.data.aciklama);
-        setValue("faturaTutar", res?.data.faturaTutar);
-        setValue("geriOdeme", res?.data.geriOdeme);
-        setValue("geriOdemeAciklama", res?.data.geriOdemeAciklama);
-        setValue("geriOdemeTutar", res?.data.geriOdemeTutar);
-        setValue("hasarNo", res?.data.hasarNo);
-        setValue("karsiPlaka", res?.data.karsiPlaka);
-        setValue("karsiSigorta", res?.data.karsiSigorta);
-        setValue("karsiSurucu", res?.data.karsiSurucu);
-        setValue("kazaSaat", dayjs(res?.data.kazaSaat, "HH:mm:ss"));
-        setValue("kazaSekli", res?.data.kazaSekli);
-        setValue("kazaSekliKodId", res?.data.kazaSekliKodId);
-        setValue("kazaTuru", res?.data.kazaTuru);
-        setValue("kazaTuruKodId", res?.data.kazaTuruKodId);
+      GetVehicleFineItemService(id).then((res) => {
+        setValue("aracId", res?.data.aracId);
         setValue("plaka", res?.data.plaka);
-        setValue("policeNo", res?.data.policeNo);
-        setValue("sigorta", res?.data.sigorta);
-        setValue("firma", res?.data.firma);
-        setValue("sigortaBilgisiVar", res?.data.sigortaBilgisiVar);
-        setValue("sigortaId", res?.data.sigortaId);
+        setValue("tarih", res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+          ? dayjs(res?.data.tarih)
+          : null);
+        setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"));
+        setValue("aciklama", res?.data.aciklama);
+        setValue("aracKm", res?.data.aracKm);
+        setValue("bankaHesap", res?.data.bankaHesap);
+        setValue("belgeNo", res?.data.belgeNo);
+        setValue("cezaMaddesi", res?.data.cezaMaddesi);
+        setValue("cezaPuan", res?.data.cezaPuan);
+        setValue("cezaTuru", res?.data.cezaTuru);
+        setValue("cezaTuruKodId", res?.data.cezaTuruKodId);
+        setValue("gecikmeTutar", res?.data.gecikmeTutar);
+        setValue("indirimOran", res?.data.indirimOran);
+        setValue("lokasyon", res?.data.lokasyon);
+        setValue("lokasyonId", res?.data.lokasyonId);
+        setValue("odeme", res?.data.odeme);
+        setValue("odemeTarih", res?.data.odemeTarih && res?.data.odemeTarih !== "1901-01-01T00:00:00"
+          ? dayjs(res?.data.odemeTarih)
+          : null);
+        setValue("tebligTarih", res?.data.tebligTarih && res?.data.tebligTarih !== "1901-01-01T00:00:00"
+          ? dayjs(res?.data.tebligTarih)
+          : null);
         setValue("surucuId", res?.data.surucuId);
         setValue("surucu", res?.data.surucuIsim);
         setValue("surucuOder", res?.data.surucuOder);
-        setValue("taliKusur", res?.data.taliKusur);
-        setValue("taliKusurKodId", res?.data.taliKusurKodId);
+        setValue("toplamTutar", res?.data.toplamTutar);
+        setValue("tutar", res?.data.tutar);
         setValue("ozelAlan1", res?.data.ozelAlan1);
         setValue("ozelAlan2", res?.data.ozelAlan2);
         setValue("ozelAlan3", res?.data.ozelAlan3);
@@ -175,11 +161,11 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("ozelAlan12", res?.data.ozelAlan12);
       });
 
-      GetPhotosByRefGroupService(id, "KAZA").then((res) =>
+      GetPhotosByRefGroupService(id, "CEZA").then((res) =>
         setImageUrls(res.data)
       );
 
-      GetDocumentsByRefGroupService(id, "KAZA").then((res) =>
+      GetDocumentsByRefGroupService(id, "CEZA").then((res) =>
         setFilesUrl(res.data)
       );
     }
@@ -188,7 +174,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadFiles = () => {
     try {
       setLoadingFiles(true);
-      uploadFile(id, "KAZA", files);
+      uploadFile(id, "CEZA", files);
     } catch (error) {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
@@ -199,7 +185,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "KAZA", images);
+      const data = uploadPhoto(id, "CEZA", images);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -211,31 +197,25 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
+      tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
+      saat: dayjs(values.saat).format("HH:mm:ss"),
+      cezaTuruKodId: values.cezaTuruKodId || 0,
+      tutar: values.tutar || 0,
+      cezaPuan: values.cezaPuan || 0,
+      toplamTutar: values.toplamTutar || 0,
+      gecikmeTutar: values.gecikmeTutar || 0,
       surucuId: values.surucuId || 0,
+      odemeTarih: dayjs(values.odemeTarih).format("YYYY-MM-DD"),
+      odeme: values.odeme,
+      cezaMaddesiId: values.cezaMaddesiId || 0,
       aciklama: values.aciklama,
-      kazaTarih: dayjs(values.kazaTarih).format("YYYY-MM-DD"),
-      faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),
-      geriOdemeTarih: dayjs(values.geriOdemeTarih).format("YYYY-MM-DD"),
-      kazaTuruKodId: values.kazaTuruKodId || 0,
-      kazaSekliKodId: values.kazaSekliKodId || 0,
-      asliKusurKodId: values.asliKusurKodId || 0,
-      taliKusurKodId: values.taliKusurKodId || 0,
-      bankaKodId: values.bankaKodId || 0,
-      sigortaId: values.sigortaKodId || 0,
-      aracKm: values.aracKm || 0,
-      faturaTutar: values.faturaTutar || 0,
-      geriOdemeTutar: values.geriOdemeTutar || 0,
-      geriOdeme: values.geriOdeme,
-      sigortaBilgisiVar: values.sigortaBilgisiVar,
-      surucuOder: values.surucuOder,
-      bankaHesap: values.bankaHesap,
-      karsiSurucu: values.karsiSurucu,
-      karsiPlaka: values.karsiPlaka,
-      karsiSigorta: values.karsiSigorta,
       belgeNo: values.belgeNo,
-      geriOdemeAciklama: values.geriOdemeAciklama,
-      hasarNo: values.hasarNo,
-      kazaSaat: dayjs(values.kazaSaat).format("HH:mm:ss"),
+      bankaHesap: values.bankaHesap,
+      lokasyonId: values.lokasyonId || 0,
+      aracKm: values.aracKm || 0,
+      surucuOder: values.surucuOder,
+      tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
+      indirimOran: values.indirimOran || 0,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -250,7 +230,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     }
 
-    UpdateAccidentItemService(body).then((res) => {
+    UpdateVehicleFineItemService(body).then((res) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
@@ -268,7 +248,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   })
 
   const personalProps = {
-    form: "KAZA",
+    form: "CEZA",
     fields,
     setFields,
   };
@@ -281,21 +261,11 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     },
     {
       key: "2",
-      label: t("geriOdeme"),
-      children: <GeriOdeme />,
-    },
-    {
-      key: "3",
-      label: t("sigortaBilgileri"),
-      children: <SigortaBilgileri />,
-    },
-    {
-      key: "4",
       label: t("ozelAlanlar"),
       children: <PersonalFields personalProps={personalProps} />,
     },
     {
-      key: "5",
+      key: "3",
       label: `[${imageUrls.length}] ${t("resimler")}`,
       children: (
         <PhotoUpload
@@ -306,7 +276,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       ),
     },
     {
-      key: "6",
+      key: "4",
       label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
       children: (
         <FileUpload
@@ -340,7 +310,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
   return (
     <Modal
-      title={t("kazaBilgisiGuncelle")}
+      title={t("cezaBilgisiGuncelle")}
       open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}

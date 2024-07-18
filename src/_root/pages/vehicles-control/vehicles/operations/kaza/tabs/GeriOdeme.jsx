@@ -3,10 +3,9 @@ import { t } from 'i18next'
 import CheckboxInput from '../../../../../../components/form/checkbox/CheckboxInput'
 import DateInput from '../../../../../../components/form/date/DateInput'
 import NumberInput from '../../../../../../components/form/inputs/NumberInput'
-import ReadonlyInput from '../../../../../../components/form/inputs/ReadonlyInput'
+import TextInput from '../../../../../../components/form/inputs/TextInput'
 import CodeControl from '../../../../../../components/form/selects/CodeControl'
 import Textarea from '../../../../../../components/form/inputs/Textarea'
-
 
 const GeriOdeme = () => {
     const { watch } = useFormContext()
@@ -36,7 +35,7 @@ const GeriOdeme = () => {
                 <div className="col-span-3">
                     <div className="flex flex-col gap-1">
                         <label>{t("bankaHesap")}</label>
-                        <ReadonlyInput name="bankaHesap" checked={!watch("geriOdeme")} />
+                        <TextInput name="bankaHesap" readonly={!watch("geriOdeme")} />
                     </div>
                 </div>
                 <div className="col-span-12">

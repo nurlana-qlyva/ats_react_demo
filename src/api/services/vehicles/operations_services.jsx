@@ -1,5 +1,54 @@
 import http from "../../http";
 
+// yakit
+export const GetFuelListByVehicleIdService = async (search, page, data) => {
+    return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}&parameter=${search}`, data);
+};
+
+export const DeleteFuelCardService = async (id) => {
+    return await http.get(`/Fuel/DeleteFuelCard?fuelId=${id}`);
+};
+
+export const AddFuelService = async (data) => {
+    return await http.post(`/Fuel/AddFuel`, data);
+};
+
+export const GetFuelCardContentByIdService = async (id) => {
+    return await http.get(`/Fuel/GetFuelCardContentById?vehicleId=${id}`);
+};
+
+export const GetMaterialPriceService = async (id) => {
+    return await http.get(`/Material/GetMaterialPrice?materialId=${id}`);
+};
+
+export const ValidateFuelInfoInsertionService = async (data) => {
+    return await http.post(`/Fuel/ValidateFuelInfoInsertion`, data);
+};
+
+export const GetKmRangeBeforeDateService = async (data) => {
+    return await http.post(`/Fuel/GetKmRangeBeforeDate`, data);
+};
+
+export const GetLastThreeFuelRecordService = async (id, date, time) => {
+    return await http.get(`/Fuel/GetLastThreeFuelRecord?vehicleId=${id}&date=${date}&time=${time}`);
+};
+
+export const GetWareHouseListService = async (id, type) => {
+    return await http.get(`/WareHouse/GetWareHouseList?tip=${type}&id=${id}`);
+};
+
+export const GetFuelCardInfoByFuelIdService = async (id) => {
+    return await http.get(`/Fuel/GetFuelCardInfoByFuelId?id=${id}`);
+};
+
+export const UpdateFuelService = async (data) => {
+    return await http.post(`/Fuel/UpdateFuel`, data);
+};
+
+export const GetFuelListService = async (search, page, data) => {
+    return await http.get(`/Fuel/GetFuelList?page=${page}&parameter=${search}`, data);
+};
+
 // harcama
 export const GetExpensesListByVehicleIdService = async (
     id,
@@ -86,4 +135,73 @@ export const UpdateAccidentItemService = async (data) => {
 
 export const GetAccidentsListService = async (search, page, data) => {
     return await http.get(`/Accident/GetAccidentsList?page=${page}&parameter=${search}`, data);
+};
+
+export const GetActiveInsuranceListService = async (search, page) => {
+    return await http.get(`/Insurance/GetActiveInsuranceList?page=${page}&parameter=${search}`);
+};
+
+// sigorta
+
+export const GetInsuranceListByVehicleIdService = async (
+    id,
+    search,
+    page,
+    data
+) => {
+    return await http.get(
+        `/Insurance/GetInsuranceListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+        data
+    );
+};
+
+export const AddInsuranceItemService = async (data) => {
+    return await http.post(`/Insurance/AddInsuranceItem`, data);
+};
+
+export const GetInsuranceItemByIdService = async (id) => {
+    return await http.get(`/Insurance/GetInsuranceItemById?id=${id}`);
+};
+
+export const UpdateInsuranceItemService = async (data) => {
+    return await http.post(`/Insurance/UpdateInsuranceItem`, data);
+};
+
+export const GetInsuranceListService = async (search, page, data) => {
+    return await http.get(`/Insurance/GetInsuranceList?page=${page}&parameter=${search}`, data);
+};
+
+// ceza
+export const GetVehicleFinesListByVehicleIdService = async (
+    id,
+    search,
+    page,
+    data
+) => {
+    return await http.get(
+        `/VehicleFines/GetVehicleFinesListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+        data
+    );
+};
+
+export const AddVehicleFineItemService = async (data) => {
+    return await http.post(`/VehicleFines/AddVehicleFineItem`, data);
+};
+
+export const GetPenaltyDefListService = async (search, page) => {
+    return await http.get(
+        `/PenaltyDef/GetPenaltyDefList?page=${page}&parameter=${search}`
+    );
+};
+
+export const GetVehicleFineItemService = async (id) => {
+    return await http.get(`/VehicleFines/GetVehicleFineItem?id=${id}`);
+};
+
+export const UpdateVehicleFineItemService = async (data) => {
+    return await http.post(`/VehicleFines/UpdateVehicleFineItem`, data);
+};
+
+export const GetVehicleFinesListService = async (search, page, data) => {
+    return await http.get(`/VehicleFines/GetVehicleFinesList?page=${page}&parameter=${search}`, data);
 };

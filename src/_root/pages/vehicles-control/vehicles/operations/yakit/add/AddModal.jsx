@@ -6,10 +6,9 @@ import { t } from 'i18next'
 import { Button, message, Modal, Tabs } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../../context/plakaSlice'
-import { AddYakitService, GetFuelCardContentByIdService } from '../../../../../../../api/services/vehicles/yakit/services'
+import { AddFuelService, GetFuelCardContentByIdService } from '../../../../../../../api/services/vehicles/operations_services'
 import GeneralInfo from './GeneralInfo'
 import PersonalFields from "../../../../../../components/form/personal-fields/PersonalFields"
-
 
 const AddModal = ({ setStatus }) => {
     const { data, plaka, setData, setHistory } = useContext(PlakaContext)
@@ -194,7 +193,7 @@ const AddModal = ({ setStatus }) => {
             "hasToInsertKmLog": values.engelle ? values.engelle : false
         }
 
-        AddYakitService(body).then(res => {
+        AddFuelService(body).then(res => {
             if (res?.data.statusCode === 200) {
                 setStatus(true)
                 setResponse("normal")

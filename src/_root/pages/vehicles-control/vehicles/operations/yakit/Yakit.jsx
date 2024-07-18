@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
+import axios from "axios";
 import {
   Modal,
   Button,
@@ -17,12 +18,12 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import {
-  DeleteYakitService,
-  GetYakitListByIdService,
-} from "../../../../../../api/services/vehicles/yakit/services";
+import { DeleteFuelCardService, GetFuelListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
+import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
+import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
 const Yakit = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
@@ -40,11 +41,18 @@ const Yakit = ({ visible, onClose, ids }) => {
   const [id, setId] = useState(0);
   const [search, setSearch] = useState("");
   const [openRowHeader, setOpenRowHeader] = useState(false);
+  const [country, setCountry] = useState({
+    name: "",
+    code: ""
+  });
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [keys, setKeys] = useState([]);
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await GetYakitListByIdService(
+      const res = await GetFuelListByVehicleIdService(
         search,
         tableParams.pagination.current,
         ids
@@ -70,7 +78,7 @@ const Yakit = ({ visible, onClose, ids }) => {
   }, [search, tableParams.pagination.current, status, ids]);
 
   const handleDelete = (data) => {
-    DeleteYakitService(data.siraNo).then((res) => {
+    DeleteFuelCardService(data.siraNo).then((res) => {
       if (res?.data.statusCode === 202) {
         setStatus(true);
       }
@@ -78,19 +86,31 @@ const Yakit = ({ visible, onClose, ids }) => {
     setStatus(false);
   };
 
-  const columns = [
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    if (res.status === 200)
+      setCountry({ name: res.data.country, code: res.data.countryCode });
+  }
+
+  const getColumns = (country) => [
     {
       title: t("plaka"),
       dataIndex: "plaka",
       key: 1,
       render: (text, record) => (
         <Button
+          className="plaka-button"
           onClick={() => {
             setUpdateModalOpen(true);
             setId(record.siraNo);
           }}
         >
-          {text}
+          <span>{country.code}</span>
+          <span>{text}</span>
         </Button>
       ),
     },
@@ -202,6 +222,16 @@ const Yakit = ({ visible, onClose, ids }) => {
     },
   ];
 
+  const [columns, setColumns] = useState(() =>
+    getColumns(country).map((column, i) => ({
+      ...column,
+      key: `${i}`,
+      onHeaderCell: () => ({
+        id: `${i}`,
+      }),
+    }))
+  );
+
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
       pagination,
@@ -230,23 +260,86 @@ const Yakit = ({ visible, onClose, ids }) => {
     value: key,
   }));
 
-  const filteredColumns = columns.filter((column) =>
-    checkedList.includes(column.key)
-  );
+  const newColumns = columns.map((col) => ({
+    ...col,
+    hidden: !checkedList.includes(col.key),
+  }));
+
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
 
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
   );
+
+  useEffect(() => {
+    setColumns(getColumns(country).map((column, i) => ({
+      ...column,
+      key: `${i}`,
+    })));
+  }, [country]);
+
+  // get selected rows data
+  if (!localStorage.getItem("selectedRowKeys"))
+    localStorage.setItem("selectedRowKeys", JSON.stringify([]));
+
+  const handleRowSelection = (row, selected) => {
+    if (selected) {
+      if (!keys.includes(row.aracId)) {
+        setKeys((prevKeys) => [...prevKeys, row.aracId]);
+        setRows((prevRows) => [...prevRows, row]);
+      }
+    } else {
+      setKeys((prevKeys) => prevKeys.filter((key) => key !== row.aracId));
+      setRows((prevRows) =>
+        prevRows.filter((item) => item.aracId !== row.aracId)
+      );
+    }
+  };
+
+  useEffect(
+    () => localStorage.setItem("selectedRowKeys", JSON.stringify(keys)),
+    [keys]
+  );
+
+  useEffect(() => {
+    const storedSelectedKeys = JSON.parse(
+      localStorage.getItem("selectedRowKeys")
+    );
+    if (storedSelectedKeys.length) {
+      setKeys(storedSelectedKeys);
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedSelectedKeys = JSON.parse(
+      localStorage.getItem("selectedRowKeys")
+    );
+    if (storedSelectedKeys.length) {
+      setSelectedRowKeys(storedSelectedKeys);
+    }
+  }, [tableParams.pagination.current]);
+
+  useEffect(() => {
+    setColumns(getColumns(country).map((column, i) => ({
+      ...column,
+      key: `${i}`,
+      onHeaderCell: () => ({
+        id: `${i}`,
+      }),
+    })));
+  }, [country]);
 
   return (
     <Modal
@@ -285,20 +378,40 @@ const Yakit = ({ visible, onClose, ids }) => {
         status={status}
       />
 
-      <Table
-        columns={filteredColumns}
-        dataSource={dataSource}
-        pagination={{
-          ...tableParams.pagination,
-          showTotal: (total) => <p className="text-info">[{total} {t("kayit")}]</p>,
-        }}
-        loading={loading}
-        size="small"
-        onChange={handleTableChange}
-        scroll={{
-          x: 1500,
-        }}
-      />
+      <DragAndDropContext items={columns} setItems={setColumns}>
+        <Table
+          rowKey={(record) => record.siraNo}
+          columns={newColumns}
+          dataSource={dataSource}
+          pagination={{
+            ...tableParams.pagination,
+            showTotal: (total) => (
+              <p className="text-info">
+                [{total} {t("kayit")}]
+              </p>
+            ),
+            locale: {
+              items_per_page: `/ ${t("sayfa")}`,
+            },
+          }}
+          scroll={{
+            x: 1500,
+          }}
+          loading={loading}
+          size="small"
+          onChange={handleTableChange}
+          rowSelection={{
+            selectedRowKeys: selectedRowKeys,
+            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+            onSelect: handleRowSelection,
+          }}
+          components={{
+            header: {
+              cell: SortableHeaderCell,
+            },
+          }}
+        />
+      </DragAndDropContext>
 
       <div className="grid gap-1 mt-10 text-center">
         <div className="col-span-3 p-10 border">

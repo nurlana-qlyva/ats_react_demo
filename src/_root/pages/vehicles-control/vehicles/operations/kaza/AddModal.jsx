@@ -15,8 +15,6 @@ import SigortaBilgileri from "./tabs/SigortaBilgileri";
 const AddModal = ({ setStatus }) => {
   const { data, plaka, setHistory } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [response, setResponse] = useState("normal");
 
   const [fields, setFields] = useState([
     {
@@ -122,7 +120,7 @@ const AddModal = ({ setStatus }) => {
       asliKusurKodId: values.asliKusurKodId || 0,
       taliKusurKodId: values.taliKusurKodId || 0,
       bankaKodId: values.bankaKodId || 0,
-      sigortaId: values.sigortaId || 0,
+      sigortaId: values.sigortaKodId || 0,
       aracKm: values.aracKm || 0,
       faturaTutar: values.faturaTutar || 0,
       geriOdemeTutar: values.geriOdemeTutar || 0,
@@ -154,7 +152,6 @@ const AddModal = ({ setStatus }) => {
     AddAccidentItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
-        setResponse("normal");
         setIsOpen(false);
         if (plaka.length === 1) {
           reset();
@@ -179,11 +176,7 @@ const AddModal = ({ setStatus }) => {
       key: "1",
       label: t("genelBilgiler"),
       children: (
-        <GeneralInfo
-          setIsValid={setIsValid}
-          response={response}
-          setResponse={setResponse}
-        />
+        <GeneralInfo />
       ),
     },
     {
@@ -216,7 +209,6 @@ const AddModal = ({ setStatus }) => {
       key="submit"
       className="btn btn-min primary-btn"
       onClick={onSubmit}
-      disabled={isValid}
     >
       {t("kaydet")}
     </Button>,
@@ -226,7 +218,6 @@ const AddModal = ({ setStatus }) => {
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setResponse("normal");
         setHistory([]);
       }}
     >

@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
+import axios from "axios";
 import {
   Modal,
   Button,
   Table,
-  Checkbox,
   Popconfirm,
   Input,
   Popover,
@@ -18,9 +18,10 @@ import {
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
-import { GetVehicleFinesListByVehicleIdService } from "../../../../../../api/services/vehicles/ceza/services";
-import AddModal from "./add/AddModal";
-import UpdateModal from "./update/UpdateModal";
+import { GetVehicleFinesListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
+import AddModal from "./AddModal";
+import UpdateModal from "./UpdateModal";
+import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
 const Ceza = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
@@ -40,6 +41,10 @@ const Ceza = ({ visible, onClose, ids }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
+  const [country, setCountry] = useState({
+    name: "",
+    code: ""
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,23 +63,35 @@ const Ceza = ({ visible, onClose, ids }) => {
           total: res?.data.recordCount,
         },
       });
-    }; 
+    };
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
 
-  const baseColumns = [
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    if (res.status === 200)
+      setCountry({ name: res.data.country, code: res.data.countryCode });
+  }
+
+  const getColumns = (country) => [
     {
       title: t("plaka"),
       dataIndex: "plaka",
       key: 1,
       render: (text, record) => (
         <Button
+          className="plaka-button"
           onClick={() => {
             setUpdateModalOpen(true);
             setId(record.siraNo);
           }}
         >
-          {text}
+          <span>{country.code}</span>
+          <span>{text}</span>
         </Button>
       ),
     },
@@ -105,7 +122,7 @@ const Ceza = ({ visible, onClose, ids }) => {
       key: 6,
     },
     {
-      title: t("surucuAdi"),
+      title: t("surucu"),
       dataIndex: "surucuIsim",
       key: 7,
     },
@@ -143,7 +160,7 @@ const Ceza = ({ visible, onClose, ids }) => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    baseColumns.map((column, i) => ({
+    getColumns(country).map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -185,19 +202,24 @@ const Ceza = ({ visible, onClose, ids }) => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
   );
+
 
   // get selected rows data
   if (!localStorage.getItem("selectedRowKeys"))
@@ -278,7 +300,7 @@ const Ceza = ({ visible, onClose, ids }) => {
 
       <DragAndDropContext items={columns} setItems={setColumns}>
         <Table
-          //   rowKey={(record) => record.aracId}
+          rowKey="siraNo"
           columns={newColumns}
           dataSource={dataSource}
           pagination={{

@@ -5,16 +5,14 @@ import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { PlakaContext } from "../../../../../../../context/plakaSlice";
-import GeneralInfo from "./GeneralInfo";
-import PersonalFields from "../../../../../../components/form/personal-fields/PersonalFields";
-import { AddVehicleFineItemService } from "../../../../../../../api/services/vehicles/ceza/services";
+import { PlakaContext } from "../../../../../../context/plakaSlice";
+import GeneralInfo from "./tabs/GeneralInfo";
+import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields";
+import { AddVehicleFineItemService } from "../../../../../../api/services/vehicles/ceza/services";
 
 const AddModal = ({ setStatus }) => {
   const { data, plaka, setHistory } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [response, setResponse] = useState("normal");
 
   const [fields, setFields] = useState([
     {
@@ -146,7 +144,6 @@ const AddModal = ({ setStatus }) => {
     AddVehicleFineItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
-        setResponse("normal");
         setIsOpen(false);
         if (plaka.length === 1) {
           reset();
@@ -171,11 +168,7 @@ const AddModal = ({ setStatus }) => {
       key: "1",
       label: t("genelBilgiler"),
       children: (
-        <GeneralInfo
-          setIsValid={setIsValid}
-          response={response}
-          setResponse={setResponse}
-        />
+        <GeneralInfo />
       ),
     },
     {
@@ -198,7 +191,6 @@ const AddModal = ({ setStatus }) => {
       key="submit"
       className="btn btn-min primary-btn"
       onClick={onSubmit}
-      disabled={isValid}
     >
       {t("kaydet")}
     </Button>,
@@ -208,7 +200,6 @@ const AddModal = ({ setStatus }) => {
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setResponse("normal");
         setHistory([]);
       }}
     >

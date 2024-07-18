@@ -21,6 +21,7 @@ import SortableHeaderCell from "../../../../../components/drag-drop-table/Sortab
 import { GetExpeditionsListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
+import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
 const Sefer = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
@@ -191,18 +192,22 @@ const Sefer = ({ visible, onClose, ids }) => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
   );
 
   // get selected rows data
@@ -248,7 +253,7 @@ const Sefer = ({ visible, onClose, ids }) => {
 
   return (
     <Modal
-      title={`${t("cezaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
+      title={`${t("seferBilgileri")} - ${t("plaka")}: [${plakaData}]`}
       open={visible}
       onCancel={onClose}
       maskClosable={false}
@@ -284,7 +289,7 @@ const Sefer = ({ visible, onClose, ids }) => {
 
       <DragAndDropContext items={columns} setItems={setColumns}>
         <Table
-          //   rowKey={(record) => record.aracId}
+          rowKey={(record) => record.siraNo}
           columns={newColumns}
           dataSource={dataSource}
           pagination={{

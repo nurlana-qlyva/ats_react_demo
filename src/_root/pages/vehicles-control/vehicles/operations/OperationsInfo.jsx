@@ -20,7 +20,7 @@ import Ceza from "./ceza/Ceza";
 import Harcama from "./harcama/Harcama";
 import Sefer from "./sefer/Sefer";
 import Kaza from "./kaza/Kaza";
-// import Bakim from './bakim/Bakim'
+import Sigorta from "./sigorta/Sigorta";
 
 const OperationsInfo = ({ ids }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -78,7 +78,7 @@ const OperationsInfo = ({ ids }) => {
     },
     {
       label: t("parcalar"),
-      key: "10",
+      key: "11",
       icon: <MdSettingsInputComponent className="text-info" />,
     },
   ];
@@ -122,6 +122,14 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Ceza
             visible={selectedItem === "6"}
+            onClose={() => setSelectedItem(null)}
+            ids={ids}
+          />
+        );
+      case "7":
+        return (
+          <Sigorta
+            visible={selectedItem === "7"}
             onClose={() => setSelectedItem(null)}
             ids={ids}
           />

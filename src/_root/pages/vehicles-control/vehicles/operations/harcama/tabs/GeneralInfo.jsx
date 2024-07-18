@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { t } from "i18next";
 import Plaka from "../../../../../../components/form/selects/Plaka";
 import Driver from "../../../../../../components/form/selects/Driver";
@@ -86,12 +85,6 @@ const GeneralInfo = () => {
       </div>
     </>
   );
-};
-
-GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

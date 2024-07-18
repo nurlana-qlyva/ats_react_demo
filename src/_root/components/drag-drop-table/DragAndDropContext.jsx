@@ -37,6 +37,7 @@ const DragAndDropContext = ({ children, items, setItems }) => {
     );
 
     const onDragEnd = ({ active, over }) => {
+        console.log(1)
         if (active.id !== over?.id) {
             setItems((prevState) => {
                 const activeIndex = prevState.findIndex((i) => i.key === active?.id);
@@ -83,9 +84,9 @@ const DragAndDropContext = ({ children, items, setItems }) => {
 };
 
 DragAndDropContext.propTypes = {
-    children: PropTypes.node.isRequired,
-    items: PropTypes.array.isRequired,
-    setItems: PropTypes.func.isRequired,
+    children: PropTypes.node,
+    items: PropTypes.array,
+    setItems: PropTypes.func,
 };
 
 export default DragAndDropContext;

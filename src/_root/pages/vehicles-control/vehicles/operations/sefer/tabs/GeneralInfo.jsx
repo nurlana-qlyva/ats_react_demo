@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import PropTypes from "prop-types";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
 import Plaka from "../../../../../../components/form/selects/Plaka";
@@ -19,7 +18,6 @@ const GeneralInfo = () => {
   const [open, setOpen] = useState(false);
   const [dorse, setDorse] = useState(false);
 
-console.log(dorse)
   const footer = [
     <Button
       key="submit"
@@ -137,7 +135,7 @@ console.log(dorse)
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTuru")}</label>
+                <label>{t("seferTip")}</label>
                 <CodeControl
                   name="seferTip"
                   codeName="seferTipKodId"
@@ -147,7 +145,7 @@ console.log(dorse)
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTuru")}</label>
+                <label>{t("seferDurum")}</label>
                 <CodeControl
                   name="seferDurum"
                   codeName="seferDurumKodId"
@@ -177,12 +175,6 @@ console.log(dorse)
       </Modal>
     </>
   );
-};
-
-GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

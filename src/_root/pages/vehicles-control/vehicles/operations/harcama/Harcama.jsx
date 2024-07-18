@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
+import axios from "axios";
 import {
     Modal,
     Button,
@@ -21,7 +22,7 @@ import SortableHeaderCell from "../../../../../components/drag-drop-table/Sortab
 import { GetExpensesListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
-
+import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
 const Harcama = ({ visible, onClose, ids }) => {
     const { plaka } = useContext(PlakaContext);
@@ -41,6 +42,10 @@ const Harcama = ({ visible, onClose, ids }) => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [keys, setKeys] = useState([]);
     const [rows, setRows] = useState([]);
+    const [country, setCountry] = useState({
+        name: "",
+        code: ""
+    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,19 +68,31 @@ const Harcama = ({ visible, onClose, ids }) => {
         fetchData();
     }, [search, tableParams.pagination.current, status, ids]);
 
-    const baseColumns = [
+    useEffect(() => {
+        getLocation();
+    }, []);
+
+    async function getLocation() {
+        const res = await axios.get("http://ip-api.com/json");
+        if (res.status === 200)
+            setCountry({ name: res.data.country, code: res.data.countryCode });
+    }
+
+    const getColumns = (country) => [
         {
             title: t("plaka"),
             dataIndex: "plaka",
             key: 1,
             render: (text, record) => (
                 <Button
+                    className="plaka-button"
                     onClick={() => {
                         setUpdateModalOpen(true);
                         setId(record.siraNo);
                     }}
                 >
-                    {text}
+                    <span>{country.code}</span>
+                    <span>{text}</span>
                 </Button>
             ),
         },
@@ -123,7 +140,7 @@ const Harcama = ({ visible, onClose, ids }) => {
     ];
 
     const [columns, setColumns] = useState(() =>
-        baseColumns.map((column, i) => ({
+        getColumns(country).map((column, i) => ({
             ...column,
             key: `${i}`,
             onHeaderCell: () => ({
@@ -165,18 +182,22 @@ const Harcama = ({ visible, onClose, ids }) => {
         value: key,
     }));
 
+    const moveCheckbox = (fromIndex, toIndex) => {
+        const updatedColumns = [...columns];
+        const [removed] = updatedColumns.splice(fromIndex, 1);
+        updatedColumns.splice(toIndex, 0, removed);
+
+        setColumns(updatedColumns);
+        setCheckedList(updatedColumns.map((col) => col.key));
+    };
+
     const content = (
-        <>
-            <Checkbox.Group
-                value={checkedList}
-                options={options}
-                onChange={(value) => {
-                    if (value.length > 0) {
-                        setCheckedList(value);
-                    }
-                }}
-            />
-        </>
+        <Content
+            options={options}
+            checkedList={checkedList}
+            setCheckedList={setCheckedList}
+            moveCheckbox={moveCheckbox}
+        />
     );
 
     // get selected rows data
@@ -222,7 +243,7 @@ const Harcama = ({ visible, onClose, ids }) => {
 
     return (
         <Modal
-            title={`${t("cezaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
+            title={`${t("harcamaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
             open={visible}
             onCancel={onClose}
             maskClosable={false}
@@ -258,7 +279,7 @@ const Harcama = ({ visible, onClose, ids }) => {
 
             <DragAndDropContext items={columns} setItems={setColumns}>
                 <Table
-                    //   rowKey={(record) => record.aracId}
+                    rowKey="siraNo"
                     columns={newColumns}
                     dataSource={dataSource}
                     pagination={{

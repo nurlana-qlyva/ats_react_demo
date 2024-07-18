@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import { Button, Input, Table } from "antd";
 import { t } from "i18next";
-import { GetVehiclesListService } from "../../../../../../../api/services/vehicles/vehicles/services";
+import dayjs from "dayjs";
+import { Input, Table } from "antd";
+import { GetActiveInsuranceListService } from "../../../../../../../api/services/vehicles/operations_services";
 
-const VehicleList = ({ setDorse, open }) => {
+const SigortaList = ({ setSigorta, open }) => {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -16,95 +16,52 @@ const VehicleList = ({ setDorse, open }) => {
         },
     });
     const [loading, setLoading] = useState(false);
-    const [country, setCountry] = useState({
-        name: "",
-        code: ""
-    });
 
-    useEffect(() => {
-        getLocation();
-    }, []);
-
-    async function getLocation() {
-        const res = await axios.get("http://ip-api.com/json");
-        if (res.status === 200)
-            setCountry({ name: res.data.country, code: res.data.countryCode });
-    }
-
-    const getBaseColumns = (country) => [
+    const columns = [
         {
-            title: t("aracPlaka"),
-            dataIndex: "plaka",
+            title: t("sigorta"),
+            dataIndex: "sigorta",
             key: 1,
-            render: (text) => (
-                <Button className="plaka-button"><span>{country.code}</span> <span>{text}</span></Button>
-            ),
         },
         {
-            title: t("aracTip"),
-            dataIndex: "aracTip",
+            title: t("baslamaTarih"),
+            dataIndex: "baslangicTarih",
             key: 2,
+            render: text => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: t("marka"),
-            dataIndex: "marka",
+            title: t("policeNo"),
+            dataIndex: "policeNo",
             key: 3,
         },
         {
-            title: t("model"),
-            dataIndex: "model",
+            title: t("firma"),
+            dataIndex: "firma",
             key: 4,
         },
-        {
-            title: t("grup"),
-            dataIndex: "grup",
-            key: 5,
-        },
-        {
-            title: t("guncelKm"),
-            dataIndex: "guncelKm",
-            key: 6,
-        },
-        {
-            title: t("renk"),
-            dataIndex: "renk",
-            key: 7,
-        },
-        {
-            title: t("yil"),
-            dataIndex: "yil",
-            key: 8,
-        },
-        {
-            title: t("yakitTip"),
-            dataIndex: "yakitTip",
-            key: 9,
-        },
     ];
-
-    const columns = getBaseColumns(country)
 
     useEffect(() => {
         if (!open) {
             setSelectedRowKeys([]);
-            setDorse([]);
+            setSigorta([]);
         }
     }, [open]);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const res = await GetVehiclesListService(
+            const res = await GetActiveInsuranceListService(
                 search,
                 tableParams.pagination.current
             );
             setLoading(false);
-            setData(res?.data.vehicleList);
+            setData(res?.data.list);
             setTableParams({
                 ...tableParams,
                 pagination: {
                     ...tableParams.pagination,
-                    total: res?.data.vehicleCount,
+                    total: res?.data.recordCount,
                 },
             });
         };
@@ -128,7 +85,7 @@ const VehicleList = ({ setDorse, open }) => {
         selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
             setSelectedRowKeys(selectedRowKeys);
-            setDorse(selectedRows);
+            setSigorta(selectedRows);
         },
     };
 
@@ -157,22 +114,16 @@ const VehicleList = ({ setDorse, open }) => {
                     }}
                     onChange={handleTableChange}
                     loading={loading}
-                    rowKey="aracId"
-                    size="small"
-                    scroll={
-                        {
-                            x: 1500
-                        }
-                    }
+                    rowKey="siraNo"
                 />
             </div>
         </>
     );
 };
 
-VehicleList.propTypes = {
-    setDorse: PropTypes.func,
+SigortaList.propTypes = {
+    setSigorta: PropTypes.func,
     open: PropTypes.bool,
 };
 
-export default VehicleList;
+export default SigortaList;

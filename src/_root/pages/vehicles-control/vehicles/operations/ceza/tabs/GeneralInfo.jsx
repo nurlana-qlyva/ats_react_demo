@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import PropTypes from "prop-types";
+import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
-
 import Plaka from "../../../../../../components/form/selects/Plaka";
 import Driver from "../../../../../../components/form/selects/Driver";
 import Location from "../../../../../../components/form/tree/Location";
@@ -16,6 +15,8 @@ import NumberInput from "../../../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
 import CezaMaddesiTable from "./CezaMaddesi";
+
+dayjs.locale("tr");
 
 const GeneralInfo = () => {
   const { setValue, watch } = useFormContext();
@@ -131,7 +132,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("bankaHesabi")}</label>
+                <label>{t("bankaHesap")}</label>
                 <TextInput name="bankaHesap" />
               </div>
             </div>
@@ -143,7 +144,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaPuani")}</label>
+                <label>{t("cezaPuan")}</label>
                 <NumberInput name="cezaPuan" />
               </div>
             </div>
@@ -159,13 +160,13 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTutari")}</label>
+                <label>{t("cezaTutar")}</label>
                 <NumberInput name="tutar" />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("erkenIndirimTutar")}</label>
+                <label>{t("erkenOdemeIndirimOran")}</label>
                 <NumberInput name="indirimOran" />
               </div>
             </div>
@@ -178,7 +179,7 @@ const GeneralInfo = () => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("toplamTutar")}</label>
-                <ReadonlyInput name="toplamTutar" checked={true} />
+                <NumberInput name="toplamTutar" />
               </div>
             </div>
           </div>
@@ -208,7 +209,7 @@ const GeneralInfo = () => {
       </div>
 
       <Modal
-        title={t("Ceza Maddeleri")}
+        title={t("cezaMaddeleri")}
         open={open}
         onCancel={() => setOpen(false)}
         maskClosable={false}
@@ -219,12 +220,6 @@ const GeneralInfo = () => {
       </Modal>
     </>
   );
-};
-
-GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

@@ -1,17 +1,19 @@
 import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { t } from "i18next";
-import { Table, Popover, Button, Input, Checkbox } from "antd";
+import axios from "axios";
+import { Table, Popover, Button, Input } from "antd";
 import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { GetVehiclesListService } from "../../../../api/services/vehicles/vehicles/services";
+import { DemoService } from "../../../../api/service";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import AddModal from "./add/AddModal";
 import Filter from "./filter/Filter";
 import OperationsInfo from "./operations/OperationsInfo";
-import { DemoService } from "../../../../api/service";
 
 const breadcrumb = [
   { href: "/", title: <HomeOutlined /> },
@@ -35,40 +37,49 @@ const Vehicles = () => {
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
   const [filterData, setFilterData] = useState({});
+  const [country, setCountry] = useState({
+    name: "",
+    code: ""
+  });
 
-  const baseColumns = [
-    {
-      title: t("aracId"),
-      dataIndex: "aracId",
-      key: 1,
-      render: (text, record) => (
-        <Link to={`/detay/${record.aracId}`}>{text}</Link>
-      ),
-    },
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    if (res.status === 200)
+      setCountry({ name: res.data.country, code: res.data.countryCode });
+  } 
+
+  const getBaseColumns = (country) => [
     {
       title: t("aracPlaka"),
       dataIndex: "plaka",
-      key: 2,
+      key: 1,
+      render: (text, record) => (
+        <Link to={`/detay/${record.aracId}`} className="plaka-button"><span>{country.code}</span> <span>{text}</span></Link>
+      ),
     },
     {
       title: t("aracTip"),
       dataIndex: "aracTip",
-      key: 3,
+      key: 2,
     },
     {
       title: t("marka"),
       dataIndex: "marka",
-      key: 4,
+      key: 3,
     },
     {
       title: t("model"),
       dataIndex: "model",
-      key: 5,
+      key: 4,
     },
     {
       title: t("grup"),
       dataIndex: "grup",
-      key: 6,
+      key: 5,
     },
     {
       title: t("guncelKm"),
@@ -93,7 +104,7 @@ const Vehicles = () => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    baseColumns.map((column, i) => ({
+    getBaseColumns(country).map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -163,19 +174,24 @@ const Vehicles = () => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
   );
+
   // get selected rows data
   if (!localStorage.getItem("selectedRowKeys"))
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
@@ -224,6 +240,16 @@ const Vehicles = () => {
       setSelectedRowKeys(storedSelectedKeys);
     }
   }, [tableParams.pagination.current]);
+
+  useEffect(() => {
+    setColumns(getBaseColumns(country).map((column, i) => ({
+      ...column,
+      key: `${i}`,
+      onHeaderCell: () => ({
+        id: `${i}`,
+      }),
+    })));
+  }, [country]);
 
   return (
     <>

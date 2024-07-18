@@ -18,7 +18,7 @@ import {
   GetKmRangeBeforeDateService,
   GetMaterialPriceService,
   ValidateFuelInfoInsertionService,
-} from "../../../../../../../api/services/vehicles/yakit/services";
+} from "../../../../../../../api/services/vehicles/operations_services";
 import { UpdateVehicleDetailsInfoService } from "../../../../../../../api/services/vehicles/vehicles/services";
 import HiddenInput from "../../../../../../components/form/inputs/HiddenInput";
 import ReadonlyInput from "../../../../../../components/form/inputs/ReadonlyInput";

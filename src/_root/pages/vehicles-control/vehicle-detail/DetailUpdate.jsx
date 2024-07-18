@@ -230,26 +230,26 @@ const DetailUpdate = () => {
       setValue(
         "muayeneTarih",
         res?.data.muayeneTarih &&
-          res?.data.muayeneTarih !== "1970-01-01T00:00:00"
+          res?.data.muayeneTarih !== "1901-01-01T00:00:00"
           ? dayjs(res?.data.muayeneTarih)
           : null
       );
       setValue(
         "sozlesmeTarih",
         res?.data.sozlesmeTarih &&
-          res?.data.sozlesmeTarih !== "1970-01-01T00:00:00"
+          res?.data.sozlesmeTarih !== "1901-01-01T00:00:00"
           ? dayjs(res?.data.sozlesmeTarih)
           : null
       );
       setValue(
         "vergiTarih",
-        res?.data.vergiTarih && res?.data.vergiTarih !== "1970-01-01T00:00:00"
+        res?.data.vergiTarih && res?.data.vergiTarih !== "1901-01-01T00:00:00"
           ? dayjs(res?.data.vergiTarih)
           : null
       );
       setValue(
         "egzosTarih",
-        res?.data.egzosTarih && res?.data.egzosTarih !== "1970-01-01T00:00:00"
+        res?.data.egzosTarih && res?.data.egzosTarih !== "1901-01-01T00:00:00"
           ? dayjs(res?.data.egzosTarih)
           : null
       );

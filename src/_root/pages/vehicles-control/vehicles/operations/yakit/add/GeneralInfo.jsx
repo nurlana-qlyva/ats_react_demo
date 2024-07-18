@@ -8,7 +8,7 @@ import { Button, Checkbox, ConfigProvider, DatePicker, Divider, InputNumber, mes
 import { ArrowUpOutlined, CheckOutlined } from '@ant-design/icons'
 import { PlakaContext } from '../../../../../../../context/plakaSlice'
 import { SelectContext } from '../../../../../../../context/selectSlice'
-import { GetKmRangeBeforeDateService, GetLastThreeFuelRecordService, GetMaterialPriceService, ValidateFuelInfoInsertionService } from '../../../../../../../api/services/vehicles/yakit/services'
+import { GetKmRangeBeforeDateService, GetLastThreeFuelRecordService, GetMaterialPriceService, ValidateFuelInfoInsertionService } from '../../../../../../../api/services/vehicles/operations_services'
 import { UpdateVehicleDetailsInfoService } from '../../../../../../../api/services/vehicles/vehicles/services'
 import Plaka from "../../../../../../components/form/selects/Plaka"
 import Driver from "../../../../../../components/form/selects/Driver"

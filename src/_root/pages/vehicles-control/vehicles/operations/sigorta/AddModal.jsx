@@ -6,7 +6,7 @@ import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { AddExpeditionItemService } from "../../../../../../api/services/vehicles/operations_services";
+import { AddInsuranceItemService } from "../../../../../../api/services/vehicles/operations_services";
 import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields"
 import GeneralInfo from "./tabs/GeneralInfo";
 
@@ -68,7 +68,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 881,
+      code: 885,
       name2: "ozelAlanKodId9",
     },
     {
@@ -76,7 +76,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 882,
+      code: 886,
       name2: "ozelAlanKodId10",
     },
     {
@@ -108,21 +108,24 @@ const AddModal = ({ setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       aracId: data.aracId,
-      surucuId1: values.surucuId1 || 0,
-      surucuId2: values.surucuId2 || 0,
       aciklama: values.aciklama,
-      dorseId: values.dorseId || 0,
-      guzergahId: values.guzergahId || 0,
-      seferTipKodId: values.seferTipKodId || 0,
-      seferDurumKodId: values.seferDurumKodId || 0,
-      cikisTarih: dayjs(values.cikisTarih).format("YYYY-MM-DD"),
-      varisTarih: dayjs(values.varisTarih).format("YYYY-MM-DD"),
-      cikisSaat: dayjs(values.cikisSaat).format("HH:mm:ss"),
-      varisSaat: dayjs(values.varisSaat).format("HH:mm:ss"),
-      seferAdedi: values.seferAdedi || 0,
-      cikisKm: values.cikisKm || 0,
-      varisKm: values.varisKm || 0,
-      farkKm: values.farkKm || 0,
+      tutar: values.tutar || 0,
+      policeNo: values.policeNo,
+      aktif: values.aktif,
+      varsayilan: values.varsayilan,
+      yetkili: values.yetkili,
+      ruhsatBelgeSeriNo: values.ruhsatBelgeSeriNo,
+      adres: values.adres,
+      il: values.il,
+      ilce: values.ilce,
+      telefon: values.telefon,
+      baslangicTarih: dayjs(values.baslangicTarih).format("YYYY-MM-DD"),
+      bitisTarih: dayjs(values.bitisTarih).format("YYYY-MM-DD"),
+      aracBedeli: values.aracBedeli || 0,
+      hasarIndirimi: values.hasarIndirimi || 0,
+      firmaId: values.firmaId || 0,
+      acentaKodId: values.acentaKodId || 0,
+      sigortaKodId: values.sigortaKodId || 0,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -137,7 +140,7 @@ const AddModal = ({ setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
-    AddExpeditionItemService(body).then((res) => {
+    AddInsuranceItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsOpen(false);
@@ -154,7 +157,7 @@ const AddModal = ({ setStatus }) => {
   });
 
   const personalProps = {
-    form: "SEFER",
+    form: "SIGORTA",
     fields,
     setFields,
   };
@@ -209,7 +212,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniSeferGirisi")}
+        title={t("yeniSigortaGirisi")}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
         maskClosable={false}

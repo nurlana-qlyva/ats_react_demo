@@ -5,7 +5,6 @@ import 'dayjs/locale/tr'
 import TextInput from '../../../../components/form/inputs/TextInput'
 import CodeControl from '../../../../components/form/selects/CodeControl'
 import NumberInput from '../../../../components/form/inputs/NumberInput'
-import ValidationInput from '../../../../components/form/inputs/ValidationInput'
 import Location from '../../../../components/form/tree/Location'
 import Marka from '../../../../components/form/selects/Marka'
 import Model from '../../../../components/form/selects/Model'
@@ -30,7 +29,7 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("plaka")}</label>
-                                <ValidationInput name="plaka" style={validateStyle} />
+                                <TextInput name="plaka" style={validateStyle} />
                             </div>
                         </div>
                         <div className="col-span-4">
@@ -97,8 +96,8 @@ const GeneralInfo = ({ isValid }) => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="">{t("mulkiyet")}</label>
-                                <TextInput name="mulkiyet" />
+                                <label htmlFor="">{t("mulkiyet")} -- ?</label>
+                                <TextInput name="mulkiyet" readonly={true} />
                             </div>
                         </div>
                         <div className="col-span-4">
