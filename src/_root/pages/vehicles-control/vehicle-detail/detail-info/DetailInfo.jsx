@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { t } from "i18next";
 import {
   DownOutlined,
   UserOutlined,
@@ -26,7 +27,6 @@ import TasitKarti from "./modals/tasit-karti/TasitKarti";
 import Kapasite from "./modals/kapasite/Kapasite";
 import Aksesuar from "./modals/aksesuar/Aksesuar";
 import Surucu from "./modals/surucu/Surucu";
-import { t } from "i18next";
 
 const DetailInfo = ({ id }) => {
   const [selectedItem, setSelectedItem] = useState(null);

@@ -20,15 +20,11 @@ import PersonalFields from "../../../../../../components/form/personal-fields/Pe
 import PhotoUpload from "../../../../../../components/upload/PhotoUpload";
 import FileUpload from "../../../../../../components/upload/FileUpload";
 
-const UpdateModal = ({
-  updateModal,
-  setUpdateModal,
-  id,
-  setStatus,
-}) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { data, plaka, setData } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState(false);
   const [response, setResponse] = useState("normal");
+  const [activeKey, setActiveKey] = useState(1);
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -139,7 +135,7 @@ const UpdateModal = ({
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
+  console.log(id);
   const { handleSubmit, reset, watch, setValue } = methods;
 
   useEffect(() => {
@@ -174,12 +170,19 @@ const UpdateModal = ({
         setValue("fullDepo", res?.data.fullDepo);
         setValue("stokKullanimi", res?.data.stokKullanimi);
         setValue("aciklama", res?.data.aciklama);
-        setValue("faturaTarih", res?.data.faturaTarih && res?.data.faturaTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.faturaTarih)
-          : null);
-        setValue("tarih", res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.tarih)
-          : null);
+        setValue(
+          "faturaTarih",
+          res?.data.faturaTarih &&
+            res?.data.faturaTarih !== "1901-01-01T00:00:00"
+            ? dayjs(res?.data.faturaTarih)
+            : null
+        );
+        setValue(
+          "tarih",
+          res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+            ? dayjs(res?.data.tarih)
+            : null
+        );
         setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"));
         setValue("ozelAlan1", res?.data.ozelAlan1);
         setValue("ozelAlan2", res?.data.ozelAlan2);
@@ -237,21 +240,22 @@ const UpdateModal = ({
   const onSubmit = handleSubmit((values) => {
     const kmLog = !watch("engelle")
       ? {
-        siraNo: watch("kmLogId"),
-        kmAracId: watch("aracId"),
-        plaka: watch("plaka"),
-        tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
-        saat: dayjs(watch("saat")).format("HH:mm:ss"),
-        yeniKm: watch("alinanKm"),
-        eskiKm: watch("eskiKm"),
-        dorse: false,
-        kaynak: "YAKIT",
-        lokasyonId: watch("lokasyonId"),
-      }
+          siraNo: watch("kmLogId"),
+          kmAracId: watch("aracId"),
+          plaka: watch("plaka"),
+          tarih: dayjs(watch("tarih")).format("YYYY-MM-DD"),
+          saat: dayjs(watch("saat")).format("HH:mm:ss"),
+          yeniKm: watch("alinanKm"),
+          eskiKm: watch("eskiKm"),
+          dorse: false,
+          kaynak: "YAKIT",
+          lokasyonId: watch("lokasyonId"),
+        }
       : null;
 
     const body = {
       siraNo: id,
+      aracId: data.aracId,
       plaka: values.plaka,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),
@@ -324,6 +328,7 @@ const UpdateModal = ({
         } else {
           reset();
         }
+        setActiveKey(1);
         if (plaka.length === 1) {
           GetFuelCardContentByIdService(plaka[0].id).then((res) => {
             setData(res.data);
@@ -347,13 +352,13 @@ const UpdateModal = ({
     {
       key: "1",
       label: t("genelBilgiler"),
-      children:
+      children: (
         <GeneralInfo
           setIsValid={setIsValid}
           response={response}
           setResponse={setResponse}
         />
-      ,
+      ),
     },
     {
       key: "2",
@@ -418,7 +423,7 @@ const UpdateModal = ({
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs defaultActiveKey={activeKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

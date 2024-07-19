@@ -312,6 +312,9 @@ const Vehicles = () => {
                 cell: SortableHeaderCell,
               },
             }}
+            scroll={
+              {x: 1200}
+            }
           />
         </DragAndDropContext>
       </div>

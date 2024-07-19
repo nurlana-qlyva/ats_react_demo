@@ -21,7 +21,6 @@ import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
 import TextInput from "../../../components/form/inputs/TextInput";
 import CodeControl from "../../../components/form/selects/CodeControl";
-import ReadonlyInput from "../../../components/form/inputs/ReadonlyInput";
 import Location from "../../../components/form/tree/Location";
 import Marka from "../../../components/form/selects/Marka";
 import Model from "../../../components/form/selects/Model";
@@ -173,7 +172,7 @@ const DetailUpdate = () => {
     defaultValues: defaultValues,
   });
 
-  const { setValue, handleSubmit } = methods;
+  const { setValue, handleSubmit, watch } = methods;
 
   useEffect(() => {
     setLoading(true);
@@ -302,21 +301,22 @@ const DetailUpdate = () => {
       setLoadingFiles(false);
     }
   };
-
+console.log(watch("ozelAlanKodId9"))
+console.log(watch("ozelAlanKodId10"))
   const onSubmit = handleSubmit((values) => {
     const data = {
       aracId: id,
       plaka: values.plaka,
       yil: values.yil ? values.yil : 0,
-      aracTipId: values.aracTipId || -1,
+      aracTipId: values.aracTipId || 0,
       guncelKm: values.guncelKm ? values.guncelKm : 0,
-      markaId: values.markaId || -1,
-      modelId: values.modelId || -1,
-      aracGrubuId: values.aracGrubuId || -1,
-      aracRenkId: values.aracRenkId || -1,
-      lokasyonId: values.lokasyonId || -1,
-      departmanId: values.departmanId || -1,
-      surucuId: values.surucuId || -1,
+      markaId: values.markaId || 0,
+      modelId: values.modelId || 0,
+      aracGrubuId: values.aracGrubuId || 0,
+      aracRenkId: values.aracRenkId || 0,
+      lokasyonId: values.lokasyonId || 0,
+      departmanId: values.departmanId || 0,
+      surucuId: values.surucuId || 0,
       muayeneTarih: values?.muayeneTarih
         ? dayjs(values?.muayeneTarih).format("YYYY-MM-DD")
         : null,
@@ -482,7 +482,7 @@ const DetailUpdate = () => {
                     <div className="col-span-10">
                       <div className="flex flex-col gap-1">
                         <label htmlFor="guncelKm">{t("guncelKm")}</label>
-                        <ReadonlyInput name="guncelKm" checked={true} />
+                        <TextInput name="guncelKm" readonly={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">

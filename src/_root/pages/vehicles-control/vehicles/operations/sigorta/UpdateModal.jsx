@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { GetInsuranceItemByIdService, UpdateInsuranceItemService } from "../../../../../../api/services/vehicles/operations_services";
+import {
+  GetInsuranceItemByIdService,
+  UpdateInsuranceItemService,
+} from "../../../../../../api/services/vehicles/operations_services";
 import {
   GetDocumentsByRefGroupService,
   GetPhotosByRefGroupService,
@@ -16,9 +19,9 @@ import PersonalFields from "../../../../../components/form/personal-fields/Perso
 import FileUpload from "../../../../../components/upload/FileUpload";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
-
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -118,12 +121,19 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       GetInsuranceItemByIdService(id).then((res) => {
         setValue("acenta", res?.data.acenta);
         setValue("acentaKodId", res?.data.acentaKodId);
-        setValue("baslangicTarih", res?.data.baslangicTarih && res?.data.baslangicTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.baslangicTarih)
-          : null);
-        setValue("bitisTarih", res?.data.bitisTarih && res?.data.bitisTarih !== "1901-01-01T00:00:00"
-          ? dayjs(res?.data.bitisTarih)
-          : null);
+        setValue(
+          "baslangicTarih",
+          res?.data.baslangicTarih &&
+            res?.data.baslangicTarih !== "1901-01-01T00:00:00"
+            ? dayjs(res?.data.baslangicTarih)
+            : null
+        );
+        setValue(
+          "bitisTarih",
+          res?.data.bitisTarih && res?.data.bitisTarih !== "1901-01-01T00:00:00"
+            ? dayjs(res?.data.bitisTarih)
+            : null
+        );
         setValue("aciklama", res?.data.aciklama);
         setValue("adres", res?.data.adres);
         setValue("aktif", res?.data.aktif);
@@ -192,6 +202,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   };
 
   const onSubmit = handleSubmit((values) => {
+
     const body = {
       siraNo: id,
       aciklama: values.aciklama,
@@ -224,7 +235,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       ozelAlanKodId10: values.ozelAlanKodId10 || 0,
       ozelAlan11: values.ozelAlan11 || 0,
       ozelAlan12: values.ozelAlan12 || 0,
-    }
+    };
 
     UpdateInsuranceItemService(body).then((res) => {
       if (res.data.statusCode === 202) {
@@ -235,13 +246,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         } else {
           reset();
         }
+        setActiveKey("1");
       }
-    })
+    });
 
     uploadFiles();
     uploadImages();
-    setStatus(false)
-  })
+    setStatus(false);
+  });
 
   const personalProps = {
     form: "SIGORTA",
@@ -285,11 +297,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   ];
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-    >
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
       {t("guncelle")}
     </Button>,
     <Button
@@ -298,6 +306,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1");
       }}
     >
       {t("iptal")}
@@ -315,7 +324,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs defaultActiveKey={activeKey} items={items} />
         </form>
       </FormProvider>
     </Modal>

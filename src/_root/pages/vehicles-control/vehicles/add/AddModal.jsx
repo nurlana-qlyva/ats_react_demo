@@ -14,6 +14,7 @@ import { CodeItemValidateService } from '../../../../../api/services/code/servic
 const AddModal = ({ setStatus }) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isValid, setIsValid] = useState("normal");
+    const [activeKey, setActiveKey] = useState(1);
 
     const [fields, setFields] = useState([
         {
@@ -166,6 +167,7 @@ const AddModal = ({ setStatus }) => {
             "departmanId": value.departmanId || -1,
             "surucuId": value.surucuId || -1,
             "aracTipId": value.aracTipId || -1,
+            "aracTipId": value.aracTipId || -1,
             "guncelKm": value.guncelKm || 0,
             "muayeneTarih": value.muayeneTarih ? dayjs(value.muayeneTarih).format("YYYY-MM-DD") : null,
             "egzosTarih": value.egzosTarih ? dayjs(value.egzosTarih).format("YYYY-MM-DD") : null,
@@ -192,6 +194,7 @@ const AddModal = ({ setStatus }) => {
                 setIsModalOpen(false)
                 setStatus(true)
                 reset()
+                setActiveKey(1)
             }
         })
         setStatus(false)
@@ -237,7 +240,7 @@ const AddModal = ({ setStatus }) => {
             <Modal open={isModalOpen} onOk={handleOk} onCancel={() => setIsModalOpen(false)} maskClosable={false} footer={footer} width={1200}>
                 <FormProvider {...methods}>
                     <form>
-                        <Tabs defaultActiveKey="1" items={items} />
+                        <Tabs defaultActiveKey={activeKey} items={items} />
                     </form>
                 </FormProvider>
             </Modal>

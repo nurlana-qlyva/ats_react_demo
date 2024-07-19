@@ -1,7 +1,7 @@
 import http from "../../http";
 
 // yakit
-export const GetFuelListByVehicleIdService = async (search, page, data) => {
+export const GetFuelListByVehicleIdService = async ( search, page, data) => {
     return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}&parameter=${search}`, data);
 };
 

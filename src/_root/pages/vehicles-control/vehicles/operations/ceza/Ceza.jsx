@@ -3,18 +3,8 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import axios from "axios";
-import {
-  Modal,
-  Button,
-  Table,
-  Popconfirm,
-  Input,
-  Popover,
-} from "antd";
-import {
-  DeleteOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { Modal, Button, Table, Popconfirm, Input, Popover } from "antd";
+import { DeleteOutlined, MenuOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
@@ -43,7 +33,7 @@ const Ceza = ({ visible, onClose, ids }) => {
   const [rows, setRows] = useState([]);
   const [country, setCountry] = useState({
     name: "",
-    code: ""
+    code: "",
   });
 
   useEffect(() => {
@@ -169,6 +159,15 @@ const Ceza = ({ visible, onClose, ids }) => {
     }))
   );
 
+  useEffect(() => {
+    setColumns(
+      getColumns(country).map((column, i) => ({
+        ...column,
+        key: `${i}`,
+      }))
+    );
+  }, [country]);
+
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
       pagination,
@@ -219,7 +218,6 @@ const Ceza = ({ visible, onClose, ids }) => {
       moveCheckbox={moveCheckbox}
     />
   );
-
 
   // get selected rows data
   if (!localStorage.getItem("selectedRowKeys"))

@@ -83,25 +83,25 @@
   align-items: center;
   transition: all .3s linear;
   padding: 0;
-  min-width: 180px;
+  min-width: 130px;
 }
 
-.plaka-button span:first-child {
-  width: 30%;
-  background-color: var(--dark-blue);
+.plaka-button span:first-of-type {
+  width: 20%;
+  background-color: var(--primary);
   color: var(--white);
-  padding: 6px;
+  padding: 4px;
   box-sizing: border-box;
 }
 
-.plaka-button span:last-child {
-  width: 70%;
+.plaka-button span:last-of-type {
+  width: 80%;
   background-color: var(--white);
   color: var(--black);
   font-weight: 600;
-  padding: 6px;
+  padding: 4px;
 }
 
-.plaka-button:hover span:last-child {
+.plaka-button:hover span:last-of-type {
   background-color: var(--gray-400);
 }

@@ -14,7 +14,35 @@ import Textarea from "../../../../../../components/form/inputs/Textarea";
 const Teknik = ({ visible, onClose, id }) => {
   const [status, setStatus] = useState(false);
 
-  const defaultValues = {};
+  const defaultValues = {
+    tsasiNo: null,
+    tsilindirHacmi: null,
+    tsilindirSaysi: null,
+    tmotorGucu: null,
+    tanahtarKod: null,
+    tmotorNo: null,
+    ttork: null,
+    tvitesTipi: null,
+    tradyoKod: null,
+    dtyKapiAdedi: null,
+    dtyMaxHiz: null,
+    dtyHizlanma: null,
+    dtyCekisAksi: null,
+    tnetAgirlik: null,
+    tyakitHacmi: null,
+    tboy: null,
+    tgenislik: null,
+    tyukseklik: null,
+    tonlastik: null,
+    tarkalastik: null,
+    tkatarAgirlik: null,
+    tbagajHacmi: null,
+    tonBasinc: null,
+    tarkaBasinc: null,
+    taciklama: null,
+    dtyAksMesafesi: null,
+    dtyIcYukseklik: null,
+  };
   const methods = useForm({
     defaultValues: defaultValues,
   });

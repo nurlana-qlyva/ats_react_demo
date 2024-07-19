@@ -13,6 +13,7 @@ import GeneralInfo from "./tabs/GeneralInfo";
 const AddModal = ({ setStatus }) => {
   const { data, plaka, setHistory } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeKey, setActiveKey] = useState(1);
 
   const [fields, setFields] = useState([
     {
@@ -149,6 +150,7 @@ const AddModal = ({ setStatus }) => {
         } else {
           reset();
         }
+        setActiveKey(1)
       } else {
         message.error("Bir sorun oluşdu! Tekrar deneyiniz.");
       }
@@ -221,7 +223,7 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs defaultActiveKey={activeKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

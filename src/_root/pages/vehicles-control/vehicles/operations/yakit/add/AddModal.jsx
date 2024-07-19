@@ -15,6 +15,7 @@ const AddModal = ({ setStatus }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
+    const [activeKey, setActiveKey] = useState(1);
 
     const [fields, setFields] = useState([
         {
@@ -225,6 +226,7 @@ const AddModal = ({ setStatus }) => {
                     reset()
                 }
                 setHistory([])
+                setActiveKey(1)
                 if (plaka.length === 1) {
                     GetFuelCardContentByIdService(plaka[0].id).then(res => {
                         setData(res.data)
@@ -314,7 +316,7 @@ const AddModal = ({ setStatus }) => {
                 <p className="count">{t("guncelKm")}: [ {watch("guncelKmLog")} km ]</p>
                 <FormProvider {...methods}>
                     <form>
-                        <Tabs defaultActiveKey="1" items={items} />
+                        <Tabs defaultActiveKey={activeKey} items={items} />
                     </form>
                 </FormProvider>
             </Modal>

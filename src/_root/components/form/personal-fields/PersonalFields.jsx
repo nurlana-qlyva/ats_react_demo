@@ -8,6 +8,7 @@ import { CodeControlByIdService } from '../../../../api/services/code/services'
 
 const PersonalFields = ({ personalProps }) => {
     const [data, setData] = useState([])
+    const {watch} = useFormContext()
     const [originalFields, setOriginalFields] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [values, setValues] = useState(null)
@@ -80,6 +81,8 @@ const PersonalFields = ({ personalProps }) => {
         isModalOpen,
     }
 
+    console.log(watch("item.label"))
+
     return (
         <div className="grid grid-cols-12 gap-1">
             {fields.map(item => {
@@ -111,7 +114,7 @@ const PersonalFields = ({ personalProps }) => {
                                 className='personal-input'
                             />
                             <Controller
-                                name={item.label}
+                                name={item.name2}
                                 control={control}
                                 render={({ field }) => (
                                     <Select
@@ -127,11 +130,13 @@ const PersonalFields = ({ personalProps }) => {
                                             label: item.codeText,
                                             value: item.siraNo,
                                         }))}
+                                        value={watch(item.label)}
                                         onClick={() => handleClickSelect(item.code)}
                                         onChange={e => {
                                             field.onChange(e)
                                             if (e === undefined) {
-                                                setValue(item.label, "")
+                                                setValue(item.label, null)
+                                                setValue(item.name2, null)
                                             } else {
                                                 setValue(item.name2, e)
                                             }

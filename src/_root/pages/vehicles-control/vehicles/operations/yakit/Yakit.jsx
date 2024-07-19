@@ -18,7 +18,10 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { DeleteFuelCardService, GetFuelListByVehicleIdService } from "../../../../../../api/services/vehicles/operations_services";
+import {
+  DeleteFuelCardService,
+  GetFuelListByVehicleIdService,
+} from "../../../../../../api/services/vehicles/operations_services";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
@@ -43,19 +46,20 @@ const Yakit = ({ visible, onClose, ids }) => {
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [country, setCountry] = useState({
     name: "",
-    code: ""
+    code: "",
   });
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
-
+console.log(ids)
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const res = await GetFuelListByVehicleIdService(
+        
         search,
         tableParams.pagination.current,
-        ids
+        ids,
       );
       setLoading(false);
       setDataSource(res?.data.fuel_list);
@@ -284,10 +288,12 @@ const Yakit = ({ visible, onClose, ids }) => {
   );
 
   useEffect(() => {
-    setColumns(getColumns(country).map((column, i) => ({
-      ...column,
-      key: `${i}`,
-    })));
+    setColumns(
+      getColumns(country).map((column, i) => ({
+        ...column,
+        key: `${i}`,
+      }))
+    );
   }, [country]);
 
   // get selected rows data
@@ -332,13 +338,15 @@ const Yakit = ({ visible, onClose, ids }) => {
   }, [tableParams.pagination.current]);
 
   useEffect(() => {
-    setColumns(getColumns(country).map((column, i) => ({
-      ...column,
-      key: `${i}`,
-      onHeaderCell: () => ({
-        id: `${i}`,
-      }),
-    })));
+    setColumns(
+      getColumns(country).map((column, i) => ({
+        ...column,
+        key: `${i}`,
+        onHeaderCell: () => ({
+          id: `${i}`,
+        }),
+      }))
+    );
   }, [country]);
 
   return (
@@ -416,7 +424,9 @@ const Yakit = ({ visible, onClose, ids }) => {
       <div className="grid gap-1 mt-10 text-center">
         <div className="col-span-3 p-10 border">
           <h3 className="text-secondary">{t("toplamMaliyet")}</h3>
-          <p>{total?.total_cost} {t("tl")}</p>
+          <p>
+            {total?.total_cost} {t("tl")}
+          </p>
         </div>
         <div className="col-span-3 p-10 border">
           <h3 className="text-secondary">{t("toplamMiktar")}</h3>
