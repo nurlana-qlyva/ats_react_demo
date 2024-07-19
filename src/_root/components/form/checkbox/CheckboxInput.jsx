@@ -9,7 +9,7 @@ const CheckboxInput = ({ name, checked }) => {
         <Controller
             name={name}
             control={control}
-            render={({ field }) => <Checkbox {...field} disabled={checked} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
+            render={({ field }) => <Checkbox {...field} style={{width: 16}} disabled={checked} checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
         />
     )
 }

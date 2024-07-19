@@ -117,7 +117,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       GetVehicleFineItemService(id).then((res) => {
         setValue("aracId", res?.data.aracId);
         setValue("plaka", res?.data.plaka);
-        setValue("tarih", res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+        setValue("tarih", res?.data.tarih && res?.data.tarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.tarih)
           : null);
         setValue("saat", dayjs(res?.data.saat, "HH:mm:ss"));
@@ -134,10 +134,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("lokasyon", res?.data.lokasyon);
         setValue("lokasyonId", res?.data.lokasyonId);
         setValue("odeme", res?.data.odeme);
-        setValue("odemeTarih", res?.data.odemeTarih && res?.data.odemeTarih !== "1901-01-01T00:00:00"
+        setValue("odemeTarih", res?.data.odemeTarih && res?.data.odemeTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.odemeTarih)
           : null);
-        setValue("tebligTarih", res?.data.tebligTarih && res?.data.tebligTarih !== "1901-01-01T00:00:00"
+        setValue("tebligTarih", res?.data.tebligTarih && res?.data.tebligTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.tebligTarih)
           : null);
         setValue("surucuId", res?.data.surucuId);

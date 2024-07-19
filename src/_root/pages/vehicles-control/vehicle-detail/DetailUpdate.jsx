@@ -4,6 +4,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { HomeOutlined, LoadingOutlined } from "@ant-design/icons";
+import { IoLocationSharp } from "react-icons/io5";
+import { PiClockCounterClockwiseBold } from "react-icons/pi";
+import { FaCircle } from "react-icons/fa";
 import { Button, message, Modal, Spin, Tabs } from "antd";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import {
@@ -42,10 +45,16 @@ const DetailUpdate = () => {
   const { setPlaka, setAracId, setPrintData } = useContext(PlakaContext);
 
   const [dataSource, setDataSource] = useState([]);
+  const [data, setData] = useState({
+    aktif: false,
+    lokasyon: "",
+    guncelKm: 0,
+  });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(false);
   const [dataStatus, setDataStatus] = useState(false);
   const [kmHistryModal, setKmHistryModal] = useState(false);
+  const [guncelKmTarih, setGuncelKmTarih] = useState("");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -180,12 +189,22 @@ const DetailUpdate = () => {
       setLoading(false);
       setPrintData(res.data);
       setDataSource(res.data);
+      setData({
+        ...data,
+        aktif: res?.data.aktif,
+        lokasyon: res.data.lokasyon,
+        guncelKm: res?.data.guncelKm,
+      });
       setValue("plaka", res?.data.plaka);
       setPlaka(res?.data.plaka);
       setAracId(res?.data.aracId);
+      setGuncelKmTarih(res?.data.sonKmGuncellemeTarih)
       setValue("guncelKm", res?.data.guncelKm);
       setValue("aracTipId", res?.data.aracTipId ? res?.data.aracTipId : null);
       setValue("aracTip", res?.data.aracTip);
+      setValue("bagliAracId", res?.data.bagliAracId);
+      setValue("bagliArac", res?.data.bagliAracPlaka);
+      setValue("hgsNo", res?.data.hgsNo);
       setValue("AracCinsiKodId", res?.data.aracCinsi);
       setValue("markaId", res?.data.markaId ? res?.data.markaId : null);
       setValue("marka", res?.data.marka);
@@ -193,6 +212,11 @@ const DetailUpdate = () => {
       setValue("modelId", res?.data.modelId ? res?.data.modelId : null);
       setValue("surucuId", res?.data.surucuId ? res?.data.surucuId : null);
       setValue("surucu", res?.data.surucu);
+      setValue("kullanimAmaciKodId", res?.data.kullanimAmaciKodId);
+      setValue("kullanimAmaci", res?.data.kullanimAmaci);
+      setValue("yedekAnahtarId", res?.data.yedekAnahtarId);
+      setValue("yedekAnahtar", res?.data.yedekAnahtar);
+      setValue("anahtarKodu", res?.data.anahtarKodu);
       setValue(
         "lokasyonId",
         res?.data.lokasyonId ? res?.data.lokasyonId : null
@@ -209,6 +233,7 @@ const DetailUpdate = () => {
       );
       setValue("renk", res?.data.renk);
       setValue("yil", res?.data.yil);
+      setValue("aciklama", res?.data.aciklama);
       setValue(
         "aracGrubuId",
         res?.data.aracGrubuId ? res?.data.aracGrubuId : null
@@ -229,26 +254,26 @@ const DetailUpdate = () => {
       setValue(
         "muayeneTarih",
         res?.data.muayeneTarih &&
-          res?.data.muayeneTarih !== "1901-01-01T00:00:00"
+          res?.data.muayeneTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.muayeneTarih)
           : null
       );
       setValue(
         "sozlesmeTarih",
         res?.data.sozlesmeTarih &&
-          res?.data.sozlesmeTarih !== "1901-01-01T00:00:00"
+          res?.data.sozlesmeTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.sozlesmeTarih)
           : null
       );
       setValue(
         "vergiTarih",
-        res?.data.vergiTarih && res?.data.vergiTarih !== "1901-01-01T00:00:00"
+        res?.data.vergiTarih && res?.data.vergiTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.vergiTarih)
           : null
       );
       setValue(
         "egzosTarih",
-        res?.data.egzosTarih && res?.data.egzosTarih !== "1901-01-01T00:00:00"
+        res?.data.egzosTarih && res?.data.egzosTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.egzosTarih)
           : null
       );
@@ -301,15 +326,17 @@ const DetailUpdate = () => {
       setLoadingFiles(false);
     }
   };
-console.log(watch("ozelAlanKodId9"))
-console.log(watch("ozelAlanKodId10"))
+
   const onSubmit = handleSubmit((values) => {
     const data = {
       aracId: id,
       plaka: values.plaka,
+      anahtarKodu: values.anahtarKodu,
+      aciklama: values.aciklama,
       yil: values.yil ? values.yil : 0,
       aracTipId: values.aracTipId || 0,
       guncelKm: values.guncelKm ? values.guncelKm : 0,
+      kullanimAmaciKodId: values.kullanimAmaciKodId || 0,
       markaId: values.markaId || 0,
       modelId: values.modelId || 0,
       aracGrubuId: values.aracGrubuId || 0,
@@ -317,6 +344,9 @@ console.log(watch("ozelAlanKodId10"))
       lokasyonId: values.lokasyonId || 0,
       departmanId: values.departmanId || 0,
       surucuId: values.surucuId || 0,
+      bagliAracId: values.bagliAracId || 0,
+      yedekAnahtarKodId: values.yedekAnahtarKodId || 0,
+      hgsNo: values.hgsNo,
       muayeneTarih: values?.muayeneTarih
         ? dayjs(values?.muayeneTarih).format("YYYY-MM-DD")
         : null,
@@ -345,8 +375,8 @@ console.log(watch("ozelAlanKodId10"))
       ozelAlan6: values.ozelAlan6,
       ozelAlan7: values.ozelAlan7,
       ozelAlan8: values.ozelAlan8,
-      ozelAlanKodId9: values.ozelAlanKodId9  || 0,
-      ozelAlanKodId10: values.ozelAlanKodId10  || 0,
+      ozelAlanKodId9: values.ozelAlanKodId9 || 0,
+      ozelAlanKodId10: values.ozelAlanKodId10 || 0,
       ozelAlan11: values.ozelAlan11,
       ozelAlan12: values.ozelAlan12,
     };
@@ -448,10 +478,30 @@ console.log(watch("ozelAlanKodId10"))
                 className="car-image border"
                 alt=""
               />
+              <div className="flex gap-1 justify-between mt-10">
+                <p className="flex gap-1 align-center">
+                  <span>
+                    <FaCircle style={{ color: "green", fontSize: 12 }} />
+                  </span>
+                  <span>{data.aktif ? "Aktif" : "Pasif"}</span>
+                </p>
+                <p className="flex gap-1 align-center">
+                  <span>
+                    <IoLocationSharp style={{ color: "red" }} />
+                  </span>
+                  <span>{data.lokasyon}</span>
+                </p>
+                <p className="flex gap-1 align-center">
+                  <span>
+                    <PiClockCounterClockwiseBold style={{ color: "grey" }} />
+                  </span>
+                  <span>{data.guncelKm}</span>
+                </p>
+              </div>
             </div>
             <div className="col-span-9">
               <div className="grid p-10 gap-1">
-                <div className="col-span-12 flex gap-1 justify-end">
+                <div className="col-span-12 flex gap-1 justify-end mb-10">
                   <Button
                     className="btn btn-min primary-btn"
                     onClick={onSubmit}
@@ -481,12 +531,16 @@ console.log(watch("ozelAlanKodId10"))
                   <div className="grid gap-1">
                     <div className="col-span-10">
                       <div className="flex flex-col gap-1">
-                        <label htmlFor="guncelKm">{t("guncelKm")}</label>
+                        <label className="flex justify-between"><span>{t("guncelKm")}</span> <span className="text-info">[ {dayjs(guncelKmTarih).format("DD.MM.YYYY")} ]</span></label>
                         <TextInput name="guncelKm" readonly={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">
-                      <Button onClick={() => setKmHistryModal(true)}>
+                      <Button
+                        className="w-full"
+                        style={{padding: "4px 0"}}
+                        onClick={() => setKmHistryModal(true)}
+                      >
                         ...
                       </Button>
                     </div>

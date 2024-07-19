@@ -210,7 +210,7 @@ const DetailInfo = ({ id }) => {
 };
 
 DetailInfo.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
 };
 
 export default DetailInfo;

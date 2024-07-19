@@ -36,7 +36,7 @@ const CodeControl = ({ name, codeName, id, checked }) => {
                     value={watch(name)}
                     onClick={handleClick}
                     onChange={e => {
-                        field.onChange(e)
+                        field.onChange(e) 
                         if (e === undefined) {
                             const selectedOption = data.find(option => option.siraNo === e);
                             if (!selectedOption) {

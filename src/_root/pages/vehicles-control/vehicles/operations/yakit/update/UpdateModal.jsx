@@ -173,13 +173,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue(
           "faturaTarih",
           res?.data.faturaTarih &&
-            res?.data.faturaTarih !== "1901-01-01T00:00:00"
+            res?.data.faturaTarih !== "0001-01-01T00:00:00"
             ? dayjs(res?.data.faturaTarih)
             : null
         );
         setValue(
           "tarih",
-          res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+          res?.data.tarih && res?.data.tarih !== "0001-01-01T00:00:00"
             ? dayjs(res?.data.tarih)
             : null
         );

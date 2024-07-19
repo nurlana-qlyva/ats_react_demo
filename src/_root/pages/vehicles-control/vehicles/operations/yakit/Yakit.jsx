@@ -51,7 +51,7 @@ const Yakit = ({ visible, onClose, ids }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
-console.log(ids)
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

@@ -77,7 +77,7 @@ const Vehicles = () => {
       key: 4,
     },
     {
-      title: t("grup"),
+      title: t("aracGrup"),
       dataIndex: "grup",
       key: 5,
     },

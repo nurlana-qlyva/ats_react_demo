@@ -169,7 +169,7 @@ const Satinalma = ({ visible, onClose, id }) => {
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
                     <label>{t("aracKM")}</label>
-                    <TextInput name="saAracKm" />
+                    <NumberInput name="saAracKm" />
                   </div>
                 </div>
                 <div className="col-span-4">

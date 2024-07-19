@@ -125,13 +125,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("bankaHesap", res?.data.bankaHesap);
         setValue("bankaKodId", res?.data.bankaKodId);
         setValue("belgeNo", res?.data.belgeNo);
-        setValue("faturaTarih", res?.data.faturaTarih && res?.data.faturaTarih !== "1901-01-01T00:00:00"
+        setValue("faturaTarih", res?.data.faturaTarih && res?.data.faturaTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.faturaTarih)
           : null);
-        setValue("geriOdemeTarih", res?.data.geriOdemeTarih && res?.data.geriOdemeTarih !== "1901-01-01T00:00:00"
+        setValue("geriOdemeTarih", res?.data.geriOdemeTarih && res?.data.geriOdemeTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.geriOdemeTarih)
           : null);
-        setValue("kazaTarih", res?.data.kazaTarih && res?.data.kazaTarih !== "1901-01-01T00:00:00"
+        setValue("kazaTarih", res?.data.kazaTarih && res?.data.kazaTarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.kazaTarih)
           : null);
         setValue("aciklama", res?.data.aciklama);

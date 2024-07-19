@@ -27,7 +27,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setValue("aksesuarKodId", res?.data.aksesuarKodId);
         setValue("aksesuar", res?.data.aksesuar);
         setValue("ureticiKod", res?.data.ureticiKod);
-        setValue("aksesuarKod", res?.data.aksesuarKod);
         setValue("miktar", res?.data.miktar);
         setValue("fiyat", res?.data.fiyat);
         setValue("degistirmeTarih", dayjs(res?.data.degistirmeTarih));
@@ -47,7 +46,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       aksesuarKodId: values.aksesuarKodId || -1,
       ureticiKod: values.ureticiKod,
       miktar: values.miktar,
-      aksesuarKod: values.aksesuarKod,
       fiyat: values.fiyat,
       degistirmeTarih:
         dayjs(values.degistirmeTarih).format("YYYY-MM-DD") || null,
@@ -92,10 +90,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <div className="flex flex-col gap-1">
-            <label>{t("aksesuarKod")}</label>
-            <TextInput name="aksesuarKod" />
-          </div>
           <div className="flex flex-col gap-1">
             <label>{t("tanim")}</label>
             <CodeControl name="aksesuar" codeName="aksesuarKodId" id={105} />

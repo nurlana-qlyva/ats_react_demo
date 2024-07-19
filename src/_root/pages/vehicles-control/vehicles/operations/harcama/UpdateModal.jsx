@@ -117,7 +117,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     if (updateModal) {
       GetExpenseByIdService(id).then((res) => {
         setValue("plaka", res?.data.plaka);
-        setValue("tarih", res?.data.tarih && res?.data.tarih !== "1901-01-01T00:00:00"
+        setValue("tarih", res?.data.tarih && res?.data.tarih !== "0001-01-01T00:00:00"
           ? dayjs(res?.data.tarih)
           : null);
         setValue("aciklama", res?.data.aciklama);

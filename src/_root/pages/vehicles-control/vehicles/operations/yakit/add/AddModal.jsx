@@ -115,9 +115,11 @@ const AddModal = ({ setStatus }) => {
         "tuketim": null,
         engelle: false
     }
+
     const methods = useForm({
         defaultValues: defaultValues
     })
+    
     const { handleSubmit, reset, setValue, watch } = methods
 
     useEffect(() => {

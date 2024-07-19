@@ -23,7 +23,7 @@ const AddModal = ({ setStatus }) => {
     defaultValues: defaultValues,
   });
 
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, watch } = methods;
 
   const handleOk = handleSubmit(async (values) => {
     const body = {
@@ -32,7 +32,6 @@ const AddModal = ({ setStatus }) => {
       aksesuarKodId: values.aksesuarKodId || -1,
       ureticiKod: values.ureticiKod,
       miktar: values.miktar,
-      aksesuarKod: values.aksesuarKod,
       fiyat: values.fiyat,
       degistirmeTarih:
         dayjs(values.degistirmeTarih).format("YYYY-MM-DD") || null,
@@ -81,10 +80,6 @@ const AddModal = ({ setStatus }) => {
         <FormProvider {...methods}>
           <form>
             <div className="flex flex-col gap-1">
-              <div className="flex flex-col gap-1">
-                <label>{t("aksesuarKod")}</label>
-                <TextInput name="aksesuarKod" />
-              </div>
               <div className="flex flex-col gap-1">
                 <label>{t("tanim")}</label>
                 <CodeControl

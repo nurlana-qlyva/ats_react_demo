@@ -124,13 +124,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue(
           "baslangicTarih",
           res?.data.baslangicTarih &&
-            res?.data.baslangicTarih !== "1901-01-01T00:00:00"
+            res?.data.baslangicTarih !== "0001-01-01T00:00:00"
             ? dayjs(res?.data.baslangicTarih)
             : null
         );
         setValue(
           "bitisTarih",
-          res?.data.bitisTarih && res?.data.bitisTarih !== "1901-01-01T00:00:00"
+          res?.data.bitisTarih && res?.data.bitisTarih !== "0001-01-01T00:00:00"
             ? dayjs(res?.data.bitisTarih)
             : null
         );

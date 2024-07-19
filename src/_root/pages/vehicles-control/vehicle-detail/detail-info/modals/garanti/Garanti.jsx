@@ -70,42 +70,42 @@ const Garanti = ({ visible, onClose, id }) => {
       onCancel={onClose}
       maskClosable={false}
       footer={footer}
-      width={1200}
+      width={600}
     >
       <FormProvider {...methods}>
         <h2>{t("garantiBilgiler")}</h2>
         <div className="grid gap-1 border p-20 mt-10">
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiSure")}</label>
               <NumberInput name="garantiSure" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiKm")}</label>
               <NumberInput name="garantiKm" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiBaslamaTarih")}</label>
               <DateInput name="garantiBaslamaTarih" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiBaslamaKm")}</label>
               <NumberInput name="garantiBaslamaKm" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiBitisTarih")}</label>
               <DateInput name="garantiBitisTarih" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-6">
             <div className="flex flex-col gap-1">
               <label>{t("garantiBitisKm")}</label>
               <NumberInput name="garantiBitisKm" />
