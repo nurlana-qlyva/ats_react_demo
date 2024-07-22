@@ -197,6 +197,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
           res.data.ehliyetKullandigiChiazProtez
         );
         setValue("ehliyetNo", res.data.ehliyetNo);
+        setValue("isim", res.data.isim);
         setSurucuId(res.data.surucuId);
         setValue("ozelAlan1", res?.data.ozelAlan1);
         setValue("ozelAlan2", res?.data.ozelAlan2);
@@ -229,6 +230,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     const body = {
       surucuId: surucuId,
       surucuKod: values.surucuKod,
+      isim: values.isim,
       aktif: values.aktif,
       isim: values.isim,
       lokasyonId: values.lokasyonId || -1,

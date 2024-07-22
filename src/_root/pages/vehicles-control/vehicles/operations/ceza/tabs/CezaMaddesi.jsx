@@ -28,6 +28,16 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       key: 2,
     },
     {
+      title: `${t("aciklama")} 1`,
+      dataIndex: "aciklama1",
+      key: 6,
+    },
+    {
+      title: `${t("aciklama")} 2`,
+      dataIndex: "aciklama2",
+      key: 7,
+    },
+    {
       title: t("puan"),
       dataIndex: "puan",
       key: 3,
@@ -41,17 +51,7 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       title: t("belgeNo"),
       dataIndex: "belgeNo",
       key: 5,
-    },
-    {
-      title: `${t("aciklama")} 1`,
-      dataIndex: "aciklama1",
-      key: 6,
-    },
-    {
-      title: `${t("aciklama")} 2`,
-      dataIndex: "aciklama2",
-      key: 7,
-    },
+    }
   ];
 
   useEffect(() => {
@@ -128,6 +128,8 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
           onChange={handleTableChange}
           loading={loading}
           rowKey="siraNo"
+          scroll={{ x: 1500, y: 500 }}
+          size="small"
         />
       </div>
     </>

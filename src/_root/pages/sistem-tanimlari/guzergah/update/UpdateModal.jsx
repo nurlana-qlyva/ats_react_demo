@@ -38,6 +38,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     useEffect(() => {
         GetGuzergahByIdService(id).then(res => {
             setValue("aciklama", res.data.aciklama)
+            setValue("tanim", res.data.guzergah)
             setValue("sehir", res.data.cikisSehri)
             setValue("cikisSehriId", res.data.cikisSehriId)
             setValue("cikisYeri", res.data.cikisYeri)

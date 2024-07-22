@@ -104,6 +104,8 @@ const AddModal = ({ setStatus }) => {
   useEffect(() => {
     if (plaka.length === 1) {
       setValue("plaka", plaka[0].plaka);
+      setValue("lokasyon", plaka[0].lokasyon);
+      setValue("lokasyonId", plaka[0].lokasyonId);
     }
   }, [plaka]);
 
@@ -117,6 +119,7 @@ const AddModal = ({ setStatus }) => {
       geriOdemeTarih: dayjs(values.geriOdemeTarih).format("YYYY-MM-DD"),
       kazaTuruKodId: values.kazaTuruKodId || 0,
       kazaSekliKodId: values.kazaSekliKodId || 0,
+      lokasyonId: values.lokasyonId || 0,
       asliKusurKodId: values.asliKusurKodId || 0,
       taliKusurKodId: values.taliKusurKodId || 0,
       bankaKodId: values.bankaKodId || 0,

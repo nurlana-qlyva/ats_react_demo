@@ -21,11 +21,9 @@ import {
 } from "../../../../../../../api/services/vehicles/operations_services";
 import { UpdateVehicleDetailsInfoService } from "../../../../../../../api/services/vehicles/vehicles/services";
 import HiddenInput from "../../../../../../components/form/inputs/HiddenInput";
-import ReadonlyInput from "../../../../../../components/form/inputs/ReadonlyInput";
 import Driver from "../../../../../../components/form/selects/Driver";
-import ReadonlyDateInput from "../../../../../../components/form/date/ReadonlyDateInput";
 import DateInput from "../../../../../../components/form/date/DateInput";
-import ReadonlyTimePicker from "../../../../../../components/form/date/ReadonlyTimePicker";
+import TimeInput from "../../../../../../components/form/date/TimeInput";
 import MaterialType from "../../../../../../components/form/selects/MaterialType";
 import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
 import YakitTank from "../../../../../../components/form/selects/YakitlTank";
@@ -347,7 +345,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setOpen(false);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -379,7 +377,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label htmlFor="plaka">{t("plaka")}</label>
-                <ReadonlyInput name="plaka" checked={true} />
+                <TextInput name="plaka" readonly={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -391,13 +389,13 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("tarih")}</label>
-                <ReadonlyDateInput name="tarih" />
+                <DateInput name="tarih" readonly={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("saat")}</label>
-                <ReadonlyTimePicker name="saat" />
+                <TimeInput name="saat" readonly={true} />
               </div>
             </div>
           </div>
@@ -439,7 +437,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label className="text-info">{t("sonAlinanKm")}</label>
-                <ReadonlyInput name="sonAlinanKm" checked={true} />
+                <TextInput name="sonAlinanKm" readonly={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -610,7 +608,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                           {t("ortalamaTuketim")}{" "}
                           <ArrowUpOutlined style={{ color: "red" }} />
                         </label>
-                        <ReadonlyInput name="tuketim" checked={true} />
+                        <TextInput name="tuketim" readonly={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">
@@ -681,7 +679,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label className="text-info">{t("kdvTutar")}</label>
-                <ReadonlyInput name="kdv" checked={true} />
+                <TextInput name="kdv" readonly={true} />
               </div>
             </div>
           </div>
@@ -725,7 +723,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("masrafMerkezi")} -- ?</label>
-                <ReadonlyInput name="" checked={true} />
+                <TextInput name="" readonly={true} />
               </div>
             </div>
             <div className="col-span-4">
@@ -776,16 +774,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         footer={footer}
         onCancel={() => setOpen(false)}
       >
-        <Controller
-          name="yakitHacmi"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              onChange={(e) => field.onChange(e.target.value)}
-            />
-          )}
-        />
+        <TextInput name="yakitHacmi" />
       </Modal>
 
       <Modal

@@ -2,8 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { t } from "i18next";
 import axios from "axios";
-import { Table, Popover, Button, Input } from "antd";
-import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
+import { Table, Popover, Button, Input, Spin } from "antd";
+import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { GetVehiclesListService } from "../../../../api/services/vehicles/vehicles/services";
 import { DemoService } from "../../../../api/service";
@@ -30,6 +30,7 @@ const Vehicles = () => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -127,12 +128,15 @@ const Vehicles = () => {
         filterData
       );
       setLoading(false);
-      setDataSource(res?.data.vehicleList);
+      setIsInitialLoading(false);
+
+      // Set dataSource and tableParams
+      setDataSource(res?.data.vehicleList || []);
       setTableParams((prevTableParams) => ({
         ...prevTableParams,
         pagination: {
           ...prevTableParams.pagination,
-          total: res?.data.vehicleCount,
+          total: res?.data.vehicleCount || 0,
         },
       }));
     };
@@ -219,6 +223,8 @@ const Vehicles = () => {
     const newPlakaEntries = rows.map((vehicle) => ({
       id: vehicle.aracId,
       plaka: vehicle.plaka,
+      lokasyonId: vehicle.lokasyonId,
+      lokasyon: vehicle.lokasyon,
     }));
     setPlaka(newPlakaEntries);
   }, [rows]);
@@ -250,6 +256,9 @@ const Vehicles = () => {
       }),
     })));
   }, [country]);
+
+  // Custom loading icon
+  const customIcon = <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />;
 
   return (
     <>
@@ -286,36 +295,41 @@ const Vehicles = () => {
 
       <div className="content">
         <DragAndDropContext items={columns} setItems={setColumns}>
-          <Table
-            rowKey={(record) => record.aracId}
-            columns={newColumns}
-            dataSource={dataSource}
-            pagination={{
-              ...tableParams.pagination,
-              showTotal: (total) => (
-                <p className="text-info">[{total} {t("kayit")}]</p>
-              ),
-              locale: {
-                items_per_page: `/ ${t("sayfa")}`,
-              },
-            }}
-            loading={loading}
-            size="small"
-            onChange={handleTableChange}
-            rowSelection={{
-              selectedRowKeys: selectedRowKeys,
-              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-              onSelect: handleRowSelection,
-            }}
-            components={{
-              header: {
-                cell: SortableHeaderCell,
-              },
-            }}
-            scroll={
-              {x: 1200}
-            }
-          />
+          <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+            <Table
+              rowKey={(record) => record.aracId}
+              columns={newColumns}
+              dataSource={dataSource}
+              pagination={{
+                ...tableParams.pagination,
+                showTotal: (total) => (
+                  <p className="text-info">[{total} {t("kayit")}]</p>
+                ),
+                locale: {
+                  items_per_page: `/ ${t("sayfa")}`,
+                },
+              }}
+              loading={false}
+              size="small"
+              onChange={handleTableChange}
+              rowSelection={{
+                selectedRowKeys: selectedRowKeys,
+                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                onSelect: handleRowSelection,
+              }}
+              components={{
+                header: {
+                  cell: SortableHeaderCell,
+                },
+              }}
+              scroll={{
+                x: 1200
+              }}
+              locale={{
+                emptyText: "Veri Bulunamadı",
+              }}
+            />
+          </Spin>
         </DragAndDropContext>
       </div>
     </>

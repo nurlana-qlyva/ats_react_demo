@@ -2,6 +2,8 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { t } from 'i18next'
 import { Checkbox, Input, InputNumber } from 'antd'
 import FirmaTip from '../../../../components/form/FirmaTip'
+import Location from '../../../../components/form/tree/Location'
+import Textarea from '../../../../components/form/inputs/Textarea'
 
 const GeneralInfo = ({ isValid }) => {
     const { control } = useFormContext()
@@ -173,6 +175,12 @@ const GeneralInfo = ({ isValid }) => {
                                 />
                             </div>
                         </div>
+                        <div className="col-span-6">
+                            <div className="flex flex-col gap-1">
+                                <label>{t("lokasyon")}</label>
+                                <Location />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-4 p-10">
@@ -303,6 +311,12 @@ const GeneralInfo = ({ isValid }) => {
                                 />
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="col-span-12 p-10">
+                    <div className="flex flex-col gap-1">
+                        <label>{t("aciklama")}</label>
+                        <Textarea name="aciklama" />
                     </div>
                 </div>
             </div>

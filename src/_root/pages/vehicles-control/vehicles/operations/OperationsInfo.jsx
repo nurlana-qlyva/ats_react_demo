@@ -21,6 +21,8 @@ import Harcama from "./harcama/Harcama";
 import Sefer from "./sefer/Sefer";
 import Kaza from "./kaza/Kaza";
 import Sigorta from "./sigorta/Sigorta";
+import Lastik from "./lastik/Lastik";
+import Bakim from "./bakim/Bakim";
 
 const OperationsInfo = ({ ids }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -92,8 +94,8 @@ const OperationsInfo = ({ ids }) => {
 
   const renderModal = () => {
     switch (selectedItem) {
-      // case '1':
-      //     return <Bakim visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} ids={ids} />;
+      case '1':
+          return <Bakim visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} ids={ids} />;
       case "2":
         return (
           <Yakit
@@ -130,6 +132,14 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Sigorta
             visible={selectedItem === "7"}
+            onClose={() => setSelectedItem(null)}
+            ids={ids}
+          />
+        );
+      case "8":
+        return (
+          <Lastik
+            visible={selectedItem === "8"}
             onClose={() => setSelectedItem(null)}
             ids={ids}
           />

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types'
 import { t } from 'i18next'
-import dayjs from 'dayjs'
-import 'dayjs/locale/tr'
 import TextInput from '../../../../components/form/inputs/TextInput'
 import CodeControl from '../../../../components/form/selects/CodeControl'
 import NumberInput from '../../../../components/form/inputs/NumberInput'
@@ -11,8 +9,6 @@ import Model from '../../../../components/form/selects/Model'
 import Driver from '../../../../components/form/selects/Driver'
 import MaterialType from '../../../../components/form/selects/MaterialType'
 import DateInput from '../../../../components/form/date/DateInput'
-
-dayjs.locale('tr')
 
 const GeneralInfo = ({ isValid }) => {
     const validateStyle = {
@@ -66,7 +62,7 @@ const GeneralInfo = ({ isValid }) => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="modelId">{t("model")}</label>
+                                <label>{t("model")}</label>
                                 <Model />
                             </div>
                         </div>
@@ -96,7 +92,7 @@ const GeneralInfo = ({ isValid }) => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="">{t("mulkiyet")} -- ?</label>
+                                <label>{t("mulkiyet")} -- ?</label>
                                 <TextInput name="mulkiyet" readonly={true} />
                             </div>
                         </div>
@@ -114,7 +110,7 @@ const GeneralInfo = ({ isValid }) => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="yakitTipId">{t("yakitTip")}</label>
+                                <label>{t("yakitTip")}</label>
                                 <MaterialType name="yakitTip" codeName="yakitTipId" type="YAKIT" />
                             </div>
                         </div>

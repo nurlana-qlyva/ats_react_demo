@@ -143,15 +143,18 @@ const PersonalFields = ({ personalProps }) => {
                       label: item.codeText,
                       value: item.siraNo,
                     }))}
-                    value={watch(item.name2)}
+                    value={watch(item.label)}
                     onClick={() => handleClickSelect(item.code)}
                     onChange={(e) => {
                       field.onChange(e);
+                      const selectedOption = data.find((option) => option.siraNo === e);
+                      console.log(selectedOption)
                       if (e === undefined) {
                         setValue(item.label, "");
                         setValue(item.name2, null);
                       } else {
                         setValue(item.name2, e);
+                        setValue(item.label, selectedOption.codeText);
                       }
                     }}
                   />

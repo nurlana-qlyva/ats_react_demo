@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { ConfigProvider, DatePicker, Input, InputNumber, TimePicker } from 'antd'
-import ServisType from '../../../../../components/form/ServisType'
+import ServisType from '../../../../../../components/form/ServisType'
 
 dayjs.locale('tr')
 

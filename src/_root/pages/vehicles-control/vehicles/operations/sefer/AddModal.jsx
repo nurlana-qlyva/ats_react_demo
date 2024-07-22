@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
@@ -7,12 +7,16 @@ import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import { AddExpeditionItemService } from "../../../../../../api/services/vehicles/operations_services";
-import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields"
+import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
+import { GetModuleCodeByCode } from "../../../../../../api/services/code/services";
+import { CodeItemValidateService } from "../../../../../../api/service";
 
 const AddModal = ({ setStatus }) => {
+  const isFirstRender = useRef(true);
   const { data, plaka, setHistory } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [isValid, setIsValid] = useState("normal");
 
   const [fields, setFields] = useState([
     {
@@ -93,11 +97,46 @@ const AddModal = ({ setStatus }) => {
     },
   ]);
 
-  const defaultValues = {};
+  const defaultValues = {
+    seferAdedi: 1,
+  };
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
+
+  useEffect(() => {
+    setValue("seferAdedi", 1);
+  }, []);
+  useEffect(() => {
+    let fark;
+    if (watch("varisKm")) {
+      fark = watch("varisKm") - watch("cikisKm");
+    } else {
+      fark = 0;
+    }
+    setValue("farkKm", fark);
+  }, [watch("varisKm"), watch("cikisKm")]);
+
+  useEffect(() => {
+    if (isOpen && isFirstRender.current) {
+      GetModuleCodeByCode("SEFER_NO").then((res) =>
+        setValue("seferNo", res.data)
+      );
+    }
+  }, [isOpen, setValue]);
+
+  useEffect(() => {
+    if (watch("seferNo")) {
+      const body = {
+        tableName: "SeferNo",
+        code: watch("seferNo"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    }
+  }, [watch("seferNo")]);
 
   useEffect(() => {
     if (plaka.length === 1) {
@@ -111,6 +150,7 @@ const AddModal = ({ setStatus }) => {
       surucuId1: values.surucuId1 || 0,
       surucuId2: values.surucuId2 || 0,
       aciklama: values.aciklama,
+      seferNo: values.seferNo,
       dorseId: values.dorseId || 0,
       guzergahId: values.guzergahId || 0,
       seferTipKodId: values.seferTipKodId || 0,
@@ -146,6 +186,7 @@ const AddModal = ({ setStatus }) => {
         } else {
           reset();
         }
+        setIsValid("normal");
       } else {
         message.error("Bir sorun oluşdu! Tekrar deneyiniz.");
       }
@@ -163,9 +204,7 @@ const AddModal = ({ setStatus }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: (
-        <GeneralInfo />
-      ),
+      children: <GeneralInfo isValid={isValid} />,
     },
     {
       key: "2",
@@ -183,11 +222,7 @@ const AddModal = ({ setStatus }) => {
   };
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-    >
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
       {t("kaydet")}
     </Button>,
     <Button

@@ -192,6 +192,7 @@ const AddModal = ({ setStatus }) => {
       ehliyetSeriNo: values.ehliyetSeriNo,
       ehliyetKullandigiChiazProtez: values.ehliyetKullandigiChiazProtez,
       ehliyetNo: values.ehliyetNo,
+      isim: values.isim,
       ozelAlan1: values.ozelAlan1,
       ozelAlan2: values.ozelAlan2,
       ozelAlan3: values.ozelAlan3,

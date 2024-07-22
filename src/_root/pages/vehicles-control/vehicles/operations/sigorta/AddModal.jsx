@@ -7,8 +7,10 @@ import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import { AddInsuranceItemService } from "../../../../../../api/services/vehicles/operations_services";
-import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields"
+import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const AddModal = ({ setStatus }) => {
   const { data, plaka, setHistory } = useContext(PlakaContext);
@@ -98,13 +100,21 @@ const AddModal = ({ setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
     if (plaka.length === 1) {
       setValue("plaka", plaka[0].plaka);
     }
   }, [plaka]);
+
+  useEffect(() => {
+    if (watch("baslangicTarih")) {
+      const dateObj = dayjs.utc(watch("baslangicTarih"));
+      const newDateObj = dateObj.add(1, "year");
+      setValue("bitisTarih", newDateObj);
+    }
+  }, [watch("baslangicTarih")]);
 
   const onSubmit = handleSubmit((values) => {
     const body = {
@@ -121,7 +131,7 @@ const AddModal = ({ setStatus }) => {
       ilce: values.ilce,
       telefon: values.telefon,
       baslangicTarih: dayjs(values.baslangicTarih).format("YYYY-MM-DD"),
-      bitisTarih: dayjs(values.bitisTarih).format("YYYY-MM-DD"),
+      bitisTarih: values.bitisTarih,
       aracBedeli: values.aracBedeli || 0,
       hasarIndirimi: values.hasarIndirimi || 0,
       firmaId: values.firmaId || 0,
@@ -150,7 +160,7 @@ const AddModal = ({ setStatus }) => {
         } else {
           reset();
         }
-        setActiveKey(1)
+        setActiveKey(1);
       } else {
         message.error("Bir sorun oluşdu! Tekrar deneyiniz.");
       }
@@ -168,9 +178,7 @@ const AddModal = ({ setStatus }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: (
-        <GeneralInfo />
-      ),
+      children: <GeneralInfo />,
     },
     {
       key: "2",
@@ -188,11 +196,7 @@ const AddModal = ({ setStatus }) => {
   };
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-    >
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
       {t("kaydet")}
     </Button>,
     <Button

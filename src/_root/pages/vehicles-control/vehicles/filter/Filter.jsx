@@ -25,6 +25,7 @@ const Filter = ({ filter, clearFilters }) => {
         yil: "",
         yakitTip: "",
     }
+
     const methods = useForm({
         defaultValues: defaultValues
     })
@@ -108,7 +109,7 @@ const Filter = ({ filter, clearFilters }) => {
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
-                                <label>{t('grup')}</label>
+                                <label>{t('aracGrup')}</label>
                                 <CodeControl name="grup" codeName="aracGrubuId" id={101} />
                             </div>
                         </div>

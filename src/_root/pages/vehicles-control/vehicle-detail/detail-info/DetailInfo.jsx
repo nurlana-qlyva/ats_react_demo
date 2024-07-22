@@ -181,6 +181,14 @@ const DetailInfo = ({ id }) => {
             id={id}
           />
         );
+      case "11":
+        return (
+          <Lastik
+            visible={selectedItem === "11"}
+            onClose={() => setSelectedItem(null)}
+            id={id}
+          />
+        );
       case "12":
         return (
           <Satis

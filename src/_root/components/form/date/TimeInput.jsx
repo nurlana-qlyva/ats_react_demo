@@ -2,7 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { TimePicker } from 'antd'
 
-const TimeInput = ({ name }) => {
+const TimeInput = ({ name, readonly }) => {
     const { control } = useFormContext()
 
     return (
@@ -10,7 +10,7 @@ const TimeInput = ({ name }) => {
             name={name}
             control={control}
             render={({ field }) => (
-                <TimePicker {...field} placeholder="" format="HH:mm:ss"/>
+                <TimePicker {...field} placeholder="" format="HH:mm:ss" readOnly={readonly}/>
             )}
         />
     )
@@ -18,6 +18,7 @@ const TimeInput = ({ name }) => {
 
 TimeInput.propTypes = {
     name: PropTypes.string,
+    readonly: PropTypes.bool,
 }
 
 export default TimeInput

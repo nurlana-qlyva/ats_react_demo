@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { Modal, Button, Table, Tabs, message, Checkbox } from 'antd'
-import { uploadPhoto, uploadFile } from '../../../../../utils/upload'
+import { uploadPhoto, uploadFile } from '../../../../../../utils/upload' 
 import AddModal from './add/AddModal'
 import GeneralInfo from './update/GeneralInfo'
-import PersonalFields from '../../../../components/form/PersonalFields'
-import PhotoUpload from '../../../../components/upload/PhotoUpload'
-import FileUpload from '../../../../components/upload/FileUpload'
+import PersonalFields from '../../../../../components/form/personal-fields/PersonalFields'
+import PhotoUpload from '../../../../../components/upload/PhotoUpload'
+import FileUpload from '../../../../../components/upload/FileUpload'
 
 const Bakim = ({ visible, onClose, ids }) => {
     const [dataSource, setDataSource] = useState([

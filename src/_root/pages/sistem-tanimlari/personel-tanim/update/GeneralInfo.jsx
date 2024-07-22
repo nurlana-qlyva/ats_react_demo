@@ -7,6 +7,7 @@ import Departman from "../../../../components/form/Departman";
 import PersonelTip from "../../../../components/form/PersonelTip";
 import PersonelGorev from "../../../../components/form/PersonelGorev";
 import PersonelUnvan from "../../../../components/form/PersonelUnvan";
+import TextInput from "../../../../components/form/inputs/TextInput";
 import { useEffect, useState } from "react";
 import { DownloadPhotoByIdService } from "../../../../../api/services/upload/services";
 
@@ -117,6 +118,12 @@ const GeneralInfo = ({ isValid, setImages, urls }) => {
                     />
                   )}
                 />
+              </div>
+            </div>
+            <div className="col-span-6">
+              <div className="flex flex-col gap-1">
+                <label>{t("personelIsmi")}</label>
+                <TextInput name="isim" />
               </div>
             </div>
             <div className="col-span-6">

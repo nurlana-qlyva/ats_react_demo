@@ -31,7 +31,7 @@ const Iletisim = () => {
                             <div className="flex flex-col gap-1">
                                 <label>{t("sehir")}</label>
                                 <Controller
-                                    name="sehir"
+                                    name="il"
                                     control={control}
                                     render={({ field }) => (
                                         <Input

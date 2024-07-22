@@ -151,6 +151,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       setValue("gsm", res.data.gsm);
       setValue("fax", res.data.fax);
       setValue("email", res.data.email);
+      setValue("web", res.data.web);
       setValue("iseBaslamaTarihi", dayjs(res.data.iseBaslamaTarihi));
       setValue("isetenAyrilmaTarihi", dayjs(res.data.isetenAyrilmaTarihi));
       setValue("aktif", res.data.aktif);

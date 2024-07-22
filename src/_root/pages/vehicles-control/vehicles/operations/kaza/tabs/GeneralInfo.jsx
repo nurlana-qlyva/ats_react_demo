@@ -9,6 +9,7 @@ import Textarea from "../../../../../../components/form/inputs/Textarea";
 import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
 import { Divider } from "antd";
+import Location from "../../../../../../components/form/tree/Location";
 
 const GeneralInfo = () => {
   return (
@@ -28,12 +29,6 @@ const GeneralInfo = () => {
                 <Driver />
               </div>
             </div>
-            <div className="col-span-12">
-              <div className="flex flex-col gap-1">
-                <label>{t("hasarNo")}</label>
-                <TextInput name="hasarNo" />
-              </div>
-            </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("kazaTarih")}</label>
@@ -44,6 +39,12 @@ const GeneralInfo = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("saat")}</label>
                 <TimeInput name="kazaSaat" />
+              </div>
+            </div>
+            <div className="col-span-12">
+              <div className="flex flex-col gap-1">
+                <label>{t("hasarNo")}</label>
+                <TextInput name="hasarNo" />
               </div>
             </div>
           </div>
@@ -66,6 +67,12 @@ const GeneralInfo = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("belgeNo")}</label>
                 <TextInput name="belgeNo" />
+              </div>
+            </div>
+            <div className="col-span-4">
+              <div className="flex flex-col gap-1">
+                <label>{t("lokasyon")}</label>
+                <Location />
               </div>
             </div>
             <div className="col-span-4">

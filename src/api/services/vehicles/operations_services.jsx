@@ -137,8 +137,8 @@ export const GetAccidentsListService = async (search, page, data) => {
     return await http.get(`/Accident/GetAccidentsList?page=${page}&parameter=${search}`, data);
 };
 
-export const GetActiveInsuranceListService = async (search, page) => {
-    return await http.get(`/Insurance/GetActiveInsuranceList?page=${page}&parameter=${search}`);
+export const GetActiveInsuranceListService = async (id,search, page) => {
+    return await http.get(`/Insurance/GetActiveInsuranceList?vehicleId=${id}&page=${page}&parameter=${search}`);
 };
 
 // sigorta

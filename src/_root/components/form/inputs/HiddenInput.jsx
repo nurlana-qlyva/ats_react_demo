@@ -11,8 +11,8 @@ const HiddenInput = ({ name }) => {
             control={control}
             render={({ field }) => (
                 <Input
-                    {...field}
-                    hidden
+                    {...field}  hidden
+                  
                 />
             )}
         />

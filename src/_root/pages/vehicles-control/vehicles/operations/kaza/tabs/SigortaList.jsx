@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { Input, Table } from "antd";
 import { GetActiveInsuranceListService } from "../../../../../../../api/services/vehicles/operations_services";
+import { PlakaContext } from "../../../../../../../context/plakaSlice";
 
 const SigortaList = ({ setSigorta, open }) => {
+    const {plaka} = useContext(PlakaContext)
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -47,11 +49,12 @@ const SigortaList = ({ setSigorta, open }) => {
             setSigorta([]);
         }
     }, [open]);
-
+    
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             const res = await GetActiveInsuranceListService(
+                plaka[0].id,
                 search,
                 tableParams.pagination.current
             );

@@ -24,7 +24,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { data, plaka, setData } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState(false);
   const [response, setResponse] = useState("normal");
-  const [activeKey, setActiveKey] = useState(1);
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -135,7 +135,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  console.log(id);
+
   const { handleSubmit, reset, watch, setValue } = methods;
 
   useEffect(() => {
@@ -213,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       );
     }
   }, [id, updateModal]);
-
+  console.log(watch("ozelAlanKodId9"));
   const uploadImages = () => {
     try {
       setLoadingImages(true);
@@ -257,9 +257,11 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       siraNo: id,
       aracId: data.aracId,
       plaka: values.plaka,
-      tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
-      faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),
-      saat: dayjs(values.saat).format("HH:mm:ss"),
+      tarih: values.tarih ? dayjs(values.tarih).format("YYYY-MM-DD") : null,
+      faturaTarih: values.faturaTarih
+        ? dayjs(values.faturaTarih).format("YYYY-MM-DD")
+        : null,
+      saat: values.saat ? dayjs(values.saat).format("HH:mm:ss") : null,
       aciklama: values.aciklama,
       faturaNo: values.faturaNo,
       sonAlinanKm: values.sonAlinanKm,
@@ -328,7 +330,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         } else {
           reset();
         }
-        setActiveKey(1);
+        setActiveKey("1");
         if (plaka.length === 1) {
           GetFuelCardContentByIdService(plaka[0].id).then((res) => {
             setData(res.data);
@@ -405,9 +407,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setUpdateModal(false);
         setResponse("normal");
         setStatus(true);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -423,7 +426,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey={activeKey} items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

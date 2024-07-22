@@ -11,11 +11,13 @@ import {
   Popconfirm,
   Input,
   Popover,
+  Spin
 } from "antd";
 import {
   DeleteOutlined,
   MenuOutlined,
   ArrowUpOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import {
@@ -33,6 +35,7 @@ const Yakit = ({ visible, onClose, ids }) => {
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [status, setStatus] = useState(false);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -56,13 +59,13 @@ const Yakit = ({ visible, onClose, ids }) => {
     const fetchData = async () => {
       setLoading(true);
       const res = await GetFuelListByVehicleIdService(
-        
         search,
         tableParams.pagination.current,
-        ids,
+        ids
       );
       setLoading(false);
-      setDataSource(res?.data.fuel_list);
+      setIsInitialLoading(false);
+      setDataSource(res?.data.fuel_list || []);
       setTotal({
         avg_consumption: res?.data.avg_consumption,
         avg_cost: res?.data.avg_cost,
@@ -73,7 +76,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         ...tableParams,
         pagination: {
           ...tableParams.pagination,
-          total: res?.data.total_count,
+          total: res?.data.total_count || 0,
         },
       });
     };
@@ -349,6 +352,11 @@ const Yakit = ({ visible, onClose, ids }) => {
     );
   }, [country]);
 
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+  );
+
   return (
     <Modal
       title={`${t("yakitBilgileri")} - ${t("plaka")}: [${plakaData}]`}
@@ -356,9 +364,9 @@ const Yakit = ({ visible, onClose, ids }) => {
       onCancel={onClose}
       maskClosable={false}
       footer={footer}
-      width={1200}
+      width={1300}
     >
-      <div className="flex align-center gap-1 mb-10">
+      <div className="flex align-center gap-1 mb-20">
         <Popover
           content={content}
           placement="bottom"
@@ -387,38 +395,43 @@ const Yakit = ({ visible, onClose, ids }) => {
       />
 
       <DragAndDropContext items={columns} setItems={setColumns}>
-        <Table
-          rowKey={(record) => record.siraNo}
-          columns={newColumns}
-          dataSource={dataSource}
-          pagination={{
-            ...tableParams.pagination,
-            showTotal: (total) => (
-              <p className="text-info">
-                [{total} {t("kayit")}]
-              </p>
-            ),
-            locale: {
-              items_per_page: `/ ${t("sayfa")}`,
-            },
-          }}
-          scroll={{
-            x: 1500,
-          }}
-          loading={loading}
-          size="small"
-          onChange={handleTableChange}
-          rowSelection={{
-            selectedRowKeys: selectedRowKeys,
-            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-            onSelect: handleRowSelection,
-          }}
-          components={{
-            header: {
-              cell: SortableHeaderCell,
-            },
-          }}
-        />
+        <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+          <Table
+            rowKey={(record) => record.siraNo}
+            columns={newColumns}
+            dataSource={dataSource}
+            pagination={{
+              ...tableParams.pagination,
+              showTotal: (total) => (
+                <p className="text-info">
+                  [{total} {t("kayit")}]
+                </p>
+              ),
+              locale: {
+                items_per_page: `/ ${t("sayfa")}`,
+              },
+            }}
+            scroll={{
+              x: 1500,
+            }}
+            loading={loading}
+            size="small"
+            onChange={handleTableChange}
+            rowSelection={{
+              selectedRowKeys: selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              onSelect: handleRowSelection,
+            }}
+            components={{
+              header: {
+                cell: SortableHeaderCell,
+              },
+            }}
+            locale={{
+              emptyText: "Veri Bulunamadı",
+            }}
+          />
+        </Spin>
       </DragAndDropContext>
 
       <div className="grid gap-1 mt-10 text-center">

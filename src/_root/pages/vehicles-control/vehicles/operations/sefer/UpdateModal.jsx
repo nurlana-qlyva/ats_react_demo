@@ -111,7 +111,18 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
+
+  useEffect(() => {setValue("seferAdedi", 1)}, [])
+  useEffect(() => {
+    let fark;
+    if (watch("varisKm")) {
+      fark = watch("varisKm") - watch("cikisKm");
+    } else {
+      fark = 0;
+    }
+    setValue("farkKm", fark);
+  }, [watch("varisKm"), watch("cikisKm")]);
 
   useEffect(() => {
     if (updateModal) {
@@ -126,6 +137,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("cikisSaat", dayjs(res?.data.cikisSaat, "HH:mm:ss"));
         setValue("varisSaat", dayjs(res?.data.varisSaat, "HH:mm:ss"));
         setValue("aciklama", res?.data.aciklama);
+        setValue("seferNo", res?.data.seferNo);
         setValue("surucuId1", res?.data.surucuId1);
         setValue("surucu1", res?.data.surucuIsim1);
         setValue("surucuId2", res?.data.surucuId2);
@@ -197,6 +209,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       surucuId1: values.surucuId1 || 0,
       surucuId2: values.surucuId2 || 0,
       aciklama: values.aciklama,
+      seferNo: values.seferNo,
       dorseId: values.dorseId || 0,
       guzergahId: values.guzergahId || 0,
       seferTipKodId: values.seferTipKodId || 0,

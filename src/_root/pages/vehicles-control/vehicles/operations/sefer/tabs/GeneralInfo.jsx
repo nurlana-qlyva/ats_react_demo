@@ -12,11 +12,21 @@ import Textarea from "../../../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../../../components/form/selects/CodeControl";
 import Guzergah from "../../../../../../components/form/selects/Guzergah";
 import VehicleList from "./VehiclesList";
+import TextInput from "../../../../../../components/form/inputs/TextInput";
 
-const GeneralInfo = () => {
+const GeneralInfo = ({ isValid }) => {
   const { setValue } = useFormContext();
   const [open, setOpen] = useState(false);
   const [dorse, setDorse] = useState(false);
+
+  const validateStyle = {
+    borderColor:
+      isValid === "error"
+        ? "#dc3545"
+        : isValid === "success"
+        ? "#23b545"
+        : "#000",
+  };
 
   const footer = [
     <Button
@@ -48,6 +58,12 @@ const GeneralInfo = () => {
               <div className="flex flex-col gap-1">
                 <label>{t("plaka")}</label>
                 <Plaka />
+              </div>
+            </div>
+            <div className="col-span-12">
+              <div className="flex flex-col gap-1">
+                <label>{t("seferNo")}</label>
+                <TextInput name="seferNo" style={validateStyle} />
               </div>
             </div>
             <div className="col-span-12">

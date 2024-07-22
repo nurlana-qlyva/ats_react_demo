@@ -114,7 +114,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
+
+  useEffect(() => {
+    if (watch("baslangicTarih")) {
+      const dateObj = dayjs.utc(watch("baslangicTarih"));
+      const newDateObj = dateObj.add(1, "year");
+      setValue("bitisTarih", newDateObj);
+    }
+  }, [watch("baslangicTarih")]);
 
   useEffect(() => {
     if (updateModal) {
@@ -205,6 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
     const body = {
       siraNo: id,
+      aracId: plaka[0].id,
       aciklama: values.aciklama,
       tutar: values.tutar || 0,
       policeNo: values.policeNo,

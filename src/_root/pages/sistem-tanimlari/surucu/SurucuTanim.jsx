@@ -352,7 +352,7 @@ const Suruculer = () => {
               },
             }}
             scroll={{
-              x: 1500,
+              x: 2000,
             }}
           />
         </DragAndDropContext>

@@ -127,11 +127,9 @@ const AddModal = ({ setStatus }) => {
     ozelAlan11: null,
     ozelAlan12: null,
   };
-
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, watch, setValue } = methods;
 
   useEffect(() => {
@@ -161,15 +159,15 @@ const AddModal = ({ setStatus }) => {
     const body = {
       plaka: value.plaka,
       yil: value.yil || 0,
-      markaId: value.markaId || -1,
-      modelId: value.modelId || -1,
-      aracGrubuId: value.aracGrubuId || -1,
-      aracRenkId: value.aracRenkId || -1,
-      lokasyonId: value.lokasyonId || -1,
-      departmanId: value.departmanId || -1,
-      surucuId: value.surucuId || -1,
-      aracTipId: value.aracTipId || -1,
-      aracTipId: value.aracTipId || -1,
+      markaId: value.markaId || 0,
+      modelId: value.modelId || 0,
+      aracGrubuId: value.aracGrubuId || 0,
+      aracRenkId: value.aracRenkId || 0,
+      lokasyonId: value.lokasyonId || 0,
+      departmanId: value.departmanId || 0,
+      surucuId: value.surucuId || 0,
+      aracTipId: value.aracTipId || 0,
+      aracTipId: value.aracTipId || 0,
       guncelKm: value.guncelKm || 0,
       muayeneTarih: value.muayeneTarih
         ? dayjs(value.muayeneTarih).format("YYYY-MM-DD")
@@ -183,7 +181,7 @@ const AddModal = ({ setStatus }) => {
       sozlesmeTarih: value.sozlesmeTarih
         ? dayjs(value.sozlesmeTarih).format("YYYY-MM-DD")
         : null,
-      yakitTipId: value.yakitTipId || -1,
+      yakitTipId: value.yakitTipId || 0,
       kmLog: kmLog,
       ozelAlan1: value.ozelAlan1 || "",
       ozelAlan2: value.ozelAlan2 || "",
@@ -269,7 +267,6 @@ const AddModal = ({ setStatus }) => {
         className="btn primary-btn"
         onClick={() => {
           setIsModalOpen(true);
-          setActiveKey("1");
         }}
       >
         <PlusOutlined /> {t("ekle")}

@@ -279,3 +279,7 @@
   background: rgba(0, 0, 0, 0.03) !important;
   color: rgba(0, 0, 0, 0.7) !important;
 }
+
+.ant-spin-nested-loading .ant-spin-blur {
+  opacity: .3;
+}

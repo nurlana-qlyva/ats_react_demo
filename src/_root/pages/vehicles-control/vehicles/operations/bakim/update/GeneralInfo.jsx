@@ -3,9 +3,9 @@ import { useFormContext, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
 import tr_TR from 'antd/lib/locale/tr_TR'
 import { Button, Checkbox, ConfigProvider, DatePicker, Divider, Input, InputNumber, Popover, Radio, TimePicker } from 'antd'
-import ServisType from '../../../../../components/form/ServisType'
-import Driver from '../../../../../components/form/Driver'
-import Location from '../../../../../components/form/Location'
+import ServisType from '../../../../../../components/form/ServisType'
+import Driver from '../../../../../../components/form/Driver'
+import Location from '../../../../../../components/form/Location'
 
 dayjs.locale('tr')
 

@@ -15,7 +15,6 @@ import Driver from "../../../../../../components/form/selects/Driver"
 import MaterialType from '../../../../../../components/form/selects/MaterialType'
 import CheckboxInput from '../../../../../../components/form/checkbox/CheckboxInput'
 import YakitTank from '../../../../../../components/form/selects/YakitlTank'
-import ReadonlyInput from '../../../../../../components/form/inputs/ReadonlyInput'
 import TextInput from '../../../../../../components/form/inputs/TextInput'
 
 dayjs.locale('tr')
@@ -591,7 +590,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                                         <div className="col-span-10">
                                             <div className="flex flex-col gap-1">
                                                 <label>{t("ortalamaTuketim")} <ArrowUpOutlined style={{ color: 'red' }} /></label>
-                                                <ReadonlyInput name="tuketim" checked={true} />
+                                                <TextInput name="tuketim" readonly={true} />
                                             </div>
                                         </div>
                                         <div className="col-span-2 self-end">

@@ -91,6 +91,10 @@
   justify-content: end;
 }
 
+.justify-self-end {
+  justify-self: end;
+}
+
 .align-center {
   align-items: center;
 }

@@ -99,6 +99,12 @@ const Sigorta = ({ visible, onClose, ids }) => {
             render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
+            title: `${t("kalanSure")} (${t("gun")})`,
+            dataIndex: "kalanSure",
+            key: 4,
+            render: (text) => <p>{text}</p>,
+        },
+        {
             title: t("policeNo"),
             dataIndex: "policeNo",
             key: 5,

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import { Button, Modal, Tabs } from 'antd'
 import GeneralInfo from './GeneralInfo'
-import PersonalFields from '../../../../../components/form/PersonalFields'
+import PersonalFields from '../../../../../../components/form/PersonalFields'
 
 const AddModal = ({ data }) => {
     const [openModal, setopenModal] = useState(false)
