@@ -24,7 +24,7 @@ const convertToLocationFormat = (data, parentId = 0) => {
   return result;
 };
 
-const Location = ({ name, codeName }) => {
+const Location = ({ name, codeName, required }) => {
   const [data, setData] = useState([]);
   const { watch, setValue, control } = useFormContext();
 
@@ -38,49 +38,58 @@ const Location = ({ name, codeName }) => {
     <Controller
       name={codeName ? codeName : "lokasyonId"}
       control={control}
-      render={({ field }) => (
-        <TreeSelect
-          {...field}
-          showSearch
-          allowClear
-          dropdownStyle={{
-            maxHeight: 400,
-            overflow: "auto",
-          }}
-          className="w-full"
-          treeLine={true}
-          treeData={convertToLocationFormat(data)}
-          value={name ? watch(name) : watch("lokasyon")}
-          onClick={handleClickTree}
-          onChange={(e) => {
-            field.onChange(e);
-            if (e === undefined) {
-              const selectedOption = data.find(
-                (option) => option.lokasyonId === e
-              );
-              if (!selectedOption) {
-                setValue("lokasyon", "");
-                name ? setValue(name, "") : setValue("lokasyon", "");
-                codeName ? setValue(codeName, -1) : setValue("lokasyonId", -1);
-              }
-            } else {
-              const selectedOption = data.find(
-                (option) => option.lokasyonId === e
-              );
+      rules={{ required: required ? "Bu alan boş bırakılamaz!" : false }}
+      render={({ field, fieldState }) => (
+        <>
+          <TreeSelect
+            {...field}
+            showSearch
+            allowClear
+            dropdownStyle={{
+              maxHeight: 400,
+              overflow: "auto",
+            }}
+            className={`w-full ${fieldState.error && !watch("lokasyonId") ? 'input-error' : ''}`}
+            treeLine={true}
+            treeData={convertToLocationFormat(data)}
+            value={name ? watch(name) : watch("lokasyon")}
+            onClick={handleClickTree}
+            onChange={(e) => {
+              field.onChange(e);
+              if (e === undefined) {
+                const selectedOption = data.find(
+                  (option) => option.lokasyonId === e
+                );
+                if (!selectedOption) {
+                  name ? setValue(name, "") : setValue("lokasyon", null);
+                  codeName
+                    ? setValue(codeName, 0)
+                    : setValue("lokasyonId", null);
+                }
+              } else {
+                const selectedOption = data.find(
+                  (option) => option.lokasyonId === e
+                );
 
-              if (selectedOption) {
-                name
-                  ? setValue(name, selectedOption.lokasyonTanim)
-                  : setValue("lokasyon", selectedOption.lokasyonTanim);
+                if (selectedOption) {
+                  name
+                    ? setValue(name, selectedOption.lokasyonTanim)
+                    : setValue("lokasyon", selectedOption.lokasyonTanim);
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
+          {fieldState.error && (
+            <span style={{ color: "red" }}>{fieldState.error.message}</span>
+          )}
+        </>
       )}
     />
   );
 };
 
-Location.propTypes = {};
+Location.propTypes = {
+  required: PropTypes.bool
+};
 
 export default Location;

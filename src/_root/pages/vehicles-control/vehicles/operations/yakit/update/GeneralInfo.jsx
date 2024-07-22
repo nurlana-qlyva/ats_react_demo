@@ -294,13 +294,14 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
           res?.data.message === " Invalid Km range for both KmLog and FuelKm !"
         ) {
           setErrorMessage("Alınan Km Yakıt ve Km Log-a girilemez!");
+          setIsValid(true);
         } else if (res?.data.message === " Invalid FuelKm Range !") {
           setErrorMessage("Alınan Km Yakıt Log-a girilemez!");
+          setIsValid(true);
         } else if (res?.data.message === " Invalid KmLog Range !") {
           setErrorMessage("Alınan Km Km Log-a girilemez!");
-          if (watch("engelle")) {
-            setResponse("success");
-          }
+          setLogError(true);
+          setIsValid(true);
         }
       } else if (res?.data.statusCode === 200) {
         setResponse("success");
@@ -309,6 +310,17 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
     });
     setIsValid(true);
   };
+
+  useEffect(() => {
+    if (watch("engelle")) {
+      setResponse("success");
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+      setResponse("error");
+      setErrorMessage("Alınan Km Km Log-a girilemez!");
+    }
+  }, [watch("engelle")]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -389,7 +401,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("tarih")}</label>
-                <DateInput name="tarih" readonly={true} />
+                <DateInput name="tarih" checked={true} />
               </div>
             </div>
             <div className="col-span-6">

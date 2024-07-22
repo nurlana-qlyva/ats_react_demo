@@ -10,7 +10,7 @@ const TimeInput = ({ name, readonly }) => {
             name={name}
             control={control}
             render={({ field }) => (
-                <TimePicker {...field} placeholder="" format="HH:mm:ss" readOnly={readonly}/>
+                <TimePicker {...field} placeholder="" format="HH:mm:ss" disabled={readonly}/>
             )}
         />
     )

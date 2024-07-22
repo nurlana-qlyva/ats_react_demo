@@ -198,7 +198,7 @@ const DetailUpdate = () => {
       setValue("plaka", res?.data.plaka);
       setPlaka(res?.data.plaka);
       setAracId(res?.data.aracId);
-      setGuncelKmTarih(res?.data.sonKmGuncellemeTarih)
+      setGuncelKmTarih(res?.data.sonKmGuncellemeTarih);
       setValue("guncelKm", res?.data.guncelKm);
       setValue("aracTipId", res?.data.aracTipId ? res?.data.aracTipId : null);
       setValue("aracTip", res?.data.aracTip);
@@ -523,22 +523,34 @@ const DetailUpdate = () => {
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label>{t("aracTip")}</label>
-                    <CodeControl name="aracTip" codeName="aracTipId" id={100} />
+                    <label>
+                      {t("aracTip")} <span className="text-danger">*</span>
+                    </label>
+                    <CodeControl
+                      name="aracTip"
+                      codeName="aracTipId"
+                      id={100}
+                      required={true}
+                    />
                   </div>
                 </div>
                 <div className="col-span-4">
                   <div className="grid gap-1">
                     <div className="col-span-10">
                       <div className="flex flex-col gap-1">
-                        <label className="flex justify-between"><span>{t("guncelKm")}</span> <span className="text-info">[ {dayjs(guncelKmTarih).format("DD.MM.YYYY")} ]</span></label>
+                        <label className="flex justify-between">
+                          <span>{t("guncelKm")}</span>{" "}
+                          <span className="text-info">
+                            [ {dayjs(guncelKmTarih).format("DD.MM.YYYY")} ]
+                          </span>
+                        </label>
                         <TextInput name="guncelKm" readonly={true} />
                       </div>
                     </div>
                     <div className="col-span-2 self-end">
                       <Button
                         className="w-full"
-                        style={{padding: "4px 0"}}
+                        style={{ padding: "4px 0" }}
                         onClick={() => setKmHistryModal(true)}
                       >
                         ...
@@ -548,20 +560,26 @@ const DetailUpdate = () => {
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="lokasyonId">{t("lokasyon")}</label>
-                    <Location />
+                    <label htmlFor="lokasyonId">
+                      {t("lokasyon")} <span className="text-danger">*</span>
+                    </label>
+                    <Location required={true} />
                   </div>
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="markaId">{t("marka")}</label>
-                    <Marka />
+                    <label htmlFor="markaId">
+                      {t("marka")} <span className="text-danger">*</span>
+                    </label>
+                    <Marka required={true} />
                   </div>
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="modelId">{t("model")}</label>
-                    <Model />
+                    <label htmlFor="modelId">
+                      {t("model")} <span className="text-danger">*</span>
+                    </label>
+                    <Model required={true} />
                   </div>
                 </div>
                 <div className="col-span-4">
@@ -572,11 +590,14 @@ const DetailUpdate = () => {
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="yakitTipId">{t("yakitTip")}</label>
+                    <label htmlFor="yakitTipId">
+                      {t("yakitTip")} <span className="text-danger">*</span>
+                    </label>
                     <MaterialType
                       name="yakitTip"
                       codeName="yakitTipId"
                       type="YAKIT"
+                      required={true}
                     />
                   </div>
                 </div>

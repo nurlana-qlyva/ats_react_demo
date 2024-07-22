@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { t } from "i18next";
 import { Checkbox, Divider, Input, InputNumber, Select } from "antd";
-import Firma from "../../../components/form/Firma";
+import Firma from "../../../components/form/selects/Firma";
 import Birim from "../../../components/form/Birim";
 import MalzemeTipi from "../../../components/form/MalzemeTipi";
 import Depo from "../../../components/form/Depo";
@@ -462,9 +462,9 @@ const GeneralInfo = ({ isValid }) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label>{t("sonAlisFiyati")}</label>
+                <label>{t("sonAlisMiktari")}</label>
                 <Controller
-                  name="sonFiyat"
+                  name="sonMiktar"
                   control={control}
                   render={({ field }) => (
                     <InputNumber

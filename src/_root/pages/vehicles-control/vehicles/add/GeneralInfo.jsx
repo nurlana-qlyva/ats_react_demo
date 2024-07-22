@@ -24,14 +24,14 @@ const GeneralInfo = ({ isValid }) => {
                     <div className="grid gap-1">
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>{t("plaka")}</label>
-                                <TextInput name="plaka" style={validateStyle} />
+                                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                                <TextInput name="plaka" style={validateStyle} required={true} />
                             </div>
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>{t("aracTip")}</label>
-                                <CodeControl name="aracTip" codeName="aracTipId" id={100} />
+                                <label>{t("aracTip")} <span className="text-danger">*</span></label>
+                                <CodeControl name="aracTip" codeName="aracTipId" id={100} required={true} />
                             </div>
                         </div>
                         <div className="col-span-4">
@@ -44,8 +44,8 @@ const GeneralInfo = ({ isValid }) => {
                 </div>
                 <div className="col-span-4 p-10">
                     <div className="flex flex-col gap-1">
-                        <label>{t("lokasyon")}</label>
-                        <Location />
+                        <label>{t("lokasyon")} <span className="text-danger">*</span></label>
+                        <Location required={true} />
                     </div>
                 </div>
             </div>
@@ -56,14 +56,14 @@ const GeneralInfo = ({ isValid }) => {
                     <div className="grid gap-1 mt-10">
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>{t("marka")}</label>
-                                <Marka />
+                                <label>{t("marka")} <span className="text-danger">*</span></label>
+                                <Marka required={true} />
                             </div>
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>{t("model")}</label>
-                                <Model />
+                                <label>{t("model")} <span className="text-danger">*</span></label>
+                                <Model required={true} />
                             </div>
                         </div>
                         <div className="col-span-4">
@@ -110,8 +110,8 @@ const GeneralInfo = ({ isValid }) => {
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
-                                <label>{t("yakitTip")}</label>
-                                <MaterialType name="yakitTip" codeName="yakitTipId" type="YAKIT" />
+                                <label>{t("yakitTip")} <span className="text-danger">*</span></label>
+                                <MaterialType name="yakitTip" codeName="yakitTipId" type="YAKIT" required={true} />
                             </div>
                         </div>
                     </div>

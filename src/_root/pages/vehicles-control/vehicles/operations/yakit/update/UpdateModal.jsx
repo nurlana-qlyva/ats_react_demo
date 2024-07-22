@@ -213,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       );
     }
   }, [id, updateModal]);
-  console.log(watch("ozelAlanKodId9"));
+
   const uploadImages = () => {
     try {
       setLoadingImages(true);

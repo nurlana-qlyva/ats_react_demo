@@ -253,7 +253,7 @@ const UpdateModal = ({
       setValue("girenMiktar", res.data.girenMiktar);
       setValue("sonAlinanFirma", res.data.sonAlinanFirma);
       setValue("cikanMiktar", res.data.cikanMiktar);
-      setValue("sonFiyat", res.data.sonFiyat);
+      setValue("sonMiktar", res.data.sonMiktar);
       setValue("stokMiktar", res.data.girenMiktar - res.data.cikanMiktar);
       setValue(
         "sonAlisTarih",
@@ -280,7 +280,7 @@ const UpdateModal = ({
       bolum: values.bolum,
       raf: values.raf,
       kritikMiktar: values.kritikMiktar || 0,
-      sonFiyat: values.sonFiyat || 0,
+      sonMiktar: values.sonMiktar || 0,
       kdvOran: values.kdvOran || 0,
       aktif: values.aktif,
       yedekParca: values.yedekParca,
