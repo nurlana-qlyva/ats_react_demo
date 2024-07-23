@@ -17,7 +17,7 @@ import PersonalFields from "../../../../../components/form/personal-fields/Perso
 import FileUpload from "../../../../../components/upload/FileUpload";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState("normal");
   const [code, setCode] = useState("normal");
@@ -213,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "SIGORTA", images);
+      const data = uploadPhoto(id, "SEFER", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -225,6 +225,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
+      aracId: aracId,
       surucuId1: values.surucuId1 || 0,
       surucuId2: values.surucuId2 || 0,
       aciklama: values.aciklama,
@@ -358,6 +359,7 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
+  aracId: PropTypes.number,
 };
 
 export default UpdateModal;

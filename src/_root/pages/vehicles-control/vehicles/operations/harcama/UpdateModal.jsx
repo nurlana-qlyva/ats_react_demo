@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
   const [activeKey, setActiveKey] = useState("1");
   // file
@@ -172,7 +172,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "HARCAMA", images);
+      const data = uploadPhoto(id, "HARCAMA", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -184,6 +184,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
+      aracId: aracId,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
       surucuId: values.surucuId || 0,
       lokasyonId: values.lokasyonId || 0,
@@ -205,6 +206,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       ozelAlan11: values.ozelAlan11 || 0,
       ozelAlan12: values.ozelAlan12 || 0,
     }
+
     UpdateExpenseItemService(body).then((res) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
@@ -308,6 +310,7 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
+  aracId: PropTypes.number,
 };
 
 export default UpdateModal;

@@ -45,6 +45,7 @@ const Yakit = ({ visible, onClose, ids }) => {
   });
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [id, setId] = useState(0);
+  const [aracId, setAracId] = useState(0);
   const [search, setSearch] = useState("");
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [country, setCountry] = useState({
@@ -114,6 +115,7 @@ const Yakit = ({ visible, onClose, ids }) => {
           onClick={() => {
             setUpdateModalOpen(true);
             setId(record.siraNo);
+            setAracId(record.aracId)
           }}
         >
           <span>{country.code}</span>
@@ -390,6 +392,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         updateModal={updateModalOpen}
         setUpdateModal={setUpdateModalOpen}
         id={id}
+        aracId={aracId}
         setStatus={setStatus}
         status={status}
       />

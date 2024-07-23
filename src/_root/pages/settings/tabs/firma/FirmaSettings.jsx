@@ -3,6 +3,8 @@ import { t } from 'i18next'
 import { Button, Divider } from 'antd'
 import TextInput from "../../../../components/form/inputs/TextInput"
 import Textarea from "../../../../components/form/inputs/Textarea"
+import { GetOwnerInfoService, UpdateOwnerInfoService } from '../../../../../api/services/settings/services'
+import { useEffect } from 'react'
 
 const FirmaSettings = () => {
     const defaultValues = {
@@ -22,7 +24,53 @@ const FirmaSettings = () => {
     const methods = useForm({
         defaultValues: defaultValues
     })
-    const { handleSubmit, reset, setValue } = methods
+    const { handleSubmit, setValue } = methods;
+
+    useEffect(() => {
+        GetOwnerInfoService().then((res) => {
+            setValue("siraNo", res?.data.siraNo);
+            setValue("firmaUnvan", res?.data.firmaUnvan);
+            setValue("adres1", res?.data.adres1);
+            setValue("adres2", res?.data.adres2);
+            setValue("sehir", res?.data.sehir);
+            setValue("ilce", res?.data.ilce);
+            setValue("pk", res?.data.pk);
+            setValue("ulke", res?.data.ulke);
+            setValue("telefon", res?.data.telefon);
+            setValue("fax", res?.data.fax);
+            setValue("web", res?.data.web);
+            setValue("email", res?.data.email);
+            setValue("vergiDaire", res?.data.vergiDaire);
+            setValue("vergiNo", res?.data.vergiNo);
+            setValue("aciklama", res?.data.aciklama);
+        });
+    }, []);
+
+    const onSubmit = handleSubmit(values => {
+        const body = {
+            "siraNo": values.siraNo,
+            "firmaUnvan": values.firmaUnvan,
+            "adres1": values.adres1,
+            "adres2": values.adres2,
+            "sehir": values.sehir,
+            "ilce": values.ilce,
+            "pk": values.pk,
+            "ulke": values.ulke,
+            "telefon": values.telefon,
+            "fax": values.fax,
+            "web": values.web,
+            "email": values.email,
+            "vergiDaire": values.vergiDaire,
+            "vergiNo": values.vergiNo,
+            "aciklama": values.aciklama
+        }
+
+        UpdateOwnerInfoService(body).then((res) => {
+            if (res.data.statusCode === 202) {
+                console.log(1)
+            }
+        });
+    })
 
 
     return (
@@ -36,43 +84,43 @@ const FirmaSettings = () => {
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("firmaUnvani")}</label>
-                                <TextInput name="" />
+                                <TextInput name="firmaUnvan" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("adres")} 1</label>
-                                <TextInput name="" />
+                                <TextInput name="adres1" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("adres")} 2</label>
-                                <TextInput name="" />
+                                <TextInput name="adres2" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("sehir")}</label>
-                                <TextInput name="" />
+                                <TextInput name="sehir" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("ilce")}</label>
-                                <TextInput name="" />
+                                <TextInput name="ilce" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("pk")}</label>
-                                <TextInput name="" />
+                                <TextInput name="pk" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("ulke")}</label>
-                                <TextInput name="" />
+                                <TextInput name="ulke" />
                             </div>
                         </div>
                         <div className="col-span-12 mt-10 mb-10">
@@ -81,50 +129,50 @@ const FirmaSettings = () => {
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("telefon")}</label>
-                                <TextInput name="" />
+                                <TextInput name="telefon" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("fax")}</label>
-                                <TextInput name="" />
+                                <TextInput name="fax" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("web")}</label>
-                                <TextInput name="" />
+                                <TextInput name="web" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("email")}</label>
-                                <TextInput name="" />
+                                <TextInput name="email" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("vergiDairesi")}</label>
-                                <TextInput name="" />
+                                <TextInput name="vergiDaire" />
                             </div>
                         </div>
                         <div className="col-span-3">
                             <div className="flex flex-col gap-1">
                                 <label>{t("vergiNumarasi")}</label>
-                                <TextInput name="" />
+                                <TextInput name="vergiNo" />
                             </div>
                         </div>
                         <div className="col-span-12">
                             <div className="flex flex-col gap-1">
                                 <label>{t("aciklama")}</label>
-                                <Textarea name="" />
+                                <Textarea name="aciklama" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="justify-end flex gap-1 col-span-12 mt-10">
-                <Button className="btn btn-min primary-btn">Kaydet</Button>
+                <Button className="btn btn-min primary-btn" onClick={onSubmit}>Kaydet</Button>
                 <Button className="btn btn-min cancel-btn">İptal</Button>
             </div>
         </FormProvider>

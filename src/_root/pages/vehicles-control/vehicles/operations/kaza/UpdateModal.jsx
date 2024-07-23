@@ -19,7 +19,7 @@ import SigortaBilgileri from "./tabs/SigortaBilgileri";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
   const [activeKey, setActiveKey] = useState("1");
   // file
@@ -200,7 +200,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "KAZA", images);
+      const data = uploadPhoto(id, "KAZA", images,  false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -212,6 +212,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
+      aracId: aracId,
       surucuId: values.surucuId || 0,
       aciklama: values.aciklama,
       kazaTarih: dayjs(values.kazaTarih).format("YYYY-MM-DD"),
@@ -364,6 +365,7 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
+  aracId: PropTypes.number,
 };
 
 export default UpdateModal;

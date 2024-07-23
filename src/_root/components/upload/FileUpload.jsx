@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { DownloadDocumentByIdService } from '../../../api/services/upload/services'
-import { InboxOutlined, FileOutlined } from '@ant-design/icons'
+import { InboxOutlined, FileOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, message, Spin, Upload } from 'antd'
 
 const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
@@ -35,10 +35,25 @@ const FileUpload = ({ filesUrl, loadingFiles, setFiles }) => {
         });
     }
 
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+    );
+
     return (
         <>
             {loadingFiles ? (
-                <Spin />
+                <div className="flex gap-1">
+                    {filesArr.map((url, i) => {
+                        return (
+                            <div key={i} className="border p-10 mb-10">
+                                <div style={{ margin: "10px", height: "150px", width: "150px", objectFit: "cover", position: "relative" }}>
+                                    <Spin spinning={true} indicator={customIcon}></Spin>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             ) : (
                 <div className="flex gap-1">
                     {filesArr.map((file, i) => {

@@ -232,7 +232,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       surucuKod: values.surucuKod,
       isim: values.isim,
       aktif: values.aktif,
-      isim: values.isim,
       lokasyonId: values.lokasyonId || -1,
       departmanKodId: values.departmanKodId || -1,
       adres: values.adres,

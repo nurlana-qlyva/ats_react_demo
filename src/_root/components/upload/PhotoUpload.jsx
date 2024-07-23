@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DownloadPhotoByIdService } from '../../../api/services/upload/services'
-import { InboxOutlined, UserOutlined } from '@ant-design/icons'
+import { InboxOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Image, message, Spin, Upload } from 'antd'
 
 const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
@@ -41,10 +41,25 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
         setImages(formData)
     }
 
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+    );
+
     return (
         <>
             {loadingImages ? (
-                <Spin />
+                <div className="flex gap-1">
+                    {imagesArr.map((url, i) => {
+                        return (
+                            <div key={i} className="border p-10 mb-10">
+                                <div style={{ margin: "10px", height: "150px", width: "150px", objectFit: "cover", position: "relative" }}>
+                                    <Spin spinning={true} indicator={customIcon}></Spin>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             ) : (
                 <div className="flex gap-1">
                     {imagesArr.map((url, i) => {
@@ -80,7 +95,7 @@ const PhotoUpload = ({ imageUrls, loadingImages, setImages }) => {
                     if (isImage && isLt2M) {
                         handleUpload(file);
                     }
-                    
+
                     handleUpload(file);
                     return false;
                 }}>

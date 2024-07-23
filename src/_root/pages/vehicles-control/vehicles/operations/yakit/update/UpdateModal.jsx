@@ -20,7 +20,7 @@ import PersonalFields from "../../../../../../components/form/personal-fields/Pe
 import PhotoUpload from "../../../../../../components/upload/PhotoUpload";
 import FileUpload from "../../../../../../components/upload/FileUpload";
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, aracId }) => {
   const { data, plaka, setData } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState(false);
   const [response, setResponse] = useState("normal");
@@ -33,6 +33,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const [imageUrls, setImageUrls] = useState([]);
   const [loadingImages, setLoadingImages] = useState(false);
   const [images, setImages] = useState([]);
+
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -211,13 +212,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       GetDocumentsByRefGroupService(id, "YAKIT").then((res) =>
         setFilesUrl(res.data)
       );
+
+      setImages([])
     }
   }, [id, updateModal]);
 
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "YAKIT", images);
+      const data = uploadPhoto(id, "YAKIT", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -255,7 +258,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
     const body = {
       siraNo: id,
-      aracId: data.aracId,
+      aracId: aracId,
       plaka: values.plaka,
       tarih: values.tarih ? dayjs(values.tarih).format("YYYY-MM-DD") : null,
       faturaTarih: values.faturaTarih
@@ -386,6 +389,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
           filesUrl={filesUrl}
           loadingFiles={loadingFiles}
           setFiles={setFiles}
+          open={updateModal}
         />
       ),
     },
@@ -439,6 +443,7 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
+  aracId: PropTypes.number,
 };
 
 export default UpdateModal;

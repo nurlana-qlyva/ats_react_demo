@@ -181,7 +181,7 @@ const DetailUpdate = () => {
     defaultValues: defaultValues,
   });
 
-  const { setValue, handleSubmit, watch } = methods;
+  const { setValue, handleSubmit } = methods;
 
   useEffect(() => {
     setLoading(true);

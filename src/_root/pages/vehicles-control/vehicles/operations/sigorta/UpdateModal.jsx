@@ -19,7 +19,7 @@ import PersonalFields from "../../../../../components/form/personal-fields/Perso
 import FileUpload from "../../../../../components/upload/FileUpload";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
   const [activeKey, setActiveKey] = useState("1");
   // file
@@ -36,7 +36,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       label: "ozelAlan1",
       key: "OZELALAN_1",
       value: "Özel Alan 1",
-      type: "text", 
+      type: "text",
     },
     {
       label: "ozelAlan2",
@@ -56,7 +56,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       value: "Özel Alan 4",
       type: "text",
     },
-    { 
+    {
       label: "ozelAlan5",
       key: "OZELALAN_5",
       value: "Özel Alan 5",
@@ -200,7 +200,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "SIGORTA", images);
+      const data = uploadPhoto(id, "SIGORTA", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -213,7 +213,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
 
     const body = {
       siraNo: id,
-      aracId: plaka[0].id,
+      aracId: aracId,
       aciklama: values.aciklama,
       tutar: values.tutar || 0,
       policeNo: values.policeNo,
@@ -346,6 +346,7 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   id: PropTypes.number,
+  aracId: PropTypes.number,
 };
 
 export default UpdateModal;
