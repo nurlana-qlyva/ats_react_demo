@@ -18,6 +18,7 @@ const GeneralInfo = ({ isValid }) => {
   const { setValue } = useFormContext();
   const [open, setOpen] = useState(false);
   const [dorse, setDorse] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
 
   const validateStyle = {
     borderColor:
@@ -27,6 +28,11 @@ const GeneralInfo = ({ isValid }) => {
           ? "#23b545"
           : "#000",
   };
+
+  const handleOpen = () => {
+    setModalKey(prevKey => prevKey + 1);
+    setOpen(true);
+  }
 
   const footer = [
     <Button
@@ -87,7 +93,7 @@ const GeneralInfo = ({ isValid }) => {
                   </div>
                 </div>
                 <div className="col-span-2 self-end">
-                  <Button onClick={() => setOpen(true)}>...</Button>
+                  <Button onClick={handleOpen}>...</Button>
                 </div>
               </div>
             </div>
@@ -186,8 +192,9 @@ const GeneralInfo = ({ isValid }) => {
         maskClosable={false}
         footer={footer}
         width={1200}
+        key={modalKey}
       >
-        <VehicleList setDorse={setDorse} open={open} />
+        <VehicleList setDorse={setDorse} open={open} key={modalKey} />
       </Modal>
     </>
   );

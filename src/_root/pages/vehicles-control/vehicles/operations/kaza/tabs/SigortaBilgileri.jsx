@@ -10,6 +10,7 @@ const SigortaBilgileri = () => {
     const { watch, setValue } = useFormContext()
     const [open, setOpen] = useState(false);
     const [sigorta, setSigorta] = useState(false);
+    const [modalKey, setModalKey] = useState(0);
 
     const footer = [
         <Button
@@ -34,6 +35,11 @@ const SigortaBilgileri = () => {
         </Button>,
     ];
 
+    const handleOpen = () => {
+        setModalKey(prevKey => prevKey + 1);
+        setOpen(true);
+    }
+
     return (
         <>
             <h2><CheckboxInput name="sigortaBilgisiVar" /> {t("sigortaBilgileri")}</h2>
@@ -47,7 +53,7 @@ const SigortaBilgileri = () => {
                             </div>
                         </div>
                         <div className="col-span-2 self-end">
-                            <Button onClick={() => setOpen(true)} disabled={!watch("sigortaBilgisiVar")}>...</Button>
+                            <Button onClick={handleOpen} disabled={!watch("sigortaBilgisiVar")}>...</Button>
                         </div>
                     </div>
                 </div>
@@ -72,8 +78,9 @@ const SigortaBilgileri = () => {
                 maskClosable={false}
                 footer={footer}
                 width={1200}
+                key={modalKey}
             >
-                <SigortaList setSigorta={setSigorta} open={open} />
+                <SigortaList setSigorta={setSigorta} open={open} key={modalKey} />
             </Modal>
         </>
     )

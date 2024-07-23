@@ -4,7 +4,7 @@ import { Input, Table } from "antd";
 import { t } from "i18next";
 import { GetPenaltyDefListService } from "../../../../../../../api/services/vehicles/ceza/services";
 
-const CezaMaddesiTable = ({ setMadde, open }) => {
+const CezaMaddesiTable = ({ setMadde, open, key }) => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -79,7 +79,7 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       });
     };
     fetchData();
-  }, [search, tableParams.pagination.current]);
+  }, [search, tableParams.pagination.current, key]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
@@ -130,6 +130,9 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
           rowKey="siraNo"
           scroll={{ x: 1500, y: 500 }}
           size="small"
+          locale={{
+            emptyText: "Veri Bulunamadı",
+          }}
         />
       </div>
     </>
@@ -139,6 +142,7 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
 CezaMaddesiTable.propTypes = {
   open: PropTypes.bool,
   setMadde: PropTypes.func,
+  key: PropTypes.number,
 };
 
 export default CezaMaddesiTable;

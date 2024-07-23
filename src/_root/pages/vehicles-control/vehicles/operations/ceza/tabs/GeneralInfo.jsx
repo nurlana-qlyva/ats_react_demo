@@ -21,6 +21,7 @@ const GeneralInfo = () => {
   const { setValue, watch } = useFormContext();
   const [open, setOpen] = useState(false);
   const [madde, setMadde] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
 
   useEffect(() => {
     if (watch("tutar") && watch("indirimOran")) {
@@ -33,6 +34,11 @@ const GeneralInfo = () => {
       setValue("toplamTutar", toplam)
     }
   }, [watch("tutar"), watch("gecikmeTutar"), watch("indirimOran")])
+
+  const handleOpen = () => {
+    setModalKey(prevKey => prevKey + 1);
+    setOpen(true);
+  }
 
   const footer = [
     <Button
@@ -109,7 +115,7 @@ const GeneralInfo = () => {
                   </div>
                 </div>
                 <div className="col-span-2 self-end">
-                  <Button onClick={() => setOpen(true)}>...</Button>
+                  <Button onClick={handleOpen}>...</Button>
                 </div>
               </div>
             </div>
@@ -214,8 +220,9 @@ const GeneralInfo = () => {
         maskClosable={false}
         footer={footer}
         width={1200}
+        key={modalKey}
       >
-        <CezaMaddesiTable setMadde={setMadde} open={open} />
+        <CezaMaddesiTable setMadde={setMadde} open={open} key={modalKey} />
       </Modal>
     </>
   );

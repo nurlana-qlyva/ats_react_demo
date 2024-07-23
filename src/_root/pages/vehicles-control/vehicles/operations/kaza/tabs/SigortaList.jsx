@@ -6,7 +6,7 @@ import { Input, Table } from "antd";
 import { GetActiveInsuranceListService } from "../../../../../../../api/services/vehicles/operations_services";
 import { PlakaContext } from "../../../../../../../context/plakaSlice";
 
-const SigortaList = ({ setSigorta, open }) => {
+const SigortaList = ({ setSigorta, open, key }) => {
     const { plaka } = useContext(PlakaContext)
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
@@ -23,48 +23,53 @@ const SigortaList = ({ setSigorta, open }) => {
         {
             title: t("sigorta"),
             dataIndex: "sigorta",
-            key: 1,
+            key: "sigorta",
         },
         {
             title: t("baslamaTarih"),
             dataIndex: "baslangicTarih",
-            key: 2,
+            key: "baslangicTarih",
             render: text => dayjs(text).format("DD.MM.YYYY")
         },
         {
             title: t("policeNo"),
             dataIndex: "policeNo",
-            key: 3,
+            key: "policeNo",
         },
         {
             title: t("firma"),
             dataIndex: "firma",
-            key: 4,
+            key: "firma",
         },
     ];
-console.log(open)
+
     useEffect(() => {
         if (open) {
             const fetchData = async () => {
                 setLoading(true);
-                const res = await GetActiveInsuranceListService(
-                    plaka[0].id,
-                    search,
-                    tableParams.pagination.current
-                );
-                setLoading(false);
-                setData(res?.data.list);
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.recordCount,
-                    },
-                });
+                try {
+                    const res = await GetActiveInsuranceListService(
+                        plaka[0].id,
+                        search,
+                        tableParams.pagination.current
+                    );
+                    setData(res?.data.list || []);
+                    setTableParams({
+                        ...tableParams,
+                        pagination: {
+                            ...tableParams.pagination,
+                            total: res?.data.recordCount || 0,
+                        },
+                    });
+                } catch (error) {
+                    console.error("Failed to fetch insurance data:", error);
+                } finally {
+                    setLoading(false);
+                }
             };
             fetchData();
         }
-    }, [search, tableParams.pagination.current, open]);
+    }, [open, plaka, search, tableParams.pagination.current, key]);
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -81,8 +86,8 @@ console.log(open)
     const rowSelection = {
         type: "radio",
         selectedRowKeys,
-        onChange: (selectedRowKeys, selectedRows) => {
-            setSelectedRowKeys(selectedRowKeys);
+        onChange: (newSelectedRowKeys, selectedRows) => {
+            setSelectedRowKeys(newSelectedRowKeys);
             setSigorta(selectedRows);
         },
     };
@@ -113,6 +118,9 @@ console.log(open)
                     onChange={handleTableChange}
                     loading={loading}
                     rowKey="siraNo"
+                    locale={{
+                        emptyText: "Veri Bulunamadı",
+                    }}
                 />
             </div>
         </>
@@ -122,6 +130,7 @@ console.log(open)
 SigortaList.propTypes = {
     setSigorta: PropTypes.func,
     open: PropTypes.bool,
+    key: PropTypes.number,
 };
 
 export default SigortaList;

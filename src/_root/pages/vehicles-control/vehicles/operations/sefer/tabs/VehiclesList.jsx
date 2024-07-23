@@ -5,7 +5,7 @@ import { Button, Input, Table } from "antd";
 import { t } from "i18next";
 import { GetVehiclesListService } from "../../../../../../../api/services/vehicles/vehicles/services";
 
-const VehicleList = ({ setDorse, open }) => {
+const VehicleList = ({ setDorse, open, key }) => {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -109,7 +109,7 @@ const VehicleList = ({ setDorse, open }) => {
             });
         };
         fetchData();
-    }, [search, tableParams.pagination.current]);
+    }, [search, tableParams.pagination.current, key]);
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -164,6 +164,9 @@ const VehicleList = ({ setDorse, open }) => {
                             x: 1500
                         }
                     }
+                    locale={{
+                        emptyText: "Veri Bulunamadı",
+                    }}
                 />
             </div>
         </>
@@ -173,6 +176,7 @@ const VehicleList = ({ setDorse, open }) => {
 VehicleList.propTypes = {
     setDorse: PropTypes.func,
     open: PropTypes.bool,
+    key: PropTypes.number,
 };
 
 export default VehicleList;
