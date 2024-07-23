@@ -7,7 +7,6 @@ import Plaka from "../../../../../../components/form/selects/Plaka";
 import Driver from "../../../../../../components/form/selects/Driver";
 import Location from "../../../../../../components/form/tree/Location";
 import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
-import ReadonlyInput from "../../../../../../components/form/inputs/ReadonlyInput";
 import TextInput from "../../../../../../components/form/inputs/TextInput";
 import DateInput from "../../../../../../components/form/date/DateInput";
 import TimeInput from "../../../../../../components/form/date/TimeInput";
@@ -52,7 +51,7 @@ const GeneralInfo = () => {
       className="btn btn-min cancel-btn"
       onClick={() => setOpen(false)}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -63,20 +62,20 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("plaka")}</label>
-                <Plaka />
+                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                <Plaka required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("surucu")}</label>
-                <Driver />
+                <label>{t("surucu")} <span className="text-danger">*</span></label>
+                <Driver required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTarihi")}</label>
-                <DateInput name="tarih" />
+                <label>{t("cezaTarihi")} <span className="text-danger">*</span></label>
+                <DateInput name="tarih" required={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -106,7 +105,7 @@ const GeneralInfo = () => {
                 <div className="col-span-10">
                   <div className="flex flex-col gap-1">
                     <label>{t("cezaMaddesi")}</label>
-                    <ReadonlyInput name="cezaMaddesi" checked="true" />
+                    <TextInput name="cezaMaddesi" readonly={true} />
                   </div>
                 </div>
                 <div className="col-span-2 self-end">

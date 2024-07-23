@@ -83,7 +83,6 @@
   align-items: center;
   transition: all .3s linear;
   padding: 0;
-  min-width: 130px;
 }
 
 .plaka-button span:first-of-type {
@@ -92,6 +91,7 @@
   color: var(--white);
   padding: 4px;
   box-sizing: border-box;
+  min-width: 40px;
 }
 
 .plaka-button span:last-of-type {
@@ -99,7 +99,8 @@
   background-color: var(--white);
   color: var(--black);
   font-weight: 600;
-  padding: 4px;
+  padding: 4px  10px;
+  min-width: 50px;
 }
 
 .plaka-button:hover span:last-of-type {

@@ -21,6 +21,7 @@ import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -254,6 +255,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
         if (plaka.length === 1) {
           reset();
         } else {
@@ -332,9 +334,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -349,7 +352,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>

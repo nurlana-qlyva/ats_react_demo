@@ -9,6 +9,7 @@ import {
   GetDocumentsByRefGroupService,
   GetPhotosByRefGroupService,
 } from "../../../../../../api/services/upload/services";
+import { CodeItemValidateService } from "../../../../../../api/services/code/services";
 import { uploadFile, uploadPhoto } from "../../../../../../utils/upload";
 import { message, Modal, Tabs, Button } from "antd";
 import GeneralInfo from "./tabs/GeneralInfo";
@@ -16,9 +17,11 @@ import PersonalFields from "../../../../../components/form/personal-fields/Perso
 import FileUpload from "../../../../../components/upload/FileUpload";
 import PhotoUpload from "../../../../../components/upload/PhotoUpload";
 
-
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
+  const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -113,7 +116,22 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   });
   const { handleSubmit, reset, setValue, watch } = methods;
 
-  useEffect(() => {setValue("seferAdedi", 1)}, [])
+  useEffect(() => {
+    if (code !== watch("seferNo")) {
+      const body = {
+        tableName: "SeferNo",
+        code: watch("seferNo"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    } else {
+      setIsValid("normal");
+    }
+  }, [watch("seferNo"), code]);
+
+  useEffect(() => { setValue("seferAdedi", 1) }, [])
+
   useEffect(() => {
     let fark;
     if (watch("varisKm")) {
@@ -138,6 +156,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("varisSaat", dayjs(res?.data.varisSaat, "HH:mm:ss"));
         setValue("aciklama", res?.data.aciklama);
         setValue("seferNo", res?.data.seferNo);
+        setCode(res?.data.seferNo);
         setValue("surucuId1", res?.data.surucuId1);
         setValue("surucu1", res?.data.surucuIsim1);
         setValue("surucuId2", res?.data.surucuId2);
@@ -240,6 +259,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
         if (plaka.length === 1) {
           reset();
         } else {
@@ -263,7 +283,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: <GeneralInfo />,
+      children: <GeneralInfo isValid={isValid} />,
     },
     {
       key: "2",
@@ -308,9 +328,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -325,7 +346,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>

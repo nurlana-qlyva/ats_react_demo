@@ -36,7 +36,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       label: "ozelAlan1",
       key: "OZELALAN_1",
       value: "Özel Alan 1",
-      type: "text",
+      type: "text", 
     },
     {
       label: "ozelAlan2",
@@ -56,7 +56,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       value: "Özel Alan 4",
       type: "text",
     },
-    {
+    { 
       label: "ozelAlan5",
       key: "OZELALAN_5",
       value: "Özel Alan 5",
@@ -250,6 +250,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
         if (plaka.length === 1) {
           reset();
         } else {
@@ -318,7 +319,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -333,7 +334,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey={activeKey} items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>

@@ -7,18 +7,22 @@ import { ConfigProvider, DatePicker } from 'antd'
 
 dayjs.locale('tr')
 
-const DateInput = ({ name, checked, readonly }) => {
+const DateInput = ({ name, checked, readonly, required }) => {
     const { control } = useFormContext()
     return (
         <Controller
             name={name}
             control={control}
-            render={({ field }) => (
-                <ConfigProvider locale={tr_TR}>
-                    <DatePicker {...field} placeholder="" disabled={checked} readOnly={readonly} locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
-                        field.onChange(e)
-                    }} />
-                </ConfigProvider>
+            rules={{ required: required ? "Bu alan boş bırakılamaz!" : false }}
+            render={({ field, fieldState }) => (
+                <>
+                    <ConfigProvider locale={tr_TR}>
+                        <DatePicker {...field} placeholder="" className={fieldState.error ? 'input-error' : ''} disabled={checked} readOnly={readonly} locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
+                            field.onChange(e)
+                        }} />
+                    </ConfigProvider>
+                    {fieldState.error && <span style={{ color: 'red' }}>{fieldState.error.message}</span>}
+                </>
             )}
         />
     )
@@ -28,6 +32,7 @@ DateInput.propTypes = {
     name: PropTypes.string,
     checked: PropTypes.string,
     readonly: PropTypes.bool,
+    required: PropTypes.bool,
 }
 
 export default DateInput

@@ -7,7 +7,6 @@ import {
   Button,
   Checkbox,
   Divider,
-  Input,
   InputNumber,
   message,
   Modal,
@@ -43,6 +42,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   const [openDetail, setOpenDetail] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [content, setContent] = useState(null);
+  const [logError, setLogError] = useState(false);
 
   const calculateTuketim = () => {
     const fullDepo = watch("fullDepo");
@@ -299,9 +299,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
           setErrorMessage("Alınan Km Yakıt Log-a girilemez!");
           setIsValid(true);
         } else if (res?.data.message === " Invalid KmLog Range !") {
-          setErrorMessage("Alınan Km Km Log-a girilemez!");
           setLogError(true);
-          setIsValid(true);
         }
       } else if (res?.data.statusCode === 200) {
         setResponse("success");
@@ -312,15 +310,17 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   };
 
   useEffect(() => {
-    if (watch("engelle")) {
-      setResponse("success");
-      setIsValid(false);
-    } else {
-      setIsValid(true);
-      setResponse("error");
-      setErrorMessage("Alınan Km Km Log-a girilemez!");
+    if (logError) {
+      if (watch("engelle")) {
+        setResponse("success");
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        setResponse("error");
+        setErrorMessage("Alınan Km Km Log-a girilemez!");
+      }
     }
-  }, [watch("engelle")]);
+  }, [watch("engelle"), logError]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -332,10 +332,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   const updateDepoHacmi = () => {
     const body = {
       dtyAracId: watch("aracId"),
-      yakitHacmi: watch("yakitHacmi"),
+      tyakitHacmi: watch("yakitHacmi"),
     };
 
-    UpdateVehicleDetailsInfoService(body).then((res) => {
+    UpdateVehicleDetailsInfoService(1,body).then((res) => {
       if (res?.data.statusCode === 202) {
         setOpen(false);
       }
@@ -466,8 +466,8 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                         response === "error"
                           ? { borderColor: "#dc3545" }
                           : response === "success"
-                          ? { borderColor: "#23b545" }
-                          : { color: "#000" }
+                            ? { borderColor: "#23b545" }
+                            : { color: "#000" }
                       }
                       {...field}
                       onPressEnter={(e) => {
@@ -669,21 +669,27 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 <Controller
                   name="tutar"
                   control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => {
-                        field.onChange(e);
-                        if (watch("litreFiyat") === null) {
-                          setValue("miktar", 0);
-                        } else {
-                          const miktar = +e / watch("litreFiyat");
-                          setValue("miktar", Math.round(miktar));
-                        }
-                        calculateTuketim();
-                      }}
-                    />
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <InputNumber
+                        {...field}
+                        className="w-full"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (watch("litreFiyat") === null) {
+                            setValue("miktar", 0);
+                          } else {
+                            const miktar = +e / watch("litreFiyat");
+                            setValue("miktar", Math.round(miktar));
+                          }
+                          calculateTuketim();
+                        }}
+                      />
+                      {fieldState.error && (
+                        <span style={{ color: "red" }}>{fieldState.error.message}</span>
+                      )}
+                    </>
                   )}
                 />
               </div>

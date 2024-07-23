@@ -278,9 +278,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
           setErrorMessage("Alınan Km Yakıt Log-a girilemez!");
           setIsValid(true);
         } else if (res?.data.message === " Invalid KmLog Range !") {
-          setErrorMessage("Alınan Km Km Log-a girilemez!");
           setLogError(true);
-          setIsValid(true);
         }
       } else if (res?.data.statusCode === 200) {
         setResponse("success");
@@ -292,15 +290,18 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   };
 
   useEffect(() => {
-    if (watch("engelle")) {
-      setResponse("success");
-      setIsValid(false);
-    } else {
-      setIsValid(true);
-      setResponse("error");
-      setErrorMessage("Alınan Km Km Log-a girilemez!");
+    if (logError) {
+      if (watch("engelle")) {
+        setResponse("success");
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        setResponse("error");
+        setErrorMessage("Alınan Km Km Log-a girilemez!");
+      }
     }
-  }, [watch("engelle")]);
+
+  }, [watch("engelle"), logError]);
 
   useEffect(() => {
     if (watch("depoYakitMiktar") + history[0]?.miktar > watch("yakitHacmi")) {
@@ -314,15 +315,6 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   }, [watch("depoYakitMiktar")]);
 
   useEffect(() => {
-    if (logError) {
-      if (watch("engelle")) {
-        setResponse("success");
-        setIsValid(false);
-      }
-    }
-  }, [logError, watch("engelle")]);
-
-  useEffect(() => {
     if (errorMessage) {
       message.error(errorMessage);
     }
@@ -332,10 +324,10 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
   const updateDepoHacmi = () => {
     const body = {
       dtyAracId: data.aracId,
-      yakitHacmi: watch("yakitHacmi"),
+      tyakitHacmi: watch("yakitHacmi"),
     };
 
-    UpdateVehicleDetailsInfoService(body).then((res) => {
+    UpdateVehicleDetailsInfoService(1,body).then((res) => {
       if (res?.data.statusCode === 202) {
         setIsOpen(false);
       }
@@ -567,33 +559,44 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 <Controller
                   name="alinanKm"
                   control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      className="w-full"
-                      style={
-                        response === "error"
-                          ? { borderColor: "#dc3545" }
-                          : response === "success"
-                          ? { borderColor: "#23b545" }
-                          : { color: "#000" }
-                      }
-                      {...field}
-                      onPressEnter={(e) => {
-                        validateLog();
-                        e.target.blur();
-                      }}
-                      onBlur={validateLog}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsValid(true);
-                        if (data.sonAlinanKm === 0 && !watch("alinanKm")) {
-                          setValue("farkKm", 0);
-                        } else {
-                          const fark = +e - watch("sonAlinanKm");
-                          setValue("farkKm", fark);
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => (
+                    <>
+
+                      <InputNumber
+                        className={
+                          fieldState.error ? "input-error w-full" : "w-full"
                         }
-                      }}
-                    />
+                        style={
+                          response === "error"
+                            ? { borderColor: "#dc3545" }
+                            : response === "success"
+                              ? { borderColor: "#23b545" }
+                              : { color: "#000" }
+                        }
+                        {...field}
+                        onPressEnter={(e) => {
+                          validateLog();
+                          e.target.blur();
+                        }}
+                        onBlur={validateLog}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setIsValid(true);
+                          if (data.sonAlinanKm === 0 && !watch("alinanKm")) {
+                            setValue("farkKm", 0);
+                          } else {
+                            const fark = +e - watch("sonAlinanKm");
+                            setValue("farkKm", fark);
+                          }
+                        }}
+                      />
+                      {fieldState.error && (
+                        <span style={{ color: "red" }}>
+                          {fieldState.error.message}
+                        </span>
+                      )}
+                    </>
                   )}
                 />
               </div>
@@ -662,39 +665,49 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 <Controller
                   name="miktar"
                   control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      className="w-full"
-                      {...field}
-                      onPressEnter={(e) => {
-                        if (watch("yakitHacmi") === 0 && !watch("fullDepo"))
-                          message.warning(
-                            "Depo Hacmi sıfırdır. Depo hacmi giriniz!"
-                          );
-
-                        if (
-                          watch("yakitHacmi") <
-                          +e.target.value + +watch("depoYakitMiktar")
-                        ) {
-                          message.warning(
-                            "Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!"
-                          );
-                          setIsValid(true);
-                        } else {
-                          setIsValid(false);
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <InputNumber
+                        className={
+                          fieldState.error ? "input-error w-full" : "w-full"
                         }
-                      }}
-                      onChange={(e) => {
-                        field.onChange(e);
+                        {...field}
+                        onPressEnter={(e) => {
+                          if (watch("yakitHacmi") === 0 && !watch("fullDepo"))
+                            message.warning(
+                              "Depo Hacmi sıfırdır. Depo hacmi giriniz!"
+                            );
 
-                        if (watch("litreFiyat") === null) {
-                          setValue("tutar", 0);
-                        } else {
-                          const tutar = +e * watch("litreFiyat");
-                          setValue("tutar", tutar);
-                        }
-                      }}
-                    />
+                          if (
+                            watch("yakitHacmi") <
+                            +e.target.value + +watch("depoYakitMiktar")
+                          ) {
+                            message.warning(
+                              "Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!"
+                            );
+                            setIsValid(true);
+                          } else {
+                            setIsValid(false);
+                          }
+                        }}
+                        onChange={(e) => {
+                          field.onChange(e);
+
+                          if (watch("litreFiyat") === null) {
+                            setValue("tutar", 0);
+                          } else {
+                            const tutar = +e * watch("litreFiyat");
+                            setValue("tutar", tutar);
+                          }
+                        }}
+                      />
+                      {fieldState.error && (
+                        <span style={{ color: "red" }}>
+                          {fieldState.error.message}
+                        </span>
+                      )}
+                    </>
                   )}
                 />
               </div>
@@ -763,21 +776,31 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
                 <Controller
                   name="tutar"
                   control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      className="w-full"
-                      onChange={(e) => {
-                        field.onChange(e);
-
-                        if (watch("litreFiyat") === null) {
-                          setValue("miktar", 0);
-                        } else {
-                          const miktar = +e / watch("litreFiyat");
-                          setValue("miktar", Math.round(miktar));
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <InputNumber
+                        {...field}
+                        className={
+                          fieldState.error ? "input-error w-full" : "w-full"
                         }
-                      }}
-                    />
+                        onChange={(e) => {
+                          field.onChange(e);
+
+                          if (watch("litreFiyat") === null) {
+                            setValue("miktar", 0);
+                          } else {
+                            const miktar = +e / watch("litreFiyat");
+                            setValue("miktar", Math.round(miktar));
+                          }
+                        }}
+                      />
+                      {fieldState.error && (
+                        <span style={{ color: "red" }}>
+                          {fieldState.error.message}
+                        </span>
+                      )}
+                    </>
                   )}
                 />
               </div>

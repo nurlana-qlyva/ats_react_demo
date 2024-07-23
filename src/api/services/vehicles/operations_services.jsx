@@ -1,7 +1,7 @@
 import http from "../../http";
 
 // yakit
-export const GetFuelListByVehicleIdService = async ( search, page, data) => {
+export const GetFuelListByVehicleIdService = async (search, page, data) => {
     return await http.post(`/Fuel/GetFuelListByVehicleId?page=${page}&parameter=${search}`, data);
 };
 
@@ -51,13 +51,12 @@ export const GetFuelListService = async (search, page, data) => {
 
 // harcama
 export const GetExpensesListByVehicleIdService = async (
-    id,
     search,
     page,
     data
 ) => {
-    return await http.get(
-        `/Expenses/GetExpensesListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+    return await http.post(
+        `/Expenses/GetExpensesListByVehicleId?page=${page}&parameter=${search}`,
         data
     );
 };
@@ -80,13 +79,12 @@ export const GetExpensesListService = async (search, page, data) => {
 
 // sefer
 export const GetExpeditionsListByVehicleIdService = async (
-    id,
     search,
     page,
     data
 ) => {
-    return await http.get(
-        `/Expeditions/GetExpeditionsListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+    return await http.post(
+        `/Expeditions/GetExpeditionsListByVehicleIds?page=${page}&parameter=${search}`,
         data
     );
 };
@@ -110,13 +108,12 @@ export const GetExpeditionsListService = async (search, page, data) => {
 
 // kazalar
 export const GetAccidentsListByVehicleIdService = async (
-    id,
     search,
     page,
     data
 ) => {
-    return await http.get(
-        `/Accident/GetAccidentsListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+    return await http.post(
+        `/Accident/GetAccidentsListByVehicleId?page=${page}&parameter=${search}`,
         data
     );
 };
@@ -137,20 +134,19 @@ export const GetAccidentsListService = async (search, page, data) => {
     return await http.get(`/Accident/GetAccidentsList?page=${page}&parameter=${search}`, data);
 };
 
-export const GetActiveInsuranceListService = async (id,search, page) => {
+export const GetActiveInsuranceListService = async (id, search, page) => {
     return await http.get(`/Insurance/GetActiveInsuranceList?vehicleId=${id}&page=${page}&parameter=${search}`);
 };
 
 // sigorta
 
 export const GetInsuranceListByVehicleIdService = async (
-    id,
     search,
     page,
     data
 ) => {
-    return await http.get(
-        `/Insurance/GetInsuranceListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+    return await http.post(
+        `/Insurance/GetInsuranceListByVehicleId?page=${page}&parameter=${search}`,
         data
     );
 };
@@ -173,13 +169,12 @@ export const GetInsuranceListService = async (search, page, data) => {
 
 // ceza
 export const GetVehicleFinesListByVehicleIdService = async (
-    id,
     search,
     page,
     data
 ) => {
-    return await http.get(
-        `/VehicleFines/GetVehicleFinesListByVehicleId?vehicleId=${id}&page=${page}&parameter=${search}`,
+    return await http.post(
+        `/VehicleFines/GetVehicleFinesListByVehicleId?page=${page}&parameter=${search}`,
         data
     );
 };

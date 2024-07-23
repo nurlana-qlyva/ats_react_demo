@@ -3,8 +3,12 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import axios from "axios";
-import { Modal, Button, Table, Popconfirm, Input, Popover } from "antd";
-import { DeleteOutlined, MenuOutlined } from "@ant-design/icons";
+import { Modal, Button, Table, Popconfirm, Input, Popover, Spin } from "antd";
+import {
+  DeleteOutlined,
+  MenuOutlined,
+  LoadingOutlined
+} from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
@@ -17,6 +21,7 @@ const Ceza = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [status, setStatus] = useState(false);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -39,12 +44,14 @@ const Ceza = ({ visible, onClose, ids }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setIsInitialLoading(true);
       const res = await GetVehicleFinesListByVehicleIdService(
-        ids,
         search,
-        tableParams.pagination.current
+        tableParams.pagination.current,
+        ids
       );
       setLoading(false);
+      setIsInitialLoading(false);
       setDataSource(res?.data.list);
       setTableParams({
         ...tableParams,
@@ -260,6 +267,11 @@ const Ceza = ({ visible, onClose, ids }) => {
     }
   }, [tableParams.pagination.current]);
 
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+  );
+
   return (
     <Modal
       title={`${t("cezaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
@@ -297,38 +309,43 @@ const Ceza = ({ visible, onClose, ids }) => {
       />
 
       <DragAndDropContext items={columns} setItems={setColumns}>
-        <Table
-          rowKey="siraNo"
-          columns={newColumns}
-          dataSource={dataSource}
-          pagination={{
-            ...tableParams.pagination,
-            showTotal: (total) => (
-              <p className="text-info">
-                [{total} {t("kayit")}]
-              </p>
-            ),
-            locale: {
-              items_per_page: `/ ${t("sayfa")}`,
-            },
-          }}
-          scroll={{
-            x: 1500,
-          }}
-          loading={loading}
-          size="small"
-          onChange={handleTableChange}
-          rowSelection={{
-            selectedRowKeys: selectedRowKeys,
-            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-            onSelect: handleRowSelection,
-          }}
-          components={{
-            header: {
-              cell: SortableHeaderCell,
-            },
-          }}
-        />
+        <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+          <Table
+            rowKey="siraNo"
+            columns={newColumns}
+            dataSource={dataSource}
+            pagination={{
+              ...tableParams.pagination,
+              showTotal: (total) => (
+                <p className="text-info">
+                  [{total} {t("kayit")}]
+                </p>
+              ),
+              locale: {
+                items_per_page: `/ ${t("sayfa")}`,
+              },
+            }}
+            scroll={{
+              x: 1500,
+            }}
+            loading={loading}
+            size="small"
+            onChange={handleTableChange}
+            rowSelection={{
+              selectedRowKeys: selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              onSelect: handleRowSelection,
+            }}
+            components={{
+              header: {
+                cell: SortableHeaderCell,
+              },
+            }}
+            locale={{
+              emptyText: "Veri Bulunamadı",
+            }}
+          />
+        </Spin>
       </DragAndDropContext>
     </Modal>
   );

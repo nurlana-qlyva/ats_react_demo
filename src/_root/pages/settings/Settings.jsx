@@ -1,7 +1,9 @@
+import { t } from 'i18next'
 import { HomeOutlined } from '@ant-design/icons'
 import { Tabs } from 'antd'
 import BreadcrumbComp from '../../components/breadcrumb/Breadcrumb'
-import FirmaInfo from './tabs/FirmaInfo'
+import FirmaSettings from './tabs/firma/FirmaSettings'
+import HatirlaticiSettings from './tabs/hatirlatici/HatirlaticiSettings'
 
 const breadcrumb = [
   {
@@ -9,7 +11,7 @@ const breadcrumb = [
     title: <HomeOutlined />,
   },
   {
-    title: 'Ayarlar',
+    title: t("ayarlar"),
   },
 ]
 
@@ -17,49 +19,34 @@ const Settings = () => {
   const items = [
     {
       key: 1,
-      label: 'Firma Bilgileri',
-      children: <FirmaInfo />
+      label: t("firmaBilgileri"),
+      children: <FirmaSettings />
     },
     {
       key: 2,
-      label: 'Hatırlatıcı Ayarları',
-      children: 'content2'
+      label: t("hatirlaticiAyarlari"),
+      children: <HatirlaticiSettings />
     },
     {
       key: 3,
-      label: 'Araçlar',
+      label: t("araclar"),
       children: 'content1'
     },
     {
       key: 4,
-      label: 'Stok İşlemleri',
+      label: t("stokIslemleri"),
       children: 'content1'
     },
     {
       key: 5,
-      label: 'Otomatik Kodlar',
+      label: t("otomatikKodlar"),
       children: 'content1'
     },
     {
       key: 6,
-      label: 'Sefer Hareketleri',
+      label: t("yakitIslemleri"),
       children: 'content1'
     },
-    {
-      key: 7,
-      label: 'Lastik Bilgileri',
-      children: 'content1'
-    },
-    {
-      key: 8,
-      label: 'Yakıt İşlemleri',
-      children: 'content1'
-    },
-    {
-      key: 9,
-      label: 'Özel Menü',
-      children: 'content1'
-    }
   ]
 
   return (

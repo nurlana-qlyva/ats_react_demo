@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import PropTypes from "prop-types";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
 import Plaka from "../../../../../../components/form/selects/Plaka";
 import Driver from "../../../../../../components/form/selects/Driver";
-import ReadonlyInput from "../../../../../../components/form/inputs/ReadonlyInput";
 import DateInput from "../../../../../../components/form/date/DateInput";
 import TimeInput from "../../../../../../components/form/date/TimeInput";
 import NumberInput from "../../../../../../components/form/inputs/NumberInput";
@@ -24,8 +24,8 @@ const GeneralInfo = ({ isValid }) => {
       isValid === "error"
         ? "#dc3545"
         : isValid === "success"
-        ? "#23b545"
-        : "#000",
+          ? "#23b545"
+          : "#000",
   };
 
   const footer = [
@@ -56,8 +56,8 @@ const GeneralInfo = ({ isValid }) => {
           <div className="grid gap-1">
             <div className="col-span-12">
               <div className="flex flex-col gap-1">
-                <label>{t("plaka")}</label>
-                <Plaka />
+                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                <Plaka required={true} />
               </div>
             </div>
             <div className="col-span-12">
@@ -68,8 +68,8 @@ const GeneralInfo = ({ isValid }) => {
             </div>
             <div className="col-span-12">
               <div className="flex flex-col gap-1">
-                <label>{t("surucu")} 1</label>
-                <Driver name="surucu1" codeName="surucuId1" />
+                <label>{t("surucu")} 1  <span className="text-danger">*</span></label>
+                <Driver name="surucu1" codeName="surucuId1" required={true} />
               </div>
             </div>
             <div className="col-span-12">
@@ -83,7 +83,7 @@ const GeneralInfo = ({ isValid }) => {
                 <div className="col-span-10">
                   <div className="flex flex-col gap-1">
                     <label>{t("dorse")}</label>
-                    <ReadonlyInput name="dorsePlaka" checked="true" />
+                    <TextInput name="dorsePlaka" readonly={true} />
                   </div>
                 </div>
                 <div className="col-span-2 self-end">
@@ -103,8 +103,8 @@ const GeneralInfo = ({ isValid }) => {
           <div className="grid gap-1">
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("cikisTarih")}</label>
-                <DateInput name="cikisTarih" />
+                <label>{t("cikisTarih")} <span className="text-danger">*</span></label>
+                <DateInput name="cikisTarih" required={true} />
               </div>
             </div>
             <div className="col-span-4">
@@ -192,5 +192,9 @@ const GeneralInfo = ({ isValid }) => {
     </>
   );
 };
+
+GeneralInfo.propTypes = {
+  isValid: PropTypes.string
+}
 
 export default GeneralInfo;

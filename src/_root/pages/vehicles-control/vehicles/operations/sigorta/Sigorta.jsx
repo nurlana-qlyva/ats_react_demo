@@ -10,10 +10,12 @@ import {
     Popconfirm,
     Input,
     Popover,
+    Spin
 } from "antd";
 import {
     DeleteOutlined,
     MenuOutlined,
+    LoadingOutlined
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
@@ -23,11 +25,11 @@ import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
-
 const Sigorta = ({ visible, onClose, ids }) => {
     const { plaka } = useContext(PlakaContext);
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [status, setStatus] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -46,12 +48,14 @@ const Sigorta = ({ visible, onClose, ids }) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setIsInitialLoading(true);
             const res = await GetInsuranceListByVehicleIdService(
-                ids,
                 search,
-                tableParams.pagination.current
+                tableParams.pagination.current,
+                ids,
             );
             setLoading(false);
+            setIsInitialLoading(false);
             setDataSource(res?.data.list);
             setTableParams({
                 ...tableParams,
@@ -269,6 +273,11 @@ const Sigorta = ({ visible, onClose, ids }) => {
         }
     }, [tableParams.pagination.current]);
 
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+    );
+
     return (
         <Modal
             title={`${t("sigortaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
@@ -306,39 +315,44 @@ const Sigorta = ({ visible, onClose, ids }) => {
             />
 
             <DragAndDropContext items={columns} setItems={setColumns}>
-                <Table
-                    rowKey={(record) => record.siraNo}
-                    columns={newColumns}
-                    dataSource={dataSource}
-                    pagination={{
-                        ...tableParams.pagination,
-                        showTotal: (total) => (
-                            <p className="text-info">
-                                [{total} {t("kayit")}]
-                            </p>
-                        ),
-                        locale: {
-                            items_per_page: `/ ${t("sayfa")}`,
-                        },
-                    }}
-                    scroll={{
-                        x: 1500,
-                    }}
-                    loading={loading}
-                    size="small"
-                    onChange={handleTableChange}
-                    rowSelection={{
-                        selectedRowKeys: selectedRowKeys,
-                        onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                        onSelect: handleRowSelection,
-                    }}
-                    components={{
-                        header: {
-                            cell: SortableHeaderCell,
-                        },
-                    }}
-                    rowClassName={(record) => (record.aktif ? "active-row" : "")}
-                />
+                <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+                    <Table
+                        rowKey={(record) => record.siraNo}
+                        columns={newColumns}
+                        dataSource={dataSource}
+                        pagination={{
+                            ...tableParams.pagination,
+                            showTotal: (total) => (
+                                <p className="text-info">
+                                    [{total} {t("kayit")}]
+                                </p>
+                            ),
+                            locale: {
+                                items_per_page: `/ ${t("sayfa")}`,
+                            },
+                        }}
+                        scroll={{
+                            x: 1500,
+                        }}
+                        loading={loading}
+                        size="small"
+                        onChange={handleTableChange}
+                        rowSelection={{
+                            selectedRowKeys: selectedRowKeys,
+                            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                            onSelect: handleRowSelection,
+                        }}
+                        components={{
+                            header: {
+                                cell: SortableHeaderCell,
+                            },
+                        }}
+                        rowClassName={(record) => (record.aktif ? "active-row" : "")}
+                        locale={{
+                            emptyText: "Veri Bulunamadı",
+                        }}
+                    />
+                </Spin>
             </DragAndDropContext>
         </Modal>
     );

@@ -39,14 +39,14 @@ const YakitTanimlar = () => {
     const baseColumns = [
         {
             title: t("yakitKod"),
-            dataIndex: "yakitKod",
+            dataIndex: "malzemeKod",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setData(record);
                         setUpdateModal(true);
-                        setId(record.yakitId)
+                        setId(record.malzemeId)
                     }}
                 >
                     {text}

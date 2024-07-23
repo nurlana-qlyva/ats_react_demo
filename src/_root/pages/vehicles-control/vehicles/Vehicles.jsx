@@ -61,6 +61,7 @@ const Vehicles = () => {
       render: (text, record) => (
         <Link to={`/detay/${record.aracId}`} className="plaka-button"><span>{country.code}</span> <span>{text}</span></Link>
       ),
+      width: 160
     },
     {
       title: t("aracTip"),

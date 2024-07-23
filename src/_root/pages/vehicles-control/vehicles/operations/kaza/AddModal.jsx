@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import { AddAccidentItemService } from "../../../../../../api/services/vehicles/operations_services";
 import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields"
@@ -13,8 +13,10 @@ import GeriOdeme from "./tabs/GeriOdeme";
 import SigortaBilgileri from "./tabs/SigortaBilgileri";
 
 const AddModal = ({ setStatus }) => {
-  const { data, plaka, setHistory } = useContext(PlakaContext);
+  const { data, plaka } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
 
   const [fields, setFields] = useState([
     {
@@ -152,10 +154,14 @@ const AddModal = ({ setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
+    setLoading(true);
+
     AddAccidentItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsOpen(false);
+        setLoading(false);
+        setActiveKey("1");
         if (plaka.length === 1) {
           reset();
         } else {
@@ -208,23 +214,29 @@ const AddModal = ({ setStatus }) => {
   };
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-    >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setHistory([]);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -243,7 +255,7 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

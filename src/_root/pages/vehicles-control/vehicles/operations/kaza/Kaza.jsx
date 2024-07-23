@@ -10,10 +10,12 @@ import {
     Popconfirm,
     Input,
     Popover,
+    Spin,
 } from "antd";
 import {
     DeleteOutlined,
     MenuOutlined,
+    LoadingOutlined
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
@@ -23,11 +25,11 @@ import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
 
-
 const Kaza = ({ visible, onClose, ids }) => {
     const { plaka } = useContext(PlakaContext);
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [status, setStatus] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -46,12 +48,14 @@ const Kaza = ({ visible, onClose, ids }) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setIsInitialLoading(true);
             const res = await GetAccidentsListByVehicleIdService(
-                ids,
                 search,
-                tableParams.pagination.current
+                tableParams.pagination.current,
+                ids
             );
             setLoading(false);
+            setIsInitialLoading(false);
             setDataSource(res?.data.list);
             setTableParams({
                 ...tableParams,
@@ -235,6 +239,11 @@ const Kaza = ({ visible, onClose, ids }) => {
         }
     }, [tableParams.pagination.current]);
 
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+    );
+
     return (
         <Modal
             title={`${t("kazaBilgileri")} - ${t("plaka")}: [${plakaData}]`}
@@ -244,7 +253,7 @@ const Kaza = ({ visible, onClose, ids }) => {
             footer={footer}
             width={1200}
         >
-            <div className="flex align-center gap-1 mb-10">
+            <div className="flex align-center gap-1 mb-20">
                 <Popover
                     content={content}
                     placement="bottom"
@@ -272,38 +281,43 @@ const Kaza = ({ visible, onClose, ids }) => {
             />
 
             <DragAndDropContext items={columns} setItems={setColumns}>
-                <Table
-                    rowKey="siraNo"
-                    columns={newColumns}
-                    dataSource={dataSource}
-                    pagination={{
-                        ...tableParams.pagination,
-                        showTotal: (total) => (
-                            <p className="text-info">
-                                [{total} {t("kayit")}]
-                            </p>
-                        ),
-                        locale: {
-                            items_per_page: `/ ${t("sayfa")}`,
-                        },
-                    }}
-                    scroll={{
-                        x: 1500,
-                    }}
-                    loading={loading}
-                    size="small"
-                    onChange={handleTableChange}
-                    rowSelection={{
-                        selectedRowKeys: selectedRowKeys,
-                        onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                        onSelect: handleRowSelection,
-                    }}
-                    components={{
-                        header: {
-                            cell: SortableHeaderCell,
-                        },
-                    }}
-                />
+                <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+                    <Table
+                        rowKey="siraNo"
+                        columns={newColumns}
+                        dataSource={dataSource}
+                        pagination={{
+                            ...tableParams.pagination,
+                            showTotal: (total) => (
+                                <p className="text-info">
+                                    [{total} {t("kayit")}]
+                                </p>
+                            ),
+                            locale: {
+                                items_per_page: `/ ${t("sayfa")}`,
+                            },
+                        }}
+                        scroll={{
+                            x: 1500,
+                        }}
+                        loading={loading}
+                        size="small"
+                        onChange={handleTableChange}
+                        rowSelection={{
+                            selectedRowKeys: selectedRowKeys,
+                            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                            onSelect: handleRowSelection,
+                        }}
+                        components={{
+                            header: {
+                                cell: SortableHeaderCell,
+                            },
+                        }}
+                        locale={{
+                            emptyText: "Veri Bulunamadı",
+                        }}
+                    />
+                </Spin>
             </DragAndDropContext>
         </Modal>
     );

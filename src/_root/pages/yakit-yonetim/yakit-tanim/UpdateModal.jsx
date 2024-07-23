@@ -111,7 +111,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     const fetchData = async () => {
       try {
         const res = await GetMaterialCardByIdService(id);
-        setValue("malzemeKod", res.data.yakitKod);
+        setValue("malzemeKod", res.data.malzemeKod);
         setValue("aktif", res.data.aktif);
         setValue("tanim", res.data.tanim);
         setValue("birim", res.data.birim);

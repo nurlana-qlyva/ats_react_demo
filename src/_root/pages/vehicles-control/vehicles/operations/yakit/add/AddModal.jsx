@@ -3,6 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
+import {LoadingOutlined} from "@ant-design/icons"
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../../context/plakaSlice";
