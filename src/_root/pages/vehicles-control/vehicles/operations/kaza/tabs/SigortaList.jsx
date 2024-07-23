@@ -7,7 +7,7 @@ import { GetActiveInsuranceListService } from "../../../../../../../api/services
 import { PlakaContext } from "../../../../../../../context/plakaSlice";
 
 const SigortaList = ({ setSigorta, open }) => {
-    const {plaka} = useContext(PlakaContext)
+    const { plaka } = useContext(PlakaContext)
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -42,34 +42,29 @@ const SigortaList = ({ setSigorta, open }) => {
             key: 4,
         },
     ];
-
+console.log(open)
     useEffect(() => {
-        if (!open) {
-            setSelectedRowKeys([]);
-            setSigorta([]);
+        if (open) {
+            const fetchData = async () => {
+                setLoading(true);
+                const res = await GetActiveInsuranceListService(
+                    plaka[0].id,
+                    search,
+                    tableParams.pagination.current
+                );
+                setLoading(false);
+                setData(res?.data.list);
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res?.data.recordCount,
+                    },
+                });
+            };
+            fetchData();
         }
-    }, [open]);
-    
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            const res = await GetActiveInsuranceListService(
-                plaka[0].id,
-                search,
-                tableParams.pagination.current
-            );
-            setLoading(false);
-            setData(res?.data.list);
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams.pagination,
-                    total: res?.data.recordCount,
-                },
-            });
-        };
-        fetchData();
-    }, [search, tableParams.pagination.current]);
+    }, [search, tableParams.pagination.current, open]);
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({

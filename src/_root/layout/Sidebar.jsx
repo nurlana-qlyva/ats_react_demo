@@ -202,7 +202,7 @@ const items = [
         key: '38',
         icon: <PieChartOutlined />,
         label: (
-            <Link to={'/'}>{t("raporlarAnalizler")}</Link>
+            <Link to={'/raporlar'}>{t("raporlarAnalizler")}</Link>
         ),
     },
     {

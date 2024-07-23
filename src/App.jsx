@@ -33,6 +33,7 @@ import YakitTransferler from './_root/pages/yakit-yonetim/transferler/YakitTrans
 import Ceza from './_root/pages/vehicles-control/ceza/Ceza'
 import Harcama from './_root/pages/vehicles-control/harcama/Harcama'
 import Sefer from './_root/pages/vehicles-control/sefer/Sefer'
+import Raporlar from './_root/pages/raporlar/Raporlar'
 
 
 
@@ -82,6 +83,7 @@ const App = () => {
         <Route path="/ceza-islemleri" element={<Ceza />} />
         <Route path="/harcama-islemleri" element={<Harcama />} />
         <Route path="/sefer-islemleri" element={<Sefer />} />
+        <Route path="/raporlar" element={<Raporlar />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />
