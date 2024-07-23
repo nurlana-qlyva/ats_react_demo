@@ -27,6 +27,21 @@ const Dashboard = () => {
             <PieChartComp />
           </div>
         </div>
+        <div className="col-span-4">
+          <div className="content bg-dark">
+            <LineChartComp />
+          </div>
+        </div>
+        <div className="col-span-4">
+          <div className="content bg-dark">
+            <BarChartComp />
+          </div>
+        </div>
+        <div className="col-span-4">
+          <div className="content bg-dark">
+            <PieChartComp />
+          </div>
+        </div>
       </div>
     </div>
   )

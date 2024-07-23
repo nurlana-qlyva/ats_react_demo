@@ -4,9 +4,14 @@ import { Menu } from 'antd';
 import {
     PieChartOutlined,
     CarOutlined,
-    FastForwardOutlined
 } from '@ant-design/icons';
+import { MdOutlineSystemUpdateAlt } from "react-icons/md";
+import { PiTireBold } from "react-icons/pi";
+import { LuWarehouse } from "react-icons/lu";
 import { FaGears } from 'react-icons/fa6';
+import { BsFuelPump } from "react-icons/bs";
+import { GiAutoRepair } from "react-icons/gi";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 import { t } from 'i18next';
 
 const items = [
@@ -72,7 +77,7 @@ const items = [
     },
     {
         key: '13',
-        icon: <CarOutlined />,
+        icon: <BsFuelPump />,
         label: 'Yakıt Yönetimi',
         children: [
             {
@@ -103,7 +108,7 @@ const items = [
     },
     {
         key: '19',
-        icon: <CarOutlined />,
+        icon: <GiAutoRepair />,
         label: 'Bakım ve Onarım Yönetimi',
         children: [
             {
@@ -134,7 +139,7 @@ const items = [
     },
     {
         key: '25',
-        icon: <CarOutlined />,
+        icon: <PiTireBold />,
         label: 'Lastik Yönetimi',
         children: [
             {
@@ -165,7 +170,7 @@ const items = [
     },
     {
         key: '31',
-        icon: <CarOutlined />,
+        icon: <LuWarehouse />,
         label: t("malzemeDepo"),
         children: [
             {
@@ -200,14 +205,14 @@ const items = [
     },
     {
         key: '38',
-        icon: <PieChartOutlined />,
+        icon: <HiOutlineDocumentReport />,
         label: (
             <Link to={'/raporlar'}>{t("raporlarAnalizler")}</Link>
         ),
     },
     {
         key: '39',
-        icon: <CarOutlined />,
+        icon: <MdOutlineSystemUpdateAlt />,
         label: t("sistemTanimlari"),
         children: [
             {
