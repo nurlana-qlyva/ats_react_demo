@@ -144,7 +144,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
         );
         setValue("aciklama", res?.data.aciklama);
         setValue("adres", res?.data.adres);
-        setValue("aktif", res?.data.aktif);
+        setValue("aktif", !res?.data.aktif);
         setValue("aracBedeli", res?.data.aracBedeli);
         setValue("unvan", res?.data.firma);
         setValue("firmaId", res?.data.firmaId);
@@ -217,7 +217,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
       aciklama: values.aciklama,
       tutar: values.tutar || 0,
       policeNo: values.policeNo,
-      aktif: values.aktif,
+      aktif: !values.aktif,
       varsayilan: values.varsayilan,
       yetkili: values.yetkili,
       ruhsatBelgeSeriNo: values.ruhsatBelgeSeriNo,

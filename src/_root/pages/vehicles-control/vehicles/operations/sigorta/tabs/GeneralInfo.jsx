@@ -17,15 +17,15 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-12">
               <div className="grid gap-1">
-                <div className="col-span-10">
+                <div className="col-span-9">
                   <div className="flex flex-col gap-1">
                     <label>{t("plaka")} <span className="text-danger">*</span></label>
                     <Plaka required={true} />
                   </div>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-3">
                   <div className="flex flex-col gap-1">
-                    <label>{t("aktif")}</label>
+                    <label>{t("aktifDegil")}</label>
                     <CheckboxInput name="aktif" />
                   </div>
                 </div>

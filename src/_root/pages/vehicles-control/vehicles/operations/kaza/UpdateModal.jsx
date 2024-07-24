@@ -137,6 +137,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
           : null);
         setValue("aciklama", res?.data.aciklama);
         setValue("faturaTutar", res?.data.faturaTutar);
+        setValue("lokasyonId", res?.data.lokasyonId);
+        setValue("lokasyon", res?.data.lokasyon);
         setValue("geriOdeme", res?.data.geriOdeme);
         setValue("geriOdemeAciklama", res?.data.geriOdemeAciklama);
         setValue("geriOdemeTutar", res?.data.geriOdemeTutar);
@@ -215,6 +217,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
       aracId: aracId,
       surucuId: values.surucuId || 0,
       aciklama: values.aciklama,
+      lokasyonId: values.lokasyonId,
       kazaTarih: dayjs(values.kazaTarih).format("YYYY-MM-DD"),
       faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),
       geriOdemeTarih: dayjs(values.geriOdemeTarih).format("YYYY-MM-DD"),

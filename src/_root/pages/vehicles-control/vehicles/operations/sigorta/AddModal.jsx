@@ -98,7 +98,9 @@ const AddModal = ({ setStatus }) => {
     },
   ]);
 
-  const defaultValues = {};
+  const defaultValues = {
+    aktif: true
+  };
   const methods = useForm({
     defaultValues: defaultValues,
   });
@@ -126,7 +128,7 @@ const AddModal = ({ setStatus }) => {
       aciklama: values.aciklama,
       tutar: values.tutar || 0,
       policeNo: values.policeNo,
-      aktif: values.aktif,
+      aktif: !values.aktif,
       varsayilan: values.varsayilan,
       yetkili: values.yetkili,
       ruhsatBelgeSeriNo: values.ruhsatBelgeSeriNo,
