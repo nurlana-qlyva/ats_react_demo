@@ -1,33 +1,20 @@
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { t } from 'i18next'
 import { Button, Divider } from 'antd'
+import { GetSettingByTypeService, UpdateSettingByTypeService } from '../../../../../api/services/settings/services'
 import TextInput from "../../../../components/form/inputs/TextInput"
 import Textarea from "../../../../components/form/inputs/Textarea"
-import { GetOwnerInfoService, UpdateOwnerInfoService } from '../../../../../api/services/settings/services'
-import { useEffect } from 'react'
 
 const FirmaSettings = () => {
-    const defaultValues = {
-        kmAracId: 0,
-        seferSiraNo: 0,
-        yakitSiraNo: 0,
-        plaka: "",
-        tarih: new Date(),
-        saat: "",
-        eskiKm: 0,
-        yeniKm: 0,
-        fark: 0,
-        kaynak: "",
-        dorse: false,
-        aciklama: "",
-    }
+    const defaultValues = {}
     const methods = useForm({
         defaultValues: defaultValues
     })
     const { handleSubmit, setValue } = methods;
 
     useEffect(() => {
-        GetOwnerInfoService().then((res) => {
+        GetSettingByTypeService(1).then((res) => {
             setValue("siraNo", res?.data.siraNo);
             setValue("firmaUnvan", res?.data.firmaUnvan);
             setValue("adres1", res?.data.adres1);
@@ -65,7 +52,7 @@ const FirmaSettings = () => {
             "aciklama": values.aciklama
         }
 
-        UpdateOwnerInfoService(body).then((res) => {
+        UpdateSettingByTypeService(1, body).then((res) => {
             if (res.data.statusCode === 202) {
                 console.log(1)
             }
@@ -172,8 +159,8 @@ const FirmaSettings = () => {
                 </div>
             </div>
             <div className="justify-end flex gap-1 col-span-12 mt-10">
-                <Button className="btn btn-min primary-btn" onClick={onSubmit}>Kaydet</Button>
-                <Button className="btn btn-min cancel-btn">İptal</Button>
+                <Button className="btn btn-min primary-btn" onClick={onSubmit}>{t("kaydet")}</Button>
+                <Button className="btn btn-min cancel-btn">{t("kapat")}</Button>
             </div>
         </FormProvider>
     )

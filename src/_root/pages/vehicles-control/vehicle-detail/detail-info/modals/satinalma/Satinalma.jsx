@@ -95,7 +95,6 @@ const Satinalma = ({ visible, onClose, id }) => {
       "krediHesapNo": values.krediKiralama ? values.krediHesapNo : ""
     }
 
-
     UpdateVehicleDetailsInfoService(4, body).then(res => {
       if (res.data.statusCode === 202) {
         setStatus(true)
@@ -110,7 +109,7 @@ const Satinalma = ({ visible, onClose, id }) => {
         {t("kaydet")}
       </Button>,
       <Button key="back" className="btn btn-min cancel-btn" onClick={onClose}>
-        {t("iptal")}
+        {t("kapat")}
       </Button>
     ]
   )
@@ -168,7 +167,7 @@ const Satinalma = ({ visible, onClose, id }) => {
                 </div>
                 <div className="col-span-4">
                   <div className="flex flex-col gap-1">
-                    <label>{t("aracKM")}</label>
+                    <label>{t("aracKm")}</label>
                     <NumberInput name="saAracKm" />
                   </div>
                 </div>
@@ -249,7 +248,7 @@ const Satinalma = ({ visible, onClose, id }) => {
               </div>
             </div>
             <div className="col-span-12">
-              <h2><CheckboxInput name="krediKiralama" /> {t("satinalmaBilgiler")}</h2>
+              <h2><CheckboxInput name="krediKiralama" /> {t("kiralamaBilgiler")}</h2>
               <div className="grid gap-1 p-20 border mt-10">
                 <div className="col-span-3">
                   <div className="flex flex-col gap-1">
@@ -270,7 +269,7 @@ const Satinalma = ({ visible, onClose, id }) => {
                     <div className="col-span-4">
                       <div className="flex gap-1">
                         <CheckboxInput name="krediUyar" checked={!watch("krediKiralama")} />
-                        <label>{"uyari"}</label>
+                        <label>{t("uyari")}</label>
                       </div>
                     </div>
                   </div>

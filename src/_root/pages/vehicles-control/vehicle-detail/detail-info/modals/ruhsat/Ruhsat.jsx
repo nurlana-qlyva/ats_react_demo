@@ -195,7 +195,7 @@ const Ruhsat = ({ visible, onClose, id }) => {
       {t("kaydet")}
     </Button>,
     <Button key="back" className="btn btn-min cancel-btn" onClick={onClose}>
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

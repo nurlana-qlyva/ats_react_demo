@@ -32,6 +32,7 @@ import MaterialType from "../../../components/form/selects/MaterialType";
 import KmLog from "../../../components/table/KmLog";
 import GeneralInfo from "./tabs/GeneralInfo";
 import DetailInfo from "./detail-info/DetailInfo";
+import ProfilePhoto from "./tabs/ProfilePhoto";
 
 const breadcrumb = [
   { href: "/", title: <HomeOutlined /> },
@@ -43,7 +44,8 @@ const DetailUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { setPlaka, setAracId, setPrintData } = useContext(PlakaContext);
-
+  const [profile, setProfile] = useState([]);
+  const [urls, setUrls] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [data, setData] = useState({
     aktif: false,
@@ -55,6 +57,7 @@ const DetailUpdate = () => {
   const [dataStatus, setDataStatus] = useState(false);
   const [kmHistryModal, setKmHistryModal] = useState(false);
   const [guncelKmTarih, setGuncelKmTarih] = useState("");
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -294,6 +297,8 @@ const DetailUpdate = () => {
       setValue("ozelAlan10", res?.data.ozelAlan10);
       setValue("ozelAlan11", res?.data.ozelAlan11);
       setValue("ozelAlan12", res?.data.ozelAlan12);
+
+      setUrls([...urls, res.data.defPhotoInfo]);
     });
 
     GetPhotosByRefGroupService(id, "Arac").then((res) =>
@@ -391,6 +396,11 @@ const DetailUpdate = () => {
 
     uploadImages();
     uploadFiles();
+
+    uploadPhoto(id, "ARAC", profile, true);
+    setProfile([]);
+    setUrls([]);
+    setActiveKey("1")
   });
 
   const personalProps = {
@@ -473,11 +483,7 @@ const DetailUpdate = () => {
         <div className="content">
           <div className="grid">
             <div className="col-span-3">
-              <img
-                src="/images/ats_login_image.jpg"
-                className="car-image border"
-                alt=""
-              />
+              <ProfilePhoto setImages={setProfile} urls={urls} />
               <div className="flex gap-1 justify-between mt-10">
                 <p className="flex gap-1 align-center">
                   <span>
@@ -512,7 +518,7 @@ const DetailUpdate = () => {
                     className="btn btn-min cancel-btn"
                     onClick={handleCancel}
                   >
-                    {t("iptal")}
+                    {t("kapat")}
                   </Button>
                 </div>
                 <div className="col-span-4">
@@ -538,10 +544,14 @@ const DetailUpdate = () => {
                   <div className="grid gap-1">
                     <div className="col-span-10">
                       <div className="flex flex-col gap-1">
-                        <label className="flex justify-between">
+                        <label className="flex gap-2">
                           <span>{t("guncelKm")}</span>{" "}
                           <span className="text-info">
-                            [ {dayjs(guncelKmTarih).format("DD.MM.YYYY")} ]
+                            {guncelKmTarih
+                              ? `[ ${dayjs(guncelKmTarih).format(
+                                  "DD.MM.YYYY"
+                                )} ]`
+                              : null}
                           </span>
                         </label>
                         <TextInput name="guncelKm" readonly={true} />
@@ -614,7 +624,7 @@ const DetailUpdate = () => {
 
         <div className="content relative">
           <DetailInfo id={id} />
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </div>
       </FormProvider>
 

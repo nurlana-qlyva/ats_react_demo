@@ -67,7 +67,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setImages([]);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -105,7 +105,6 @@ UpdateModal.propTypes = {
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
   record: PropTypes.object,
-  status: PropTypes.bool,
 };
 
 export default UpdateModal;

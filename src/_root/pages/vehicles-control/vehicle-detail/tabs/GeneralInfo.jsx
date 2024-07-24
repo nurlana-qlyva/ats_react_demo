@@ -16,15 +16,32 @@ const GeneralInfo = () => {
   const { setValue, watch } = useFormContext();
   const [open, setOpen] = useState(false);
   const [vehicle, setVehicle] = useState(false);
-  const [warning, setWarning] = useState(false);
+  const [warning, setWarning] = useState({
+    muayene: false,
+    sozlesme: false,
+    vergi: false,
+    egzos: false,
+  });
 
   useEffect(() => {
-    let current = new Date().getDate();
-    if (current < 10) current = "0" + current;
+    const current = dayjs().startOf("day"); // Ensure comparison starts from the start of the day
+    const muayeneDate = dayjs(watch("muayeneTarih")).startOf("day");
+    const sozlesmeDate = dayjs(watch("sozlesmeTarih")).startOf("day");
+    const egzosDate = dayjs(watch("egzosTarih")).startOf("day");
+    const vergiDate = dayjs(watch("vergiTarih")).startOf("day");
 
-    if (current - dayjs(watch("muayeneTarih")).format("DD") === 2)
-      setWarning(true);
-  }, []);
+    setWarning({
+      muayene: muayeneDate.isValid() && muayeneDate.diff(current, "day") < 3 && muayeneDate.diff(current, "day") > 0,
+      sozlesme: sozlesmeDate.isValid() && sozlesmeDate.diff(current, "day") < 3 && sozlesmeDate.diff(current, "day") > 0,
+      egzos: egzosDate.isValid() && egzosDate.diff(current, "day") < 3 && egzosDate.diff(current, "day") > 0,
+      vergi: vergiDate.isValid() && vergiDate.diff(current, "day") < 3 && vergiDate.diff(current, "day") > 0,
+    });
+  }, [
+    watch("muayeneTarih"),
+    watch("sozlesmeTarih"),
+    watch("egzosTarih"),
+    watch("vergiTarih"),
+  ]);
 
   const footer = [
     <Button
@@ -54,19 +71,19 @@ const GeneralInfo = () => {
           <div className="border p-10 mb-10">
             <h3 className="sub-title">{t("aracBilgileri")}</h3>
             <div className="grid gap-1 mt-10">
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label htmlFor="yil">{t("yil")}</label>
                   <NumberInput name="yil" />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label htmlFor="aracGrubuId">{t("aracGrup")}</label>
                   <CodeControl name="grup" codeName="aracGrubuId" id={101} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("aracCinsi")}</label>
                   <CodeControl
@@ -76,13 +93,13 @@ const GeneralInfo = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label htmlFor="">{t("mulkiyet")}</label>
                   <TextInput name="mulkiyet" />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label htmlFor="departmanId">{t("departman")}</label>
                   <CodeControl
@@ -92,25 +109,25 @@ const GeneralInfo = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("proje")} -- ?</label>
                   <TextInput name="" readonly={true} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("masrafMerkezi")} -- ?</label>
                   <TextInput name="" readonly={true} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("havuz")} -- ?</label>
                   <TextInput name="havuzGrup" readonly={true} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("kullanimAmaci")}</label>
                   <CodeControl
@@ -120,25 +137,25 @@ const GeneralInfo = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("durum")}</label>
                   <CodeControl name="durum" codeName="durumKodId" id={122} />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("hgs")}</label>
                   <TextInput name="hgsNo" />
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("tts")}</label>
                   <TextInput name="tts" />
                 </div>
               </div>
-              <div className="col-span-6">
+              <div className="col-span-4">
                 <div className="grid gap-1">
                   <div className="col-span-10">
                     <div className="flex flex-col gap-1">
@@ -157,13 +174,13 @@ const GeneralInfo = () => {
           </div>
           <div className="border p-10 mt-10">
             <div className="grid gap-1">
-              <div className="col-span-6">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("anahtarKodu")}</label>
                   <TextInput name="anahtarKodu" />
                 </div>
               </div>
-              <div className="col-span-6">
+              <div className="col-span-4">
                 <div className="flex flex-col gap-1">
                   <label>{t("yedekAnahtar")}</label>
                   <CodeControl
@@ -175,12 +192,6 @@ const GeneralInfo = () => {
               </div>
             </div>
           </div>
-          <div className="border p-10 mt-10">
-            <div className="flex flex-col gap-1">
-              <label>{t("aciklama")}</label>
-              <Textarea name="aciklama" />
-            </div>
-          </div>
         </div>
         <div className="col-span-4">
           <div className="border p-10">
@@ -188,12 +199,14 @@ const GeneralInfo = () => {
             <div className="grid gap-1 mt-10">
               <div className="col-span-6">
                 <div className="flex flex-col gap-1">
-                  <label className="text-info flex align-center gap-1">
+                  <label className="text-info flex gap-2">
                     <span>{t("muayeneTarihi")} </span>
                     <span
-                      className={`warning-icon ${!warning ? "show" : "hide"}`}
+                      className={`warning-icon ${
+                        warning.muayene ? "show" : "hide"
+                      }`}
                     >
-                      <IoIosWarning style={{ color: "red" }} />
+                      <IoIosWarning style={{ color: "red", fontSize: 18 }} />
                     </span>
                   </label>
                   <DateInput name="muayeneTarih" />
@@ -201,19 +214,46 @@ const GeneralInfo = () => {
               </div>
               <div className="col-span-6">
                 <div className="flex flex-col gap-1">
-                  <label className="text-info">{t("sozlesmeTarihi")}</label>
+                  <label className="text-info flex gap-2">
+                    <span>{t("sozlesmeTarihi")} </span>
+                    <span
+                      className={`warning-icon ${
+                        warning.sozlesme ? "show" : "hide"
+                      }`}
+                    >
+                      <IoIosWarning style={{ color: "red", fontSize: 18 }} />
+                    </span>
+                  </label>
                   <DateInput name="sozlesmeTarih" />
                 </div>
               </div>
               <div className="col-span-6">
                 <div className="flex flex-col gap-1">
-                  <label className="text-info">{t("egzozEmisyon")}</label>
+                  <label className="text-info flex gap-2">
+                    <span>{t("egzozEmisyon")} </span>
+                    <span
+                      className={`warning-icon ${
+                        warning.egzos ? "show" : "hide"
+                      }`}
+                    >
+                      <IoIosWarning style={{ color: "red", fontSize: 18 }} />
+                    </span>
+                  </label>
                   <DateInput name="egzosTarih" />
                 </div>
               </div>
               <div className="col-span-6">
                 <div className="flex flex-col gap-1">
-                  <label className="text-info">{t("vergi")}</label>
+                  <label className="text-info flex gap-2">
+                    <span>{t("vergi")} </span>
+                    <span
+                      className={`warning-icon ${
+                        warning.vergi ? "show" : "hide"
+                      }`}
+                    >
+                      <IoIosWarning style={{ color: "red", fontSize: 18 }} />
+                    </span>
+                  </label>
                   <DateInput name="vergiTarih" />
                 </div>
               </div>
@@ -254,6 +294,14 @@ const GeneralInfo = () => {
               <Radio value={2}>{t("pasif")}</Radio>
               <Radio value={3}>{t("arsiv")}</Radio>
             </Radio.Group>
+          </div>
+        </div>
+        <div className="col-span-12">
+          <div className="border p-10 mt-10">
+            <div className="flex flex-col gap-1">
+              <label>{t("aciklama")}</label>
+              <Textarea name="aciklama" />
+            </div>
           </div>
         </div>
 

@@ -11,15 +11,12 @@ import CodeControl from "../../../../../../components/form/selects/CodeControl";
 
 const AddModal = ({ setStatus }) => {
   const { plaka, aracId } = useContext(PlakaContext);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const defaultValues = {};
-
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset } = methods;
 
   const handleOk = handleSubmit(async (values) => {
@@ -50,7 +47,7 @@ const AddModal = ({ setStatus }) => {
       className="btn btn-min cancel-btn"
       onClick={() => setIsModalOpen(false)}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

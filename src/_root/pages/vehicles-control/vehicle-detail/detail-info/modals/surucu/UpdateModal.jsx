@@ -154,7 +154,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         reset(defaultValues);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

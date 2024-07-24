@@ -145,7 +145,7 @@ const Tutanak = ({ data }) => {
             <div>
                 {/* button to trigger printing of target component */}
                 <ReactToPrint
-                    trigger={() => <Button>Yazdır</Button>}
+                    trigger={() => <Button className='btn cancel-btn btn-min'>Yazdır</Button>}
                     content={() => componentRef}
                 />
 

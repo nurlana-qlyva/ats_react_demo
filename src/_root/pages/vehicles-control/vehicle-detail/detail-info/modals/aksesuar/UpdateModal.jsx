@@ -75,7 +75,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setImages([]);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

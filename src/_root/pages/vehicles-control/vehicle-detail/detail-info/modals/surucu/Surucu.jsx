@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { MenuOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Input, Modal, Popover, Table } from "antd";
+import { MenuOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Input, Modal, Popover, Spin, Table } from "antd";
 import DragAndDropContext from "../../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../../components/drag-drop-table/SortableHeaderCell";
 import { GetDriverSubstitutionListByVehicleIdService } from "../../../../../../../api/services/vehicles/vehicles/services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
+import Content from "../../../../../../components/drag-drop-table/DraggableCheckbox";
 
 const Surucu = ({ visible, onClose, id }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -19,6 +20,7 @@ const Surucu = ({ visible, onClose, id }) => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -90,13 +92,15 @@ const Surucu = ({ visible, onClose, id }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setIsInitialLoading(true);
       const res = await GetDriverSubstitutionListByVehicleIdService(
         id,
         search,
         tableParams.pagination.current
       );
       setLoading(false);
-      setDataSource(res?.data.list);
+      setIsInitialLoading(false);
+      setDataSource(res?.data.list); 
       setTableParams((prevTableParams) => ({
         ...prevTableParams,
         pagination: {
@@ -132,25 +136,34 @@ const Surucu = ({ visible, onClose, id }) => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
   );
 
   const footer = [
     <Button key="back" className="btn btn-min cancel-btn" onClick={onClose}>
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
+
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+  );
 
   return (
     <Modal
@@ -190,27 +203,34 @@ const Surucu = ({ visible, onClose, id }) => {
       />
       <div className="mt-20">
         <DragAndDropContext items={columns} setItems={setColumns}>
-          <Table
-            columns={newColumns}
-            dataSource={dataSource}
-            pagination={{
-              ...tableParams.pagination,
-              showTotal: (total) => (
-                <p className="text-info">[{total} {t("kayit")}]</p>
-              ),
-              locale: {
-                items_per_page: `/ ${t("sayfa")}`,
-              },
-            }}
-            loading={loading}
-            size="small"
-            onChange={handleTableChange}
-            components={{
-              header: {
-                cell: SortableHeaderCell,
-              },
-            }}
-          />
+          <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+            <Table
+              columns={newColumns}
+              dataSource={dataSource}
+              pagination={{
+                ...tableParams.pagination,
+                showTotal: (total) => (
+                  <p className="text-info">
+                    [{total} {t("kayit")}]
+                  </p>
+                ),
+                locale: {
+                  items_per_page: `/ ${t("sayfa")}`,
+                },
+              }}
+              loading={loading}
+              size="small"
+              onChange={handleTableChange}
+              components={{
+                header: {
+                  cell: SortableHeaderCell,
+                },
+              }}
+              locale={{
+                emptyText: "Veri Bulunamadı",
+              }}
+            />
+          </Spin>
         </DragAndDropContext>
       </div>
     </Modal>

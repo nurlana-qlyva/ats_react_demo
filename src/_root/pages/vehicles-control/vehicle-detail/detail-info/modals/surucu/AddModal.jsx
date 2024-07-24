@@ -133,7 +133,7 @@ const AddModal = ({ setStatus }) => {
         reset();
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

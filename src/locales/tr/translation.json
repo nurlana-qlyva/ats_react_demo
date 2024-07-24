@@ -388,5 +388,19 @@
     "eskiKm": "Eski KM",
     "yeniAracGiris": "Yeni Araç Girişi",
     "gun": "Gün",
-    "hasarIndirimi": "Hasar İndirimi"
+    "hasarIndirimi": "Hasar İndirimi",
+    "yukle": "Yükle",
+    "kiralamaBilgiler": "Kiralama Bilgileri",
+    "ammorTismanBilgiler": "Amortisman Bilgileri",
+    "kiralamaTutar": "Kiralama Tutarı",
+    "hesapNo": "Hesap No",
+    "kiraBaslangicTarih": "Kira Başlangıç Tarihi",
+    "ilgili": "İlgili",
+    "kiralamaSuresi": "Kiralama Süresi",
+    "garantiSure": "Garanti Süresi",
+    "garantiKm": "Garanti KM",
+    "garantiBaslamaTarih": "Başlama Tarihi",
+    "garantiBaslamaKm": "Başlama KM",
+    "garantiBitisTarih": "Bitiş Tarihi",
+    "garantiBitisKm": "Bitiş KM"
 }
