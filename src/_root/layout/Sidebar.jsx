@@ -25,7 +25,7 @@ const items = [
     {
         key: '2',
         icon: <CarOutlined />,
-        label: 'Araç Yönetimi',
+        label: t("aracYonetimi"),
         children: [
             {
                 key: '3',
@@ -78,12 +78,12 @@ const items = [
     {
         key: '13',
         icon: <BsFuelPump />,
-        label: 'Yakıt Yönetimi',
+        label: t("yakitYonetimi"),
         children: [
             {
                 key: '14',
                 label: (
-                    <Link to={'/yakit-tanimlari'}>{t("yakitTanimlari")}</Link>
+                    <Link to={'/yakit-tanimlari'}>{t("tanimlar")}</Link>
                 ),
             },
             {
@@ -277,7 +277,7 @@ const items = [
             },
         ],
     },
-   
+
     {
         key: '50',
         icon: <FaGears />,

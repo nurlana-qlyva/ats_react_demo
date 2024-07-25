@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import { Button, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { t } from "i18next";
 import { GetModuleCodeByCode, CodeItemValidateService } from "../../../../api/services/code/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
@@ -10,9 +11,11 @@ import { AddMaterialService } from "../../../../api/services/yakit-yonetimi/serv
 
 const AddModal = ({ setStatus }) => {
   const isFirstRender = useRef(true);
-
   const [isOpen, setIsModalOpen] = useState(false);
   const [isValid, setIsValid] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
+
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -92,31 +95,10 @@ const AddModal = ({ setStatus }) => {
     },
   ]);
 
-  const defaultValues = {
-    malzemeKod: "",
-    tanim: "",
-    birimKodId: null,
-    birim: null,
-    malzemeTipKodId: null,
-    fiyat: null,
-    seriNo: "",
-    barKodNo: "",
-    depoId: 0,
-    bolum: "",
-    raf: "",
-    kritikMiktar: null,
-    kdvOran: null,
-    aktif: false,
-    yedekParca: false,
-    sarfMlz: false,
-    demirBas: false,
-    olcu: "",
-  };
-
+  const defaultValues = {};
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
@@ -187,28 +169,45 @@ const AddModal = ({ setStatus }) => {
         setStatus(true);
         setIsModalOpen(false);
         reset(defaultValues);
+        setIsValid("normal");
+        setLoading(false);
+        setActiveKey("1");
       }
     });
     setStatus(false);
   });
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={isValid === "error"
-      ? true
-      : isValid === "success"
-        ? false
-        : false} >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success"
+            ? false
+            : isValid === "error"
+              ? true
+              : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setIsModalOpen(false);
-        reset(defaultValues);
+        reset(defaultValues)
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -218,7 +217,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniMalzemeGirisi")}
+        title={t("yeniYakitTanimGirisi")}
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
@@ -227,12 +226,16 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>
     </>
   );
+};
+
+AddModal.propTypes = {
+  setStatus: PropTypes.func
 };
 
 export default AddModal;

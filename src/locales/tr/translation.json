@@ -410,5 +410,18 @@
     "onEk": "Ön Ek",
     "no": "No",
     "haneSayisi": "Hane Sayısı",
-    "alaniKilitle": "Alanı Kilitle"
+    "alaniKilitle": "Alanı Kilitle",
+    "aracYonetimi": "Araç Yönetimi",
+    "yakitYonetimi": "Yakıt Yönetimi",
+    "tanimlar": "Tanımlar",
+    "girişFişleri": "Giriş Fişleri",
+    "çıkışFişleri": "Çıkış Fişleri",
+    "yakitTanimlari": "Yakıt Tanımları",
+    "yakitKod": "Yakıt Kodu",
+    "yakitTanimi": "Yakıt Tanımı",
+    "yeniYakitTanimGirisi": "Yeni Yakıt Tanım Girişi",
+    "yakitTanimGuncelle": "Yakıt Tanımı Güncelle",
+    "fisGirisBilgisiEkle": "Fiş Giriş Bilgisi Ekle",
+    "yakitTanimlari": "Yakıt Tanımları",
+    "yakitTanimlari": "Yakıt Tanımları"
 }

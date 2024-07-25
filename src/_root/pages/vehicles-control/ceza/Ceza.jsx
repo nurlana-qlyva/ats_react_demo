@@ -302,7 +302,6 @@ const Ceza = () => {
         updateModal={updateModal}
         setUpdateModal={setUpdateModal}
         setStatus={setStatus}
-        status={status}
         id={id}
       />
 

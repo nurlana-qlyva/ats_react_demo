@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input } from "antd";
-import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
+import { Table, Popover, Button, Input, Spin } from "antd";
+import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import { GetFuelMaterialListService } from "../../../../api/services/yakit-yonetimi/services";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
-
 
 const breadcrumb = [
     { href: "/", title: <HomeOutlined /> },
@@ -25,11 +25,11 @@ const YakitTanimlar = () => {
         },
     });
     const [loading, setLoading] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState(false);
     const [openRowHeader, setOpenRowHeader] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
-    const [data, setData] = useState(false);
     const [filterData, setFilterData] = useState({});
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [keys, setKeys] = useState([]);
@@ -44,7 +44,6 @@ const YakitTanimlar = () => {
             render: (text, record) => (
                 <Button
                     onClick={() => {
-                        setData(record);
                         setUpdateModal(true);
                         setId(record.malzemeId)
                     }}
@@ -64,7 +63,7 @@ const YakitTanimlar = () => {
             key: 3,
         },
         {
-            title: t("yakitTipi"),
+            title: t("yakitTip"),
             dataIndex: "yakitTipKodText",
             key: 4,
         },
@@ -117,12 +116,14 @@ const YakitTanimlar = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setIsInitialLoading(true)
             const res = await GetFuelMaterialListService(
                 search,
                 tableParams.pagination.current,
                 filterData
             );
             setLoading(false);
+            setIsInitialLoading(false)
             setDataSource(res?.data.materialList);
             setTableParams((prevTableParams) => ({
                 ...prevTableParams,
@@ -170,18 +171,27 @@ const YakitTanimlar = () => {
         value: key,
     }));
 
+    const moveCheckbox = (fromIndex, toIndex) => {
+        const updatedColumns = [...columns];
+        const [removed] = updatedColumns.splice(fromIndex, 1);
+        updatedColumns.splice(toIndex, 0, removed);
+
+        setColumns(updatedColumns);
+        setCheckedList(updatedColumns.map((col) => col.key));
+    };
+
     const content = (
-        <>
-            <Checkbox.Group
-                value={checkedList}
-                options={options}
-                onChange={(value) => {
-                    if (value.length > 0) {
-                        setCheckedList(value);
-                    }
-                }}
-            />
-        </>
+        <Content
+            options={options}
+            checkedList={checkedList}
+            setCheckedList={setCheckedList}
+            moveCheckbox={moveCheckbox}
+        />
+    );
+
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
     );
 
     // get selected rows data
@@ -246,7 +256,7 @@ const YakitTanimlar = () => {
                             </Button>
                         </Popover>
                         <Input
-                            placeholder="Arama"
+                            placeholder={t("arama")}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <AddModal setStatus={setStatus} />
@@ -259,39 +269,43 @@ const YakitTanimlar = () => {
                 updateModal={updateModal}
                 setUpdateModal={setUpdateModal}
                 setStatus={setStatus}
-                status={status}
                 id={id}
             />
 
             <div className="content">
                 <DragAndDropContext items={columns} setItems={setColumns}>
-                    <Table
-                        rowKey={(record) => record.yakitId}
-                        columns={newColumns}
-                        dataSource={dataSource}
-                        pagination={{
-                            ...tableParams.pagination,
-                            showTotal: (total) => (
-                                <p className="text-info">[{total} kayıt]</p>
-                            ),
-                            locale: {
-                                items_per_page: `/ ${t("sayfa")}`,
-                            },
-                        }}
-                        loading={loading}
-                        size="small"
-                        onChange={handleTableChange}
-                        rowSelection={{
-                            selectedRowKeys: selectedRowKeys,
-                            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-                            onSelect: handleRowSelection,
-                        }}
-                        components={{
-                            header: {
-                                cell: SortableHeaderCell,
-                            },
-                        }}
-                    />
+                    <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+                        <Table
+                            rowKey={(record) => record.yakitId}
+                            columns={newColumns}
+                            dataSource={dataSource}
+                            pagination={{
+                                ...tableParams.pagination,
+                                showTotal: (total) => (
+                                    <p className="text-info">[{total} {t("kayit")}]</p>
+                                ),
+                                locale: {
+                                    items_per_page: `/ ${t("sayfa")}`,
+                                },
+                            }}
+                            loading={loading}
+                            size="small"
+                            onChange={handleTableChange}
+                            rowSelection={{
+                                selectedRowKeys: selectedRowKeys,
+                                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                                onSelect: handleRowSelection,
+                            }}
+                            components={{
+                                header: {
+                                    cell: SortableHeaderCell,
+                                },
+                            }}
+                            locale={{
+                                emptyText: "Veri Bulunamadı",
+                            }}
+                        />
+                    </Spin>
                 </DragAndDropContext>
             </div>
         </>

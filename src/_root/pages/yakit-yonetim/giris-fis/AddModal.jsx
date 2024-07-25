@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Modal, Popconfirm, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types";
+import { Button, Modal, Popconfirm } from "antd";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import {
@@ -20,8 +21,9 @@ const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState("normal");
   const isFirstRender = useRef(true);
+  const [loading, setLoading] = useState(false);
 
   const defaultValues = {
     fisNo: "",
@@ -38,12 +40,11 @@ const AddModal = ({ setStatus }) => {
     islemTipi: "",
     aciklama: "",
   };
-
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, setValue, watch } = methods;
+
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -99,6 +100,8 @@ const AddModal = ({ setStatus }) => {
         reset(defaultValues);
         setTableData([]);
         setIsSuccess(true);
+        setLoading(false);
+        setIsValid("normal");
       }
     });
     setStatus(false);
@@ -159,14 +162,26 @@ const AddModal = ({ setStatus }) => {
   }, [watch("girisDepoSiraNo")]);
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-      disabled={!isValid}
-    >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success"
+            ? false
+            : isValid === "error"
+              ? true
+              : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Popconfirm
       key="back"
       title="Bilgileri Kaydetmeden Çıkılsın mı?"
@@ -179,7 +194,7 @@ const AddModal = ({ setStatus }) => {
         setIsSuccess(true);
       }}
     >
-      <Button className="btn btn-min cancel-btn">{t("iptal")}</Button>
+      <Button className="btn btn-min cancel-btn">{t("kapat")}</Button>
     </Popconfirm>,
   ];
 
@@ -189,7 +204,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> Ekle
       </Button>
       <Modal
-        title="Fiş Giriş Bilgisi Ekle"
+        title={t("fisGirisBilgisiEkle")}
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
@@ -212,6 +227,10 @@ const AddModal = ({ setStatus }) => {
       </Modal>
     </>
   );
+};
+
+AddModal.propTypes = {
+  setStatus: PropTypes.func
 };
 
 export default AddModal;

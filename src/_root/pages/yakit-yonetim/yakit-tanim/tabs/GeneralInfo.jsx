@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { t } from "i18next";
-import ValidationInput from "../../../../components/form/inputs/ValidationInput";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import TextInput from "../../../../components/form/inputs/TextInput";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
@@ -24,12 +23,12 @@ const GeneralInfo = ({ isValid }) => {
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
                 <label>{t("yakitKod")}</label>
-                <ValidationInput name="malzemeKod" style={validateStyle} />
+                <TextInput name="malzemeKod" style={validateStyle} />
               </div>
             </div>
             <div className="col-span-8">
               <div className="flex flex-col gap-1">
-                <label>{t("aktif")}</label>
+                <label>{t("aktifDegil")}</label>
                 <CheckboxInput name="aktif" />
               </div>
             </div>
@@ -80,7 +79,6 @@ const GeneralInfo = ({ isValid }) => {
 
 GeneralInfo.propTypes = {
   isValid: PropTypes.string,
-  setImages: PropTypes.func,
 };
 
 export default GeneralInfo;

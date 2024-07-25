@@ -2,14 +2,29 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
-import { Button, Modal, Tabs } from "antd";
-import { CodeItemValidateService } from "../../../../api/service";
+import { Button, message, Modal, Tabs } from "antd";
+import { CodeItemValidateService } from "../../../../api/services/code/services";
+import { GetMaterialCardByIdService, UpdateMaterialCardService } from "../../../../api/services/yakit-yonetimi/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
-import { GetMaterialCardByIdService, UpdateMaterialCardService } from "../../../../api/services/yakit-yonetimi/services";
+import { GetDocumentsByRefGroupService, GetPhotosByRefGroupService } from "../../../../api/services/upload/services";
+import { uploadFile, uploadPhoto } from "../../../../utils/upload";
+import PhotoUpload from "../../../components/upload/PhotoUpload";
+import FileUpload from "../../../components/upload/FileUpload";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  // file
+  const [filesUrl, setFilesUrl] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+  // photo
+  const [imageUrls, setImageUrls] = useState([]);
+  const [loadingImages, setLoadingImages] = useState(false);
+  const [images, setImages] = useState([]);
+
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -96,7 +111,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
-    if (watch("malzemeKod")) {
+    if (code !== watch("malzemeKod")) {
       const body = {
         tableName: "Malzeme",
         code: watch("malzemeKod"),
@@ -105,13 +120,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
     }
-  }, [watch("malzemeKod")]);
+  }, [watch("malzemeKod"), code]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await GetMaterialCardByIdService(id);
         setValue("malzemeKod", res.data.malzemeKod);
+        setCode(res?.data.malzemeKod);
         setValue("aktif", res.data.aktif);
         setValue("tanim", res.data.tanim);
         setValue("birim", res.data.birim);
@@ -144,9 +160,38 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
 
     if (updateModal) {
       fetchData();
-    }
+      GetPhotosByRefGroupService(id, "YAKIT").then((res) =>
+        setImageUrls(res.data)
+      );
 
+      GetDocumentsByRefGroupService(id, "YAKIT").then((res) =>
+        setFilesUrl(res.data)
+      );
+    }
   }, [id, updateModal]);
+
+  const uploadFiles = () => {
+    try {
+      setLoadingFiles(true);
+      uploadFile(id, "YAKIT", files);
+    } catch (error) {
+      message.error("Dosya yüklenemedi. Yeniden deneyin.");
+    } finally {
+      setLoadingFiles(false);
+    }
+  };
+
+  const uploadImages = () => {
+    try {
+      setLoadingImages(true);
+      const data = uploadPhoto(id, "YAKIT", images, false);
+      setImageUrls([...imageUrls, data.imageUrl]);
+    } catch (error) {
+      message.error("Resim yüklenemedi. Yeniden deneyin.");
+    } finally {
+      setLoadingImages(false);
+    }
+  };
 
   const onSubmit = handleSubmit((values) => {
     const body = {
@@ -179,10 +224,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setUpdateModal(false);
         setStatus(true);
         reset(defaultValues);
+        setActiveKey("1")
       }
     });
 
-
+    uploadFiles();
+    uploadImages();
     setStatus(false);
   });
 
@@ -203,6 +250,28 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       label: t("ozelAlanlar"),
       children: <PersonalFields personalProps={personalProps} />,
     },
+    {
+      key: "3",
+      label: `[${imageUrls.length}] ${t("resimler")}`,
+      children: (
+        <PhotoUpload
+          imageUrls={imageUrls}
+          loadingImages={loadingImages}
+          setImages={setImages}
+        />
+      ),
+    },
+    {
+      key: "4",
+      label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
+      children: (
+        <FileUpload
+          filesUrl={filesUrl}
+          loadingFiles={loadingFiles}
+          setFiles={setFiles}
+        />
+      ),
+    },
   ];
 
   const footer = [
@@ -215,15 +284,16 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       onClick={() => {
         setUpdateModal(false);
         reset(defaultValues);
+        setActiveKey("1")
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
   return (
     <Modal
-      title={t("surucuGuncelle")}
+      title={t("yakitTanimGuncelle")}
       open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
@@ -232,7 +302,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>
