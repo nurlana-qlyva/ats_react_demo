@@ -7,11 +7,15 @@ import Dashboard from './_root/pages/dashboard/Dashboard'
 import Vehicles from './_root/pages/vehicles-control/vehicles/Vehicles'
 import DetailUpdate from './_root/pages/vehicles-control/vehicle-detail/DetailUpdate'
 import Yakit from './_root/pages/vehicles-control/yakit/Yakit'
+import Sefer from './_root/pages/vehicles-control/sefer/Sefer'
+import Sigorta from './_root/pages/vehicles-control/sigorta/Sigorta'
+import Kaza from './_root/pages/vehicles-control/kaza/Kaza'
+import Harcama from './_root/pages/vehicles-control/harcama/Harcama'
+import Ceza from './_root/pages/vehicles-control/ceza/Ceza'
+import KmUpdate from './_root/pages/vehicles-control/hizli-km/KmUpdate'
+
 import Suruculer from './_root/pages/sistem-tanimlari/surucu/SurucuTanim'
 import YakitGirisFisleri from './_root/pages/yakit-yonetim/giris-fis/YakitGirisFisleri'
-
-
-import KmUpdate from './_root/pages/km-update/KmUpdate'
 import Settings from './_root/pages/settings/Settings'
 import MalzemeTanimlari from './_root/pages/malzeme/MalzemeTanimlari'
 import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
@@ -30,11 +34,8 @@ import Transferler from './_root/pages/transferler/Transferler'
 import YakitTanimlar from './_root/pages/yakit-yonetim/yakit-tanim/YakitTanimlar'
 import YakitCikisFisleri from './_root/pages/yakit-yonetim/cikis-fis/YakitCikisFisleri'
 import YakitTransferler from './_root/pages/yakit-yonetim/transferler/YakitTransferler'
-import Ceza from './_root/pages/vehicles-control/ceza/Ceza'
-import Harcama from './_root/pages/vehicles-control/harcama/Harcama'
-import Sefer from './_root/pages/vehicles-control/sefer/Sefer'
 import Raporlar from './_root/pages/raporlar/Raporlar'
-
+import KodYonetimi from './_root/pages/kod-yonetimi/KodYonetimi'
 
 
 const App = () => {
@@ -81,9 +82,12 @@ const App = () => {
         <Route path="/yakit-cikis-fisleri" element={<YakitCikisFisleri />} />
         <Route path="/yakit-transferler" element={<YakitTransferler />} />
         <Route path="/ceza-islemleri" element={<Ceza />} />
+        <Route path="/sigorta-islemleri" element={<Sigorta />} />
         <Route path="/harcama-islemleri" element={<Harcama />} />
+        <Route path="/kaza-islemleri" element={<Kaza />} />
         <Route path="/sefer-islemleri" element={<Sefer />} />
         <Route path="/raporlar" element={<Raporlar />} />
+        <Route path="/kod-yonetimi" element={<KodYonetimi />} />
       </Route>
       {hasToken && (
         <Route path="/login" element={<AuthLayout />} />

@@ -369,7 +369,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
         setIsOpen(false);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -656,7 +656,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <div className="flex align-baseline gap-1">
-                  <label htmlFor="miktar">{t("miktar")} (lt)</label>
+                  <label htmlFor="miktar">{t("miktar")} (lt) <span className="text-danger">*</span></label>
                   <Button className="depo" onClick={() => setIsOpen(true)}>
                     {t("depoHacmi")}: {watch("yakitHacmi")}{" "}
                     {(watch("birim") === "LITRE" && "lt") || "lt"}

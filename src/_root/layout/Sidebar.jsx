@@ -49,7 +49,7 @@ const items = [
             },
             {
                 key: '7',
-                label: <Link to={'/'}>{t("sigortalar")}</Link>,
+                label: <Link to={'/sigorta-islemleri'}>{t("sigortalar")}</Link>,
             },
             {
                 key: '8',
@@ -57,7 +57,7 @@ const items = [
             },
             {
                 key: '9',
-                label: <Link to={'/'}>{t("kazalar")}</Link>,
+                label: <Link to={'/kaza-islemleri'}>{t("kazalar")}</Link>,
             },
             {
                 key: '10',
@@ -298,7 +298,7 @@ const items = [
             {
                 key: '53',
                 label: (
-                    <Link to={`/kullanici-tanimlari`}>{t("dokumanYoneticisi")}</Link>
+                    <Link to={`/kod-yonetimi`}>{t("kodYonetimi")}</Link>
 
                 ),
             }

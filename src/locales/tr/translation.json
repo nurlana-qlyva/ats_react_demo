@@ -402,5 +402,13 @@
     "garantiBaslamaTarih": "Başlama Tarihi",
     "garantiBaslamaKm": "Başlama KM",
     "garantiBitisTarih": "Bitiş Tarihi",
-    "garantiBitisKm": "Bitiş KM"
+    "garantiBitisKm": "Bitiş KM",
+    "seferNo": "Sefer No",
+    "harcamaIslemleri": "Harcama İşlemleri",
+    "kazaIslemleri": "Kaza İşlemleri",
+    "cezaIslemleri": "Ceza İşlemleri",
+    "onEk": "Ön Ek",
+    "no": "No",
+    "haneSayisi": "Hane Sayısı",
+    "alaniKilitle": "Alanı Kilitle"
 }

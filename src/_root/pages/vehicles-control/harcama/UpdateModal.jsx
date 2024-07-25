@@ -1,25 +1,33 @@
 import { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import { t } from "i18next";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { GetExpenseByIdService, UpdateExpenseItemService } from "../../../../api/services/vehicles/operations_services";
 import {
   GetDocumentsByRefGroupService,
+  GetPhotosByRefGroupService,
 } from "../../../../api/services/upload/services";
-import { uploadFile } from "../../../../utils/upload";
+import { uploadFile, uploadPhoto } from "../../../../utils/upload";
 import { message, Modal, Tabs, Button } from "antd";
 import GeneralInfo from "./tabs/GeneralInfo";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import FileUpload from "../../../components/upload/FileUpload";
 import dayjs from "dayjs";
+import PhotoUpload from "../../../components/upload/PhotoUpload";
 
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
-  const { data, plaka } = useContext(PlakaContext);
+  const { plaka } = useContext(PlakaContext);
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
+  // photo
+  const [imageUrls, setImageUrls] = useState([]);
+  const [loadingImages, setLoadingImages] = useState(false);
+  const [images, setImages] = useState([]);
 
   const [fields, setFields] = useState([
     {
@@ -138,7 +146,11 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("ozelAlan12", res?.data.ozelAlan12);
       });
 
-      GetDocumentsByRefGroupService(id, "CEZA").then((res) =>
+      GetPhotosByRefGroupService(id, "HARCAMA").then((res) =>
+        setImageUrls(res.data)
+      );
+
+      GetDocumentsByRefGroupService(id, "HARCAMA").then((res) =>
         setFilesUrl(res.data)
       );
     }
@@ -147,7 +159,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const uploadFiles = () => {
     try {
       setLoadingFiles(true);
-      uploadFile(id, "CEZA", files);
+      uploadFile(id, "HARCAMA", files);
     } catch (error) {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
@@ -155,7 +167,20 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     }
   };
 
+  const uploadImages = () => {
+    try {
+      setLoadingImages(true);
+      const data = uploadPhoto(id, "HARCAMA", images, false);
+      setImageUrls([...imageUrls, data.imageUrl]);
+    } catch (error) {
+      message.error("Resim yüklenemedi. Yeniden deneyin.");
+    } finally {
+      setLoadingImages(false);
+    }
+  };
+
   const onSubmit = handleSubmit((values) => {
+    console.log(1)
     const body = {
       siraNo: id,
       tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
@@ -184,6 +209,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
         if (plaka.length === 1) {
           reset();
         } else {
@@ -193,13 +219,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     })
 
     uploadFiles();
+    uploadImages();
+    setStatus(false)
   })
 
-
-
-
   const personalProps = {
-    form: "CEZA",
+    form: "HARCAMA",
     fields,
     setFields,
   };
@@ -217,6 +242,17 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     },
     {
       key: "3",
+      label: `[${imageUrls.length}] ${t("resimler")}`,
+      children: (
+        <PhotoUpload
+          imageUrls={imageUrls}
+          loadingImages={loadingImages}
+          setImages={setImages}
+        />
+      ),
+    },
+    {
+      key: "4",
       label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
       children: (
         <FileUpload
@@ -242,15 +278,16 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
   return (
     <Modal
-      title={t("cezaBilgisiGuncelle")}
+      title={t("harcamaBilgisiGuncelle")}
       open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
@@ -259,11 +296,18 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>
   );
+};
+
+UpdateModal.propTypes = {
+  updateModal: PropTypes.bool,
+  setUpdateModal: PropTypes.func,
+  setStatus: PropTypes.func,
+  id: PropTypes.number,
 };
 
 export default UpdateModal;

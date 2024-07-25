@@ -1,21 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { AddExpeditionItemService } from "../../../../api/services/vehicles/operations_services";
+import { GetModuleCodeByCode } from "../../../../api/services/code/services";
+import { CodeItemValidateService } from "../../../../api/service";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields"
 import GeneralInfo from "./tabs/GeneralInfo";
 
-
 const AddModal = ({ setStatus }) => {
-  const { data, plaka, setHistory } = useContext(PlakaContext);
+  const isFirstRender = useRef(true);
+  const { data, plaka } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [response, setResponse] = useState("normal");
+  const [isValid, setIsValid] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
 
   const [fields, setFields] = useState([
     {
@@ -100,16 +103,49 @@ const AddModal = ({ setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
 
+  useEffect(() => {
+    setValue("seferAdedi", 1);
+  }, []);
 
+  useEffect(() => {
+    let fark;
+    if (watch("varisKm")) {
+      fark = watch("varisKm") - watch("cikisKm");
+    } else {
+      fark = 0;
+    }
+    setValue("farkKm", fark);
+  }, [watch("varisKm"), watch("cikisKm")]);
+
+  useEffect(() => {
+    if (isOpen && isFirstRender.current) {
+      GetModuleCodeByCode("SEFER_NO").then((res) =>
+        setValue("seferNo", res.data)
+      );
+    }
+  }, [isOpen, setValue]);
+
+  useEffect(() => {
+    if (watch("seferNo")) {
+      const body = {
+        tableName: "SeferNo",
+        code: watch("seferNo"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    }
+  }, [watch("seferNo")]);
 
   const onSubmit = handleSubmit((values) => {
     const body = {
-      aracId: data.aracId,
+      aracId: plaka[0].aracId,
       surucuId1: values.surucuId1 || 0,
       surucuId2: values.surucuId2 || 0,
       aciklama: values.aciklama,
+      seferNo: values.seferNo,
       dorseId: values.dorseId || 0,
       guzergahId: values.guzergahId || 0,
       seferTipKodId: values.seferTipKodId || 0,
@@ -136,16 +172,19 @@ const AddModal = ({ setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
+    setLoading(true);
     AddExpeditionItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
-        setResponse("normal");
         setIsOpen(false);
+        setLoading(false);
+        setActiveKey("1");
         if (plaka.length === 1) {
           reset();
         } else {
           reset();
         }
+        setIsValid("normal");
       } else {
         message.error("Bir sorun oluşdu! Tekrar deneyiniz.");
       }
@@ -165,9 +204,7 @@ const AddModal = ({ setStatus }) => {
       label: t("genelBilgiler"),
       children: (
         <GeneralInfo
-          setIsValid={setIsValid}
-          response={response}
-          setResponse={setResponse}
+          isValid={isValid}
         />
       ),
     },
@@ -187,25 +224,36 @@ const AddModal = ({ setStatus }) => {
   };
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-      disabled={isValid}
-    >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success"
+            ? false
+            : isValid === "error"
+              ? true
+              : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setResponse("normal");
-        setHistory([]);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -224,7 +272,7 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

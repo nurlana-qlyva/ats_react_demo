@@ -1,21 +1,20 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { AddExpenseItemService } from "../../../../api/services/vehicles/operations_services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields"
 import GeneralInfo from "./tabs/GeneralInfo";
 
-
 const AddModal = ({ setStatus }) => {
-  const { data, plaka, setHistory } = useContext(PlakaContext);
+  const { data, plaka } = useContext(PlakaContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [response, setResponse] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
 
   const [fields, setFields] = useState([
     {
@@ -100,13 +99,7 @@ const AddModal = ({ setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
-
-  useEffect(() => {
-    if (plaka.length === 1) {
-      setValue("plaka", plaka[0].plaka);
-    }
-  }, [plaka]);
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = handleSubmit((values) => {
     const body = {
@@ -136,8 +129,9 @@ const AddModal = ({ setStatus }) => {
     AddExpenseItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
-        setResponse("normal");
         setIsOpen(false);
+        setLoading(false);
+        setActiveKey("1");
         if (plaka.length === 1) {
           reset();
         } else {
@@ -161,11 +155,7 @@ const AddModal = ({ setStatus }) => {
       key: "1",
       label: t("genelBilgiler"),
       children: (
-        <GeneralInfo
-          setIsValid={setIsValid}
-          response={response}
-          setResponse={setResponse}
-        />
+        <GeneralInfo />
       ),
     },
     {
@@ -184,25 +174,29 @@ const AddModal = ({ setStatus }) => {
   };
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-      disabled={isValid}
-    >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setIsOpen(false);
         resetForm(plaka, data, reset);
-        setResponse("normal");
-        setHistory([]);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -221,7 +215,7 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

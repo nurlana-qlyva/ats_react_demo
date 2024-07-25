@@ -2,13 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PlakaContext } from "../../../../context/plakaSlice";
-import { AddVehicleFineItemService } from "../../../../api/services/vehicles/operations_services";
+import { AddInsuranceItemService } from "../../../../api/services/vehicles/operations_services";
+import PersonalFields from "../../../components/form/personal-fields/PersonalFields"
 import GeneralInfo from "./tabs/GeneralInfo";
-import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
+
+dayjs.extend(utc);
 
 const AddModal = ({ setStatus }) => {
     const { data, plaka } = useContext(PlakaContext);
@@ -70,7 +73,7 @@ const AddModal = ({ setStatus }) => {
             key: "OZELALAN_9",
             value: "Özel Alan 9",
             type: "select",
-            code: 879,
+            code: 885,
             name2: "ozelAlanKodId9",
         },
         {
@@ -78,7 +81,7 @@ const AddModal = ({ setStatus }) => {
             key: "OZELALAN_10",
             value: "Özel Alan 10",
             type: "select",
-            code: 880,
+            code: 886,
             name2: "ozelAlanKodId10",
         },
         {
@@ -99,38 +102,37 @@ const AddModal = ({ setStatus }) => {
     const methods = useForm({
         defaultValues: defaultValues,
     });
-    const { handleSubmit, reset, setValue } = methods;
+    const { handleSubmit, reset, setValue, watch } = methods;
 
     useEffect(() => {
-        if (plaka.length === 1) {
-            setValue("plaka", plaka[0].plaka);
-            setValue("lokasyon", plaka[0].lokasyon);
-            setValue("lokasyonId", plaka[0].lokasyonId);
+        if (watch("baslangicTarih")) {
+            const dateObj = dayjs.utc(watch("baslangicTarih"));
+            const newDateObj = dateObj.add(1, "year");
+            setValue("bitisTarih", newDateObj);
         }
-    }, [plaka]);
+    }, [watch("baslangicTarih")]);
 
     const onSubmit = handleSubmit((values) => {
         const body = {
-            aracId: plaka[0].aracId,
-            tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
-            saat: dayjs(values.saat).format("HH:mm:ss"),
-            cezaTuruKodId: values.cezaTuruKodId || 0,
-            tutar: values.tutar || 0,
-            cezaPuan: values.cezaPuan || 0,
-            toplamTutar: values.toplamTutar || 0,
-            gecikmeTutar: values.gecikmeTutar || 0,
-            surucuId: values.surucuId || 0,
-            odemeTarih: dayjs(values.odemeTarih).format("YYYY-MM-DD"),
-            odeme: values.odeme,
-            cezaMaddesiId: values.cezaMaddesiId || 0,
+            aracId: data.aracId,
             aciklama: values.aciklama,
-            belgeNo: values.belgeNo,
-            bankaHesap: values.bankaHesap,
-            lokasyonId: values.lokasyonId || 0,
-            aracKm: values.aracKm || 0,
-            surucuOder: values.surucuOder,
-            tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
-            indirimOran: values.indirimOran || 0,
+            tutar: values.tutar || 0,
+            policeNo: values.policeNo,
+            aktif: !values.aktif,
+            varsayilan: values.varsayilan,
+            yetkili: values.yetkili,
+            ruhsatBelgeSeriNo: values.ruhsatBelgeSeriNo,
+            adres: values.adres,
+            il: values.il,
+            ilce: values.ilce,
+            telefon: values.telefon,
+            baslangicTarih: dayjs(values.baslangicTarih).format("YYYY-MM-DD"),
+            bitisTarih: values.bitisTarih,
+            aracBedeli: values.aracBedeli || 0,
+            hasarIndirimi: values.hasarIndirimi || 0,
+            firmaId: values.firmaId || 0,
+            acentaKodId: values.acentaKodId || 0,
+            sigortaKodId: values.sigortaKodId || 0,
             ozelAlan1: values.ozelAlan1 || "",
             ozelAlan2: values.ozelAlan2 || "",
             ozelAlan3: values.ozelAlan3 || "",
@@ -144,8 +146,8 @@ const AddModal = ({ setStatus }) => {
             ozelAlan11: values.ozelAlan11 || 0,
             ozelAlan12: values.ozelAlan12 || 0,
         };
-
-        AddVehicleFineItemService(body).then((res) => {
+        setLoading(true);
+        AddInsuranceItemService(body).then((res) => {
             if (res?.data.statusCode === 200) {
                 setStatus(true);
                 setIsOpen(false);
@@ -164,7 +166,7 @@ const AddModal = ({ setStatus }) => {
     });
 
     const personalProps = {
-        form: "CEZA",
+        form: "SIGORTA",
         fields,
         setFields,
     };
@@ -225,7 +227,7 @@ const AddModal = ({ setStatus }) => {
                 <PlusOutlined /> {t("ekle")}
             </Button>
             <Modal
-                title={t("yeniCezaGirisi")}
+                title={t("yeniSigortaGirisi")}
                 open={isOpen}
                 onCancel={() => setIsOpen(false)}
                 maskClosable={false}

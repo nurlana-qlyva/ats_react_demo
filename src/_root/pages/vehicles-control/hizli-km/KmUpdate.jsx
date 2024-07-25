@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
+import { t } from "i18next";
 import { HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   DatePicker,
@@ -12,14 +13,13 @@ import {
   TimePicker,
 } from "antd";
 import {
-  KMAddService,
-  KMGetService,
-  KMValidateService,
-} from "../../../api/service";
-import BreadcrumbComp from "../../components/breadcrumb/Breadcrumb";
+  AddKmLogService,
+  GetKmUpdateListService,
+  ValidateKmLogForAddService,
+} from "../../../../api/services/vehicles/vehicles/services";
+import BreadcrumbComp from "../..//../components/breadcrumb/Breadcrumb";
 import Filter from "./filter/Filter";
 import ContextMenu from "./context-menu/ContextMenu";
-import { t } from "i18next";
 
 const breadcrumb = [
   {
@@ -348,7 +348,7 @@ const KmUpdate = () => {
 
   useEffect(() => {
     setLoading(true);
-    KMGetService(tableParams.pagination.current, filter).then((res) => {
+    GetKmUpdateListService(tableParams.pagination.current, filter).then((res) => {
       const modifiedData = res?.data.km_list.map((item) => {
         const rows = [...validatedRows, ...errorRows];
         const validatedRow = rows.find((row) => row.kmAracId === item.aracId);
@@ -428,7 +428,7 @@ const KmUpdate = () => {
         };
 
         if (body.tarih && body.saat && body.yeniKm) {
-          KMValidateService(body).then((res) => {
+          ValidateKmLogForAddService(body).then((res) => {
             if (res?.data.statusCode === 400) {
               if (!errorRows.some((item) => item.kmAracId === body.kmAracId)) {
                 setErrorRows((prevErrorRows) => [
@@ -501,7 +501,7 @@ const KmUpdate = () => {
   };
 
   const handleTableChange = (pagination, filters, sorter) => {
-    KMGetService(pagination.current, filter).then((res) => {
+    GetKmUpdateListService(pagination.current, filter).then((res) => {
       const modifiedData = res?.data.km_list.map((item) => {
         const rows = [...validatedRows, ...errorRows];
         const validatedRow = rows.find((row) => row.kmAracId === item.aracId);
@@ -586,7 +586,7 @@ const KmUpdate = () => {
   }, [showContext]);
 
   const addKm = () => {
-    KMAddService(validatedRows).then((res) => {
+    AddKmLogService(validatedRows).then((res) => {
       if (res?.data.statusCode === 200) {
         success();
         setStatus(true);
@@ -598,7 +598,7 @@ const KmUpdate = () => {
   };
 
   const getData = () => {
-    KMGetService(tableParams.pagination.current, filter).then((res) => {
+    GetKmUpdateListService(tableParams.pagination.current, filter).then((res) => {
       const modifiedData = res?.data.km_list.map((item) => {
         const rows = [...validatedRows, ...errorRows];
         const validatedRow = rows.find((row) => row.kmAracId === item.aracId);
@@ -631,7 +631,7 @@ const KmUpdate = () => {
     });
   };
   const clear = () => {
-    KMGetService(tableParams.pagination.current, null).then((res) => {
+    GetKmUpdateListService(tableParams.pagination.current, null).then((res) => {
       const modifiedData = res?.data.km_list.map((item) => {
         const rows = [...validatedRows, ...errorRows];
         const validatedRow = rows.find((row) => row.kmAracId === item.aracId);
@@ -747,6 +747,9 @@ const KmUpdate = () => {
                 return handleContextMenu(e, record, rowIndex);
               },
             };
+          }}
+          locale={{
+            emptyText: "Veri Bulunamadı",
           }}
         />
 

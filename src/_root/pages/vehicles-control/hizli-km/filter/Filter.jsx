@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types';
+import { t } from "i18next";
 import { SearchOutlined, CarryOutOutlined } from '@ant-design/icons'
 import { IoIosRefresh, IoIosMore } from 'react-icons/io'
 import { Button, Popconfirm, Popover, Select, TreeSelect } from 'antd'
-import { CodeControlService, CustomCodeControlService } from '../../../../api/service'
-import { t } from "i18next";
+import { CodeControlByIdService, CodeControlByUrlService } from '../../../../../api/services/code/services';
 
 const convertToFormat = (data, parentId = 0) => {
   const result = []
@@ -36,16 +37,16 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
   }
 
   const handleClickPlaka = () => {
-    CustomCodeControlService("Vehicle/GetVehiclePlates").then(res => {
+    CodeControlByUrlService("Vehicle/GetVehiclePlates").then(res => {
       setPlaka(res.data)
     })
   }
   const handleClickLocation = () => {
-    CustomCodeControlService("Location/GetLocationList").then(res => setLocation(res.data))
+    CodeControlByUrlService("Location/GetLocationList").then(res => setLocation(res.data))
   }
   const handleClickCode = (id) => {
     setCode([])
-    CodeControlService(id).then(res => {
+    CodeControlByIdService(id).then(res => {
       setCode(res.data)
     })
   }
@@ -57,14 +58,6 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
       setIsDisabled(false)
     }
   }, [errorRows, validatedRows])
-
-  const cancel = (e) => {
-    // message.error('Click on No');
-  };
-
-  const confirm = (e) => {
-    addKm()
-  };
 
   return (
     <div className='flex flex-col gap-1'>
@@ -176,8 +169,7 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
           <Popconfirm
             title={t("guncelle")}
             description={t("hizliKmGuncellemeSoru")}
-            onConfirm={confirm}
-            onCancel={cancel}
+            onConfirm={addKm}
             okText={t("ok")}
             cancelText={t("cancel")}
           >
@@ -188,5 +180,16 @@ const Filter = ({ content, addKm, errorRows, validatedRows, setFilter, filter, g
     </div>
   )
 }
+
+Filter.propTypes = {
+  content: PropTypes.node,
+  addKm: PropTypes.func,
+  errorRows: PropTypes.array,
+  validatedRows: PropTypes.array,
+  setFilter: PropTypes.func,
+  filter: PropTypes.object,
+  getData: PropTypes.func,
+  clear: PropTypes.func
+};
 
 export default Filter

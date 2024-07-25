@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Input, Table } from "antd";
+import PropTypes from "prop-types";
+import axios from "axios";
+import { Input, Table, Button } from "antd";
 import { t } from "i18next";
 import { GetVehiclesListService } from "../../../../../api/services/vehicles/vehicles/services";
 
-const VehicleList = ({ setDorse, open }) => {
+const VehicleList = ({ setDorse, open, key }) => {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -14,38 +16,49 @@ const VehicleList = ({ setDorse, open }) => {
         },
     });
     const [loading, setLoading] = useState(false);
+    const [country, setCountry] = useState({
+        name: "",
+        code: ""
+    });
 
-    const columns = [
-        {
-            title: t("aracId"),
-            dataIndex: "aracId",
-            key: 1,
+    useEffect(() => {
+        getLocation();
+    }, []);
 
-        },
+    async function getLocation() {
+        const res = await axios.get("http://ip-api.com/json");
+        if (res.status === 200)
+            setCountry({ name: res.data.country, code: res.data.countryCode });
+    }
+
+    const getBaseColumns = (country) => [
         {
             title: t("aracPlaka"),
             dataIndex: "plaka",
-            key: 2,
+            key: 1,
+            render: (text) => (
+                <Button className="plaka-button"><span>{country.code}</span> <span>{text}</span></Button>
+            ),
         },
         {
             title: t("aracTip"),
             dataIndex: "aracTip",
-            key: 3,
+            key: 2,
         },
         {
             title: t("marka"),
             dataIndex: "marka",
-            key: 4,
+            key: 3,
         },
         {
             title: t("model"),
             dataIndex: "model",
-            key: 5,
+            key: 4,
         },
         {
             title: t("grup"),
             dataIndex: "grup",
-            key: 6,
+            key: 5,
         },
         {
             title: t("guncelKm"),
@@ -68,6 +81,8 @@ const VehicleList = ({ setDorse, open }) => {
             key: 9,
         },
     ];
+
+    const columns = getBaseColumns(country)
 
     useEffect(() => {
         if (!open) {
@@ -94,7 +109,7 @@ const VehicleList = ({ setDorse, open }) => {
             });
         };
         fetchData();
-    }, [search, tableParams.pagination.current]);
+    }, [search, tableParams.pagination.current, key]);
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
@@ -143,10 +158,25 @@ const VehicleList = ({ setDorse, open }) => {
                     onChange={handleTableChange}
                     loading={loading}
                     rowKey="aracId"
+                    size="small"
+                    scroll={
+                        {
+                            x: 1500
+                        }
+                    }
+                    locale={{
+                        emptyText: "Veri Bulunamadı",
+                    }}
                 />
             </div>
         </>
     );
+};
+
+VehicleList.propTypes = {
+    setDorse: PropTypes.func,
+    open: PropTypes.bool,
+    key: PropTypes.number,
 };
 
 export default VehicleList;

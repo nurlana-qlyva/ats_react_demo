@@ -24,11 +24,11 @@ import {
   DeleteFuelCardService,
   GetFuelListByVehicleIdService,
 } from "../../../../../../api/services/vehicles/operations_services";
-import AddModal from "./add/AddModal";
-import UpdateModal from "./update/UpdateModal";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../../../components/drag-drop-table/SortableHeaderCell";
 import Content from "../../../../../components/drag-drop-table/DraggableCheckbox";
+import AddModal from "./add/AddModal";
+import UpdateModal from "./update/UpdateModal";
 
 const Yakit = ({ visible, onClose, ids }) => {
   const { plaka } = useContext(PlakaContext);
@@ -292,15 +292,6 @@ const Yakit = ({ visible, onClose, ids }) => {
     />
   );
 
-  useEffect(() => {
-    setColumns(
-      getColumns(country).map((column, i) => ({
-        ...column,
-        key: `${i}`,
-      }))
-    );
-  }, [country]);
-
   // get selected rows data
   if (!localStorage.getItem("selectedRowKeys"))
     localStorage.setItem("selectedRowKeys", JSON.stringify([]));
@@ -350,7 +341,7 @@ const Yakit = ({ visible, onClose, ids }) => {
         onHeaderCell: () => ({
           id: `${i}`,
         }),
-      }))
+      })) 
     );
   }, [country]);
 

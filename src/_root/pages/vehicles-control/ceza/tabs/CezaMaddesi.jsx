@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Input, Table } from "antd";
 import { t } from "i18next";
-import { GetPenaltyDefListService } from "../../../../../api/services/vehicles/ceza/services";
+import { GetPenaltyDefListService } from "../../../../../api/services/vehicles/operations_services";
 
-const CezaMaddesiTable = ({ setMadde, open }) => {
+const CezaMaddesiTable = ({ setMadde, open, key }) => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -27,6 +28,16 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       key: 2,
     },
     {
+      title: `${t("aciklama")} 1`,
+      dataIndex: "aciklama1",
+      key: 6,
+    },
+    {
+      title: `${t("aciklama")} 2`,
+      dataIndex: "aciklama2",
+      key: 7,
+    },
+    {
       title: t("puan"),
       dataIndex: "puan",
       key: 3,
@@ -40,17 +51,7 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       title: t("belgeNo"),
       dataIndex: "belgeNo",
       key: 5,
-    },
-    {
-      title: t("aciklama1"),
-      dataIndex: "aciklama1",
-      key: 6,
-    },
-    {
-      title: t("aciklama2"),
-      dataIndex: "aciklama2",
-      key: 7,
-    },
+    }
   ];
 
   useEffect(() => {
@@ -78,7 +79,7 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
       });
     };
     fetchData();
-  }, [search, tableParams.pagination.current]);
+  }, [search, tableParams.pagination.current, key]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
@@ -127,10 +128,22 @@ const CezaMaddesiTable = ({ setMadde, open }) => {
           onChange={handleTableChange}
           loading={loading}
           rowKey="siraNo"
+          scroll={{ x: 1500, y: 500 }}
+          size="small"
+          locale={{
+            emptyText: "Veri Bulunamadı",
+          }}
         />
       </div>
     </>
   );
 };
 
+CezaMaddesiTable.propTypes = {
+  open: PropTypes.bool,
+  setMadde: PropTypes.func,
+  key: PropTypes.number,
+};
+
 export default CezaMaddesiTable;
+

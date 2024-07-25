@@ -51,7 +51,7 @@ const GeneralInfo = ({ isValid }) => {
       className="btn btn-min cancel-btn"
       onClick={() => setOpen(false)}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 

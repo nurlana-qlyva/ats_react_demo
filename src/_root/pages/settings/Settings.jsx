@@ -7,6 +7,7 @@ import HatirlaticiSettings from "./tabs/hatirlatici/HatirlaticiSettings";
 import VehiclesSettings from "./tabs/araclar/VehiclesSettings";
 import StokSettings from "./tabs/stok/StokSettings";
 import YakitSettings from "./tabs/yakit/YakitSettings";
+import OtomatikKodlar from "./tabs/otomatik-kodlar/OtomatikKodlar";
 
 const breadcrumb = [
   {
@@ -43,7 +44,7 @@ const Settings = () => {
     {
       key: 5,
       label: t("otomatikKodlar"),
-      children: "content1",
+      children: <OtomatikKodlar />,
     },
     {
       key: 6,
@@ -58,7 +59,7 @@ const Settings = () => {
         <BreadcrumbComp items={breadcrumb} />
       </div>
 
-      <div className="content settings">
+      <div className="content">
         <Tabs defaultActiveKey="1" tabPosition="left" items={items} />
       </div>
     </div>

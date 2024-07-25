@@ -335,7 +335,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
       tyakitHacmi: watch("yakitHacmi"),
     };
 
-    UpdateVehicleDetailsInfoService(1,body).then((res) => {
+    UpdateVehicleDetailsInfoService(1, body).then((res) => {
       if (res?.data.statusCode === 202) {
         setOpen(false);
       }
@@ -454,39 +454,45 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label className="text-info">{t("yakitinAlindigiKm")}</label>
+                <label className="text-info">{t("yakitinAlindigiKm")} <span className="text-danger">*</span></label>
                 <Controller
                   name="alinanKm"
                   control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      className="w-full"
-                      {...field}
-                      style={
-                        response === "error"
-                          ? { borderColor: "#dc3545" }
-                          : response === "success"
-                            ? { borderColor: "#23b545" }
-                            : { color: "#000" }
-                      }
-                      {...field}
-                      onPressEnter={(e) => {
-                        validateLog();
-                        e.target.blur();
-                      }}
-                      onBlur={validateLog}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsValid(true);
-                        if (watch("sonAlinanKm") === 0 && !watch("alinanKm")) {
-                          setValue("farkKm", 0);
-                        } else {
-                          const fark = +e - watch("sonAlinanKm");
-                          setValue("farkKm", fark);
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <InputNumber
+                        className={fieldState.error ? "input-error w-full" : "w-full"}
+                        {...field}
+                        style={
+                          response === "error"
+                            ? { borderColor: "#dc3545" }
+                            : response === "success"
+                              ? { borderColor: "#23b545" }
+                              : { color: "#000" }
                         }
-                        calculateTuketim();
-                      }}
-                    />
+                        {...field}
+                        onPressEnter={(e) => {
+                          validateLog();
+                          e.target.blur();
+                        }}
+                        onBlur={validateLog}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setIsValid(true);
+                          if (watch("sonAlinanKm") === 0 && !watch("alinanKm")) {
+                            setValue("farkKm", 0);
+                          } else {
+                            const fark = +e - watch("sonAlinanKm");
+                            setValue("farkKm", fark);
+                          }
+                          calculateTuketim();
+                        }}
+                      />
+                      {fieldState.error && (
+                        <span style={{ color: "red" }}>{fieldState.error.message}</span>
+                      )}
+                    </>
                   )}
                 />
               </div>
@@ -547,49 +553,44 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <div className="flex align-baseline gap-1">
-                  <label className="text-info">{t("miktar")} (lt)</label>
-                  <Button className="depo" onClick={() => setOpen(true)}>
-                    Depo Hacmi: {watch("yakitHacmi")}{" "}
-                    {(watch("birim") === "LITRE" && "lt") || "lt"}
-                  </Button>
+                  <label className='text-info'>{t("miktar")} (lt) <span className="text-danger">*</span></label>
+                  <Button className="depo" onClick={() => setOpen(true)}>Depo Hacmi: {watch("yakitHacmi")} {watch("birim") === "LITRE" && "lt" || "lt"}</Button>
                 </div>
                 <Controller
                   name="miktar"
                   control={control}
-                  render={({ field }) => (
+                  rules={{ required: "Bu alan boş bırakılamaz!" }}
+                  render={({ field, fieldState }) => <>
                     <InputNumber
-                      className="w-full"
+                      className={fieldState.error ? "input-error w-full" : "w-full"}
                       {...field}
-                      onPressEnter={(e) => {
-                        if (watch("yakitHacmi") === 0 && !watch("fullDepo"))
-                          message.warning(
-                            "Depo Hacmi sıfırdır. Depo hacmi giriniz!"
-                          );
+                      onPressEnter={e => {
+                        if (watch("yakitHacmi") === 0 && !watch("fullDepo")) message.warning("Depo Hacmi sıfırdır. Depo hacmi giriniz!")
 
-                        if (
-                          watch("yakitHacmi") <
-                          +e.target.value + +watch("depoYakitMiktar")
-                        ) {
-                          message.warning(
-                            "Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!"
-                          );
-                          setIsValid(true);
+                        if (watch("yakitHacmi") < (+e.target.value + +watch("depoYakitMiktar"))) {
+                          message.warning("Miktar depo hacminden büyükdür. Depo hacmini güncelleyin!")
+                          setIsValid(true)
                         } else {
-                          setIsValid(false);
+                          setIsValid(false)
                         }
                       }}
-                      onChange={(e) => {
-                        field.onChange(e);
+                      onChange={(e => {
+                        field.onChange(e)
                         if (watch("litreFiyat") === null) {
-                          setValue("tutar", 0);
+                          setValue("tutar", 0)
                         } else {
-                          const tutar = +e * watch("litreFiyat");
-                          setValue("tutar", tutar);
+                          const tutar = +e * watch("litreFiyat")
+                          setValue("tutar", tutar)
                         }
-                        calculateTuketim();
-                      }}
+                        calculateTuketim()
+
+                      })}
                     />
-                  )}
+                    {fieldState.error && (
+                      <span style={{ color: "red" }}>{fieldState.error.message}</span>
+                    )}
+                  </>
+                  }
                 />
               </div>
             </div>
@@ -665,7 +666,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             </div>
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label className="text-info">{t("tutar")}</label>
+                <label className="text-info">{t("tutar")} <span className="text-danger">*</span></label>
                 <Controller
                   name="tutar"
                   control={control}
@@ -725,7 +726,7 @@ const GeneralInfo = ({ setIsValid, response, setResponse }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("gorevNo")} -- ?</label>
-                <TextInput name="" />
+                <TextInput name="" readonly={true} />
               </div>
             </div>
             <div className="col-span-6">

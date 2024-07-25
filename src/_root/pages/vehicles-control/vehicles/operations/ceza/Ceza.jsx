@@ -300,7 +300,7 @@ const Ceza = ({ visible, onClose, ids }) => {
           style={{ width: "20%" }}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <AddModal setStatus={setStatus} />
+        <AddModal setStatus={setStatus} /> 
       </div>
 
       <UpdateModal

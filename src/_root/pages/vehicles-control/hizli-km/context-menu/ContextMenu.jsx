@@ -1,9 +1,11 @@
-import { Button, Input, Modal } from "antd";
+
 import { useEffect, useRef, useState } from "react";
-import KmHistory from "./KmHistory"
+import PropTypes from 'prop-types';
 import dayjs from "dayjs";
-import { KMEditService, KMResetService } from "../../../../api/service";
 import { t } from "i18next";
+import { Button, Input, Modal } from "antd";
+import { EditKmLogService, ResetKmLogService } from "../../../../../api/services/vehicles/vehicles/services";
+import KmHistory from "./KmHistory"
 
 const ContextMenu = ({ position, rowData, setStatus }) => {
     const [visible, setVisible] = useState(false)
@@ -48,7 +50,7 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
             yakitSiraNo: 0,
             aciklama: ""
         }
-        KMResetService(body).then(res => {
+        ResetKmLogService(body).then(res => {
             if (res?.data.statusCode === 202) {
                 setStatus(true)
             }
@@ -108,7 +110,7 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
             yeniKm: yeniKm
         }
 
-        KMEditService(body).then(res => {
+        EditKmLogService(body).then(res => {
             if (res?.data.statusCode === 202) {
                 setStatus(true)
             }
@@ -156,12 +158,27 @@ const ContextMenu = ({ position, rowData, setStatus }) => {
                     </div>
                     <div>
                         <label>{t("yeniKm")}</label>
-                        <Input onChange={(e) => setYeniKm(e.target.value)}/>
+                        <Input onChange={(e) => setYeniKm(e.target.value)} />
                     </div>
                 </div>
             </Modal>
         </div>
     );
+};
+
+ContextMenu.propTypes = {
+    position: PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired
+    }).isRequired,
+    rowData: PropTypes.shape({
+        aracId: PropTypes.number.isRequired,
+        plaka: PropTypes.string.isRequired,
+        tarih: PropTypes.string.isRequired,
+        saat: PropTypes.string.isRequired,
+        guncelKm: PropTypes.number.isRequired
+    }).isRequired,
+    setStatus: PropTypes.func.isRequired
 };
 
 export default ContextMenu;

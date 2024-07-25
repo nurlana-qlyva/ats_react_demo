@@ -5,25 +5,22 @@ import dayjs from 'dayjs'
 import { t } from 'i18next'
 import { Button, message, Modal, Tabs } from 'antd'
 import { PlakaContext } from "../../../../../context/plakaSlice";
-
-import GeneralInfo from './GeneralInfo'
-import { GetFuelCardContentByIdService, GetFuelCardInfoByFuelIdService, UpdateFuelService } from '../../../../../api/services/vehicles/yakit/services'
+import { GetFuelCardContentByIdService, GetFuelCardInfoByFuelIdService, UpdateFuelService } from '../../../../../api/services/vehicles/operations_services'
+import { GetDocumentsByRefGroupService, GetPhotosByRefGroupService } from '../../../../../api/services/upload/services'
 import { uploadFile, uploadPhoto } from '../../../../../utils/upload'
 import PersonalFields from '../../../../components/form/personal-fields/PersonalFields'
+import GeneralInfo from './GeneralInfo'
 import PhotoUpload from '../../../../components/upload/PhotoUpload'
 import FileUpload from '../../../../components/upload/FileUpload'
-import { GetDocumentsByRefGroupService, GetPhotosByRefGroupService } from '../../../../../api/services/upload/services'
 
-
-
-const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     const { data, plaka, setData } = useContext(PlakaContext)
-
     const [isValid, setIsValid] = useState(false)
     const [response, setResponse] = useState("normal")
+    const [activeKey, setActiveKey] = useState("1");
     // file
     const [filesUrl, setFilesUrl] = useState([])
-    const [files, setFiles] = useState([]) 
+    const [files, setFiles] = useState([])
     const [loadingFiles, setLoadingFiles] = useState(false)
     // photo
     const [imageUrls, setImageUrls] = useState([])
@@ -189,12 +186,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
 
         GetPhotosByRefGroupService(id, "YAKIT").then(res => setImageUrls(res.data))
         GetDocumentsByRefGroupService(id, "YAKIT").then(res => setFilesUrl(res.data))
-    }, [id, status])
+    }, [id, updateModal])
 
     const uploadImages = () => {
         try {
             setLoadingImages(true);
-            const data = uploadPhoto(id, "YAKIT", images)
+            const data = uploadPhoto(id, "YAKIT", images, false)
             setImageUrls([...imageUrls, data.imageUrl]);
         } catch (error) {
             message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -279,6 +276,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
                 setUpdateModal(false)
                 setResponse('normal')
                 setStatus(true)
+                setActiveKey("1");
                 if (plaka.length === 1) {
                     reset(
                         {
@@ -356,8 +354,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
                 setUpdateModal(false)
                 setResponse('normal')
                 setStatus(true)
+                setActiveKey("1");
             }}>
-                {t("iptal")}
+                {t("kapat")}
             </Button>
         ]
     )
@@ -374,7 +373,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, status }) => 
             >
                 <FormProvider {...methods}>
                     <form>
-                        <Tabs defaultActiveKey="1" items={items} />
+                        <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
                     </form>
                 </FormProvider>
             </Modal>
@@ -387,7 +386,6 @@ UpdateModal.propTypes = {
     setUpdateModal: PropTypes.func,
     setStatus: PropTypes.func,
     id: PropTypes.number,
-    status: PropTypes.bool
 }
 
 export default UpdateModal

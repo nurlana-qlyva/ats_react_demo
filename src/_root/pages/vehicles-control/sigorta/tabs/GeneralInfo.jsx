@@ -1,12 +1,13 @@
+import PropTypes from "prop-types";
 import { t } from "i18next";
-import Plaka from "../../../../../../components/form/selects/Plaka";
-import DateInput from "../../../../../../components/form/date/DateInput";
-import NumberInput from "../../../../../../components/form/inputs/NumberInput";
-import TextInput from "../../../../../../components/form/inputs/TextInput";
-import Textarea from "../../../../../../components/form/inputs/Textarea";
-import CheckboxInput from "../../../../../../components/form/checkbox/CheckboxInput";
-import CodeControl from "../../../../../../components/form/selects/CodeControl";
-import Firma from "../../../../../../components/form/selects/Firma";
+import Plaka from "../../../../components/form/selects/Plaka";
+import DateInput from "../../../../components/form/date/DateInput";
+import NumberInput from "../../../../components/form/inputs/NumberInput";
+import TextInput from "../../../../components/form/inputs/TextInput";
+import Textarea from "../../../../components/form/inputs/Textarea";
+import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
+import CodeControl from "../../../../components/form/selects/CodeControl";
+import Firma from "../../../../components/form/selects/Firma";
 
 const GeneralInfo = () => {
   return (
@@ -150,6 +151,12 @@ const GeneralInfo = () => {
       </div>
     </>
   );
+};
+
+GeneralInfo.propTypes = {
+  setIsValid: PropTypes.func,
+  response: PropTypes.string,
+  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Input, Table } from "antd";
 import { t } from "i18next";
-import { GetPenaltyDefListService } from "../../../../../../../api/services/vehicles/ceza/services";
+import { GetPenaltyDefListService } from "../../../../../../../api/services/vehicles/operations_services";
 
 const CezaMaddesiTable = ({ setMadde, open, key }) => {
   const [data, setData] = useState([]);

@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
 import Plaka from "../../../../components/form/selects/Plaka";
 import Driver from "../../../../components/form/selects/Driver";
-import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
+import TextInput from "../../../../components/form/inputs/TextInput";
 import DateInput from "../../../../components/form/date/DateInput";
 import TimeInput from "../../../../components/form/date/TimeInput";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
@@ -13,32 +13,26 @@ import Textarea from "../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import Guzergah from "../../../../components/form/selects/Guzergah";
 import VehicleList from "./VehiclesList";
-import { CodeControlByUrlService } from "../../../../../api/services/code/services";
-import { PlakaContext } from "../../../../../context/plakaSlice";
 
-const GeneralInfo = () => {
-  const { setPlaka } = useContext(PlakaContext)
+const GeneralInfo = ({ isValid }) => {
   const { setValue } = useFormContext();
   const [open, setOpen] = useState(false);
   const [dorse, setDorse] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
-      const updatedData = res.data.map((item) => {
-        if ("aracId" in item && "plaka" in item) {
-          return {
-            ...item,
-            id: item.aracId,
-          };
-        }
-        return item;
-      });
-      setPlaka(updatedData);
-    };
+  const validateStyle = {
+    borderColor:
+      isValid === "error"
+        ? "#dc3545"
+        : isValid === "success"
+          ? "#23b545"
+          : "#000",
+  };
 
-    fetchData();
-  }, []);
+  const handleOpen = () => {
+    setModalKey(prevKey => prevKey + 1);
+    setOpen(true);
+  }
 
   const footer = [
     <Button
@@ -57,7 +51,7 @@ const GeneralInfo = () => {
       className="btn btn-min cancel-btn"
       onClick={() => setOpen(false)}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -68,14 +62,20 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-12">
               <div className="flex flex-col gap-1">
-                <label>{t("plaka")}</label>
-                <Plaka />
+                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                <Plaka required={true} />
               </div>
             </div>
             <div className="col-span-12">
               <div className="flex flex-col gap-1">
-                <label>{t("surucu")} 1</label>
-                <Driver name="surucu1" codeName="surucuId1" />
+                <label>{t("seferNo")}</label>
+                <TextInput name="seferNo" style={validateStyle} />
+              </div>
+            </div>
+            <div className="col-span-12">
+              <div className="flex flex-col gap-1">
+                <label>{t("surucu")} 1  <span className="text-danger">*</span></label>
+                <Driver name="surucu1" codeName="surucuId1" required={true} />
               </div>
             </div>
             <div className="col-span-12">
@@ -89,11 +89,11 @@ const GeneralInfo = () => {
                 <div className="col-span-10">
                   <div className="flex flex-col gap-1">
                     <label>{t("dorse")}</label>
-                    <ReadonlyInput name="dorsePlaka" checked="true" />
+                    <TextInput name="dorsePlaka" readonly={true} />
                   </div>
                 </div>
                 <div className="col-span-2 self-end">
-                  <Button onClick={() => setOpen(true)}>...</Button>
+                  <Button onClick={handleOpen}>...</Button>
                 </div>
               </div>
             </div>
@@ -109,8 +109,8 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("cikisTarih")}</label>
-                <DateInput name="cikisTarih" />
+                <label>{t("cikisTarih")} <span className="text-danger">*</span></label>
+                <DateInput name="cikisTarih" required={true} />
               </div>
             </div>
             <div className="col-span-4">
@@ -157,7 +157,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTuru")}</label>
+                <label>{t("seferTip")}</label>
                 <CodeControl
                   name="seferTip"
                   codeName="seferTipKodId"
@@ -167,7 +167,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTuru")}</label>
+                <label>{t("seferDurum")}</label>
                 <CodeControl
                   name="seferDurum"
                   codeName="seferDurumKodId"
@@ -192,17 +192,16 @@ const GeneralInfo = () => {
         maskClosable={false}
         footer={footer}
         width={1200}
+        key={modalKey}
       >
-        <VehicleList setDorse={setDorse} open={open} />
+        <VehicleList setDorse={setDorse} open={open} key={modalKey} />
       </Modal>
     </>
   );
 };
 
 GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
+  isValid: PropTypes.string
 };
 
 export default GeneralInfo;

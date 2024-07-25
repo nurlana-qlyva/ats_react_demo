@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input, Popconfirm } from "antd";
+import axios from "axios";
+import { Table, Popover, Button, Input, Popconfirm, Spin } from "antd";
 import {
   MenuOutlined,
   HomeOutlined,
   DeleteOutlined,
-  ArrowUpOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
-import { DeleteFuelCardService, GetFuelListService } from "../../../../api/services/vehicles/yakit/services";
+import { GetVehicleFinesListService } from "../../../../api/services/vehicles/operations_services";
 import DragAndDropContext from '../../../components/drag-drop-table/DragAndDropContext';
 import SortableHeaderCell from '../../../components/drag-drop-table/SortableHeaderCell';
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import BreadcrumbComp from '../../../components/breadcrumb/Breadcrumb';
-import { GetVehicleFinesListService } from "../../../../api/services/vehicles/ceza/services";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 
@@ -30,6 +31,7 @@ const Ceza = () => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -39,20 +41,36 @@ const Ceza = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
+  const [country, setCountry] = useState({
+    name: "",
+    code: "",
+  });
 
-  const baseColumns = [
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    if (res.status === 200)
+      setCountry({ name: res.data.country, code: res.data.countryCode });
+  }
+
+  const getColumns = (country) => [
     {
       title: t("plaka"),
       dataIndex: "plaka",
       key: 1,
       render: (text, record) => (
         <Button
+          className="plaka-button"
           onClick={() => {
             setUpdateModal(true);
             setId(record.siraNo);
           }}
         >
-          {text}
+          <span>{country.code}</span>
+          <span>{text}</span>
         </Button>
       ),
     },
@@ -83,7 +101,7 @@ const Ceza = () => {
       key: 6,
     },
     {
-      title: t("surucuAdi"),
+      title: t("surucu"),
       dataIndex: "surucuIsim",
       key: 7,
     },
@@ -121,14 +139,23 @@ const Ceza = () => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    baseColumns.map((column, i) => ({
+    getColumns(country).map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
         id: `${i}`,
       }),
-    })),
+    }))
   );
+
+  useEffect(() => {
+    setColumns(
+      getColumns(country).map((column, i) => ({
+        ...column,
+        key: `${i}`,
+      }))
+    );
+  }, [country]);
 
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -136,8 +163,10 @@ const Ceza = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setIsInitialLoading(true)
       const res = await GetVehicleFinesListService(search, tableParams.pagination.current, filterData);
       setLoading(false);
+      setIsInitialLoading(false)
       setDataSource(res?.data.list);
       setTableParams(prevTableParams => ({
         ...prevTableParams,
@@ -185,18 +214,27 @@ const Ceza = () => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
+  );
+
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
   );
 
   // get selected rows data
@@ -270,31 +308,36 @@ const Ceza = () => {
 
       <div className="content">
         <DragAndDropContext items={columns} setItems={setColumns}>
-          <Table
-            rowKey={(record) => record.siraNo}
-            columns={newColumns}
-            dataSource={dataSource}
-            pagination={{
-              ...tableParams.pagination,
-              showTotal: (total) => <p className="text-info">[{total} {t("kayit")}]</p>,
-              locale: {
-                items_per_page: `/ ${t('sayfa')}`,
-              },
-            }}
-            loading={loading}
-            size="small"
-            onChange={handleTableChange}
-            rowSelection={{
-              selectedRowKeys: selectedRowKeys,
-              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-              onSelect: handleRowSelection,
-            }}
-            components={{
-              header: {
-                cell: SortableHeaderCell,
-              },
-            }}
-          />
+          <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+            <Table
+              rowKey={(record) => record.siraNo}
+              columns={newColumns}
+              dataSource={dataSource}
+              pagination={{
+                ...tableParams.pagination,
+                showTotal: (total) => <p className="text-info">[{total} {t("kayit")}]</p>,
+                locale: {
+                  items_per_page: `/ ${t('sayfa')}`,
+                },
+              }}
+              loading={loading}
+              size="small"
+              onChange={handleTableChange}
+              rowSelection={{
+                selectedRowKeys: selectedRowKeys,
+                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                onSelect: handleRowSelection,
+              }}
+              components={{
+                header: {
+                  cell: SortableHeaderCell,
+                },
+              }}
+              locale={{
+                emptyText: "Veri Bulunamadı",
+              }}
+            />
+          </Spin>
         </DragAndDropContext>
       </div>
     </>

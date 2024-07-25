@@ -322,3 +322,7 @@
   font-size: 18px !important;
   font-weight: bold !important;
 }
+
+.ant-spin-nested-loading {
+  z-index: 1000;
+}

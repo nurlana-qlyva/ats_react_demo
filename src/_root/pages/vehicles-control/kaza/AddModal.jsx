@@ -5,10 +5,12 @@ import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-import { PlakaContext } from "../../../../../../context/plakaSlice";
-import { AddVehicleFineItemService } from "../../../../../../api/services/vehicles/operations_services";
+import { PlakaContext } from "../../../../context/plakaSlice";
+import { AddAccidentItemService } from "../../../../api/services/vehicles/operations_services";
+import PersonalFields from "../../../components/form/personal-fields/PersonalFields"
 import GeneralInfo from "./tabs/GeneralInfo";
-import PersonalFields from "../../../../../components/form/personal-fields/PersonalFields";
+import GeriOdeme from "./tabs/GeriOdeme";
+import SigortaBilgileri from "./tabs/SigortaBilgileri";
 
 const AddModal = ({ setStatus }) => {
   const { data, plaka } = useContext(PlakaContext);
@@ -70,7 +72,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 879,
+      code: 883,
       name2: "ozelAlanKodId9",
     },
     {
@@ -78,7 +80,7 @@ const AddModal = ({ setStatus }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 880,
+      code: 884,
       name2: "ozelAlanKodId10",
     },
     {
@@ -111,26 +113,33 @@ const AddModal = ({ setStatus }) => {
 
   const onSubmit = handleSubmit((values) => {
     const body = {
-      aracId: data.aracId,
-      tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
-      saat: dayjs(values.saat).format("HH:mm:ss"),
-      cezaTuruKodId: values.cezaTuruKodId || 0,
-      tutar: values.tutar || 0,
-      cezaPuan: values.cezaPuan || 0,
-      toplamTutar: values.toplamTutar || 0,
-      gecikmeTutar: values.gecikmeTutar || 0,
+      aracId: plaka[0].aracId,
       surucuId: values.surucuId || 0,
-      odemeTarih: dayjs(values.odemeTarih).format("YYYY-MM-DD"),
-      odeme: values.odeme,
-      cezaMaddesiId: values.cezaMaddesiId || 0,
       aciklama: values.aciklama,
-      belgeNo: values.belgeNo,
-      bankaHesap: values.bankaHesap,
+      kazaTarih: dayjs(values.kazaTarih).format("YYYY-MM-DD"),
+      faturaTarih: dayjs(values.faturaTarih).format("YYYY-MM-DD"),
+      geriOdemeTarih: dayjs(values.geriOdemeTarih).format("YYYY-MM-DD"),
+      kazaTuruKodId: values.kazaTuruKodId || 0,
+      kazaSekliKodId: values.kazaSekliKodId || 0,
       lokasyonId: values.lokasyonId || 0,
+      asliKusurKodId: values.asliKusurKodId || 0,
+      taliKusurKodId: values.taliKusurKodId || 0,
+      bankaKodId: values.bankaKodId || 0,
+      sigortaId: values.sigortaKodId || 0,
       aracKm: values.aracKm || 0,
+      faturaTutar: values.faturaTutar || 0,
+      geriOdemeTutar: values.geriOdemeTutar || 0,
+      geriOdeme: values.geriOdeme,
+      sigortaBilgisiVar: values.sigortaBilgisiVar,
       surucuOder: values.surucuOder,
-      tebligTarih: dayjs(values.tebligTarih).format("YYYY-MM-DD"),
-      indirimOran: values.indirimOran || 0,
+      bankaHesap: values.bankaHesap,
+      karsiSurucu: values.karsiSurucu,
+      karsiPlaka: values.karsiPlaka,
+      karsiSigorta: values.karsiSigorta,
+      belgeNo: values.belgeNo,
+      geriOdemeAciklama: values.geriOdemeAciklama,
+      hasarNo: values.hasarNo,
+      kazaSaat: dayjs(values.kazaSaat).format("HH:mm:ss"),
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
       ozelAlan3: values.ozelAlan3 || "",
@@ -144,8 +153,10 @@ const AddModal = ({ setStatus }) => {
       ozelAlan11: values.ozelAlan11 || 0,
       ozelAlan12: values.ozelAlan12 || 0,
     };
+
     setLoading(true);
-    AddVehicleFineItemService(body).then((res) => {
+
+    AddAccidentItemService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsOpen(false);
@@ -164,7 +175,7 @@ const AddModal = ({ setStatus }) => {
   });
 
   const personalProps = {
-    form: "CEZA",
+    form: "KAZA",
     fields,
     setFields,
   };
@@ -179,6 +190,16 @@ const AddModal = ({ setStatus }) => {
     },
     {
       key: "2",
+      label: t("geriOdeme"),
+      children: <GeriOdeme />,
+    },
+    {
+      key: "3",
+      label: t("sigortaBilgileri"),
+      children: <SigortaBilgileri />,
+    },
+    {
+      key: "4",
       label: t("ozelAlanlar"),
       children: <PersonalFields personalProps={personalProps} />,
     },
@@ -225,7 +246,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniCezaGirisi")}
+        title={t("yeniKazaGirisi")}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
         maskClosable={false}

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input, Spin } from "antd";
+import { Table, Popover, Button, Input, Spin } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,
     LoadingOutlined
 } from "@ant-design/icons";
-import { GetExpeditionsListService } from "../../../../api/services/vehicles/operations_services";
+import { GetAccidentsListService } from "../../../../api/services/vehicles/operations_services";
 import DragAndDropContext from '../../../components/drag-drop-table/DragAndDropContext';
 import SortableHeaderCell from '../../../components/drag-drop-table/SortableHeaderCell';
 import Content from "../../../components/drag-drop-table/DraggableCheckbox";
@@ -17,10 +17,10 @@ import UpdateModal from "./UpdateModal";
 
 const breadcrumb = [
     { href: "/", title: <HomeOutlined />, },
-    { title: t("seferIslemleri"), },
+    { title: t("kazaIslemleri"), },
 ];
 
-const Sefer = () => {
+const Kaza = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -42,8 +42,8 @@ const Sefer = () => {
 
     const baseColumns = [
         {
-            title: t("surucu"),
-            dataIndex: "surucuIsim1",
+            title: t("tarih"),
+            dataIndex: "kazaTarih",
             key: 1,
             render: (text, record) => (
                 <Button
@@ -52,67 +52,50 @@ const Sefer = () => {
                         setId(record.siraNo);
                     }}
                 >
-                    {text}
+                    {dayjs(text).format("DD.MM.YYYY")}
                 </Button>
             ),
         },
         {
-            title: t("seferAdedi"),
-            dataIndex: "seferAdedi",
+            title: t("surucu"),
+            dataIndex: "surucuIsim",
             key: 2,
         },
         {
-            title: t("guzergah"),
-            dataIndex: "guzergah",
+            title: t("kazaTuru"),
+            dataIndex: "kazaTuru",
+            key: 2,
+        },
+        {
+            title: t("kazaSekli"),
+            dataIndex: "kazaSekli",
             key: 3,
         },
         {
-            title: t("cikisTarih"),
-            dataIndex: "cikisTarih",
+            title: t("karsiPlaka"),
+            dataIndex: "karsiPlaka",
             key: 4,
-            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("cikisSaat"),
-            dataIndex: "cikisSaat",
+            title: t("faturaTarih"),
+            dataIndex: "faturaTarih",
             key: 5,
+            render: text => dayjs(text).format("DD.MM.YYYY")
         },
         {
-            title: t("varisTarih"),
-            dataIndex: "varisTarih",
+            title: t("faturaTutar"),
+            dataIndex: "faturaTutar",
             key: 6,
-            render: (text) => dayjs(text).format("DD.MM.YYYY"),
-        },
-        {
-            title: t("varisSaat"),
-            dataIndex: "varisSaat",
-            key: 7,
-        },
-        {
-            title: "cikisKm",
-            dataIndex: "cikisKm",
-            key: 8,
-            render: (text) => dayjs(text).format("DD.MM.YYYY"),
-        },
-        {
-            title: t("varisKm"),
-            dataIndex: "varisKm",
-            key: 9,
-        },
-        {
-            title: t("farkKm"),
-            dataIndex: "farkKm",
-            key: 10,
         },
         {
             title: t("aciklama"),
             dataIndex: "aciklama",
-            key: 12,
+            key: 7,
         },
         // {
         //   title: "",
         //   dataIndex: "delete",
-        //   key: 11,
+        //   key: 8,
         //   render: (_, record) => (
         //     <Popconfirm
         //       title={t("confirmQuiz")}
@@ -133,7 +116,7 @@ const Sefer = () => {
             onHeaderCell: () => ({
                 id: `${i}`,
             }),
-        })),
+        }))
     );
 
     const defaultCheckedList = columns.map((item) => item.key);
@@ -142,10 +125,10 @@ const Sefer = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            setIsInitialLoading(true);
-            const res = await GetExpeditionsListService(search, tableParams.pagination.current, filterData);
+            setIsInitialLoading(true)
+            const res = await GetAccidentsListService(search, tableParams.pagination.current, filterData);
             setLoading(false);
-            setIsInitialLoading(false);
+            setIsInitialLoading(false)
             setDataSource(res?.data.list);
             setTableParams(prevTableParams => ({
                 ...prevTableParams,
@@ -281,6 +264,7 @@ const Sefer = () => {
                 updateModal={updateModal}
                 setUpdateModal={setUpdateModal}
                 setStatus={setStatus}
+                status={status}
                 id={id}
             />
 
@@ -322,4 +306,4 @@ const Sefer = () => {
     );
 };
 
-export default Sefer;
+export default Kaza;

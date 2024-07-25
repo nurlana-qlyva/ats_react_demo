@@ -1,25 +1,35 @@
 import { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import { t } from "i18next";
+import dayjs from "dayjs";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { GetExpeditionItemByIdService, UpdateExpeditionItemService } from "../../../../api/services/vehicles/operations_services";
 import {
   GetDocumentsByRefGroupService,
+  GetPhotosByRefGroupService,
 } from "../../../../api/services/upload/services";
-import { uploadFile } from "../../../../utils/upload";
+import { CodeItemValidateService } from "../../../../api/services/code/services";
+import { uploadFile, uploadPhoto } from "../../../../utils/upload";
 import { message, Modal, Tabs, Button } from "antd";
 import GeneralInfo from "./tabs/GeneralInfo";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import FileUpload from "../../../components/upload/FileUpload";
-import dayjs from "dayjs";
-
+import PhotoUpload from "../../../components/upload/PhotoUpload";
 
 const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
+  const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
+  // photo
+  const [imageUrls, setImageUrls] = useState([]);
+  const [loadingImages, setLoadingImages] = useState(false);
+  const [images, setImages] = useState([]);
 
   const [fields, setFields] = useState([
     {
@@ -104,12 +114,40 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
+
+  useEffect(() => {
+    if (code !== watch("seferNo")) {
+      const body = {
+        tableName: "SeferNo",
+        code: watch("seferNo"),
+      };
+      CodeItemValidateService(body).then((res) => {
+        !res.data.status ? setIsValid("success") : setIsValid("error");
+      });
+    } else {
+      setIsValid("normal");
+    }
+  }, [watch("seferNo"), code]);
+
+  useEffect(() => { setValue("seferAdedi", 1) }, [])
+
+  useEffect(() => {
+    let fark;
+    if (watch("varisKm")) {
+      fark = watch("varisKm") - watch("cikisKm");
+    } else {
+      fark = 0;
+    }
+    setValue("farkKm", fark);
+  }, [watch("varisKm"), watch("cikisKm")]);
 
   useEffect(() => {
     if (updateModal) {
       GetExpeditionItemByIdService(id).then((res) => {
         setValue("plaka", res?.data.plaka);
+        setValue("seferNo", res?.data.seferNo);
+        setCode(res?.data.seferNo);
         setValue("cikisTarih", dayjs(res?.data.cikisTarih));
         setValue("varisTarih", dayjs(res?.data.varisTarih));
         setValue("cikisSaat", dayjs(res?.data.cikisSaat, "HH:mm:ss"));
@@ -147,6 +185,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("ozelAlan12", res?.data.ozelAlan12);
       });
 
+      GetPhotosByRefGroupService(id, "SEFER").then((res) =>
+        setImageUrls(res.data)
+      );
+
       GetDocumentsByRefGroupService(id, "SEFER").then((res) =>
         setFilesUrl(res.data)
       );
@@ -161,6 +203,18 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       message.error("Dosya yüklenemedi. Yeniden deneyin.");
     } finally {
       setLoadingFiles(false);
+    }
+  };
+
+  const uploadImages = () => {
+    try {
+      setLoadingImages(true);
+      const data = uploadPhoto(id, "SEFER", images, false);
+      setImageUrls([...imageUrls, data.imageUrl]);
+    } catch (error) {
+      message.error("Resim yüklenemedi. Yeniden deneyin.");
+    } finally {
+      setLoadingImages(false);
     }
   };
 
@@ -200,6 +254,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
         if (plaka.length === 1) {
           reset();
         } else {
@@ -209,6 +264,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     })
 
     uploadFiles();
+    uploadImages();
+    setStatus(false)
   })
 
   const personalProps = {
@@ -221,7 +278,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     {
       key: "1",
       label: t("genelBilgiler"),
-      children: <GeneralInfo />,
+      children: <GeneralInfo isValid={isValid} />,
     },
     {
       key: "2",
@@ -230,6 +287,17 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     },
     {
       key: "3",
+      label: `[${imageUrls.length}] ${t("resimler")}`,
+      children: (
+        <PhotoUpload
+          imageUrls={imageUrls}
+          loadingImages={loadingImages}
+          setImages={setImages}
+        />
+      ),
+    },
+    {
+      key: "4",
       label: `[${filesUrl.length}] ${t("ekliBelgeler")}`,
       children: (
         <FileUpload
@@ -255,9 +323,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1")
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -272,11 +341,18 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>
   );
+};
+
+UpdateModal.propTypes = {
+  updateModal: PropTypes.bool,
+  setUpdateModal: PropTypes.func,
+  setStatus: PropTypes.func,
+  id: PropTypes.number,
 };
 
 export default UpdateModal;

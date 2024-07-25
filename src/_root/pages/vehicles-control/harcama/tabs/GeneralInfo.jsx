@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { t } from "i18next";
 import Plaka from "../../../../components/form/selects/Plaka";
 import Driver from "../../../../components/form/selects/Driver";
@@ -8,32 +7,8 @@ import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
 import CodeControl from "../../../../components/form/selects/CodeControl";
-import { CodeControlByUrlService } from "../../../../../api/services/code/services";
-import { useContext, useEffect } from "react";
-import { PlakaContext } from "../../../../../context/plakaSlice";
 
 const GeneralInfo = () => {
-  const { setPlaka } = useContext(PlakaContext)
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
-      const updatedData = res.data.map((item) => {
-        if ("aracId" in item && "plaka" in item) {
-          return {
-            ...item,
-            id: item.aracId,
-          };
-        }
-        return item;
-      });
-      setPlaka(updatedData);
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <>
       <div className="grid gap-1">
@@ -41,17 +16,18 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("plaka")}</label>
-                <Plaka />
+                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                <Plaka required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("harcama")}</label>
+                <label>{t("harcama")} <span className="text-danger">*</span></label>
                 <CodeControl
                   name="harcama"
                   codeName="harcamaKodId"
                   id={204}
+                  required={true}
                 />
               </div>
             </div>
@@ -73,14 +49,14 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("tarih")}</label>
-                <DateInput name="tarih" />
+                <label>{t("tarih")} <span className="text-danger">*</span></label>
+                <DateInput name="tarih" required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("tutar")}</label>
-                <NumberInput name="tutar" />
+                <label>{t("tutar")} <span className="text-danger">*</span></label>
+                <NumberInput name="tutar" required={true} />
               </div>
             </div>
             <div className="col-span-12">
@@ -110,12 +86,6 @@ const GeneralInfo = () => {
       </div>
     </>
   );
-};
-
-GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

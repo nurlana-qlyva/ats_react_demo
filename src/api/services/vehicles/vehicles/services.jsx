@@ -36,10 +36,6 @@ export const UpdateVehicleDetailsInfoService = async (type, data) => {
   );
 };
 
-export const UpdateKmLogService = async (data) => {
-  return await http.post(`/KmLog/UpdateKmLog`, data);
-};
-
 // kapasite
 export const GetCapacityListByVehicleIdService = async (id, search, page) => {
   return await http.get(
@@ -60,7 +56,6 @@ export const UpdateCapacityByIdService = async (data) => {
 };
 
 // aksesuar
-
 export const GetAccListByVehicleIdService = async (id, search, page) => {
   return await http.get(
     `/Accessories/GetAccListByVehicleId?vehicleId=${id}&parameter=${search}&page=${page}`
@@ -80,7 +75,6 @@ export const UpdateAccItemService = async (data) => {
 };
 
 // surucu
-
 export const GetDriverSubstitutionListByVehicleIdService = async (id, search, page) => {
   return await http.get(
     `/DriverSubstitution/GetDriverSubstitutionListByVehicleId?vehicleId=${id}&parameter=${search}&page=${page}`
@@ -97,4 +91,49 @@ export const GetDriverSubstitutionByIdService = async (id) => {
 
 export const UpdateDriverSubstitutionItemService = async (data) => {
   return await http.post(`DriverSubstitution/UpdateDriverSubstitutionItem`, data);
+};
+
+
+// km
+export const GetKmUpdateListService = async (page, data) => {
+  return await http.post(`/QuickKmUpdate/GetKmUpdateList?page=${page}`, data);
+};
+
+export const ValidateKmLogForAddService = async (data) => {
+  return await http.post(`/KmLog/ValidateKmLogForAdd`, data);
+};
+
+export const AddKmLogService = async (data) => {
+  return await http.post(`/KmLog/AddKmLog`, data);
+};
+
+export const ResetKmLogService = async (data) => {
+  return await http.post(`/KmLog/ResetKmLog`, data);
+};
+
+export const EditKmLogService = async (data) => {
+  return await http.post(`/KmLog/EditKmLog`, data);
+};
+
+// km history
+export const GetKmLogListGetService = async (page) => {
+  return await http.get(`/KmLog/GetKmLogList?page=${page}`);
+};
+
+export const GetKmLogListByVehicleIdService = async (id, page) => {
+  return await http.get(
+    `/KmLog/GetKmLogListByVehicleId?vehicleId=${id}&page=${page}`
+  );
+};
+
+export const DeleteKmLogService = async (data) => {
+  return await http.post(`/KmLog/DeleteKmLog`, data);
+};
+
+export const ValidateKmLogForUpdateService = async (data) => {
+  return await http.post(`/KmLog/ValidateKmLogForUpdate`, data);
+};
+
+export const UpdateKmLogService = async (data) => {
+  return await http.post(`/KmLog/UpdateKmLog`, data);
 };

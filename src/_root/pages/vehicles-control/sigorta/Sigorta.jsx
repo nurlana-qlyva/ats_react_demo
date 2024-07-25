@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input, Spin } from "antd";
+import { Table, Popover, Button, Input, Spin, Checkbox } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,
     LoadingOutlined
 } from "@ant-design/icons";
-import { GetExpeditionsListService } from "../../../../api/services/vehicles/operations_services";
+import { GetInsuranceListService } from "../../../../api/services/vehicles/operations_services";
 import DragAndDropContext from '../../../components/drag-drop-table/DragAndDropContext';
 import SortableHeaderCell from '../../../components/drag-drop-table/SortableHeaderCell';
 import Content from "../../../components/drag-drop-table/DraggableCheckbox";
@@ -17,10 +17,10 @@ import UpdateModal from "./UpdateModal";
 
 const breadcrumb = [
     { href: "/", title: <HomeOutlined />, },
-    { title: t("seferIslemleri"), },
+    { title: t("sigortaIslemleri"), },
 ];
 
-const Sefer = () => {
+const Sigorta = () => {
     const [dataSource, setDataSource] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -42,14 +42,14 @@ const Sefer = () => {
 
     const baseColumns = [
         {
-            title: t("surucu"),
-            dataIndex: "surucuIsim1",
+            title: t("sigorta"),
+            dataIndex: "sigorta",
             key: 1,
             render: (text, record) => (
                 <Button
                     onClick={() => {
                         setUpdateModal(true);
-                        setId(record.siraNo);
+                        setId(record.siraNo); 
                     }}
                 >
                     {text}
@@ -57,62 +57,79 @@ const Sefer = () => {
             ),
         },
         {
-            title: t("seferAdedi"),
-            dataIndex: "seferAdedi",
+            title: t("aktif"),
+            dataIndex: "aktif",
             key: 2,
+            render: text => <Checkbox checked={text} />
         },
         {
-            title: t("guzergah"),
-            dataIndex: "guzergah",
+            title: t("baslangicTarih"),
+            dataIndex: "baslangicTarih",
             key: 3,
+            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("cikisTarih"),
-            dataIndex: "cikisTarih",
+            title: t("bitisTarih"),
+            dataIndex: "bitisTarih",
             key: 4,
             render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("cikisSaat"),
-            dataIndex: "cikisSaat",
+            title: `${t("kalanSure")} (${t("gun")})`,
+            dataIndex: "kalanSure",
+            key: 4,
+            render: (text) => <p>{text}</p>,
+        },
+        {
+            title: t("policeNo"),
+            dataIndex: "policeNo",
             key: 5,
         },
         {
-            title: t("varisTarih"),
-            dataIndex: "varisTarih",
+            title: t("tutar"),
+            dataIndex: "tutar",
             key: 6,
-            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("varisSaat"),
-            dataIndex: "varisSaat",
+            title: t("firma"),
+            dataIndex: "firma",
             key: 7,
         },
         {
-            title: "cikisKm",
-            dataIndex: "cikisKm",
+            title: t("acenta"),
+            dataIndex: "acenta",
             key: 8,
-            render: (text) => dayjs(text).format("DD.MM.YYYY"),
         },
         {
-            title: t("varisKm"),
-            dataIndex: "varisKm",
+            title: t("yetkili"),
+            dataIndex: "yetkili",
             key: 9,
         },
         {
-            title: t("farkKm"),
-            dataIndex: "farkKm",
+            title: t("ruhsatBelgeSeriNo"),
+            dataIndex: "ruhsatBelgeSeriNo",
             key: 10,
         },
         {
-            title: t("aciklama"),
-            dataIndex: "aciklama",
+            title: t("aracBedeli"),
+            dataIndex: "aracBedeli",
+            key: 11,
+        },
+        {
+            title: t("hasarsizlikIndirim"),
+            dataIndex: "hasarIndirimi",
             key: 12,
+        },
+        {
+            title: t("varsayilan"),
+            dataIndex: "varsayilan",
+            key: 13,
+            render: text => <Checkbox checked={text} />
         },
         // {
         //   title: "",
         //   dataIndex: "delete",
-        //   key: 11,
+        //   key: 7,
         //   render: (_, record) => (
         //     <Popconfirm
         //       title={t("confirmQuiz")}
@@ -143,7 +160,7 @@ const Sefer = () => {
         const fetchData = async () => {
             setLoading(true);
             setIsInitialLoading(true);
-            const res = await GetExpeditionsListService(search, tableParams.pagination.current, filterData);
+            const res = await GetInsuranceListService(search, tableParams.pagination.current, filterData);
             setLoading(false);
             setIsInitialLoading(false);
             setDataSource(res?.data.list);
@@ -322,4 +339,4 @@ const Sefer = () => {
     );
 };
 
-export default Sefer;
+export default Sigorta;

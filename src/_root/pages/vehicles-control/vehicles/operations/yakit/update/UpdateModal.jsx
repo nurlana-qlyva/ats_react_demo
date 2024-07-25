@@ -132,11 +132,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, aracId }) => 
     tuketim: null,
     engelle: false,
   };
-
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, watch, setValue } = methods;
 
   useEffect(() => {
@@ -389,7 +387,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus, aracId }) => 
           filesUrl={filesUrl}
           loadingFiles={loadingFiles}
           setFiles={setFiles}
-          open={updateModal}
         />
       ),
     },

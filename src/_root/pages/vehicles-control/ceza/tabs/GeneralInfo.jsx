@@ -1,14 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import PropTypes from "prop-types";
+import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
-
 import Plaka from "../../../../components/form/selects/Plaka";
 import Driver from "../../../../components/form/selects/Driver";
 import Location from "../../../../components/form/tree/Location";
 import CheckboxInput from "../../../../components/form/checkbox/CheckboxInput";
-import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
 import TextInput from "../../../../components/form/inputs/TextInput";
 import DateInput from "../../../../components/form/date/DateInput";
 import TimeInput from "../../../../components/form/date/TimeInput";
@@ -16,33 +14,14 @@ import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import CezaMaddesiTable from "./CezaMaddesi";
-import { PlakaContext } from "../../../../../context/plakaSlice";
-import { CodeControlByUrlService } from "../../../../../api/services/code/services";
+
+dayjs.locale("tr");
 
 const GeneralInfo = () => {
   const { setValue, watch } = useFormContext();
   const [open, setOpen] = useState(false);
   const [madde, setMadde] = useState(false);
-  const { setPlaka } = useContext(PlakaContext)
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
-      const updatedData = res.data.map((item) => {
-        if ("aracId" in item && "plaka" in item) {
-          return {
-            ...item,
-            id: item.aracId,
-          };
-        }
-        return item;
-      });
-      setPlaka(updatedData);
-    };
-
-    fetchData();
-  }, []);
+  const [modalKey, setModalKey] = useState(0);
 
   useEffect(() => {
     if (watch("tutar") && watch("indirimOran")) {
@@ -55,6 +34,11 @@ const GeneralInfo = () => {
       setValue("toplamTutar", toplam)
     }
   }, [watch("tutar"), watch("gecikmeTutar"), watch("indirimOran")])
+
+  const handleOpen = () => {
+    setModalKey(prevKey => prevKey + 1);
+    setOpen(true);
+  }
 
   const footer = [
     <Button
@@ -73,7 +57,7 @@ const GeneralInfo = () => {
       className="btn btn-min cancel-btn"
       onClick={() => setOpen(false)}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -84,20 +68,20 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("plaka")}</label>
-                <Plaka />
+                <label>{t("plaka")} <span className="text-danger">*</span></label>
+                <Plaka required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("surucu")}</label>
-                <Driver />
+                <label>{t("surucu")} <span className="text-danger">*</span></label>
+                <Driver required={true} />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTarihi")}</label>
-                <DateInput name="tarih" />
+                <label>{t("cezaTarihi")} <span className="text-danger">*</span></label>
+                <DateInput name="tarih" required={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -127,11 +111,11 @@ const GeneralInfo = () => {
                 <div className="col-span-10">
                   <div className="flex flex-col gap-1">
                     <label>{t("cezaMaddesi")}</label>
-                    <ReadonlyInput name="cezaMaddesi" checked="true" />
+                    <TextInput name="cezaMaddesi" readonly={true} />
                   </div>
                 </div>
                 <div className="col-span-2 self-end">
-                  <Button onClick={() => setOpen(true)}>...</Button>
+                  <Button onClick={handleOpen}>...</Button>
                 </div>
               </div>
             </div>
@@ -153,7 +137,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("bankaHesabi")}</label>
+                <label>{t("bankaHesap")}</label>
                 <TextInput name="bankaHesap" />
               </div>
             </div>
@@ -165,7 +149,7 @@ const GeneralInfo = () => {
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaPuani")}</label>
+                <label>{t("cezaPuan")}</label>
                 <NumberInput name="cezaPuan" />
               </div>
             </div>
@@ -181,13 +165,13 @@ const GeneralInfo = () => {
           <div className="grid gap-1">
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("cezaTutari")}</label>
+                <label>{t("cezaTutar")}</label>
                 <NumberInput name="tutar" />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
-                <label>{t("erkenIndirimTutar")}</label>
+                <label>{t("erkenOdemeIndirimOran")}</label>
                 <NumberInput name="indirimOran" />
               </div>
             </div>
@@ -200,7 +184,7 @@ const GeneralInfo = () => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("toplamTutar")}</label>
-                <ReadonlyInput name="toplamTutar" checked={true} />
+                <NumberInput name="toplamTutar" />
               </div>
             </div>
           </div>
@@ -230,23 +214,18 @@ const GeneralInfo = () => {
       </div>
 
       <Modal
-        title={t("Ceza Maddeleri")}
+        title={t("cezaMaddeleri")}
         open={open}
         onCancel={() => setOpen(false)}
         maskClosable={false}
         footer={footer}
         width={1200}
+        key={modalKey}
       >
-        <CezaMaddesiTable setMadde={setMadde} open={open} />
+        <CezaMaddesiTable setMadde={setMadde} open={open} key={modalKey} />
       </Modal>
     </>
   );
-};
-
-GeneralInfo.propTypes = {
-  setIsValid: PropTypes.func,
-  response: PropTypes.string,
-  setResponse: PropTypes.func,
 };
 
 export default GeneralInfo;

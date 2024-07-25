@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Input, InputNumber, Modal, Popconfirm, Table } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { KMLogListDeleteService, KMLogListGetByIdService, KMLogListUpdateService, KMLogListValidateService } from '../../../../api/service'
+import { DeleteKmLogService, GetKmLogListByVehicleIdService, UpdateKmLogService, ValidateKmLogForUpdateService } from '../../../../../api/services/vehicles/vehicles/services'
 
 const KmUpdate = ({ data, setTable }) => {
     const [dataSource, setDataSource] = useState([]);
@@ -18,7 +18,7 @@ const KmUpdate = ({ data, setTable }) => {
     });
 
     useEffect(() => {
-        KMLogListGetByIdService(data.aracId, tableParams?.pagination.current).then(res => {
+        GetKmLogListByVehicleIdService(data.aracId, tableParams?.pagination.current).then(res => {
             setDataSource(res?.data.km_list)
             setTableParams({
                 ...tableParams,
@@ -45,7 +45,7 @@ const KmUpdate = ({ data, setTable }) => {
     const handleDelete = (data) => {
         const body = { ...data }
 
-        KMLogListDeleteService(body).then(res => {
+        DeleteKmLogService(body).then(res => {
             if (res?.data.statusCode === 202) {
                 setStatus(true)
                 setTable(true)
@@ -60,7 +60,7 @@ const KmUpdate = ({ data, setTable }) => {
         const body = { ...updateData };
 
         try {
-            const res = await KMLogListValidateService(body);
+            const res = await ValidateKmLogForUpdateService(body);
             if (res?.data.statusCode === 400) {
                 setKmStatus('red');
                 return false;
@@ -83,7 +83,7 @@ const KmUpdate = ({ data, setTable }) => {
         const response = await validateKm()
 
         if (response) {
-            KMLogListUpdateService(body).then(res => {
+            UpdateKmLogService(body).then(res => {
                 if (res.data.statusCode === 202) {
                     setStatus(true);
                     onClose();
@@ -107,7 +107,7 @@ const KmUpdate = ({ data, setTable }) => {
 
     const handleSearch = e => {
         if (e.target.value >= 3) {
-            KMLogListGetByIdService(data.aracId, tableParams?.pagination.current, e.target.value).then(res => {
+            GetKmLogListByVehicleIdService(data.aracId, tableParams?.pagination.current, e.target.value).then(res => {
                 setDataSource(res?.data.km_list)
                 setTableParams({
                     ...tableParams,

@@ -1,13 +1,15 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
 import { Select } from "antd";
 import { PlakaContext } from "../../../../context/plakaSlice";
 import { GetFuelCardContentByIdService } from "../../../../api/services/vehicles/yakit/services";
+import { CodeControlByUrlService } from "../../../../api/services/code/services";
 
 const Plaka = ({ name, codeName, required }) => {
   const { plaka, setData } = useContext(PlakaContext);
   const { setValue, control, watch } = useFormContext();
+  const [plateList, setPlateList] = useState([])
 
   useEffect(() => {
     if (plaka.length === 1) {
@@ -19,6 +21,22 @@ const Plaka = ({ name, codeName, required }) => {
 
   const handleChange = (e) => {
     GetFuelCardContentByIdService(e).then((res) => setData(res.data));
+  };
+
+  const handleClick = async () => {
+    if (plaka.length === 0) {
+      const res = await CodeControlByUrlService("Vehicle/GetVehiclePlates");
+      const updatedData = res.data.map((item) => {
+        if ("aracId" in item && "plaka" in item) {
+          return {
+            ...item,
+            id: item.aracId,
+          };
+        }
+        return item;
+      });
+      setPlateList(updatedData);
+    }
   };
 
   return (
@@ -43,10 +61,14 @@ const Plaka = ({ name, codeName, required }) => {
                 .toLowerCase()
                 .localeCompare((optionB?.label ?? "").toLowerCase())
             }
-            options={plaka.map((item) => ({
+            options={plaka.length === 0 ? plateList.map((item) => ({
+              label: item.plaka,
+              value: item.id,
+            })) : plaka.map((item) => ({
               label: item.plaka,
               value: item.id,
             }))}
+            onClick={handleClick}
             onChange={(e) => {
               field.onChange(e);
               handleChange(e);
