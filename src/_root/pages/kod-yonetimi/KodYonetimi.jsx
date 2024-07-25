@@ -132,7 +132,6 @@ const KodYonetimi = () => {
             {t("kapat")}
         </Button >,
     ];
-    console.log(selectedCodeText)
 
     return (
         <>
@@ -159,7 +158,7 @@ const KodYonetimi = () => {
                         <Content style={{ padding: 24, margin: 0, minHeight: 280, overflow: 'auto' }}>
                             {selectedCode && (
                                 <>
-                                    <div className='title'>{code}</div>
+                                    {/* <div className='title'>{code}</div> */}
                                     <div className="m-20">
                                         <Input
                                             value={searchCodeText}

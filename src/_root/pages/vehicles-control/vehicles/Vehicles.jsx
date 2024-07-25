@@ -246,7 +246,7 @@ const Vehicles = () => {
     if (storedSelectedKeys.length) {
       setSelectedRowKeys(storedSelectedKeys);
     }
-  }, [tableParams.pagination.current]);
+  }, [tableParams.pagination.current, search]);
 
   useEffect(() => {
     setColumns(getBaseColumns(country).map((column, i) => ({
@@ -260,7 +260,7 @@ const Vehicles = () => {
 
   // Custom loading icon
   const customIcon = <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />;
-
+console.log(selectedRowKeys)
   return (
     <>
       <div className="content">
@@ -289,7 +289,7 @@ const Vehicles = () => {
             <Filter filter={filter} clearFilters={clear} />
           </div>
           <div>
-            <OperationsInfo ids={selectedRowKeys} />
+            <OperationsInfo ids={keys} />
           </div>
         </div>
       </div>
