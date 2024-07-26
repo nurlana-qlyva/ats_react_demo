@@ -53,7 +53,7 @@ const AddModal = ({ setStatus }) => {
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.malzemeId,
-        birimKodId: item.birimKodId || 0,
+        birimKodId: item.birimId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,
@@ -155,7 +155,23 @@ const AddModal = ({ setStatus }) => {
     if (watch("girisDepoSiraNo")) {
       const fetchData = async () => {
         const res = await GetMaterialCardByIdService(watch("malzemeId"));
-        setTableData([...tableData, res?.data]);
+        setTableData([res?.data]);
+        setValue("edit_plakaId", watch("aracId"));
+        setValue("malzeme_plaka", watch("plaka"));
+        setValue("edit_miktar", 1);
+        setValue("edit_lokasyonId", watch("lokasyonId"));
+        setValue("edit_lokasyon", watch("lokasyon"));
+        setValue("edit_malzemeTanimi", res?.data.tanim);
+        setValue("birim", res?.data.birim);
+        setValue("edit_birim", res?.data.birimKodId);
+        setValue("edit_fiyat", res?.data.fiyat);
+        setValue("edit_kdvOrani", res?.data.kdvOran);
+        setValue("edit_toplam", res?.data.toplam);
+        setValue("edit_malzemeKod", res?.data.malzemeKod);
+        setValue("edit_malzemeTip", res?.data.malzemeTipKodText);
+        setValue("edit_aciklama", res?.data.aciklama);
+        setValue("edit_indirimOrani", null);
+        setValue("edit_indirimTutari", null);
       };
       fetchData();
     }
@@ -172,11 +188,7 @@ const AddModal = ({ setStatus }) => {
         className="btn btn-min primary-btn"
         onClick={onSubmit}
         disabled={
-          isValid === "success"
-            ? false
-            : isValid === "error"
-              ? true
-              : false
+          isValid === "success" ? false : isValid === "error" ? true : false
         }
       >
         {t("kaydet")}
@@ -230,7 +242,7 @@ const AddModal = ({ setStatus }) => {
 };
 
 AddModal.propTypes = {
-  setStatus: PropTypes.func
+  setStatus: PropTypes.func,
 };
 
 export default AddModal;

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input } from "antd";
-import { MenuOutlined, HomeOutlined } from "@ant-design/icons";
+import { Table, Popover, Button, Input, Spin } from "antd";
+import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import { GetMaterialListService } from "../../../../api/services/malzeme/malzeme_services";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
+import AddModal from "./AddModal";
+import UpdateModal from "./UpdateModal";
 
 const breadcrumb = [
   { href: "/", title: <HomeOutlined /> },
@@ -22,11 +25,12 @@ const Malzemeler = () => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
-  const [data, setData] = useState(false);
+  const [id, setId] = useState([]);
   const [filterData, setFilterData] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
@@ -34,13 +38,13 @@ const Malzemeler = () => {
 
   const baseColumns = [
     {
-      title: t("malzemeId"),
-      dataIndex: "malzemeId",
+      title: t("malzemeKodu"),
+      dataIndex: "malzemeKod",
       key: 1,
       render: (text, record) => (
         <Button
           onClick={() => {
-            setData(record);
+            setId(record.malzemeId);
             setUpdateModal(true);
           }}
         >
@@ -49,90 +53,85 @@ const Malzemeler = () => {
       ),
     },
     {
-      title: t("malzemeKodu"),
-      dataIndex: "malzemeKod",
-      key: 2,
-    },
-    {
       title: t("malzemeTanimi"),
       dataIndex: "tanim",
-      key: 3,
+      key: 2,
     },
     {
       title: t("malzemeTipi"),
       dataIndex: "malzemeTipKodText",
-      key: 4,
+      key: 3,
     },
     {
       title: t("stokMiktar"),
       dataIndex: "stokMiktar",
-      key: 5,
+      key: 4,
     },
     {
       title: t("birim"),
       dataIndex: "birim",
-      key: 6,
+      key: 5,
     },
     {
       title: t("fiyat"),
       dataIndex: "fiyat",
-      key: 7,
+      key: 6,
     },
     {
       title: t("tedarikci"),
       dataIndex: "tedarikci",
-      key: 8,
+      key: 7,
     },
     {
       title: t("seriNo"),
       dataIndex: "seriNo",
-      key: 9,
+      key: 8,
     },
     {
       title: t("barkodNo"),
       dataIndex: "barkodNo",
-      key: 10,
+      key: 9,
     },
     {
       title: t("depo"),
       dataIndex: "depo",
-      key: 11,
+      key: 10,
     },
     {
       title: t("bolum"),
       dataIndex: "bolum",
-      key: 12,
+      key: 11,
     },
     {
       title: t("raf"),
       dataIndex: "raf",
-      key: 13,
+      key: 12,
     },
     {
       title: t("kritikMik"),
       dataIndex: "kritikMiktar",
-      key: 14,
+      key: 13,
     },
     {
       title: t("sonAlisTarihi"),
       dataIndex: "sonAlisTarih",
-      key: 15,
+      key: 14,
       render: (text) => dayjs(text).format("DD.MM.YYYY"),
     },
     {
       title: t("sonAlinanFirma"),
       dataIndex: "sonAlinanFirma",
-      key: 16,
+      key: 15,
     },
     {
       title: t("sonAlinanFiyat"),
       dataIndex: "sonFiyat",
-      key: 17,
+      key: 16,
     },
     {
       title: t("aktif"),
       dataIndex: "aktif",
-      key: 18,
+      key: 17,
       render: (text, record) => (
         <Checkbox checked={record.ozelKullanim} readOnly />
       ),
@@ -140,22 +139,22 @@ const Malzemeler = () => {
     {
       title: t("kdvOrani"),
       dataIndex: "kdvOran",
-      key: 19,
+      key: 18,
     },
     {
       title: t("girenMiktar"),
       dataIndex: "girenMiktar",
-      key: 20,
+      key: 19,
     },
     {
       title: t("cikanMiktar"),
       dataIndex: "cikanMiktar",
-      key: 21,
+      key: 20,
     },
     {
       title: t("yedekParca"),
       dataIndex: "yedekParca",
-      key: 22,
+      key: 21,
       render: (text, record) => (
         <Checkbox checked={record.yedekParca} readOnly />
       ),
@@ -163,31 +162,31 @@ const Malzemeler = () => {
     {
       title: t("sarfMalz"),
       dataIndex: "sarfMlz",
-      key: 23,
+      key: 22,
       render: (text, record) => <Checkbox checked={record.sarfMlz} readOnly />,
     },
     {
       title: t("demirbas"),
       dataIndex: "demirBas",
-      key: 24,
+      key: 23,
       render: (text, record) => <Checkbox checked={record.demirBas} readOnly />,
     },
     {
       title: t("degistirme"),
       dataIndex: "degistirme",
-      key: 25,
+      key: 24,
       render: (text) => <p className="text-secondary">{text}</p>,
     },
     {
       title: t("olusturma"),
       dataIndex: "olusturma",
-      key: 26,
+      key: 25,
       render: (text) => <p className="text-success">{text}</p>,
     },
     {
       title: t("aciklama"),
       dataIndex: "aciklama",
-      key: 27,
+      key: 26,
     },
   ];
 
@@ -207,12 +206,14 @@ const Malzemeler = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setIsInitialLoading(true);
       const res = await GetMaterialListService(
         search,
         tableParams.pagination.current,
         filterData
       );
       setLoading(false);
+      setIsInitialLoading(false);
       setDataSource(res?.data.fuel_list);
       setTableParams((prevTableParams) => ({
         ...prevTableParams,
@@ -260,18 +261,27 @@ const Malzemeler = () => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
+  );
+
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
   );
 
   // get selected rows data
@@ -339,49 +349,53 @@ const Malzemeler = () => {
               placeholder="Arama"
               onChange={(e) => setSearch(e.target.value)}
             />
-            {/* <AddModal setStatus={setStatus} /> */}
+            <AddModal setStatus={setStatus} />
             {/* <Filter filter={filter} clearFilters={clear} /> */}
           </div>
         </div>
       </div>
 
-      {/* <UpdateModal
-                updateModal={updateModal}
-                setUpdateModal={setUpdateModal}
-                setStatus={setStatus}
-                status={status}
-                id={id}
-            /> */}
+      <UpdateModal
+        updateModal={updateModal}
+        setUpdateModal={setUpdateModal}
+        setStatus={setStatus}
+        id={id}
+      />
 
       <div className="content">
         <DragAndDropContext items={columns} setItems={setColumns}>
-          <Table
-            rowKey={(record) => record.malzemeId}
-            columns={newColumns}
-            dataSource={dataSource}
-            pagination={{
-              ...tableParams.pagination,
-              showTotal: (total) => (
-                <p className="text-info">[{total} kayıt]</p>
-              ),
-              locale: {
-                items_per_page: `/ ${t("sayfa")}`,
-              },
-            }}
-            loading={loading}
-            size="small"
-            onChange={handleTableChange}
-            rowSelection={{
-              selectedRowKeys: selectedRowKeys,
-              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-              onSelect: handleRowSelection,
-            }}
-            components={{
-              header: {
-                cell: SortableHeaderCell,
-              },
-            }}
-          />
+          <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+            <Table
+              rowKey={(record) => record.malzemeId}
+              columns={newColumns}
+              dataSource={dataSource}
+              pagination={{
+                ...tableParams.pagination,
+                showTotal: (total) => (
+                  <p className="text-info">[{total} kayıt]</p>
+                ),
+                locale: {
+                  items_per_page: `/ ${t("sayfa")}`,
+                },
+              }}
+              loading={loading}
+              size="small"
+              onChange={handleTableChange}
+              rowSelection={{
+                selectedRowKeys: selectedRowKeys,
+                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                onSelect: handleRowSelection,
+              }}
+              components={{
+                header: {
+                  cell: SortableHeaderCell,
+                },
+              }}
+              locale={{
+                emptyText: "Veri Bulunamadı",
+              }}
+            />
+          </Spin>
         </DragAndDropContext>
       </div>
     </>

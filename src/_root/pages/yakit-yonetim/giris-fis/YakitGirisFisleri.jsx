@@ -74,14 +74,14 @@ const YakitGirisFisleri = () => {
       key: 4,
     },
     {
-      title: t("girisDeposu"),
+      title: t("girisTank"),
       dataIndex: "girisDepo",
       key: 5,
     },
     {
-      title: t("cikisDeposu"),
+      title: t("cikisTank"),
       dataIndex: "cikisDepo",
-      key: 6,
+      key: 6, 
     },
     {
       title: t("araToplam"),

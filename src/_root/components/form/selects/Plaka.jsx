@@ -9,7 +9,7 @@ import { CodeControlByUrlService } from "../../../../api/services/code/services"
 const Plaka = ({ name, codeName, required }) => {
   const { plaka, setData } = useContext(PlakaContext);
   const { setValue, control, watch } = useFormContext();
-  const [plateList, setPlateList] = useState([])
+  const [plateList, setPlateList] = useState([]);
 
   useEffect(() => {
     if (plaka.length === 1) {
@@ -52,7 +52,7 @@ const Plaka = ({ name, codeName, required }) => {
             allowClear
             optionFilterProp="children"
             className={fieldState.error ? "input-error" : ""}
-            value={watch("plaka") || watch(codeName)}
+            value={name ? watch(name) : watch("plaka")}
             filterOption={(input, option) =>
               (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())
             }
@@ -61,13 +61,17 @@ const Plaka = ({ name, codeName, required }) => {
                 .toLowerCase()
                 .localeCompare((optionB?.label ?? "").toLowerCase())
             }
-            options={plaka.length === 0 ? plateList.map((item) => ({
-              label: item.plaka,
-              value: item.id,
-            })) : plaka.map((item) => ({
-              label: item.plaka,
-              value: item.id,
-            }))}
+            options={
+              plaka.length === 0
+                ? plateList.map((item) => ({
+                    label: item.plaka,
+                    value: item.id,
+                  }))
+                : plaka.map((item) => ({
+                    label: item.plaka,
+                    value: item.id,
+                  }))
+            }
             onClick={handleClick}
             onChange={(e) => {
               field.onChange(e);

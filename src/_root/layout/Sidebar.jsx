@@ -138,37 +138,6 @@ const items = [
         ],
     },
     {
-        key: '25',
-        icon: <PiTireBold />,
-        label: 'Lastik Yönetimi',
-        children: [
-            {
-                key: '26',
-                label: (
-                    <Link to={'/'}>{t("işlemler")}</Link>
-                ),
-            },
-            {
-                key: '27',
-                label: (
-                    <Link to={'/'}>{t("depolar")}</Link>
-                )
-            },
-            {
-                key: '28',
-                label: <Link to={'/'}>{t("girisFislerı")}</Link>,
-            },
-            {
-                key: '29',
-                label: <Link to={'/'}>{t("cikisFisleri")}</Link>,
-            },
-            {
-                key: '30',
-                label: <Link to={'/'}>{t("transferFisleri")}</Link>,
-            },
-        ],
-    },
-    {
         key: '31',
         icon: <LuWarehouse />,
         label: t("malzemeDepo"),

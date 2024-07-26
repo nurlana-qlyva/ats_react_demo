@@ -81,7 +81,7 @@ const MarkaList = () => {
     );
 
 
-    const filteredModelList = modelList.filter(model =>
+    const filteredModelList = modelList.filter(model => 
         model.modelDef.toLowerCase().includes(searchModel.toLowerCase())
     );
 

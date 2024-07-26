@@ -11,4 +11,6 @@ export const GetWareHouseListByTipService = async (type) => {
   return await http.get(`/WareHouse/GetWareHouseListByTip?tip=${type}`);
 };
 
-// MALZEME
+export const AddMaterialService = async (data) => {
+  return await http.post(`/Material/AddMaterial`, data);
+};

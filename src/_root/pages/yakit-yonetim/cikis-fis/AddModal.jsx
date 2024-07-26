@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Modal, Popconfirm, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types";
+import { Button, Modal, Popconfirm } from "antd";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import {
@@ -22,6 +23,7 @@ const AddModal = ({ setStatus }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const isFirstRender = useRef(true);
+  const [loading, setLoading] = useState(false);
 
   const defaultValues = {
     fisNo: "",
@@ -42,8 +44,8 @@ const AddModal = ({ setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, setValue, watch } = methods;
+
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -52,7 +54,7 @@ const AddModal = ({ setStatus }) => {
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.malzemeId,
-        birimKodId: item.birimKodId || 0,
+        birimKodId: item.birimId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,
@@ -151,21 +153,45 @@ const AddModal = ({ setStatus }) => {
     if (watch("girisDepoSiraNo")) {
       const fetchData = async () => {
         const res = await GetMaterialCardByIdService(watch("malzemeId"));
-        setTableData([...tableData, res?.data]);
+        setTableData([res?.data]);
+        setValue("edit_plakaId", watch("aracId"));
+        setValue("malzeme_plaka", watch("plaka"));
+        setValue("edit_miktar", 1);
+        setValue("edit_lokasyonId", watch("lokasyonId"));
+        setValue("edit_lokasyon", watch("lokasyon"));
+        setValue("edit_malzemeTanimi", res?.data.tanim);
+        setValue("birim", res?.data.birim);
+        setValue("edit_birim", res?.data.birimKodId);
+        setValue("edit_fiyat", res?.data.fiyat);
+        setValue("edit_kdvOrani", res?.data.kdvOran);
+        setValue("edit_toplam", res?.data.toplam);
+        setValue("edit_malzemeKod", res?.data.malzemeKod);
+        setValue("edit_malzemeTip", res?.data.malzemeTipKodText);
+        setValue("edit_aciklama", res?.data.aciklama);
+        setValue("edit_indirimOrani", null);
+        setValue("edit_indirimTutari", null);
       };
       fetchData();
     }
   }, [watch("girisDepoSiraNo")]);
 
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-      disabled={!isValid}
-    >
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success" ? false : isValid === "error" ? true : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Popconfirm
       key="back"
       title="Bilgileri Kaydetmeden Çıkılsın mı?"
@@ -178,7 +204,7 @@ const AddModal = ({ setStatus }) => {
         setIsSuccess(true);
       }}
     >
-      <Button className="btn btn-min cancel-btn">{t("iptal")}</Button>
+      <Button className="btn btn-min cancel-btn">{t("kapat")}</Button>
     </Popconfirm>,
   ];
 
@@ -188,7 +214,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> Ekle
       </Button>
       <Modal
-        title="Fiş Giriş Bilgisi Ekle"
+        title={t("fisGirisBilgisiEkle")}
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
@@ -211,6 +237,10 @@ const AddModal = ({ setStatus }) => {
       </Modal>
     </>
   );
+};
+
+AddModal.propTypes = {
+  setStatus: PropTypes.func,
 };
 
 export default AddModal;

@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, InputNumber, Modal, Select, Table } from "antd";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
-import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Plaka from "../../../../components/form/selects/Plaka";
 import Location from "../../../../components/form/tree/Location";
 import Textarea from "../../../../components/form/inputs/Textarea";
+import TextInput from "../../../../components/form/inputs/TextInput";
 
 const UpdateMalzemeLists = ({
   setTableData,
@@ -28,7 +28,7 @@ const UpdateMalzemeLists = ({
           onClick={() => {
             setEditModal(true);
             setRecord(record);
-            setValue("edit_indirimTutari", record.mlzAracId);
+            setValue("edit_indirimTutari", record.indirimTutar);
             setValue("malzeme_plaka", record.plaka);
             setValue("edit_malzemeTanimi", record.malezemeTanim);
             setValue("edit_indirimOrani", record.indirimOran);
@@ -257,10 +257,10 @@ const UpdateMalzemeLists = ({
         setValue("edit_miktar", 1);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
-console.log(tableData)
+
   return (
     <div className="border p-20 mt-20 relative">
       <Table
@@ -286,19 +286,19 @@ console.log(tableData)
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTanimi")}</label>
-              <ReadonlyInput name="edit_malzemeTanimi" checked={true} />
+              <TextInput name="edit_malzemeTanimi" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeKodu")}</label>
-              <ReadonlyInput name="edit_malzemeKod" checked={true} />
+              <TextInput name="edit_malzemeKod" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTipi")}</label>
-              <ReadonlyInput name="edit_malzemeTip" checked={true} />
+              <TextInput name="edit_malzemeTip" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
@@ -355,7 +355,7 @@ console.log(tableData)
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("araToplam")}</label>
-              <ReadonlyInput name="edit_araToplam" checked={true} />
+              <TextInput name="edit_araToplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
@@ -529,7 +529,7 @@ console.log(tableData)
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("toplam")}</label>
-              <ReadonlyInput name="edit_toplam" checked={true} />
+              <TextInput name="edit_toplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">

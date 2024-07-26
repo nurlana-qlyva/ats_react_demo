@@ -1,18 +1,20 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Button, InputNumber, Modal, Select, Table } from "antd";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
-import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import NumberInput from "../../../../components/form/inputs/NumberInput";
 import Plaka from "../../../../components/form/selects/Plaka";
 import Location from "../../../../components/form/tree/Location";
 import Textarea from "../../../../components/form/inputs/Textarea";
+import TextInput from "../../../../components/form/inputs/TextInput";
 
 const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
-  const { control, setValue, watch, handleSubmit } = useFormContext();
+  const { control, setValue, watch, handleSubmit } =
+    useFormContext();
   const [editModal, setEditModal] = useState(false);
-  const [record, setRecord] = useState(null);
+  const [data, setData] = useState(null);
 
   const defaultColumns = [
     {
@@ -22,26 +24,50 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         <Button
           onClick={() => {
             setEditModal(true);
-            setRecord(record);
-            setValue("edit_plakaId", record.mlzAracId);
-            setValue("malzeme_plaka", record.plaka);
+            setData(record);
+            setValue(
+              "edit_plakaId",
+              watch("edit_plakaId") ? watch("edit_plakaId") : watch("aracId")
+            );
+            setValue(
+              "malzeme_plaka",
+              watch("malzeme_plaka") ? watch("malzeme_plaka") : watch("plaka")
+            );
             setValue("edit_malzemeTanimi", record.tanim);
-            setValue("edit_miktar", record.miktar ? record.miktar : 1);
+            setValue(
+              "edit_miktar",
+              watch("edit_miktar") ? watch("edit_miktar") : 1
+            );
             setValue("birim", record.birim);
             setValue("edit_birim", record.birimKodId);
             setValue("edit_fiyat", record.fiyat);
             setValue(
               "edit_araToplam",
-              record.miktar ? record.miktar : 1 * record.fiyat
+              watch("edit_miktar")
+                ? watch("edit_miktar") * watch("edit_fiyat")
+                : 1 * watch("edit_fiyat")
             );
             setValue("edit_kdvOrani", record.kdvOran);
             setValue("edit_toplam", record.toplam);
             setValue("edit_malzemeKod", record.malzemeKod);
             setValue("edit_malzemeTip", record.malzemeTipKodText);
             setValue("edit_aciklama", record.aciklama);
-            setValue("edit_lokasyonId", record.lokasyonId);
-            setValue("edit_lokasyon", record.lokasyon);
-            setValue("edit_kdv", record.kdvDahilHaric ? "dahil" : "haric");
+            setValue(
+              "edit_lokasyonId",
+              watch("edit_lokasyonId")
+                ? watch("edit_lokasyonId")
+                : watch("lokasyonId")
+            );
+            setValue(
+              "edit_lokasyon",
+              watch("edit_lokasyon")
+                ? watch("edit_lokasyon")
+                : watch("lokasyon")
+            );
+
+            if (!data) {
+              setValue("edit_kdv", record.kdvDahilHaric ? "Dahil" : "Hariç");
+            }
           }}
         >
           {text}
@@ -59,7 +85,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("miktar"),
       dataIndex: "miktar",
-      render: () => 1,
+      render: () => (watch("edit_miktar") ? watch("edit_miktar") : 1),
     },
     {
       title: t("birim"),
@@ -72,6 +98,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("araToplam"),
       dataIndex: "araToplam",
+      render: (text, record) =>
+        watch("edit_miktar")
+          ? watch("edit_miktar") * record.fiyat
+          : 1 * record.fiyat,
     },
     {
       title: t("indirimOrani"),
@@ -92,18 +122,64 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("kdvTutar"),
       dataIndex: "kdvTutar",
+      render: (text, record) => (record.kdvOran === 0 ? 0 : text),
     },
     {
       title: t("toplam"),
       dataIndex: "toplam",
+      render: (text, record) => {
+        const indirimOrani = record.indirimOran;
+        const araToplam = 1 * record.fiyat;
+        const kdvDH = record.kdv ? "Dahil" : "Hariç";
+        const kdvOrani = record.kdvOran;
+        let toplam;
+        let result;
+        let kdvTutar;
+        let indirimTutar;
+
+        if (kdvDH === "haric" || kdvDH === "Hariç") {
+          if (indirimOrani) {
+            indirimTutar = (araToplam * indirimOrani) / 100;
+            result = araToplam - indirimTutar;
+            kdvTutar = ((result * kdvOrani) / 100).toFixed(2);
+            toplam = (+result + +kdvTutar).toFixed(2);
+          } else {
+            kdvTutar = (araToplam * (kdvOrani / 100)).toFixed(2);
+            toplam = (+araToplam + +kdvTutar).toFixed(2);
+          }
+        } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
+          if (indirimOrani) {
+            kdvTutar = (araToplam - araToplam / (1 + kdvOrani / 100)).toFixed(
+              2
+            );
+            indirimTutar = (
+              ((araToplam - kdvTutar) * indirimOrani) /
+              100
+            ).toFixed(2);
+            result = araToplam - kdvTutar - indirimTutar;
+            toplam = +result.toFixed(2) + +kdvTutar;
+          } else {
+            kdvTutar = (araToplam - araToplam / (1 + kdvOrani / 100)).toFixed(
+              2
+            );
+            toplam = +araToplam.toFixed(2);
+          }
+        }
+
+        return toplam;
+      },
     },
     {
       title: t("plaka"),
       dataIndex: "plaka",
+      render: () =>
+        watch("malzeme_plaka") ? watch("malzeme_plaka") : watch("plaka"),
     },
     {
       title: t("lokasyon"),
       dataIndex: "lokasyon",
+      render: () =>
+        watch("edit_lokasyon") ? watch("edit_lokasyon") : watch("lokasyon"),
     },
     {
       title: t("aciklama"),
@@ -114,7 +190,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   useEffect(() => {
     setValue("edit_miktar", 1);
   }, []);
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -193,7 +268,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
   });
 
   const handleEdit = handleSubmit((values) => {
-    const key = record.key;
+    const key = data.key;
     const index = tableData.findIndex((item) => item.key === key);
     if (index !== -1) {
       const currentFiyat = values.edit_fiyat;
@@ -207,9 +282,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         tanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
-        birimId: values.edit_birim
-          ? values.edit_birim
-          : selectedRows.birimKodId,
+        birimId: values.edit_birim,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
@@ -227,6 +300,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       };
 
       setTableData(newData);
+      setData(newData);
     }
 
     setEditModal(false);
@@ -245,13 +319,9 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       className="btn cancel-btn"
       onClick={() => {
         setEditModal(false);
-        setValue("edit_indirimOrani", null);
-        setValue("edit_indirimOrani", null);
-        setValue("edit_indirimTutari", null);
-        setValue("edit_miktar", 1);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -280,19 +350,19 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTanimi")}</label>
-              <ReadonlyInput name="edit_malzemeTanimi" checked={true} />
+              <TextInput name="edit_malzemeTanimi" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeKodu")}</label>
-              <ReadonlyInput name="edit_malzemeKod" checked={true} />
+              <TextInput name="edit_malzemeKod" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTipi")}</label>
-              <ReadonlyInput name="edit_malzemeTip" checked={true} />
+              <TextInput name="edit_malzemeTip" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
@@ -349,7 +419,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("araToplam")}</label>
-              <ReadonlyInput name="edit_araToplam" checked={true} />
+              <TextInput name="edit_araToplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
@@ -478,10 +548,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    defaultValue="dahil"
+                    defaultValue="Dahil"
                     options={[
-                      { value: "dahil", label: <span>Dahil</span> },
-                      { value: "haric", label: <span>Hariç</span> },
+                      { value: "Dahil", label: <span>Dahil</span> },
+                      { value: "Hariç", label: <span>Hariç</span> },
                     ]}
                     onChange={(e) => field.onChange(e)}
                   />
@@ -523,7 +593,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("toplam")}</label>
-              <ReadonlyInput name="edit_toplam" checked={true} />
+              <TextInput name="edit_toplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">

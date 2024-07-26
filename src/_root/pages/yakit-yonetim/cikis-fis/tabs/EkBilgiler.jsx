@@ -1,6 +1,6 @@
 import { t } from "i18next";
-import ReadonlyInput from "../../../../components/form/inputs/ReadonlyInput";
 import Textarea from "../../../../components/form/inputs/Textarea";
+import TextInput from "../../../../components/form/inputs/TextInput";
 
 
 const EkBilgiler = () => {
@@ -12,25 +12,25 @@ const EkBilgiler = () => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("araToplam")}</label>
-                <ReadonlyInput name="toplam_araToplam" checked="true" />
+                <TextInput name="toplam_araToplam" readonly="true" />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("indirim")}</label>
-                <ReadonlyInput name="toplam_indirim" checked="true" />
+                <TextInput name="toplam_indirim" readonly="true" />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("kdvToplam")}</label>
-                <ReadonlyInput name="toplam_kdvToplam" checked="true" />
+                <TextInput name="toplam_kdvToplam" readonly="true" />
               </div>
             </div>
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("genelToplam")}</label>
-                <ReadonlyInput name="toplam_genelToplam" checked="true" />
+                <TextInput name="toplam_genelToplam" readonly="true" />
               </div>
             </div>
           </div>

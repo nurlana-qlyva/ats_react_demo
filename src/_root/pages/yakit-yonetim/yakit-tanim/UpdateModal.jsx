@@ -119,6 +119,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    }else {
+      setIsValid("normal");
     }
   }, [watch("malzemeKod"), code]);
 

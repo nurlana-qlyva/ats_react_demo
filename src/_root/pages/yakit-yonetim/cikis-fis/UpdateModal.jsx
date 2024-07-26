@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
-import {
-  CodeItemValidateService,
-  GetModuleCodeByCode,
-} from "../../../../api/services/code/services";
+import { CodeItemValidateService } from "../../../../api/services/code/services";
 import GeneralInfo from "./tabs/GeneralInfo";
 import UpdateMalzemeLists from "./tabs/UpdateMalzemeLists";
 import EkBilgiler from "./tabs/EkBilgiler";
@@ -19,6 +17,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const [tableData, setTableData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
   const [record, setRecord] = useState(true);
 
   const defaultValues = {
@@ -44,13 +43,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
     GetMaterialReceiptByIdService(id).then((res) => {
       setValue("toplam_araToplam", res?.data?.receipt.araToplam);
       setValue("fisNo", res?.data?.receipt.fisNo);
+      setCode(res?.data?.receipt.fisNo);
       setValue("toplam_genelToplam", res?.data?.receipt.genelToplam);
       setValue("girisDepoSiraNo", res?.data?.receipt.cikisDepoSiraNo);
       setValue("depo", res?.data?.receipt.cikisDepo);
@@ -74,7 +73,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   }, [id, updateModal]);
 
   useEffect(() => {
-    if (watch("fisNo")) {
+    if (code !== watch("fisNo")) {
       const body = {
         tableName: "Fis",
         code: watch("fisNo"),
@@ -82,8 +81,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    } else {
+      setIsValid("normal");
     }
-  }, [updateModal, watch("fisNo")]);
+  }, [watch("fisNo"), code]);
 
   useEffect(() => {
     if (tableData.length > 0) {
@@ -172,7 +173,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     <Button
       key="submit"
       className="btn btn-min primary-btn"
-      disabled={!isValid}
+      disabled={
+        isValid === "success" ? false : isValid === "error" ? true : false
+      }
       onClick={onSubmit}
     >
       {t("guncelle")}
@@ -187,14 +190,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         reset(defaultValues);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
   return (
     <>
       <Modal
-        title="Fiş Giriş Bilgisi Güncelle"
+        title={t("fisGirisBilgisiGuncelle")}
         open={updateModal}
         onCancel={() => setUpdateModal(false)}
         maskClosable={false}
@@ -206,7 +209,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
             <GeneralInfo isValid={isValid} />
             <UpdateMalzemeLists
               setTableData={setTableData}
-              tableData={tableData} 
+              tableData={tableData}
               isSuccess={isSuccess}
               setIsSuccess={setIsSuccess}
             />
@@ -216,6 +219,13 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
       </Modal>
     </>
   );
+};
+
+UpdateModal.propTypes = {
+  updateModal: PropTypes.bool,
+  setUpdateModal: PropTypes.func,
+  id: PropTypes.number,
+  setStatus: PropTypes.func,
 };
 
 export default UpdateModal;

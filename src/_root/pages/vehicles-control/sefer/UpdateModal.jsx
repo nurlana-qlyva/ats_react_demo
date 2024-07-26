@@ -21,7 +21,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const { plaka } = useContext(PlakaContext);
   const [isValid, setIsValid] = useState("normal");
   const [code, setCode] = useState("normal");
-  const [activeKey, setActiveKey] = useState("1");
+  const [activeKey, setActiveKey] = useState("1"); 
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
