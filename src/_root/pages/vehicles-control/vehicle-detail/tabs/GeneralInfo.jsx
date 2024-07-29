@@ -24,17 +24,17 @@ const GeneralInfo = () => {
   });
 
   useEffect(() => {
-    const current = dayjs().startOf("day"); // Ensure comparison starts from the start of the day
-    const muayeneDate = dayjs(watch("muayeneTarih")).startOf("day");
-    const sozlesmeDate = dayjs(watch("sozlesmeTarih")).startOf("day");
-    const egzosDate = dayjs(watch("egzosTarih")).startOf("day");
-    const vergiDate = dayjs(watch("vergiTarih")).startOf("day");
+    const current = dayjs().endOf("day"); // Ensure comparison starts from the start of the day
+    const muayeneDate = dayjs(watch("muayeneTarih")).endOf("day");
+    const sozlesmeDate = dayjs(watch("sozlesmeTarih")).endOf("day");
+    const egzosDate = dayjs(watch("egzosTarih")).endOf("day");
+    const vergiDate = dayjs(watch("vergiTarih")).endOf("day");
 
     setWarning({
-      muayene: muayeneDate.isValid() && muayeneDate.diff(current, "day") < 3 && muayeneDate.diff(current, "day") > 0,
-      sozlesme: sozlesmeDate.isValid() && sozlesmeDate.diff(current, "day") < 3 && sozlesmeDate.diff(current, "day") > 0,
-      egzos: egzosDate.isValid() && egzosDate.diff(current, "day") < 3 && egzosDate.diff(current, "day") > 0,
-      vergi: vergiDate.isValid() && vergiDate.diff(current, "day") < 3 && vergiDate.diff(current, "day") > 0,
+      muayene: muayeneDate.isValid() && muayeneDate.diff(current, "day") < 0 && muayeneDate.diff(current, "day") > -3,
+      sozlesme: sozlesmeDate.isValid() && sozlesmeDate.diff(current, "day") < 0 && sozlesmeDate.diff(current, "day") > -3,
+      egzos: egzosDate.isValid() && egzosDate.diff(current, "day") < 0 && egzosDate.diff(current, "day") > -3,
+      vergi: vergiDate.isValid() && vergiDate.diff(current, "day") < 0 && vergiDate.diff(current, "day") > -3,
     });
   }, [
     watch("muayeneTarih"),
