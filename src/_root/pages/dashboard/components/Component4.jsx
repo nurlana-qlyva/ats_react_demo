@@ -185,7 +185,7 @@ function Component4(props) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {data}
+                {data} TL
               </Text>
               <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>KM Başina Maliyetler</Text>
             </div>
