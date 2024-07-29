@@ -4,10 +4,16 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import { Button, message, Modal, Tabs } from "antd";
 import { CodeItemValidateService } from "../../../../api/services/code/services";
-import { GetMaterialCardByIdService, UpdateMaterialCardService } from "../../../../api/services/yakit-yonetimi/services";
+import {
+  GetMaterialCardByIdService,
+  UpdateMaterialCardService,
+} from "../../../../api/services/yakit-yonetimi/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
-import { GetDocumentsByRefGroupService, GetPhotosByRefGroupService } from "../../../../api/services/upload/services";
+import {
+  GetDocumentsByRefGroupService,
+  GetPhotosByRefGroupService,
+} from "../../../../api/services/upload/services";
 import { uploadFile, uploadPhoto } from "../../../../utils/upload";
 import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
@@ -79,7 +85,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 865,
+      code: 867,
       name2: "ozelAlanKodId9",
     },
     {
@@ -87,7 +93,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 866,
+      code: 868,
       name2: "ozelAlanKodId10",
     },
     {
@@ -119,7 +125,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
-    }else {
+    } else {
       setIsValid("normal");
     }
   }, [watch("malzemeKod"), code]);
@@ -205,7 +211,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       fiyat: values.fiyat || 0,
       kdvOran: values.kdvOran || 0,
       aktif: values.aktif,
-      "malzemeTip": "YAKIT",
+      malzemeTip: "YAKIT",
       malzemeKod: values.malzemeKod,
       ozelAlan1: values.ozelAlan1 || "",
       ozelAlan2: values.ozelAlan2 || "",
@@ -226,7 +232,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         setUpdateModal(false);
         setStatus(true);
         reset(defaultValues);
-        setActiveKey("1")
+        setActiveKey("1");
       }
     });
 
@@ -277,7 +283,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   ];
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+    <Button
+      key="submit"
+      className="btn btn-min primary-btn"
+      onClick={onSubmit}
+      disabled={
+        isValid === "success" ? false : isValid === "error" ? true : false
+      }
+    >
       {t("guncelle")}
     </Button>,
     <Button
@@ -286,7 +299,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       onClick={() => {
         setUpdateModal(false);
         reset(defaultValues);
-        setActiveKey("1")
+        setActiveKey("1");
       }}
     >
       {t("kapat")}

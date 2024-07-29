@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Select } from "antd";
-import { GetWareHouseListByTipService } from "../../../../api/services/malzeme/malzeme_services";
+import { GetWareHouseListByTipService } from "../../../../api/services/malzeme/services";
 
 const Depo = ({ type }) => {
   const [data, setData] = useState([]);

@@ -1,24 +1,26 @@
 import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Modal, Popconfirm, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import GeneralInfo from "./GeneralInfo";
-import MalzemeLists from "./MalzemeLists";
-import EkBilgiler from "./EkBilgiler";
+import PropTypes from "prop-types";
+import { Button, Modal, Popconfirm } from "antd";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import {
-  CodeItemValidateService,
-  GirisFisCodeGetService,
-  GirisFisleriAddService,
-} from "../../../../api/service";
 import { t } from "i18next";
+import {
+  GetModuleCodeByCode,
+  CodeItemValidateService,
+} from "../../../../api/services/code/services";
+import { AddMaterialReceiptService } from "../../../../api/services/malzeme/services";
+import GeneralInfo from "./tabs/GeneralInfo";
+import MalzemeLists from "./tabs/MalzemeLists";
+import EkBilgiler from "./tabs/EkBilgiler";
 
 const AddModal = ({ setStatus }) => {
   const [isOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState("normal");
   const isFirstRender = useRef(true);
+  const [loading, setLoading] = useState(false);
 
   const defaultValues = {
     fisNo: "",
@@ -35,12 +37,11 @@ const AddModal = ({ setStatus }) => {
     islemTipi: "",
     aciklama: "",
   };
-
   const methods = useForm({
     defaultValues: defaultValues,
   });
-
   const { handleSubmit, reset, setValue, watch } = methods;
+
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -59,11 +60,14 @@ const AddModal = ({ setStatus }) => {
         indirim: item.indirimTutar || 0,
         araToplam: item.araToplam || 0,
         kdvToplam: +values.toplam_kdvToplam || 0,
+        kdvTutar: +item.kdvTutar || 0,
         girisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: item.isPriceChanged,
-        kdvDahilHaric: item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
-        gc: 1
+        kdvDahilHaric:
+          item.kdvDH === "Dahil" || item.kdvDH === "dahil" ? true : false,
+        gc: 1,
+        fisTip: "MALZEME",
       });
     });
 
@@ -83,16 +87,18 @@ const AddModal = ({ setStatus }) => {
       genelToplam: values.toplam_genelToplam,
       materialMovements,
       gc: 1,
-      fisTip: "MALZEME"
+      fisTip: "MALZEME",
     };
 
-    GirisFisleriAddService(body).then((res) => {
+    AddMaterialReceiptService(body).then((res) => {
       if (res?.data.statusCode === 200) {
         setStatus(true);
         setIsModalOpen(false);
         reset(defaultValues);
         setTableData([]);
         setIsSuccess(true);
+        setLoading(false);
+        setIsValid("normal");
       }
     });
     setStatus(false);
@@ -100,7 +106,9 @@ const AddModal = ({ setStatus }) => {
 
   useEffect(() => {
     if (isOpen && isFirstRender.current) {
-      GirisFisCodeGetService().then((res) => setValue("fisNo", res.data));
+      GetModuleCodeByCode("STOK_FIS_ALIS ").then((res) =>
+        setValue("fisNo", res.data)
+      );
     }
   }, [isOpen, setValue]);
 
@@ -111,11 +119,8 @@ const AddModal = ({ setStatus }) => {
         code: watch("fisNo"),
       };
       CodeItemValidateService(body).then((res) => {
-        if (!res.data.status) {
-          setIsValid(true);
-        }
+        !res.data.status ? setIsValid("success") : setIsValid("error");
       });
-      setIsValid(false);
     }
   }, [watch("fisNo")]);
 
@@ -143,15 +148,49 @@ const AddModal = ({ setStatus }) => {
     }
   }, [tableData, setValue]);
 
+  useEffect(() => {
+    if (watch("girisDepoSiraNo")) {
+      const fetchData = async () => {
+        const res = await GetMaterialCardByIdService(watch("malzemeId"));
+        setTableData([res?.data]);
+        setValue("edit_plakaId", watch("aracId"));
+        setValue("malzeme_plaka", watch("plaka"));
+        setValue("edit_miktar", 1);
+        setValue("edit_lokasyonId", watch("lokasyonId"));
+        setValue("edit_lokasyon", watch("lokasyon"));
+        setValue("edit_malzemeTanimi", res?.data.tanim);
+        setValue("birim", res?.data.birim);
+        setValue("edit_birim", res?.data.birimKodId);
+        setValue("edit_fiyat", res?.data.fiyat);
+        setValue("edit_kdvOrani", res?.data.kdvOran);
+        setValue("edit_toplam", res?.data.toplam);
+        setValue("edit_malzemeKod", res?.data.malzemeKod);
+        setValue("edit_malzemeTip", res?.data.malzemeTipKodText);
+        setValue("edit_aciklama", res?.data.aciklama);
+        setValue("edit_indirimOrani", null);
+        setValue("edit_indirimTutari", null);
+      };
+      fetchData();
+    }
+  }, [watch("girisDepoSiraNo")]);
+
   const footer = [
-    <Button
-      key="submit"
-      className="btn btn-min primary-btn"
-      onClick={onSubmit}
-      disabled={!isValid}
-    >
-      Kaydet
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success" ? false : isValid === "error" ? true : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Popconfirm
       key="back"
       title="Bilgileri Kaydetmeden Çıkılsın mı?"
@@ -164,7 +203,7 @@ const AddModal = ({ setStatus }) => {
         setIsSuccess(true);
       }}
     >
-      <Button className="btn btn-min cancel-btn">{t("iptal")}</Button>
+      <Button className="btn btn-min cancel-btn">{t("kapat")}</Button>
     </Popconfirm>,
   ];
 
@@ -174,14 +213,13 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> Ekle
       </Button>
       <Modal
-        title="Fiş Giriş Bilgisi Ekle"
+        title={t("fisGirisBilgisiEkle")}
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
         footer={footer}
         width={1300}
         closeIcon={null}
-      // closable={false}
       >
         <FormProvider {...methods}>
           <form>
@@ -198,6 +236,10 @@ const AddModal = ({ setStatus }) => {
       </Modal>
     </>
   );
+};
+
+AddModal.propTypes = {
+  setStatus: PropTypes.func,
 };
 
 export default AddModal;

@@ -7,19 +7,22 @@ import { CodeItemValidateService } from "../../../../api/services/code/services"
 import {
   GetMaterialCardByIdService,
   UpdateMaterialCardService,
-} from "../../../../api/services/yakit-yonetimi/services";
+} from "../../../../api/services/malzeme/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
-import GeneralInfo from "./tabs/GeneralInfo";
 import {
   GetDocumentsByRefGroupService,
   GetPhotosByRefGroupService,
 } from "../../../../api/services/upload/services";
+import GeneralInfo from "./tabs/GeneralInfo";
 import { uploadFile, uploadPhoto } from "../../../../utils/upload";
 import PhotoUpload from "../../../components/upload/PhotoUpload";
 import FileUpload from "../../../components/upload/FileUpload";
+import dayjs from "dayjs";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
   // file
   const [filesUrl, setFilesUrl] = useState([]);
   const [files, setFiles] = useState([]);
@@ -82,15 +85,15 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       key: "OZELALAN_9",
       value: "Özel Alan 9",
       type: "select",
-      code: 865,
+      code: 869,
       name2: "ozelAlanKodId9",
-    },
+    }, 
     {
       label: "ozelAlan10",
       key: "OZELALAN_10",
       value: "Özel Alan 10",
       type: "select",
-      code: 866,
+      code: 870,
       name2: "ozelAlanKodId10",
     },
     {
@@ -169,7 +172,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   };
 
   useEffect(() => {
-    if (watch("malzemeKod")) {
+    if (code !== watch("malzemeKod")) {
       const body = {
         tableName: "Malzeme",
         code: watch("malzemeKod"),
@@ -177,8 +180,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    } else {
+      setIsValid("normal");
     }
-  }, [watch("malzemeKod")]);
+  }, [watch("malzemeKod"), code]);
 
   const personalProps = {
     form: "MALZEME",
@@ -222,9 +227,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   ];
 
   useEffect(() => {
-    MalzemeDataByIdGetService(id).then((res) => {
+    GetMaterialCardByIdService(id).then((res) => {
       setValue("malzemeKod", res.data.malzemeKod);
-      setValue("aktif", res.data.aktif);
+      setCode(res?.data.malzemeKod);
+      setValue("aktif", !res.data.aktif);
       setValue("barKodNo", res.data.barKodNo);
       setValue("birim", res.data.birim);
       setValue("birimKodId", res.data.birimKodId);
@@ -257,7 +263,29 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
         "sonAlisTarih",
         dayjs(res.data.sonAlisTarih).format("DD.MM.YYYY")
       );
+      setValue("ozelAlan1", res?.data.ozelAlan1);
+      setValue("ozelAlan2", res?.data.ozelAlan2);
+      setValue("ozelAlan3", res?.data.ozelAlan3);
+      setValue("ozelAlan4", res?.data.ozelAlan4);
+      setValue("ozelAlan5", res?.data.ozelAlan5);
+      setValue("ozelAlan6", res?.data.ozelAlan6);
+      setValue("ozelAlan7", res?.data.ozelAlan7);
+      setValue("ozelAlan8", res?.data.ozelAlan8);
+      setValue("ozelAlanKodId9", res?.data.ozelAlanKodId9);
+      setValue("ozelAlan9", res?.data.ozelAlan9);
+      setValue("ozelAlan10", res?.data.ozelAlan10);
+      setValue("ozelAlanKodId10", res?.data.ozelAlanKodId10);
+      setValue("ozelAlan11", res?.data.ozelAlan11);
+      setValue("ozelAlan12", res?.data.ozelAlan12);
     });
+
+    GetPhotosByRefGroupService(id, "MALZEME").then((res) =>
+      setImageUrls(res.data)
+    );
+
+    GetDocumentsByRefGroupService(id, "MALZEME").then((res) =>
+      setFilesUrl(res.data)
+    );
   }, [id, updateModal]);
 
   const onSubmit = handleSubmit((values) => {
@@ -280,29 +308,50 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       kritikMiktar: values.kritikMiktar || 0,
       sonMiktar: values.sonMiktar || 0,
       kdvOran: values.kdvOran || 0,
-      aktif: values.aktif,
+      aktif: !values.aktif,
       yedekParca: values.yedekParca,
       sarfMlz: values.sarfMlz,
       demirBas: values.demirBas,
       olcu: values.olcu,
-      kdvDahilHaric: values.kdvDH === "dahil" ? true : false,
+      kdvDahilHaric:
+        values.kdvDH === "dahil" || values.kdvDH === "Dahil" ? true : false,
+      ozelAlan1: values.ozelAlan1 || "",
+      ozelAlan2: values.ozelAlan2 || "",
+      ozelAlan3: values.ozelAlan3 || "",
+      ozelAlan4: values.ozelAlan4 || "",
+      ozelAlan5: values.ozelAlan5 || "",
+      ozelAlan6: values.ozelAlan6 || "",
+      ozelAlan7: values.ozelAlan7 || "",
+      ozelAlan8: values.ozelAlan8 || "",
+      ozelAlanKodId9: values.ozelAlanKodId9 || -1,
+      ozelAlanKodId10: values.ozelAlanKodId10 || -1,
+      ozelAlan11: values.ozelAlan11 || 0,
+      ozelAlan12: values.ozelAlan12 || 0,
     };
 
-    MalzemeUpdateService(body).then((res) => {
+    UpdateMaterialCardService(body).then((res) => {
       if (res?.data.statusCode === 202) {
         setStatus(true);
         setUpdateModal(false);
         reset(defaultValues);
+        setActiveKey("1");
       }
     });
-    setStatus(false);
 
     uploadImages();
     uploadFiles();
+    setStatus(false);
   });
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+    <Button
+      key="submit"
+      className="btn btn-min primary-btn"
+      onClick={onSubmit}
+      disabled={
+        isValid === "success" ? false : isValid === "error" ? true : false
+      }
+    >
       {t("guncelle")}
     </Button>,
     <Button
@@ -311,9 +360,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       onClick={() => {
         setUpdateModal(false);
         setStatus(true);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -329,7 +379,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>

@@ -8,7 +8,7 @@ import {
   GetModuleCodeByCode,
   CodeItemValidateService,
 } from "../../../../api/services/code/services";
-import { AddMaterialService } from "../../../../api/services/malzeme/malzeme_services";
+import { AddMaterialService } from "../../../../api/services/malzeme/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
 

@@ -26,8 +26,6 @@ const PersonalFields = ({ personalProps }) => {
     });
   };
 
-
-
   useEffect(() => {
     PersonalFieldsReadService(form).then((res) => {
       const apiData = res.data;
@@ -148,7 +146,6 @@ const PersonalFields = ({ personalProps }) => {
                     onChange={(e) => {
                       field.onChange(e);
                       const selectedOption = data.find((option) => option.siraNo === e);
-                      console.log(selectedOption)
                       if (e === undefined) {
                         setValue(item.label, "");
                         setValue(item.name2, null);

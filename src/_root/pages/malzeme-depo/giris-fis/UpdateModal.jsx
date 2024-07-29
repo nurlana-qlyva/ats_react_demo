@@ -1,35 +1,29 @@
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { Button, Modal } from "antd";
 import {
   CodeItemValidateService,
-  GetMaterialReceiptByIdService,
-} from "../../../../api/service";
-import GeneralInfo from "./GeneralInfo";
-import EkBilgiler from "./EkBilgiler";
-import MalzemeLists from "./MalzemeLists";
-import { UpdateMaterialReceiptService } from "../../../../api/services/girisfis_services";
+} from "../../../../api/services/code/services";
+import GeneralInfo from "./tabs/GeneralInfo";
+import UpdateMalzemeLists from "./tabs/UpdateMalzemeLists";
+import EkBilgiler from "./tabs/EkBilgiler";
+import { UpdateMaterialReceiptService, GetMaterialReceiptByIdService } from "../../../../api/services/malzeme/services";
 
-const UpdateModal = ({
-  updateModal,
-  setUpdateModal,
-  id,
-  setStatus,
-  status,
-}) => {
+const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   const [tableData, setTableData] = useState([]);
-  const [data, setData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
   const [record, setRecord] = useState(true);
 
   const defaultValues = {
     fisNo: record.fisNo,
     tarih: dayjs(record.tarih),
     saat: dayjs(record.saat, "HH:mm:ss"),
-    girisDepoSiraNo: record.girisDepoSiraNo,
+    girisDepoSiraNo: record.girisDepoSiraNo, 
     girisDepo: record.girisDepo,
     firmaId: record.firmaId,
     lokasyonId: record.lokasyonId,
@@ -55,6 +49,7 @@ const UpdateModal = ({
     GetMaterialReceiptByIdService(id).then((res) => {
       setValue("toplam_araToplam", res?.data?.receipt.araToplam);
       setValue("fisNo", res?.data?.receipt.fisNo);
+      setCode(res?.data?.receipt.fisNo);
       setValue("toplam_genelToplam", res?.data?.receipt.genelToplam);
       setValue("girisDepoSiraNo", res?.data?.receipt.girisDepoSiraNo);
       setValue("depo", res?.data?.receipt.girisDepo);
@@ -72,13 +67,13 @@ const UpdateModal = ({
       setValue("mlzFisId", res?.data?.receipt.mlzFisId);
       setValue("saat", dayjs(res?.data?.receipt.saat, "HH:mm:ss"));
       setValue("tarih", dayjs(res?.data?.receipt.tarih));
-      setData(res?.data?.receipt.materialMovements);
+      setTableData(res?.data?.receipt.materialMovements);
       setRecord(res?.data?.receipt);
     });
   }, [id, updateModal]);
 
   useEffect(() => {
-    if (watch("fisNo")) {
+    if (code !== watch("fisNo")) {
       const body = {
         tableName: "Fis",
         code: watch("fisNo"),
@@ -86,8 +81,10 @@ const UpdateModal = ({
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    }else {
+      setIsValid("normal");
     }
-  }, [updateModal, watch("fisNo")]);
+  }, [watch("fisNo"), code]);
 
   useEffect(() => {
     if (tableData.length > 0) {
@@ -112,6 +109,7 @@ const UpdateModal = ({
       setValue("toplam_kdvToplam", totals.kdvToplam.toFixed(2));
     }
   }, [tableData, setValue]);
+
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -121,17 +119,18 @@ const UpdateModal = ({
         mlzAracId: item.mlzAracId || 0,
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
-        malzemeId: item.key,
-        birimKodId: item.birimId || 0,
+        malzemeId: item.malzemeId,
+        birimKodId: item.birimKodId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,
         toplam: +item.toplam || 0,
-        aciklama: item.aciklama,
+        aciklama: values.aciklama,
         kdvOran: item.kdvOran || 0,
-        indirim: item.indirimTutar || 0,
+        indirim: item.indirim || 0,
         araToplam: item.araToplam || 0,
         kdvToplam: +values.toplam_kdvToplam || 0,
+        kdvTutar: +item.kdvTutar || 0,
         girisDepoSiraNo: values.girisDepoSiraNo || 0,
         indirimOran: item.indirimOran || 0,
         isPriceChanged: item.isPriceChanged,
@@ -174,7 +173,9 @@ const UpdateModal = ({
     <Button
       key="submit"
       className="btn btn-min primary-btn"
-      disabled={!isValid}
+      disabled={
+        isValid === "success" ? false : isValid === "error" ? true : false
+      }
       onClick={onSubmit}
     >
       {t("guncelle")}
@@ -189,14 +190,14 @@ const UpdateModal = ({
         reset(defaultValues);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
   return (
     <>
       <Modal
-        title="Fiş Giriş Bilgisi Güncelle"
+        title={t("fisGirisBilgisiGuncelle")}
         open={updateModal}
         onCancel={() => setUpdateModal(false)}
         maskClosable={false}
@@ -206,12 +207,11 @@ const UpdateModal = ({
         <FormProvider {...methods}>
           <form>
             <GeneralInfo isValid={isValid} />
-            <MalzemeLists
+            <UpdateMalzemeLists
               setTableData={setTableData}
               tableData={tableData}
               isSuccess={isSuccess}
               setIsSuccess={setIsSuccess}
-              data={data}
             />
             <EkBilgiler />
           </form>
@@ -219,6 +219,13 @@ const UpdateModal = ({
       </Modal>
     </>
   );
+};
+
+UpdateModal.propTypes = {
+  updateModal: PropTypes.bool,
+  setUpdateModal: PropTypes.func,
+  id: PropTypes.number,
+  setStatus: PropTypes.func,
 };
 
 export default UpdateModal;

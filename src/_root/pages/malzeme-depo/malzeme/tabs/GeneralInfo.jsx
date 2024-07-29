@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { t } from "i18next";
-import { Checkbox, Input, InputNumber, Select } from "antd";
+import { Checkbox, Input, Select } from "antd";
 import CodeControl from "../../../../components/form/selects/CodeControl";
 import Depo from "../../../../components/form/selects/Depo";
 import TextInput from "../../../../components/form/inputs/TextInput";
@@ -12,7 +12,8 @@ const GeneralInfo = ({ isValid }) => {
   const { control, setValue } = useFormContext();
 
   useEffect(() => {
-    setValue("kdvDahilHaric", "dahil");
+    setValue("kdvDahilHaric", "Dahil");
+    setValue("aktif", true);
   }, []);
 
   const validateStyle = {
@@ -65,21 +66,19 @@ const GeneralInfo = ({ isValid }) => {
             </div>
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("marka")}</label>
-                <Controller
+                <label>{t("marka")} -- ?</label>
+                <TextInput
                   name=""
-                  control={control}
-                  render={({ field }) => <Input field={field} />}
+                  readonly={true}
                 />
               </div>
             </div>
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("model")}</label>
-                <Controller
+                <label>{t("model")} -- ?</label>
+                <TextInput
                   name=""
-                  control={control}
-                  render={({ field }) => <Input field={field} />}
+                  readonly={true}
                 />
               </div>
             </div>
@@ -93,7 +92,7 @@ const GeneralInfo = ({ isValid }) => {
               <div className="grid gap-1">
                 <div className="col-span-6">
                   <div className="flex flex-col gap-1">
-                    <label>{t("kdvOrani")}</label>
+                    <label>{t("kdvOrani")} %</label>
                     <NumberInput name="kdvOran" />
                   </div>
                 </div>
