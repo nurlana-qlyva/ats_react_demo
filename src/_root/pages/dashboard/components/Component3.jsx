@@ -188,7 +188,7 @@ function Component3(props) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {data} KM
+                {data} km
               </Text>
               <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>Toplam Katedilen Mesafe</Text>
             </div>
