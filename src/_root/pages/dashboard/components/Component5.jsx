@@ -12,19 +12,27 @@ function Component5(updateApi) {
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await http.get('GetDashboardCards?ID=2');
-        setData(response);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const body = {
+      startYear: 2021,
     };
-    fetchData();
+    try {
+      const response = await http.post("Graphs/GetGraphInfoByType?type=6", body);
+      setData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+      fetchData();
   }, []);
+
+  console.log(data);
 
   const showModal = (title, content) => {
     setModalTitle(title);
@@ -54,7 +62,7 @@ function Component5(updateApi) {
       }}
     >
       <div style={{ padding: '10px' }}>
-        <Text style={{ fontWeight: '500', fontSize: '17px' }}> Özet Durum </Text>
+        <Text style={{ fontWeight: '500', fontSize: '17px' }}> Filo Araç Durumları </Text>
       </div>
       {isLoading ? (
         <Spin size="large" />
@@ -95,7 +103,7 @@ function Component5(updateApi) {
                   borderRadius: '50%',
                 }}
               ></div>
-              <Text> Devam Eden İş Talepleri </Text>
+              <Text> Tüm Araçlar </Text>
             </div>
 
             <Text
@@ -135,7 +143,7 @@ function Component5(updateApi) {
                   borderRadius: '50%',
                 }}
               ></div>
-              <Text> Açık İş Emirleri </Text>
+              <Text> Aktif Araçlar </Text>
             </div>
 
             <Text
@@ -175,7 +183,7 @@ function Component5(updateApi) {
                   borderRadius: '50%',
                 }}
               ></div>
-              <Text> Düşük Stoklu Malzemeler </Text>
+              <Text> Pasif Araçlar </Text>
             </div>
 
             <Text
@@ -216,7 +224,7 @@ function Component5(updateApi) {
                   borderRadius: '50%',
                 }}
               ></div>
-              <Text> Toplam Makine Sayısı </Text>
+              <Text> Arşivdeki Araçlar </Text>
             </div>
 
             <Text
