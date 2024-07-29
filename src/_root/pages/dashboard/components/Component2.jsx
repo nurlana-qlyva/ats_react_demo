@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import bg from "../assets/images/bg-card.png";
+import bg from "../../../../../public/images/bg-card.png";
 import { Button, DatePicker, Modal, Popover, Spin, Typography } from "antd";
 import { FormOutlined, MoreOutlined } from "@ant-design/icons";
 import { Controller, useFormContext } from "react-hook-form";
@@ -60,9 +60,12 @@ function Component2(props) {
     try {
       const response = await http.post("Graphs/GetGraphInfoByType?type=2", body);
       let responseData = response.data;
-      if (typeof responseData === "number") {
-        responseData = responseData % 1 === 0 ? responseData : responseData.toFixed(2);
-      }
+        if (typeof responseData === "number") {
+            // Ondalık kısmı yuvarlama
+            responseData = Math.round(responseData);
+            // Sayıyı 100'lük basamaklara ayırma
+            responseData = responseData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
       setData(responseData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
@@ -185,7 +188,7 @@ function Component2(props) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {data}
+                {data} TL
               </Text>
               <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>Yakıt Tüketimi</Text>
             </div>

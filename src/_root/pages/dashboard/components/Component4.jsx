@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import bg from "../assets/images/bg-card.png";
+import bg from "../../../../../public/images/bg-card.png";
 import { Button, DatePicker, Modal, Popover, Spin, Typography } from "antd";
 import { HistoryOutlined, MoreOutlined } from "@ant-design/icons";
 import { Controller, useFormContext } from "react-hook-form";
@@ -185,7 +185,7 @@ function Component4(props) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {data}
+                {data} TL
               </Text>
               <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>KM Başina Maliyetler</Text>
             </div>
