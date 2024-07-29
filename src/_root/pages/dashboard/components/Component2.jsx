@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import bg from "../assets/images/bg-card.png";
+import bg from "../../../../../public/images/bg-card.png";
 import { Button, DatePicker, Modal, Popover, Spin, Typography } from "antd";
 import { FormOutlined, MoreOutlined } from "@ant-design/icons";
 import { Controller, useFormContext } from "react-hook-form";
