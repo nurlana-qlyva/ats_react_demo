@@ -188,7 +188,7 @@ function Component2(props) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {data} TL
+                {data} ₺
               </Text>
               <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>Yakıt Tüketimi</Text>
             </div>
