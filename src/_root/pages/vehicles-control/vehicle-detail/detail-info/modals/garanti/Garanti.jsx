@@ -57,7 +57,7 @@ const Garanti = ({ visible, onClose, id }) => {
             "month"
           );
           break;
-        case "il":
+        case "yil":
           newDate = dayjs(garantiBaslamaTarih).add(
             methods.getValues("garantiSure"),
             "year"
@@ -139,7 +139,7 @@ const Garanti = ({ visible, onClose, id }) => {
                       options={[
                         { value: "gun", label: <span>Gün</span> },
                         { value: "ay", label: <span>Ay</span> },
-                        { value: "il", label: <span>İl</span> },
+                        { value: "yil", label: <span>Yıl</span> },
                       ]}
                       onChange={(e) => field.onChange(e)}
                     />

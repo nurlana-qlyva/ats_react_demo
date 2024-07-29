@@ -119,6 +119,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
     if (updateModal) {
       GetAccidentItemByIdService(id).then((res) => {
         setValue("aracKm", res?.data.aracKm);
+        setValue("aracId", res?.data.aracId);
         setValue("asliKusur", res?.data.asliKusur);
         setValue("asliKusurKodId", res?.data.asliKusurKodId);
         setValue("banka", res?.data.banka);
@@ -213,7 +214,6 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
   const onSubmit = handleSubmit((values) => {
     const body = {
       siraNo: id,
-      aracId: aracId,
       surucuId: values.surucuId || 0,
       aciklama: values.aciklama,
       lokasyonId: values.lokasyonId,

@@ -120,7 +120,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         setValue("aracId", res?.data.aracId);
         setValue("plaka", res?.data.plaka);
         setValue("tarih", dayjs(res?.data.tarih));
-        setValue("aciklama", res?.data.aciklama);
+        setValue("aciklama", res?.data.aciklama); 
         setValue("lokasyon", res?.data.lokasyon);
         setValue("lokasyonId", res?.data.lokasyonId);
         setValue("surucuId", res?.data.surucuId);

@@ -113,7 +113,7 @@ const AddModal = ({ setStatus }) => {
 
   const onSubmit = handleSubmit((values) => {
     const body = {
-      aracId: plaka[0].aracId,
+      aracId: data.aracId,
       surucuId: values.surucuId || 0,
       aciklama: values.aciklama,
       kazaTarih: dayjs(values.kazaTarih).format("YYYY-MM-DD"),

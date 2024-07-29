@@ -207,7 +207,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, aracId, setStatus }) => 
     } finally {
       setLoadingImages(false);
     }
-  };
+  }; 
 
   const onSubmit = handleSubmit((values) => {
 

@@ -142,6 +142,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
                 setValue("aciklama", res?.data.aciklama);
                 setValue("adres", res?.data.adres);
                 setValue("aktif", !res?.data.aktif);
+                setValue("aracId", res?.data.aracId);
                 setValue("aracBedeli", res?.data.aracBedeli);
                 setValue("unvan", res?.data.firma);
                 setValue("firmaId", res?.data.firmaId);
@@ -207,10 +208,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
     };
 
     const onSubmit = handleSubmit((values) => {
-
         const body = {
             siraNo: id,
-            aracId: plaka[0].aracId,
+            aracId: watch("aracId"),
             aciklama: values.aciklama,
             tutar: values.tutar || 0,
             policeNo: values.policeNo,

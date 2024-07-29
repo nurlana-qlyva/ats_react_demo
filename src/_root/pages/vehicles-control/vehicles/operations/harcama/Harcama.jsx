@@ -62,13 +62,13 @@ const Harcama = ({ visible, onClose, ids }) => {
         pagination: {
           ...tableParams.pagination,
           total: res?.data.recordCount,
-        },
+        }, 
       });
     };
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
 
-  useEffect(() => {
+  useEffect(() => { 
     getLocation();
   }, []);
 

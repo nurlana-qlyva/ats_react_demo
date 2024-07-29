@@ -192,7 +192,6 @@ const GeneralInfo = ({ isValid }) => {
         maskClosable={false}
         footer={footer}
         width={1200}
-        key={modalKey}
       >
         <VehicleList setDorse={setDorse} open={open} key={modalKey} />
       </Modal>

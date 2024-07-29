@@ -2,19 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import {
-  Modal,
-  Button,
-  Table,
-  Popconfirm,
-  Input,
-  Popover,
-  Spin
-} from "antd";
+import axios from "axios";
+import { Modal, Button, Table, Popconfirm, Input, Popover, Spin } from "antd";
 import {
   DeleteOutlined,
   MenuOutlined,
-  LoadingOutlined
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { PlakaContext } from "../../../../../../context/plakaSlice";
 import DragAndDropContext from "../../../../../components/drag-drop-table/DragAndDropContext";
@@ -44,6 +37,10 @@ const Sefer = ({ visible, onClose, ids }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
+  const [country, setCountry] = useState({
+    name: "", 
+    code: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,22 +65,39 @@ const Sefer = ({ visible, onClose, ids }) => {
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
 
-  const baseColumns = [
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    if (res.status === 200)
+      setCountry({ name: res.data.country, code: res.data.countryCode });
+  }
+
+  const getColumns = (country) => [
     {
-      title: t("surucu"),
-      dataIndex: "surucuIsim1",
+      title: t("plaka"),
+      dataIndex: "plaka",
       key: 1,
       render: (text, record) => (
         <Button
+          className="plaka-button"
           onClick={() => {
             setUpdateModalOpen(true);
             setId(record.siraNo);
             setAracId(record.aracId);
           }}
         >
-          {text}
+          <span>{country.code}</span>
+          <span>{text}</span>
         </Button>
       ),
+    },
+    {
+      title: t("surucu"),
+      dataIndex: "surucuIsim1",
+      key: 1,
     },
     {
       title: t("seferAdedi"),
@@ -118,7 +132,7 @@ const Sefer = ({ visible, onClose, ids }) => {
       key: 7,
     },
     {
-      title: "cikisKm",
+      title: t("cikisKm"),
       dataIndex: "cikisKm",
       key: 8,
       render: (text) => dayjs(text).format("DD.MM.YYYY"),
@@ -156,7 +170,7 @@ const Sefer = ({ visible, onClose, ids }) => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    baseColumns.map((column, i) => ({
+    getColumns(country).map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -164,6 +178,18 @@ const Sefer = ({ visible, onClose, ids }) => {
       }),
     }))
   );
+
+  useEffect(() => {
+    setColumns(
+      getColumns(country).map((column, i) => ({
+        ...column,
+        key: `${i}`,
+        onHeaderCell: () => ({
+          id: `${i}`,
+        }),
+      }))
+    );
+  }, [country]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({

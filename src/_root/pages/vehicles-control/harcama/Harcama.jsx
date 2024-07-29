@@ -14,7 +14,7 @@ import SortableHeaderCell from '../../../components/drag-drop-table/SortableHead
 import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import BreadcrumbComp from '../../../components/breadcrumb/Breadcrumb';
 import AddModal from "./AddModal";
-import UpdateModal from "./UpdateModal";
+import UpdateModal from "./UpdateModal"; 
 
 const breadcrumb = [
     { href: "/", title: <HomeOutlined />, },

@@ -206,7 +206,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniCezaGirisi")}
+        title={t("yeniHarcamaGirisi")}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
         maskClosable={false}
