@@ -73,6 +73,10 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
   }, [id, updateModal]);
 
   useEffect(() => {
+    
+  }, [watch("lokasyonId"), watch("lokasyon")])
+
+  useEffect(() => {
     if (code !== watch("fisNo")) {
       const body = {
         tableName: "Fis",
