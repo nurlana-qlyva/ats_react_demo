@@ -66,18 +66,18 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_malzemeKod", record.malzemeKod);
             setValue("edit_malzemeTip", record.malzemeTipKodText);
             setValue("edit_aciklama", record.aciklama);
-            // setValue(
-            //   "edit_lokasyonId",
-            //   watch("edit_lokasyonId")
-            //     ? watch("edit_lokasyonId")
-            //     : watch("lokasyonId")
-            // );
-            // setValue(
-            //   "edit_lokasyon",
-            //   watch("edit_lokasyon")
-            //     ? watch("edit_lokasyon")
-            //     : watch("lokasyon")
-            // );
+            setValue(
+              "edit_lokasyonId",
+              watch("edit_lokasyonId")
+                ? watch("edit_lokasyonId")
+                : watch("lokasyonId")
+            );
+            setValue(
+              "edit_lokasyon",
+              watch("edit_lokasyon")
+                ? watch("edit_lokasyon")
+                : watch("lokasyon")
+            );
             setValue("edit_kdv", record.kdvDH === "Hariç" ? "Hariç" : "Dahil");
           }}
         >
@@ -189,8 +189,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("lokasyon"),
       dataIndex: "lokasyon",
-      render: () =>
-        watch("edit_lokasyon") ? watch("edit_lokasyon") : watch("lokasyon"),
     },
     {
       title: t("aciklama"),
@@ -222,6 +220,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
   useEffect(() => {
     setValue("edit_miktar", 1);
+    setValue("edit_lokasyon", watch("lokasyon"));
   }, []);
 
   useEffect(() => {
@@ -376,8 +375,8 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birimId: values.edit_birim
-        ? values.edit_birim
-        : selectedRows.birimKodId,
+          ? values.edit_birim
+          : selectedRows.birimKodId,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
