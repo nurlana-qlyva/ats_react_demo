@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import axios from "axios";
 import {
   Modal,
   Button,
@@ -48,10 +47,6 @@ const Yakit = ({ visible, onClose, ids }) => {
   const [aracId, setAracId] = useState(0);
   const [search, setSearch] = useState("");
   const [openRowHeader, setOpenRowHeader] = useState(false);
-  const [country, setCountry] = useState({
-    name: "",
-    code: "",
-  });
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
@@ -94,17 +89,7 @@ const Yakit = ({ visible, onClose, ids }) => {
     setStatus(false);
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  async function getLocation() {
-    const res = await axios.get("http://ip-api.com/json");
-    if (res.status === 200)
-      setCountry({ name: res.data.country, code: res.data.countryCode });
-  }
-
-  const getColumns = (country) => [
+  const baseColumns = [
     {
       title: t("plaka"),
       dataIndex: "plaka",
@@ -118,7 +103,6 @@ const Yakit = ({ visible, onClose, ids }) => {
             setAracId(record.aracId)
           }}
         >
-          <span>{country.code}</span>
           <span>{text}</span>
         </Button>
       ),
@@ -232,7 +216,7 @@ const Yakit = ({ visible, onClose, ids }) => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    getColumns(country).map((column, i) => ({
+    baseColumns.map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -332,18 +316,6 @@ const Yakit = ({ visible, onClose, ids }) => {
       setSelectedRowKeys(storedSelectedKeys);
     }
   }, [tableParams.pagination.current]);
-
-  useEffect(() => {
-    setColumns(
-      getColumns(country).map((column, i) => ({
-        ...column,
-        key: `${i}`,
-        onHeaderCell: () => ({
-          id: `${i}`,
-        }),
-      })) 
-    );
-  }, [country]);
 
   // Custom loading icon
   const customIcon = (

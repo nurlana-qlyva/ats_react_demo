@@ -260,7 +260,7 @@ const Vehicles = () => {
 
   // Custom loading icon
   const customIcon = <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />;
-console.log(selectedRowKeys)
+
   return (
     <>
       <div className="content">

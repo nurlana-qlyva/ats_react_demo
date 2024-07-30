@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import axios from "axios";
 import {
   Modal,
   Button,
@@ -46,10 +45,6 @@ const Sigorta = ({ visible, onClose, ids }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
-  const [country, setCountry] = useState({
-    name: "",
-    code: "",
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,17 +69,7 @@ const Sigorta = ({ visible, onClose, ids }) => {
     fetchData();
   }, [search, tableParams.pagination.current, status, ids]);
 
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  async function getLocation() {
-    const res = await axios.get("http://ip-api.com/json");
-    if (res.status === 200)
-      setCountry({ name: res.data.country, code: res.data.countryCode });
-  }
-
-  const getColumns = (country) => [
+  const baseColumns = [
     {
       title: t("plaka"),
       dataIndex: "plaka",
@@ -98,7 +83,6 @@ const Sigorta = ({ visible, onClose, ids }) => {
             setAracId(record.aracId);
           }}
         >
-          <span>{country.code}</span>
           <span>{text}</span>
         </Button>
       ),
@@ -196,7 +180,7 @@ const Sigorta = ({ visible, onClose, ids }) => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    getColumns(country).map((column, i) => ({
+    baseColumns.map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -204,18 +188,6 @@ const Sigorta = ({ visible, onClose, ids }) => {
       }),
     }))
   );
-
-  useEffect(() => {
-    setColumns(
-      getColumns(country).map((column, i) => ({
-        ...column,
-        key: `${i}`,
-        onHeaderCell: () => ({
-          id: `${i}`,
-        }),
-      }))
-    );
-  }, [country]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
