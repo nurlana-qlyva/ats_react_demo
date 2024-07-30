@@ -148,32 +148,6 @@ const AddModal = ({ setStatus }) => {
     }
   }, [tableData, setValue]);
 
-  useEffect(() => {
-    if (watch("girisDepoSiraNo")) {
-      const fetchData = async () => {
-        const res = await GetMaterialCardByIdService(watch("malzemeId"));
-        setTableData([res?.data]);
-        setValue("edit_plakaId", watch("aracId"));
-        setValue("malzeme_plaka", watch("plaka"));
-        setValue("edit_miktar", 1);
-        setValue("edit_lokasyonId", watch("lokasyonId"));
-        setValue("edit_lokasyon", watch("lokasyon"));
-        setValue("edit_malzemeTanimi", res?.data.tanim);
-        setValue("birim", res?.data.birim);
-        setValue("edit_birim", res?.data.birimKodId);
-        setValue("edit_fiyat", res?.data.fiyat);
-        setValue("edit_kdvOrani", res?.data.kdvOran);
-        setValue("edit_toplam", res?.data.toplam);
-        setValue("edit_malzemeKod", res?.data.malzemeKod);
-        setValue("edit_malzemeTip", res?.data.malzemeTipKodText);
-        setValue("edit_aciklama", res?.data.aciklama);
-        setValue("edit_indirimOrani", null);
-        setValue("edit_indirimTutari", null);
-      };
-      fetchData();
-    }
-  }, [watch("girisDepoSiraNo")]);
-
   const footer = [
     loading ? (
       <Button className="btn btn-min primary-btn">

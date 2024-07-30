@@ -67,10 +67,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_malzemeTip", record.malzemeTipKodText);
             setValue("edit_aciklama", record.aciklama);
             setValue(
-              "edit_lokasyonId", watch("lokasyonId")
+              "edit_lokasyonId", record.lokasyonId
             );
             setValue(
-              "edit_lokasyon", watch("lokasyon")
+              "edit_lokasyon", record.lokasyon
             );
             setValue("edit_kdv", record.kdvDH === "Hariç" ? "Hariç" : "Dahil");
           }}
@@ -183,7 +183,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("lokasyon"),
       dataIndex: "lokasyon",
-      render: () => tableData.map(item => item.lokasyon ? item.lokasyon : watch("lokasyon"))
     },
     {
       title: t("aciklama"),
