@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { t } from 'i18next'
+import dayjs from 'dayjs'
 import { Button, Drawer, Input, Select } from 'antd'
 import { FunnelPlotOutlined } from '@ant-design/icons'
-import Location from '../../../components/form/Location'
-import Depo from '../../../components/form/Depo'
-import dayjs from 'dayjs'
+import Location from '../../../../components/form/tree/Location'
+import Depo from '../../../../components/form/selects/Depo'
+import TextInput from '../../../../components/form/inputs/TextInput'
 
 const Filter = ({ filter, clearFilters }) => {
     const [openDrawer, setOpenDrawer] = useState(false)
@@ -77,7 +78,6 @@ const Filter = ({ filter, clearFilters }) => {
         filter(data);
     });
 
-
     const clear = () => {
         reset()
         setHasValue(false)
@@ -112,43 +112,19 @@ const Filter = ({ filter, clearFilters }) => {
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
                                 <label>{t('malzemeKodu')}</label>
-                                <Controller
-                                    name="malzemeKod"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            allowClear
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="malzemeKod" />
                             </div>
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
                                 <label>{t('lokasyon')}</label>
-                                <Controller
-                                    name="lokasyonId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Location field={field} />
-                                    )}
-                                />
+                                <Location />
                             </div>
                         </div>
                         <div className="col-span-6 border p-10 align-center">
                             <div className="flex flex-col gap-1">
                                 <label>{t('depo')}</label>
-                                <Controller
-                                    name="depoId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Depo field={field} />
-                                    )}
-                                />
+                                <Depo name="depoId" type="MALZEME" />
                             </div>
                         </div>
                         <div className="col-span-6 border p-10 align-center">

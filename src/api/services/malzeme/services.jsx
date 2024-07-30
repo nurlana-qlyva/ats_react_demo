@@ -52,3 +52,28 @@ export const GetMaterialReceiptByIdService = async (id) => {
 export const DeleteUpdatedMaterialReceiptService = async (id) => {
   return await http.get(`/MaterialMovements/DeleteMaterialMovementItemById?id=${id}`);
 };
+
+// cikis
+export const GetMaterialReleaseReceiptListService = async (
+  search,
+  page,
+  data
+) => {
+  return await http.post(
+    `/MaterialReceipt/GetMaterialReleaseReceiptList?page=${page}&parameter=${search}`,
+    data
+  );
+};
+
+// transfer
+export const GetMaterialTransferReceiptListService = async (search, page, data) => {
+  return await http.post(
+    `/MaterialReceipt/GetMaterialTransferReceiptList?page=${page}&parameter=${search}`,
+    data
+  );
+};
+
+// hareket
+export const GetMaterialMovementsListService = async (search, page, data) => {
+  return await http.post(`/MaterialMovements/GetMaterialMovementsList?page=${page}&parameter=${search}`, data);
+};

@@ -21,14 +21,14 @@ import YakitTransferler from "./_root/pages/yakit-yonetim/transferler/YakitTrans
 import YakitGirisFisleri from "./_root/pages/yakit-yonetim/giris-fis/YakitGirisFisleri";
 // malzeme depo
 import Malzemeler from "./_root/pages/malzeme-depo/malzeme/Malzemeler";
+import GirisFisleri from './_root/pages/malzeme-depo/giris-fis/GirisFisleri'
+import CikisFisleri from './_root/pages/malzeme-depo/cikis-fis/CikisFisleri'
+import Transferler from "./_root/pages/malzeme-depo/transferler/Transferler";
+import Hareketler from "./_root/pages/malzeme-depo/hareketler/Hareketler";
+
 
 import Suruculer from "./_root/pages/sistem-tanimlari/surucu/SurucuTanim";
 import Settings from "./_root/pages/settings/Settings";
-// import GirisFisleri from './_root/pages/giris-fisleri/GirisFisleri'
-import GirisFisleri from './_root/pages/malzeme-depo/giris-fis/GirisFisleri'
-
-import CikisFisleri from "./_root/pages/cikis-fisleri/CikisFisleri";
-import Hareketler from "./_root/pages/hareketler/Hareketler";
 import MarkaList from "./_root/pages/sistem-tanimlari/marka-model/MarkaList";
 import Sehirler from "./_root/pages/sistem-tanimlari/sehirler/Sehirler";
 import Guzergah from "./_root/pages/sistem-tanimlari/guzergah/Guzergah";
@@ -38,7 +38,7 @@ import CezaTanim from "./_root/pages/sistem-tanimlari/ceza-tanim/CezaTanim";
 import ServisTanim from "./_root/pages/sistem-tanimlari/servis-tanim/ServisTanim";
 import FirmaTanim from "./_root/pages/sistem-tanimlari/firma-tanim/FirmaTanim";
 import PersonelTanim from "./_root/pages/sistem-tanimlari/personel-tanim/PersonelTanim";
-import Transferler from "./_root/pages/transferler/Transferler";
+
 import Raporlar from "./_root/pages/raporlar/Raporlar";
 import KodYonetimi from "./_root/pages/kod-yonetimi/KodYonetimi";
 
@@ -79,13 +79,13 @@ const App = () => {
         <Route path="/yakit-transferler" element={<YakitTransferler />} />
         {/* malzeme depo */}
         <Route path="/malzeme-tanimlari" element={<Malzemeler />} />
+        <Route path="/giris-fisleri" element={<GirisFisleri />} />
+        <Route path="/cikis-fisleri" element={<CikisFisleri />} />
+        <Route path="/transferler" element={<Transferler />} />
 
 
 
         <Route path="/ayarlar" element={<Settings />} />
-        {/* <Route path="/giris-fisleri" element={<GirisFisleri />} /> */}
-        <Route path="/giris-fisleri" element={<GirisFisleri />} />
-        <Route path="/cikis-fisleri" element={<CikisFisleri />} />
         <Route path="/hareketler" element={<Hareketler />} />
         <Route path="/arac-marka-ve-model" element={<MarkaList />} />
         <Route path="/sehir-tanimlari" element={<Sehirler />} />
@@ -96,7 +96,7 @@ const App = () => {
         <Route path="/servis-tanimlari" element={<ServisTanim />} />
         <Route path="/firma-tanimlari" element={<FirmaTanim />} />
         <Route path="/personel-tanimlari" element={<PersonelTanim />} />
-        <Route path="/transferler" element={<Transferler />} />
+
         <Route path="/surucu-tanimlari" element={<Suruculer />} />
         <Route path="/raporlar" element={<Raporlar />} />
       </Route>

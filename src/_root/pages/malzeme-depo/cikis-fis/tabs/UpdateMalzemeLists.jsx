@@ -1,31 +1,22 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Popconfirm,
-  Select,
-  Table,
-} from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { Button, InputNumber, message, Modal, Popconfirm, Select, Table } from "antd";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
-import TextArea from "antd/lib/input/TextArea";
-import Birim from "../../../components/form/Birim";
-import MalzemeLokasyon from "../../../components/form/MalzemeLokasyon";
+import { DeleteOutlined } from "@ant-design/icons";
+import TextInput from "../../../../components/form/inputs/TextInput";
+import CodeControl from "../../../../components/form/selects/CodeControl";
+import NumberInput from "../../../../components/form/inputs/NumberInput";
+import Plaka from "../../../../components/form/selects/Plaka";
+import Location from "../../../../components/form/tree/Location";
+import Textarea from "../../../../components/form/inputs/Textarea";
 import MalzemeTable from "./MalzemeTable";
-import MalzemePlaka from "../../../components/form/MalzemePlaka";
-import { DeleteUpdatedMaterialReceiptService } from "../../../../api/services/girisfis_services";
+import { DeleteUpdatedMaterialReceiptService } from "../../../../../api/services/malzeme/services";
 
-const MalzemeLists = ({
+const UpdateMalzemeLists = ({
   setTableData,
   tableData,
   isSuccess,
   setIsSuccess,
-  data,
 }) => {
   const { control, setValue, watch, handleSubmit } = useFormContext();
   const [dataSource, setDataSource] = useState([]);
@@ -42,75 +33,52 @@ const MalzemeLists = ({
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
   const [record, setRecord] = useState(null);
-  const handleDelete = (key) => {
-    const newData = dataSource.filter((item) => item.key !== key.key);
-    const newRows = selectedRows.filter((item) => item.malzemeId !== key.key);
-    setDataSource(newData);
-    setTableData(newData);
-    setSelectedRows([...newRows]);
-    const deletedRow = dataSource.find(item => item.key === key.key)
-    DeleteUpdatedMaterialReceiptService(deletedRow.siraNo).then(res => console.log(res.data))
-  };
-  useEffect(() => {
-    const newRows = data.map((item) => ({
-      key: item.malzemeId,
-      siraNo: item.siraNo,
-      malzemeKod: item.malezemeKod,
-      malzemeTanim: item.malezemeTanim,
-      malzemeTipKodText: item.malzemeTip,
-      miktar: item.miktar,
-      aciklama: item.aciklama,
-      birim: item.birim,
-      fiyat: item.fiyat,
-      plaka: item.plaka,
-      mlzAracId: item.mlzAracId,
-      araToplam: item.araToplam,
-      kdvOran: item.kdvOran,
-      indirimOran: item.indirimOran,
-      indirimTutar: item.indirim,
-      lokasyon: item.lokasyon,
-      lokasyonId: item.lokasyonId,
-      toplam: item.toplam,
-      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
-      kdvTutar: item.kdvDahilHaric
-        ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
-        : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
-      isPriceChanged: false,
-    }));
-    setDataSource([...newRows]);
-    // setTableData([...newRows]);
-    setSelectedRows([...newRows]);
-  }, [data]);
 
   const defaultColumns = [
     {
       title: t("malzemeKodu"),
-      dataIndex: "malzemeKod",
+      dataIndex: "malezemeKod",
       render: (text, record) => (
         <Button
           onClick={() => {
             setEditModal(true);
+            setDataSource(record);
             setRecord(record);
-            console.log(record);
-            setValue("edit_malzemeTanimi", record.malzemeTanim);
-            setValue("edit_malzemeKod", record.malzemeKod);
-            setValue("edit_malzemeTip", record.malzemeTipKodText);
-            setValue("edit_miktar", record.miktar);
+            setValue(
+              "edit_plakaId", record.aracId
+            );
+            setValue(
+              "malzeme_plaka",
+              record.plaka
+            );
+            setValue("edit_indirimOrani", record.indirimOran)
+            setValue("edit_indirimTutari", record.indirimTutar)
+            setValue("edit_malzemeTanimi", record.malezemeTanim);
+            setValue(
+              "edit_miktar",
+              watch("edit_miktar") ? watch("edit_miktar") : 1
+            );
             setValue("birim", record.birim);
-            setValue("edit_birim", record.birimId);
+            setValue("edit_birim", record.birimKodId);
             setValue("edit_fiyat", record.fiyat);
-            setValue("edit_araToplam", record.araToplam);
+            setValue(
+              "edit_araToplam",
+              watch("edit_miktar")
+                ? watch("edit_miktar") * watch("edit_fiyat")
+                : 1 * watch("edit_fiyat")
+            );
             setValue("edit_kdvOrani", record.kdvOran);
             setValue("edit_toplam", record.toplam);
+            setValue("edit_malzemeKod", record.malezemeKod);
+            setValue("edit_malzemeTip", record.malzemeTip);
             setValue("edit_aciklama", record.aciklama);
-            setValue("edit_kdv", record.kdvDH);
-            setValue("malzeme_plaka", record.plaka);
-            setValue("edit_plakaId", record.mlzAracId);
-            setValue("edit_lokasyonId", record.lokasyonId);
-            setValue("edit_lokasyon", record.lokasyon);
-            setValue("edit_aciklama", record.aciklama);
-            setValue("edit_indirimOrani", record.indirimOran);
-            setValue("edit_indirimTutari", record.indirim);
+            setValue(
+              "edit_lokasyonId", record.lokasyonId
+            );
+            setValue(
+              "edit_lokasyon", record.lokasyon
+            );
+            setValue("edit_kdv", record.kdvDahilHaric ? "Dahil" : "Hariç");
           }}
         >
           {text}
@@ -119,11 +87,11 @@ const MalzemeLists = ({
     },
     {
       title: t("malzemeTanimi"),
-      dataIndex: "malzemeTanim",
+      dataIndex: "malezemeTanim",
     },
     {
       title: t("malzemeTipi"),
-      dataIndex: "malzemeTipKodText",
+      dataIndex: "malzemeTip",
     },
     {
       title: t("miktar"),
@@ -142,20 +110,23 @@ const MalzemeLists = ({
       dataIndex: "araToplam",
     },
     {
-      title: t("indirimOrani"),
+      title: `${t("indirimOrani")} %`,
       dataIndex: "indirimOran",
+      render: text => `${text} %`
     },
     {
       title: t("indirimTutari"),
-      dataIndex: "indirimTutar",
+      dataIndex: "indirim",
     },
     {
-      title: t("kdvOrani"),
+      title: `${t("kdvOrani")} %`,
       dataIndex: "kdvOran",
+      render: text => `${text} %`
     },
     {
       title: `${t("kdv")} D/H`,
-      dataIndex: "kdvDH",
+      dataIndex: "kdvDahilHaric",
+      render: (text) => (text ? "Dahil" : "Hariç"),
     },
     {
       title: t("kdvTutar"),
@@ -193,6 +164,18 @@ const MalzemeLists = ({
     },
   ];
 
+  const handleDelete = (key) => {
+    const newData = dataSource.filter((item) => item.key !== key.key);
+    const newRows = selectedRows.filter((item) => item.malzemeId !== key.key);
+    setDataSource(newData);
+    setTableData(newData);
+    setSelectedRows([...newRows]);
+    const deletedRow = dataSource.find((item) => item.key === key.key);
+    DeleteUpdatedMaterialReceiptService(deletedRow.siraNo).then((res) =>
+      console.log(res.data)
+    );
+  };
+
   useEffect(() => {
     setValue("edit_miktar", 1);
   }, []);
@@ -223,11 +206,11 @@ const MalzemeLists = ({
       if (indirimOrani) {
         indirimTutar = (araToplam * indirimOrani) / 100;
         result = araToplam - indirimTutar;
-        kdvTutar = (result * kdvOrani) / 100;
-        toplam = +result + +kdvTutar;
+        kdvTutar = ((result * kdvOrani) / 100).toFixed(2);
+        toplam = (+result + +kdvTutar).toFixed(2);
       } else {
-        kdvTutar = araToplam * (kdvOrani / 100);
-        toplam = +araToplam + +kdvTutar;
+        kdvTutar = (araToplam * (kdvOrani / 100)).toFixed(2);
+        toplam = (+araToplam + +kdvTutar).toFixed(2);
       }
     } else if (kdvDH === "dahil" || kdvDH == "Dahil") {
       if (indirimOrani) {
@@ -254,10 +237,30 @@ const MalzemeLists = ({
     watch("edit_indirimTutari"),
     watch("edit_toplam"),
   ]);
+
   useEffect(() => {
-    let araToplam = watch("edit_miktar") * watch("edit_fiyat");
-    setValue("edit_araToplam", araToplam);
-  }, [watch("edit_miktar")]);
+    if (watch("edit_miktar")) {
+      let araToplam = watch("edit_miktar") * watch("edit_fiyat");
+      setValue("edit_araToplam", araToplam);
+    }
+  }, [watch("edit_miktar"), watch("edit_fiyat")]);
+
+  const columns = defaultColumns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+      }),
+    };
+  });
+
   const handleAdd = () => {
     const newRows = selectedRows.map((item) => ({
       key: item.malzemeId,
@@ -266,6 +269,7 @@ const MalzemeLists = ({
       malzemeTipKodText: item.malzemeTipKodText,
       miktar: 1,
       birim: item.birim,
+      birimKodId: item.birimKodId,
       fiyat: item.fiyat,
       araToplam: 1 * item.fiyat,
       kdvOran: item.kdvOran,
@@ -305,52 +309,21 @@ const MalzemeLists = ({
     setKeys([]);
     setRows([]);
   };
-
-  const columns = defaultColumns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-      }),
-    };
-  });
-
-  const handleTableChange = (pagination, filters, sorter) => {
-    setTableParams({
-      pagination,
-      filters,
-      ...sorter,
-    });
-
-    // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setDataSource([]);
-    }
-  };
-
+console.log(tableData)
   const handleEdit = handleSubmit((values) => {
     const key = record.key;
-    const index = dataSource.findIndex((item) => item.key === key);
+    const index = tableData.findIndex((item) => item.key === key);
     if (index !== -1) {
       const currentFiyat = values.edit_fiyat;
-      const originalFiyat = dataSource[index].fiyat;
+      const originalFiyat = tableData[index].fiyat;
 
-      const newData = [...dataSource];
+      const newData = [...tableData];
       newData[index] = {
         ...newData[index],
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
-        birimId: values.edit_birim
-          ? values.edit_birim
-          : selectedRows.birimKodId,
+        birimKodId: values.edit_birim,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,
@@ -392,7 +365,7 @@ const MalzemeLists = ({
         setKeys([]);
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -402,7 +375,7 @@ const MalzemeLists = ({
       className="btn primary-btn km-update"
       onClick={handleEdit}
     >
-      Güncelle
+      {t("guncelle")}
     </Button>,
     <Button
       key="back"
@@ -415,7 +388,7 @@ const MalzemeLists = ({
         setValue("edit_miktar", 1);
       }}
     >
-      Kapat
+      {t("kapat")}
     </Button>,
   ];
 
@@ -435,8 +408,9 @@ const MalzemeLists = ({
       </Button>
       <Table
         bordered
-        dataSource={dataSource}
+        dataSource={tableData}
         columns={columns}
+        scroll={{ x: 1800 }}
         pagination={{
           ...tableParams.pagination,
           showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
@@ -444,15 +418,14 @@ const MalzemeLists = ({
             items_per_page: `/ ${t("sayfa")}`,
           },
         }}
-        onChange={handleTableChange}
-        scroll={{ x: 1800 }}
         locale={{
           emptyText: "Veri Bulunamadı",
         }}
         size="small"
       />
+
       <Modal
-        title="Fiş Çıkış Detayı"
+        title="Fiş Giriş Detayı"
         open={isOpen}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
@@ -482,60 +455,25 @@ const MalzemeLists = ({
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTanimi")}</label>
-              <Controller
-                name="edit_malzemeTanimi"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                )}
-              />
+              <TextInput name="edit_malzemeTanimi" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeKodu")}</label>
-              <Controller
-                name="edit_malzemeKod"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                )}
-              />
+              <TextInput name="edit_malzemeKod" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("malzemeTipi")}</label>
-              <Controller
-                name="edit_malzemeTip"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                )}
-              />
+              <TextInput name="edit_malzemeTip" readonly={true} />
             </div>
           </div>
-
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("birim")}</label>
-              <Controller
-                name="edit_birim"
-                control={control}
-                render={({ field }) => <Birim field={field} />}
-              />
+              <CodeControl name="birim" codeName="edit_birim" id={300} />
             </div>
           </div>
           <div className="col-span-4">
@@ -548,6 +486,7 @@ const MalzemeLists = ({
                   <InputNumber
                     {...field}
                     className="w-full"
+                    value={watch("edit_miktar")}
                     onPressEnter={(e) => {
                       const result = watch("edit_fiyat") * e.target.value;
                       setValue("edit_araToplam", result);
@@ -572,10 +511,6 @@ const MalzemeLists = ({
                       const result = watch("edit_miktar") * e.target.value;
                       setValue("edit_araToplam", result);
                     }}
-                    // onBlur={e => {
-                    //   const result = watch("edit_miktar") * e.target.value
-                    //   setValue("edit_araToplam", result)
-                    // }}
                     onChange={(e) => {
                       field.onChange(e);
                       const result = watch("edit_miktar") * e;
@@ -589,18 +524,7 @@ const MalzemeLists = ({
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("araToplam")}</label>
-              <Controller
-                name="edit_araToplam"
-                control={control}
-                render={({ field }) => (
-                  <InputNumber
-                    {...field}
-                    className="w-full"
-                    readOnly
-                    onChange={(e) => field.onChange(e)}
-                  />
-                )}
-              />
+              <TextInput name="edit_araToplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
@@ -685,7 +609,7 @@ const MalzemeLists = ({
 
                       if (e) {
                         if (kdvDH === "haric" || kdvDH === "Hariç") {
-                          indirimOran = (e * 100) / araToplam;
+                          indirimOran = ((e * 100) / araToplam).toFixed(2);
                           result = araToplam - e;
                           kdvTutar = (result * kdvOrani) / 100;
                           toplam = +result + +kdvTutar;
@@ -717,17 +641,7 @@ const MalzemeLists = ({
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("kdvOrani")} %</label>
-              <Controller
-                name="edit_kdvOrani"
-                control={control}
-                render={({ field }) => (
-                  <InputNumber
-                    {...field}
-                    className="w-full"
-                    onChange={(e) => field.onChange(e)}
-                  />
-                )}
-              />
+              <NumberInput name="edit_kdvOrani" />
             </div>
           </div>
           <div className="col-span-4">
@@ -784,48 +698,25 @@ const MalzemeLists = ({
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("toplam")}</label>
-              <Controller
-                name="edit_toplam"
-                control={control}
-                render={({ field }) => (
-                  <InputNumber
-                    {...field}
-                    className="w-full"
-                    readOnly
-                    onChange={(e) => field.onChange(e)}
-                  />
-                )}
-              />
+              <TextInput name="edit_toplam" readonly={true} />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("plaka")}</label>
-              <Controller
-                name="edit_plakaId"
-                control={control}
-                render={({ field }) => <MalzemePlaka field={field} />}
-              />
+              <Plaka name="malzeme_plaka" codeName="edit_plakaId" />
             </div>
           </div>
           <div className="col-span-4">
             <div className="flex flex-col gap-1">
               <label>{t("lokasyon")}</label>
-              <Controller
-                name="edit_lokasyonId"
-                control={control}
-                render={({ field }) => <MalzemeLokasyon field={field} />}
-              />
+              <Location name="edit_lokasyon" codeName="edit_lokasyonId" />
             </div>
           </div>
           <div className="col-span-12">
             <div className="flex flex-col gap-1">
               <label>{t("aciklama")}</label>
-              <Controller
-                name="edit_aciklama"
-                control={control}
-                render={({ field }) => <TextArea {...field} />}
-              />
+              <Textarea name="edit_aciklama" />
             </div>
           </div>
         </div>
@@ -834,4 +725,4 @@ const MalzemeLists = ({
   );
 };
 
-export default MalzemeLists;
+export default UpdateMalzemeLists;

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Input, Table } from "antd";
-import {
-  MalzemeListGetService,
-  MalzemeListSearchService,
-} from "../../../../api/service";
+import { Input, Table, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { t } from "i18next";
+import { GetMaterialListService } from "../../../../../api/services/malzeme/services";
 
 const MalzemeTable = ({
   setSelectedRows,
@@ -15,7 +13,7 @@ const MalzemeTable = ({
   setKeys,
   setRows,
 }) => {
-  const [data, setData] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
   const [search, setSearch] = useState("");
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -24,6 +22,7 @@ const MalzemeTable = ({
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const columns = [
     {
@@ -69,55 +68,34 @@ const MalzemeTable = ({
   ];
 
   useEffect(() => {
-    setLoading(true);
-    MalzemeListGetService(tableParams.pagination.current).then((res) => {
-      setData(res?.data.materialList);
-      setTableParams({
-        ...tableParams,
+    const fetchData = async () => {
+      setLoading(true);
+      setIsInitialLoading(true);
+      const res = await GetMaterialListService(
+        search,
+        tableParams.pagination.current
+      );
+      setLoading(false);
+      setIsInitialLoading(false);
+      setDataSource(res?.data.materialList);
+      setTableParams((prevTableParams) => ({
+        ...prevTableParams,
         pagination: {
-          ...tableParams.pagination,
+          ...prevTableParams.pagination,
           total: res?.data.total_count,
         },
-      });
-      setLoading(false);
-    });
-  }, []);
+      }));
+    };
 
-  useEffect(() => {
-    if (search.length >= 3) {
-      MalzemeListSearchService(tableParams?.pagination.current, search).then(
-        (res) => {
-          setData(res?.data.materialList);
-          setTableParams({
-            ...tableParams,
-            pagination: {
-              ...tableParams.pagination,
-              total: res?.data.total_count,
-            },
-          });
-          setLoading(false);
-        }
-      );
-    } else {
-      MalzemeListGetService(tableParams?.pagination.current).then((res) => {
-        setData(res?.data.materialList);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: res?.data.total_count,
-          },
-        });
-        setLoading(false);
-      });
-    }
-  }, [search, tableParams?.pagination.current]);
+    fetchData();
+  }, [search, tableParams.pagination.current]);
 
   const handleRowSelectionChange = (selectedRowKeys) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
   const handleHandleRowSelection = (row, selected) => {
+    console.log(row)
     if (selected) {
       if (!keys.includes(row.malzemeId)) {
         setKeys([...keys, row.malzemeId]);
@@ -149,7 +127,7 @@ const MalzemeTable = ({
     });
 
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
+      setDataSource([]);
     }
   };
 
@@ -159,32 +137,42 @@ const MalzemeTable = ({
     setSelectedRowKeys(storedSelectedKeys);
   }, [tableParams.pagination.current, localStorage.getItem("selectedRowKeys")]);
 
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
+  );
+
   return (
     <>
       <Input
         placeholder={t("arama")}
         onChange={(e) => setSearch(e.target.value)}
-        style={{width: "30%"}}
+        style={{ width: "30%" }}
       />
-      <Table
-        rowSelection={{
-          selectedRowKeys,
-          onChange: handleRowSelectionChange,
-          onSelect: handleHandleRowSelection,
-        }}
-        columns={columns}
-        dataSource={data}
-        pagination={{
-          ...tableParams.pagination,
-          showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
-          locale: {
-            items_per_page: `/ ${t("sayfa")}`,
-          },
-        }}
-        onChange={handleTableChange}
-        loading={loading}
-        rowKey="malzemeId"
-      />
+      <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+        <Table
+          rowSelection={{
+            selectedRowKeys,
+            onChange: handleRowSelectionChange,
+            onSelect: handleHandleRowSelection,
+          }}
+          columns={columns}
+          dataSource={dataSource}
+          pagination={{
+            ...tableParams.pagination,
+            showTotal: (total) => <p className="text-info">[{total} kayıt]</p>,
+            locale: {
+              items_per_page: `/ ${t("sayfa")}`,
+            },
+          }}
+          onChange={handleTableChange}
+          loading={loading}
+          rowKey="malzemeId"
+          locale={{
+            emptyText: "Veri Bulunamadı",
+          }}
+        />
+      </Spin>
     </>
   );
 };
