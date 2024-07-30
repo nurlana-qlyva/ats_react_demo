@@ -9,7 +9,7 @@ import {
   GetModuleCodeByCode,
   CodeItemValidateService,
 } from "../../../../api/services/code/services";
-import { AddMaterialReceiptService } from "../../../../api/services/malzeme/services";
+import { AddMaterialReceiptService, GetMaterialCardByIdService } from "../../../../api/services/malzeme/services";
 import GeneralInfo from "./tabs/GeneralInfo";
 import MalzemeLists from "./tabs/MalzemeLists";
 import EkBilgiler from "./tabs/EkBilgiler";

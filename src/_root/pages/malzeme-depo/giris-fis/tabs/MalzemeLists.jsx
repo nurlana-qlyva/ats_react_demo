@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, InputNumber, Modal, Popconfirm, Select, Table } from "antd";
+import { Button, InputNumber, message, Modal, Popconfirm, Select, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
@@ -67,16 +67,10 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setValue("edit_malzemeTip", record.malzemeTipKodText);
             setValue("edit_aciklama", record.aciklama);
             setValue(
-              "edit_lokasyonId",
-              watch("edit_lokasyonId")
-                ? watch("edit_lokasyonId")
-                : watch("lokasyonId")
+              "edit_lokasyonId", watch("lokasyonId")
             );
             setValue(
-              "edit_lokasyon",
-              watch("edit_lokasyon")
-                ? watch("edit_lokasyon")
-                : watch("lokasyon")
+              "edit_lokasyon", watch("lokasyon")
             );
             setValue("edit_kdv", record.kdvDH === "Hariç" ? "Hariç" : "Dahil");
           }}
@@ -189,6 +183,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("lokasyon"),
       dataIndex: "lokasyon",
+      render: () => tableData.map(item => item.lokasyon ? item.lokasyon : watch("lokasyon"))
     },
     {
       title: t("aciklama"),
@@ -220,7 +215,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
 
   useEffect(() => {
     setValue("edit_miktar", 1);
-    setValue("edit_lokasyon", watch("lokasyon"));
   }, []);
 
   useEffect(() => {
