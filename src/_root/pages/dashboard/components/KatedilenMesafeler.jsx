@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList, ResponsiveContainer } from "recharts";
 import { Button, Popover, Spin, Typography, Modal, DatePicker, Tour } from "antd";
 
 import http from "../../../../api/http.jsx";
@@ -21,6 +21,9 @@ function KatedilenMesafeler(props = {}) {
   const [baslamaTarihi, setBaslamaTarihi] = useState();
   const [open, setOpen] = useState(false);
   const ref1 = useRef(null);
+  const [visibleSeries, setVisibleSeries] = useState({
+    AYLIK_BAKIM_ISEMRI_MALIYET: true,
+  });
   const {
     control,
     watch,
@@ -30,15 +33,18 @@ function KatedilenMesafeler(props = {}) {
   } = useFormContext();
 
   useEffect(() => {
-    const yilSecimiValue = watch("yilSecimiAylikKatEdilenMesefeler");
+    const yilSecimiValue = watch("yilSecimiKatedilenMesafe");
     if (!yilSecimiValue) {
+      // Eğer baslamaTarihi değeri undefined ise, sistem saatinden o senenin yıl hanesini alıp setBaslamaTarihi'ye atar
       const currentYear = dayjs().format("YYYY");
       setBaslamaTarihi(currentYear);
     } else if (yilSecimiValue) {
+      // Ant Design DatePicker returns a moment object when a date is picked.
+      // To extract only the year and set it as the state, use the format method of the moment object.
       const yearOnly = yilSecimiValue.format("YYYY");
       setBaslamaTarihi(yearOnly);
     }
-  }, [watch("yilSecimiAylikKatEdilenMesefeler")]);
+  }, [watch("yilSecimiKatedilenMesafe")]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -49,12 +55,12 @@ function KatedilenMesafeler(props = {}) {
       const response = await http.post("Graphs/GetGraphInfoByType?type=9", body);
 
       // Sort the response by month number
-      const sortedResponse = response.data.sort((a, b) => a.ay - b.ay);
+      const sortedResponse = response.data.sort((a, b) => a.AY - b.AY);
 
       // Transform the data
       const transformedData = sortedResponse.map((item) => ({
-        month: monthNames[item.ay],
-        km: item.deger,
+        AY: monthNames[item.ay],
+        AYLIK_BAKIM_ISEMRI_MALIYET: item.deger,
       }));
 
       setData(transformedData);
@@ -84,6 +90,85 @@ function KatedilenMesafeler(props = {}) {
     html2pdf().set(opt).from(element).save();
   };
 
+  const handleLegendClick = (dataKey) => {
+    setVisibleSeries((prev) => ({
+      ...prev,
+      [dataKey]: !prev[dataKey],
+    }));
+  };
+
+  const CustomLegend = ({ payload }) => {
+    const customNames = {
+      AYLIK_BAKIM_ISEMRI_MALIYET: "Katedilen Mesafe",
+    };
+
+    const handleToggleAll = () => {
+      const allVisible = Object.values(visibleSeries).every((value) => value);
+      setVisibleSeries({
+        AYLIK_BAKIM_ISEMRI_MALIYET: !allVisible,
+      });
+    };
+
+    return (
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          display: "flex",
+          gap: "15px",
+          justifyContent: "center",
+          margin: 0,
+        }}
+      >
+        <li
+          style={{
+            cursor: "pointer",
+            color: Object.values(visibleSeries).every((value) => value) ? "black" : "gray",
+          }}
+          onClick={handleToggleAll}
+        >
+          Tümü
+        </li>
+        {payload.map((entry, index) => (
+          <li
+            key={`item-${index}`}
+            style={{
+              cursor: "pointer",
+              color: visibleSeries[entry.dataKey] ? entry.color : "gray",
+            }}
+            onClick={() => handleLegendClick(entry.dataKey)}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "10px",
+                backgroundColor: visibleSeries[entry.dataKey] ? entry.color : "gray",
+                marginRight: "5px",
+              }}
+            ></span>
+            {customNames[entry.dataKey] || entry.value}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip" style={{ display: "flex", flexDirection: "column", gap: "5px", backgroundColor: "#fff", padding: "10px", border: "1px solid #ccc" }}>
+          <p className="label">{`Ay: ${label}`}</p>
+          {payload.map((entry, index) => (
+            <p key={`item-${index}`} style={{ color: entry.color }}>{`${entry.name}: ${entry.value} km`}</p>
+          ))}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const showModal = (content) => {
     setModalContent(content);
     setIsModalVisible(true);
@@ -95,11 +180,15 @@ function KatedilenMesafeler(props = {}) {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    // reset();
   };
 
   useEffect(() => {
     if (isModalVisible === true) {
-      setValue("yilSecimiAylikKatEdilenMesefeler", null);
+      setValue("yilSecimiKatedilenMesafe", null);
+      // reset({
+      //   yilSecimiKatedilenMesafe: undefined,
+      // });
     }
   }, [isModalVisible]);
 
@@ -129,31 +218,72 @@ function KatedilenMesafeler(props = {}) {
     {
       title: "Bilgi",
       description: (
-        <div style={{ overflow: "auto", height: "100%", maxHeight: "400px" }}>
+        <div
+          style={{
+            overflow: "auto",
+            height: "100%",
+            maxHeight: "400px",
+          }}
+        >
           <p>
             Bu grafik ile aylık bakım maliyetlerini daha kapsamlı bir şekilde analiz etmek ve raporlamak mümkündür. Bu bilgiler, bakım bütçesinin yönetimi, maliyet optimizasyonu ve
             gelecekteki planlama için önemli bir temel oluşturur.
           </p>
         </div>
       ),
+
       target: () => ref1.current,
     },
   ];
 
   return (
     <div
-      style={{ width: "100%", height: "100%", borderRadius: "5px", backgroundColor: "white", display: "flex", flexDirection: "column", gap: "10px", border: "1px solid #f0f0f0" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        borderRadius: "5px",
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        border: "1px solid #f0f0f0",
+      }}
     >
-      <div style={{ padding: "10px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+      <div
+        style={{
+          padding: "10px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Text
           title={`Aylık Bakım Maliyetleri${baslamaTarihi ? ` (${baslamaTarihi})` : ""}`}
-          style={{ fontWeight: "500", fontSize: "17px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "calc(100% - 50px)" }}
+          style={{
+            fontWeight: "500",
+            fontSize: "17px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "calc(100% - 50px)",
+          }}
         >
-          Katedilen Mesafeler
+          Katedilen Mesafe
           {baslamaTarihi && ` (${baslamaTarihi})`}
         </Text>
         <Popover placement="bottom" content={content} trigger="click">
-          <Button type="text" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0px 5px", height: "32px", zIndex: 3 }}>
+          <Button
+            type="text"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0px 5px",
+              height: "32px",
+              zIndex: 3,
+            }}
+          >
             <MoreOutlined style={{ cursor: "pointer", fontWeight: "500", fontSize: "16px" }} />
           </Button>
         </Popover>
@@ -161,27 +291,38 @@ function KatedilenMesafeler(props = {}) {
       {isLoading ? (
         <Spin />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "7px", overflow: "auto", height: "100vh", padding: "10px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "7px",
+            overflow: "auto",
+            height: "100vh",
+            padding: "10px",
+          }}
+        >
           <div style={{ width: "100%", height: "calc(100% - 5px)" }}>
             <ResponsiveContainer ref={ref1} width="100%" height="100%">
-              <ScatterChart
+              <BarChart
                 width="100%"
                 height="100%"
+                data={data}
                 margin={{
                   top: 20,
-                  right: 20,
-                  bottom: 20,
+                  right: 30,
                   left: 20,
+                  bottom: 5,
                 }}
               >
-                <CartesianGrid />
-                <XAxis type="category" dataKey="month" name="Ay" />
-                <YAxis type="number" dataKey="km" name="Maliyet" unit="km" width={80} />
-                <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-                <Scatter name="Aylık Araç Bakım Maliyeti" data={data} fill="#8884d8">
-                  {/*<LabelList style={{ fill: "white" }} dataKey="km" position="top" />*/}
-                </Scatter>
-              </ScatterChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="AY" name="Ay" />
+                <YAxis unit="km" width={80} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend content={<CustomLegend />} />
+                <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#8884d8" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
+                  {/*<LabelList dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />*/}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -189,10 +330,17 @@ function KatedilenMesafeler(props = {}) {
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <Modal title="Tarih Seçimi" centered open={isModalVisible} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
         {modalContent === "Yıl Seç" && (
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
             <div>Yıl Seç:</div>
             <Controller
-              name="yilSecimiAylikKatEdilenMesefeler"
+              name="yilSecimiKatedilenMesafe"
               control={control}
               render={({ field }) => <DatePicker {...field} picker="year" style={{ width: "130px" }} placeholder="Tarih seçiniz" />}
             />
@@ -202,12 +350,26 @@ function KatedilenMesafeler(props = {}) {
       {/* Expanded Modal */}
       <Modal
         title={
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "98%" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "98%",
+            }}
+          >
             <Text
               title={`Aylık Bakım Maliyetleri${baslamaTarihi ? ` (${baslamaTarihi})` : ""}`}
-              style={{ fontWeight: "500", fontSize: "17px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "calc(100% - 50px)" }}
+              style={{
+                fontWeight: "500",
+                fontSize: "17px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "calc(100% - 50px)",
+              }}
             >
-              Katedilen Mesafeler
+              Katedilen Mesafe
               {baslamaTarihi && ` (${baslamaTarihi})`}
             </Text>
             <PrinterOutlined style={{ cursor: "pointer", fontSize: "20px" }} onClick={downloadPDF} />
@@ -220,24 +382,45 @@ function KatedilenMesafeler(props = {}) {
         width="90%"
         destroyOnClose
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "7px", overflow: "auto", height: "calc(100vh - 180px)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "7px",
+            overflow: "auto",
+            height: "calc(100vh - 180px)",
+          }}
+        >
           <ResponsiveContainer id="aylik-bakim" width="100%" height="100%">
-            <ScatterChart
+            <BarChart
+              width="100%"
+              height="100%"
+              data={data}
               margin={{
                 top: 20,
-                right: 20,
-                bottom: 20,
+                right: 30,
                 left: 20,
+                bottom: 5,
               }}
             >
-              <CartesianGrid />
-              <XAxis type="category" dataKey="month" name="Ay" />
-              <YAxis type="number" dataKey="km" name="Maliyet" unit="km" width={80} />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Scatter name="Aylık Araç Bakım Maliyeti" data={data} fill="#8884d8">
-                <LabelList style={{ fill: "white" }} dataKey="km" position="top" />
-              </Scatter>
-            </ScatterChart>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="AY"
+                // interval={0}
+                // angle={-90}
+                // textAnchor="end"
+                // height={70} // X ekseni yüksekliğini artırın
+                // tick={{
+                //   dy: 10, // Etiketleri aşağı kaydırın
+                // }}
+              />
+              <YAxis unit="km" width={80} />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend content={<CustomLegend />} />
+              <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#8884d8" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
+                <LabelList style={{ fill: "white" }} dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </Modal>
