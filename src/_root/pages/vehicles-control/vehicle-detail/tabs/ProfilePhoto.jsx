@@ -76,24 +76,24 @@ const ProfilePhoto = ({ urls, setImages }) => {
       reader.readAsDataURL(newFileList[newFileList.length - 1].originFileObj);
     }
   };
-console.log(urls)
+
   return (
     <ConfigProvider locale={customLocale}>
       <div
-        className="flex flex-col gap-2 align-center justify-evenly profile border"
+        className="profile border"
         style={{ height: "90%", position: "relative" }}
       >
         {fileList[fileList.length - 1]?.name || urls[0]?.tbResimId ? (
           <img
             src={profileImage}
             alt="Profile"
-            style={{ width: "70%", height: "90%" }}
+            style={{ width: "100%", height: "100%" }}
           />
         ) : (
           <div
             style={{
-              width: "70%",
-              height: "90%",
+              width: "100%",
+              height: "100%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
