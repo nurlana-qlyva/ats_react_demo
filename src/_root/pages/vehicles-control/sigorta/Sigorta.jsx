@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import axios from "axios";
 import { Table, Popover, Button, Input, Spin, Checkbox } from "antd";
 import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons";
 import { GetInsuranceListService } from "../../../../api/services/vehicles/operations_services";
@@ -36,22 +35,8 @@ const Sigorta = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keys, setKeys] = useState([]);
   const [rows, setRows] = useState([]);
-  const [country, setCountry] = useState({
-    name: "",
-    code: "",
-  });
 
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  async function getLocation() {
-    const res = await axios.get("http://ip-api.com/json");
-    if (res.status === 200)
-      setCountry({ name: res.data.country, code: res.data.countryCode });
-  }
-
-  const getColumns = (country) => [
+  const baseColumns = [
     {
       title: t("plaka"),
       dataIndex: "plaka",
@@ -64,7 +49,6 @@ const Sigorta = () => {
             setId(record.siraNo);
           }}
         >
-          <span>{country.code}</span>
           <span>{text}</span>
         </Button>
       ),
@@ -162,7 +146,7 @@ const Sigorta = () => {
   ];
 
   const [columns, setColumns] = useState(() =>
-    getColumns(country).map((column, i) => ({
+    baseColumns.map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({
@@ -170,18 +154,6 @@ const Sigorta = () => {
       }),
     }))
   );
-
-  useEffect(() => {
-    setColumns(
-      getColumns(country).map((column, i) => ({
-        ...column,
-        key: `${i}`,
-        onHeaderCell: () => ({
-          id: `${i}`,
-        }),
-      }))
-    );
-  }, [country]);
 
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
