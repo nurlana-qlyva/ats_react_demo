@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import { Button, Dropdown, Space } from "antd";
@@ -15,6 +15,7 @@ import {
   MdHealthAndSafety,
   MdSettingsInputComponent,
 } from "react-icons/md";
+import { PlakaContext } from "../../../../../context/plakaSlice";
 import Yakit from "./yakit/Yakit";
 import Ceza from "./ceza/Ceza";
 import Harcama from "./harcama/Harcama";
@@ -25,6 +26,7 @@ import Lastik from "./lastik/Lastik";
 import Bakim from "./bakim/Bakim";
 
 const OperationsInfo = ({ ids }) => {
+  const { setPlaka } = useContext(PlakaContext)
   const [selectedItem, setSelectedItem] = useState(null);
 
   const items = [
@@ -95,12 +97,18 @@ const OperationsInfo = ({ ids }) => {
   const renderModal = () => {
     switch (selectedItem) {
       case '1':
-          return <Bakim visible={selectedItem === '1'} onClose={() => setSelectedItem(null)} ids={ids} />;
+        return <Bakim visible={selectedItem === '1'} onClose={() => {
+          setSelectedItem(null)
+          setPlaka([])
+        }} ids={ids} />;
       case "2":
         return (
           <Yakit
             visible={selectedItem === "2"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -108,7 +116,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Harcama
             visible={selectedItem === "4"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -116,7 +127,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Kaza
             visible={selectedItem === "5"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -124,7 +138,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Ceza
             visible={selectedItem === "6"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -132,7 +149,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Sigorta
             visible={selectedItem === "7"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -140,7 +160,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Lastik
             visible={selectedItem === "8"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
@@ -148,7 +171,10 @@ const OperationsInfo = ({ ids }) => {
         return (
           <Sefer
             visible={selectedItem === "10"}
-            onClose={() => setSelectedItem(null)}
+            onClose={() => {
+              setSelectedItem(null)
+              setPlaka([])
+            }}
             ids={ids}
           />
         );
