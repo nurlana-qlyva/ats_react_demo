@@ -95,6 +95,7 @@ const MalzemeTable = ({
   };
 
   const handleHandleRowSelection = (row, selected) => {
+    console.log(row)
     if (selected) {
       if (!keys.includes(row.malzemeId)) {
         setKeys([...keys, row.malzemeId]);

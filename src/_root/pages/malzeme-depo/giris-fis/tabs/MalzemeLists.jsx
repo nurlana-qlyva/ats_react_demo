@@ -302,6 +302,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       malzemeTipKodText: item.malzemeTipKodText,
       miktar: 1,
       birim: item.birim,
+      birimKodId: item.birimKodId,
       fiyat: item.fiyat,
       araToplam: 1 * item.fiyat,
       kdvOran: item.kdvOran,
@@ -364,9 +365,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         ...newData[index],
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
-        birimId: values.edit_birim
-          ? values.edit_birim
-          : selectedRows.birimKodId,
+        birimKodId: values.edit_birim,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,

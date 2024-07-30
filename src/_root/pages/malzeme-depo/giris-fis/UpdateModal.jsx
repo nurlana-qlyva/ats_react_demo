@@ -124,7 +124,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, id, setStatus }) => {
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.malzemeId,
-        birimKodId: item.birimId || 0,
+        birimKodId: item.birimKodId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,

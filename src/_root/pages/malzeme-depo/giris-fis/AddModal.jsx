@@ -41,7 +41,7 @@ const AddModal = ({ setStatus }) => {
     defaultValues: defaultValues,
   });
   const { handleSubmit, reset, setValue, watch } = methods;
-
+console.log(tableData)
   const onSubmit = handleSubmit((values) => {
     let materialMovements = [];
     tableData.map((item) => {
@@ -50,7 +50,7 @@ const AddModal = ({ setStatus }) => {
         tarih: dayjs(values.tarih).format("YYYY-MM-DD"),
         firmaId: values.firmaId || 0,
         malzemeId: item.key,
-        birimKodId: item.birimId || 0,
+        birimKodId: item.birimKodId || 0,
         lokasyonId: item.lokasyonId || 0,
         miktar: item.miktar || 0,
         fiyat: item.fiyat || 0,
@@ -184,6 +184,7 @@ const AddModal = ({ setStatus }) => {
   useEffect(() => {
     setTableData(tableData.map(item => item = { ...item, lokasyon: watch("lokasyon"), lokasyonId: watch("lokasyonId"), plaka: watch("plaka"), aracId: watch("aracId") }))
   }, [watch("lokasyon"), watch("lokasyonId"), watch("aracId"), watch("plaka")])
+
   return (
     <>
       <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}>
