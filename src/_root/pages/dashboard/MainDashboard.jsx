@@ -1,72 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { GridStack } from 'gridstack';
-import 'gridstack/dist/gridstack.css';
-import { Button, Checkbox, Popover, Typography, Switch, Tooltip, ConfigProvider } from 'antd';
-import { DownOutlined, QuestionCircleOutlined, ReloadOutlined } from '@ant-design/icons';
-import trTR from 'antd/lib/locale/tr_TR';
-import { useForm, FormProvider } from 'react-hook-form';
-import Component3 from './components/Component3.jsx';
-import Component2 from './components/Component2.jsx';
-import Component1 from './components/Component1.jsx';
-import Component4 from './components/Component4.jsx';
-import Component5 from './components/Component5.jsx';
-import LokasyonBazindaIsTalepleri from './components/LokasyonBazindaIsTalepleri.jsx';
-import IsEmirleriOzetTablosu from './components/IsEmirleriOzetTablosu.jsx';
-import ArizaliMakineler from './components/ArizaliMakineler.jsx';
-import MakineTiplerineGore from './components/MakineTiplerineGore.jsx';
-import TamamlanmaOranlari from './components/TamamlanmaOranlari.jsx';
-import AylikBakimMaliyetleri from './components/AylikBakimMaliyetleri.jsx';
-import IsEmriZamanDagilimi from './components/IsEmriZamanDagilimi.jsx';
-import PersonelBazindaIsGucu from './components/PersonelBazindaIsGucu.jsx';
-import ToplamHarcananIsGucu from './components/ToplamHarcananIsGucu.jsx';
-import CustomDashboards from './components/CustomDashboards.jsx';
-import PersonelKPITablosu from './components/PersonelKPITablosu.jsx';
-import IsEmriTipleri from './components/IsEmriTipleri.jsx';
-import IsTalebiTipleri from './components/IsTalebiTipleri.jsx';
-import { createRoot } from 'react-dom/client';
+import React, { useState, useEffect } from "react";
+import { GridStack } from "gridstack";
+import "gridstack/dist/gridstack.css";
+import { Button, Checkbox, Popover, Typography, Switch, Tooltip, ConfigProvider } from "antd";
+import { DownOutlined, QuestionCircleOutlined, ReloadOutlined } from "@ant-design/icons";
+import trTR from "antd/lib/locale/tr_TR";
+import { useForm, FormProvider } from "react-hook-form";
+import Component3 from "./components/Component3.jsx";
+import Component2 from "./components/Component2.jsx";
+import Component1 from "./components/Component1.jsx";
+import Component4 from "./components/Component4.jsx";
+import Component5 from "./components/Component5.jsx";
+import LokasyonBazindaIsTalepleri from "./components/LokasyonBazindaIsTalepleri.jsx";
+import IsEmirleriOzetTablosu from "./components/IsEmirleriOzetTablosu.jsx";
+import ArizaliMakineler from "./components/ArizaliMakineler.jsx";
+import MakineTiplerineGore from "./components/MakineTiplerineGore.jsx";
+import TamamlanmaOranlari from "./components/TamamlanmaOranlari.jsx";
+import AylikBakimMaliyetleri from "./components/AylikBakimMaliyetleri.jsx";
+import AylikAracBakimMaliyetleri from "./components/AylikAracBakimMaliyetleri.jsx";
+import KatedilenMesafeler from "./components/KatedilenMesafeler.jsx";
+import IsEmriZamanDagilimi from "./components/IsEmriZamanDagilimi.jsx";
+import PersonelBazindaIsGucu from "./components/PersonelBazindaIsGucu.jsx";
+import ToplamHarcananIsGucu from "./components/ToplamHarcananIsGucu.jsx";
+import CustomDashboards from "./components/CustomDashboards.jsx";
+import PersonelKPITablosu from "./components/PersonelKPITablosu.jsx";
+import IsEmriTipleri from "./components/IsEmriTipleri.jsx";
+import IsTalebiTipleri from "./components/IsTalebiTipleri.jsx";
+import { createRoot } from "react-dom/client";
 
-import './custom-gridstack.css'; // Add this line to import your custom CSS
+import "./custom-gridstack.css"; // Add this line to import your custom CSS
 
 const { Text } = Typography;
 
 const widgetTitles = {
-  widget1: 'Devam Eden İş Talepleri',
-  widget2: 'Açık İş Emirleri',
-  widget3: 'Düşük Stoklu Malzemeler',
-  widget4: 'Toplam Makine Sayısı',
-  widget5: 'Özet Durum',
-  widget6: 'Lokasyon Bazında İş Talepleri ve İş Emirleri Dağılımı',
-  widget7: 'İş Emri Analizi',
-  widget8: 'Arızalı Makineler',
-  widget9: 'Makine Tiplerine Göre Envanter Dağılımı',
-  widget10: 'Tamamlanmış İş Talepleri ve İş Emirleri Oranları',
-  widget11: 'Aylık Bakım Maliyetleri',
-  widget12: 'İş Emirlerinin Zaman Dağılımı',
-  widget13: 'Personel Bazında İş Gücü',
-  widget14: 'Toplam Harcanan İş Gücü',
-  widget15: 'Personel KPI',
-  widget16: 'İş Emri Tipleri',
-  widget17: 'İş Talebi Tipleri',
+  widget1: "Aktif Araç Sayısı",
+  widget2: "Yakıt Tüketimi",
+  widget3: "Toplam Katedilen Mesafe",
+  widget4: "KM Başına Maliyetler",
+  widget5: "Filo Araç Durumları",
+  widget6: "Lokasyon Bazında İş Talepleri ve İş Emirleri Dağılımı",
+  widget7: "İş Emri Analizi",
+  widget8: "Arızalı Makineler",
+  widget9: "Makine Tiplerine Göre Envanter Dağılımı",
+  widget10: "Tamamlanmış İş Talepleri ve İş Emirleri Oranları",
+  widget11: "Aylık Bakım Maliyetleri",
+  widget12: "İş Emirlerinin Zaman Dağılımı",
+  widget13: "Personel Bazında İş Gücü",
+  widget14: "Toplam Harcanan İş Gücü",
+  widget15: "Personel KPI",
+  widget16: "İş Emri Tipleri",
+  widget17: "İş Talebi Tipleri",
+  widget18: "Araç Bakım Maliyetleri",
+  widget19: "Kat Edilen Mesafeler",
 };
 
 const defaultItems = [
-  { id: 'widget1', x: 0, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
-  { id: 'widget2', x: 3, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
-  { id: 'widget3', x: 6, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
-  { id: 'widget4', x: 9, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
-  { id: 'widget5', x: 0, y: 1, width: 4, height: 3, minW: 3, minH: 2 },
-  { id: 'widget10', x: 4, y: 1, width: 8, height: 3, minW: 3, minH: 2 },
-  { id: 'widget13', x: 0, y: 4, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: 'widget6', x: 0, y: 7, width: 7, height: 4, minW: 3, minH: 2 },
-  { id: 'widget14', x: 7, y: 7, width: 5, height: 4, minW: 3, minH: 2 },
-  { id: 'widget12', x: 0, y: 11, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: 'widget11', x: 0, y: 14, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: 'widget15', x: 0, y: 17, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: 'widget7', x: 6, y: 17, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: 'widget16', x: 0, y: 21, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: 'widget17', x: 6, y: 21, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: 'widget8', x: 0, y: 25, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: 'widget9', x: 6, y: 25, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget1", x: 0, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
+  { id: "widget2", x: 3, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
+  { id: "widget3", x: 6, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
+  { id: "widget4", x: 9, y: 0, width: 3, height: 1, minW: 3, minH: 1 },
+  { id: "widget5", x: 0, y: 1, width: 4, height: 3, minW: 3, minH: 2 },
+  { id: "widget19", x: 4, y: 1, width: 8, height: 3, minW: 3, minH: 2 },
+  { id: "widget14", x: 0, y: 4, width: 5, height: 4, minW: 3, minH: 2 },
+  { id: "widget18", x: 5, y: 4, width: 7, height: 4, minW: 3, minH: 2 },
+  { id: "widget11", x: 0, y: 8, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget13", x: 0, y: 11, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget10", x: 0, y: 14, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget12", x: 0, y: 17, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget6", x: 0, y: 20, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget15", x: 0, y: 24, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget7", x: 6, y: 20, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget16", x: 0, y: 28, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget9", x: 6, y: 24, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget8", x: 0, y: 32, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget17", x: 6, y: 28, width: 6, height: 4, minW: 3, minH: 2 },
 ];
 
 function MainDashboard() {
@@ -90,6 +96,8 @@ function MainDashboard() {
     widget15: false,
     widget16: false,
     widget17: false,
+    widget18: false,
+    widget19: false,
   });
 
   const methods = useForm({
@@ -100,29 +108,29 @@ function MainDashboard() {
 
   const { setValue, watch, reset } = methods;
 
-  const selectedDashboard = watch('selectedDashboard');
+  const selectedDashboard = watch("selectedDashboard");
 
   const updateApiTriger = async () => {
     setUpdateApi(!updateApi);
   };
 
   useEffect(() => {
-    const reorganizeValue = localStorage.getItem('reorganize');
+    const reorganizeValue = localStorage.getItem("reorganize");
     if (reorganizeValue !== null) {
-      setReorganize(reorganizeValue === 'true');
+      setReorganize(reorganizeValue === "true");
     } else {
       setReorganize(false); // Or any other default value you want reorganize varsayılan değerini ayarla
-      localStorage.setItem('reorganize', 'false');
+      localStorage.setItem("reorganize", "false");
     }
   }, []);
 
   const onChange = (checked) => {
     if (checked) {
       setReorganize(false);
-      localStorage.setItem('reorganize', 'false');
+      localStorage.setItem("reorganize", "false");
     } else {
       setReorganize(true);
-      localStorage.setItem('reorganize', 'true');
+      localStorage.setItem("reorganize", "true");
     }
     setTimeout(() => {
       const gridItems = JSON.parse(localStorage.getItem(selectedDashboard)) || [];
@@ -137,14 +145,14 @@ function MainDashboard() {
     const grid = GridStack.init({
       float: reorganize,
       resizable: {
-        handles: 'se, sw', // Enable resizing from bottom right and bottom left
+        handles: "se, sw", // Enable resizing from bottom right and bottom left
       },
       column: 12, // 12 sütunlu grid yapısı
       margin: 10, // Widgetler arasında 10px boşluk bırakır
       minRow: 1,
-      cellHeight: 'auto', // Widgetlerin otomatik yüksekliğini ayarla
+      cellHeight: "auto", // Widgetlerin otomatik yüksekliğini ayarla
       draggable: {
-        handle: '.widget-header', // Dragging handle to move widgets
+        handle: ".widget-header", // Dragging handle to move widgets
       },
     });
 
@@ -161,30 +169,30 @@ function MainDashboard() {
       localStorage.setItem(selectedDashboard, JSON.stringify(items));
     };
 
-    grid.on('change', saveLayout);
+    grid.on("change", saveLayout);
 
     const loadWidgets = (items) => {
       grid.removeAll();
       items.forEach((item) => {
-        const widgetEl = document.createElement('div');
-        widgetEl.className = 'grid-stack-item';
+        const widgetEl = document.createElement("div");
+        widgetEl.className = "grid-stack-item";
         widgetEl.id = item.id;
-        widgetEl.setAttribute('gs-w', item.width);
-        widgetEl.setAttribute('gs-h', item.height);
-        widgetEl.setAttribute('gs-x', item.x);
-        widgetEl.setAttribute('gs-y', item.y);
-        widgetEl.setAttribute('gs-min-w', item.minW);
-        widgetEl.setAttribute('gs-min-h', item.minH);
+        widgetEl.setAttribute("gs-w", item.width);
+        widgetEl.setAttribute("gs-h", item.height);
+        widgetEl.setAttribute("gs-x", item.x);
+        widgetEl.setAttribute("gs-y", item.y);
+        widgetEl.setAttribute("gs-min-w", item.minW);
+        widgetEl.setAttribute("gs-min-h", item.minH);
 
-        const contentEl = document.createElement('div');
-        contentEl.className = 'grid-stack-item-content';
+        const contentEl = document.createElement("div");
+        contentEl.className = "grid-stack-item-content";
 
-        const headerEl = document.createElement('div');
-        headerEl.className = 'widget-header';
+        const headerEl = document.createElement("div");
+        headerEl.className = "widget-header";
         headerEl.textContent = widgetTitles[item.id] || `Widget ${item.id}`;
 
-        const bodyEl = document.createElement('div');
-        bodyEl.className = 'widget-body';
+        const bodyEl = document.createElement("div");
+        bodyEl.className = "widget-body";
 
         widgetEl.appendChild(headerEl);
         widgetEl.appendChild(bodyEl);
@@ -193,7 +201,7 @@ function MainDashboard() {
 
         const root = createRoot(bodyEl);
         switch (item.id) {
-          case 'widget1':
+          case "widget1":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -202,7 +210,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget2':
+          case "widget2":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -211,7 +219,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget3':
+          case "widget3":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -220,7 +228,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget4':
+          case "widget4":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -229,7 +237,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget5':
+          case "widget5":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -238,7 +246,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget6':
+          case "widget6":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -247,7 +255,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget7':
+          case "widget7":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -256,7 +264,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget8':
+          case "widget8":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -265,7 +273,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget9':
+          case "widget9":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -274,7 +282,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget10':
+          case "widget10":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -283,7 +291,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget11':
+          case "widget11":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -292,7 +300,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget12':
+          case "widget12":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -301,7 +309,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget13':
+          case "widget13":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -310,7 +318,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget14':
+          case "widget14":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -319,7 +327,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget15':
+          case "widget15":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -328,7 +336,7 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget16':
+          case "widget16":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
@@ -337,11 +345,29 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
-          case 'widget17':
+          case "widget17":
             root.render(
               <FormProvider {...methods}>
                 <ConfigProvider locale={trTR}>
                   <IsTalebiTipleri />
+                </ConfigProvider>
+              </FormProvider>
+            );
+            break;
+          case "widget18":
+            root.render(
+              <FormProvider {...methods}>
+                <ConfigProvider locale={trTR}>
+                  <AylikAracBakimMaliyetleri />
+                </ConfigProvider>
+              </FormProvider>
+            );
+            break;
+          case "widget19":
+            root.render(
+              <FormProvider {...methods}>
+                <ConfigProvider locale={trTR}>
+                  <KatedilenMesafeler />
                 </ConfigProvider>
               </FormProvider>
             );
@@ -371,6 +397,8 @@ function MainDashboard() {
         widget15: false,
         widget16: false,
         widget17: false,
+        widget18: false,
+        widget19: false,
       };
       newGridItems.forEach((item) => {
         if (Object.prototype.hasOwnProperty.call(newChecked, item.id)) {
@@ -407,6 +435,8 @@ function MainDashboard() {
         widget15: false,
         widget16: false,
         widget17: false,
+        widget18: false,
+        widget19: false,
       };
       itemsToLoad.forEach((item) => {
         if (Object.prototype.hasOwnProperty.call(checked, item.id)) {
@@ -424,7 +454,7 @@ function MainDashboard() {
     handleDashboardChange();
 
     return () => {
-      grid.off('change', saveLayout);
+      grid.off("change", saveLayout);
     };
   }, [reorganize, selectedDashboard]);
 
@@ -529,7 +559,7 @@ function MainDashboard() {
 
   const handleReset = () => {
     localStorage.removeItem(selectedDashboard);
-    localStorage.removeItem('reorganize');
+    localStorage.removeItem("reorganize");
     window.location.reload();
   };
 
@@ -548,20 +578,20 @@ function MainDashboard() {
   const content = (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        height: 'calc(-200px + 100vh)',
-        maxHeight: '610px',
-        overflowY: 'auto',
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        height: "calc(-200px + 100vh)",
+        maxHeight: "610px",
+        overflowY: "auto",
       }}
     >
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: '5px',
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "5px",
         }}
       >
         <Switch checked={!reorganize} onChange={onChange} />
@@ -572,19 +602,19 @@ function MainDashboard() {
         </Tooltip>
       </div>
       <Checkbox name="widget1" onChange={handleCheckboxChange} checked={checkedWidgets.widget1}>
-        Devam Eden İş Talepleri
+        Aktif Araç Sayısı
       </Checkbox>
       <Checkbox name="widget2" onChange={handleCheckboxChange} checked={checkedWidgets.widget2}>
-        Açık İş Emirleri
+        Yakıt Tüketimi
       </Checkbox>
       <Checkbox name="widget3" onChange={handleCheckboxChange} checked={checkedWidgets.widget3}>
-        Düşük Stoklu Malzemeler
+        Toplam Katedilen Mesafe
       </Checkbox>
       <Checkbox name="widget4" onChange={handleCheckboxChange} checked={checkedWidgets.widget4}>
-        Toplam Makine Sayısı
+        KM Başına Maliyetler
       </Checkbox>
       <Checkbox name="widget5" onChange={handleCheckboxChange} checked={checkedWidgets.widget5}>
-        Özet Durum
+        Filo Araç Durumları
       </Checkbox>
       <Checkbox name="widget6" onChange={handleCheckboxChange} checked={checkedWidgets.widget6}>
         Lokasyon Bazında İş Talepleri ve İş Emirleri Dağılımı
@@ -600,10 +630,10 @@ function MainDashboard() {
       </Checkbox>
       <Checkbox name="widget10" onChange={handleCheckboxChange} checked={checkedWidgets.widget10}>
         Tamamlanmış İş Talepleri ve İş Emirleri Oranları
-      </Checkbox>{' '}
+      </Checkbox>{" "}
       <Checkbox name="widget11" onChange={handleCheckboxChange} checked={checkedWidgets.widget11}>
         Aylık Bakım Maliyetleri
-      </Checkbox>{' '}
+      </Checkbox>{" "}
       <Checkbox name="widget12" onChange={handleCheckboxChange} checked={checkedWidgets.widget12}>
         İş Emirlerinin Zaman Dağılımı
       </Checkbox>
@@ -622,7 +652,13 @@ function MainDashboard() {
       <Checkbox name="widget17" onChange={handleCheckboxChange} checked={checkedWidgets.widget17}>
         İş Emri Tipleri
       </Checkbox>
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+      <Checkbox name="widget18" onChange={handleCheckboxChange} checked={checkedWidgets.widget18}>
+        Araç Bakım Maliyetleri
+      </Checkbox>
+      <Checkbox name="widget19" onChange={handleCheckboxChange} checked={checkedWidgets.widget19}>
+        Kat Edilen Mesafeler
+      </Checkbox>
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Button danger onClick={handleReset}>
           Widgetları Sıfırla
         </Button>
@@ -636,31 +672,31 @@ function MainDashboard() {
         <div className="App">
           <div
             style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '10px',
-              marginBottom: '10px',
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+              marginBottom: "10px",
             }}
           >
             <CustomDashboards />
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: '10px',
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+                gap: "10px",
               }}
             >
               <Button type="text" onClick={rerenderWidgets}>
                 <Text
                   type="secondary"
                   style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: '5px',
-                    alignItems: 'center',
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "5px",
+                    alignItems: "center",
                   }}
                 >
                   <ReloadOutlined />
@@ -669,10 +705,10 @@ function MainDashboard() {
               </Button>
               <Button
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: '5px',
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "5px",
                 }}
                 onClick={handleRearrange}
               >
@@ -689,10 +725,10 @@ function MainDashboard() {
               <Popover content={content} title="Widgetları Yönet" trigger="click">
                 <Button
                   style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: '5px',
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: "5px",
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24" name="widget">
@@ -704,12 +740,12 @@ function MainDashboard() {
                     ></path>
                   </svg>
                   Widgetleri Yönet
-                  <DownOutlined style={{ marginLeft: '2px' }} />
+                  <DownOutlined style={{ marginLeft: "2px" }} />
                 </Button>
               </Popover>
             </div>
           </div>
-          <div style={{ overflow: 'auto', height: 'calc(100vh - 210px)' }}>
+          <div style={{ overflow: "auto", height: "calc(100vh - 185px)" }}>
             <div className="grid-stack">
               <div className="grid-stack-item border-dark" id="widget1">
                 <div className="grid-stack-item-content">
@@ -770,13 +806,13 @@ function MainDashboard() {
                   <div className="widget-header">{widgetTitles.widget10}</div>
                   <TamamlanmaOranlari />
                 </div>
-              </div>{' '}
+              </div>{" "}
               <div className="grid-stack-item border-dark" id="widget11">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget11}</div>
                   <AylikBakimMaliyetleri />
                 </div>
-              </div>{' '}
+              </div>{" "}
               <div className="grid-stack-item border-dark" id="widget12">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget12}</div>
@@ -810,6 +846,18 @@ function MainDashboard() {
               <div className="grid-stack-item border-dark" id="widget17">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget17}</div>
+                  <IsEmriTipleri />
+                </div>
+              </div>
+              <div className="grid-stack-item border-dark" id="widget18">
+                <div className="grid-stack-item-content">
+                  <div className="widget-header">{widgetTitles.widget18}</div>
+                  <IsEmriTipleri />
+                </div>
+              </div>
+              <div className="grid-stack-item border-dark" id="widget19">
+                <div className="grid-stack-item-content">
+                  <div className="widget-header">{widgetTitles.widget19}</div>
                   <IsEmriTipleri />
                 </div>
               </div>

@@ -187,7 +187,7 @@ function Component4(props) {
               >
                 {data} ₺
               </Text>
-              <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>KM Başina Maliyetler</Text>
+              <Text style={{ color: "white", fontSize: "15px", fontWeight: "400" }}>KM Başına Maliyetler</Text>
             </div>
             <StyledClockCircleOutlined />
           </div>
