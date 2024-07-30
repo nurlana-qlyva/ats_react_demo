@@ -21,6 +21,7 @@ import KatedilenMesafeler from "./components/KatedilenMesafeler.jsx";
 import IsEmriZamanDagilimi from "./components/IsEmriZamanDagilimi.jsx";
 import PersonelBazindaIsGucu from "./components/PersonelBazindaIsGucu.jsx";
 import ToplamHarcananIsGucu from "./components/ToplamHarcananIsGucu.jsx";
+import AylikMaliyetler from "./components/AylikMaliyetler.jsx";
 import CustomDashboards from "./components/CustomDashboards.jsx";
 import PersonelKPITablosu from "./components/PersonelKPITablosu.jsx";
 import IsEmriTipleri from "./components/IsEmriTipleri.jsx";
@@ -51,6 +52,7 @@ const widgetTitles = {
   widget17: "İş Talebi Tipleri",
   widget18: "Araç Bakım Maliyetleri",
   widget19: "Kat Edilen Mesafeler",
+  widget20: "Aylık Maliyetler",
 };
 
 const defaultItems = [
@@ -63,16 +65,17 @@ const defaultItems = [
   { id: "widget14", x: 0, y: 4, width: 5, height: 4, minW: 3, minH: 2 },
   { id: "widget18", x: 5, y: 4, width: 7, height: 4, minW: 3, minH: 2 },
   { id: "widget11", x: 0, y: 8, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: "widget13", x: 0, y: 11, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: "widget10", x: 0, y: 14, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: "widget12", x: 0, y: 17, width: 12, height: 3, minW: 3, minH: 2 },
-  { id: "widget6", x: 0, y: 20, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget15", x: 0, y: 24, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget7", x: 6, y: 20, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget16", x: 0, y: 28, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget9", x: 6, y: 24, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget8", x: 0, y: 32, width: 6, height: 4, minW: 3, minH: 2 },
-  { id: "widget17", x: 6, y: 28, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget20", x: 0, y: 11, width: 6, height: 3, minW: 3, minH: 2 },
+  { id: "widget13", x: 0, y: 14, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget10", x: 0, y: 17, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget12", x: 0, y: 20, width: 12, height: 3, minW: 3, minH: 2 },
+  { id: "widget6", x: 0, y: 23, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget7", x: 6, y: 23, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget15", x: 0, y: 27, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget9", x: 6, y: 27, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget16", x: 0, y: 31, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget17", x: 6, y: 31, width: 6, height: 4, minW: 3, minH: 2 },
+  { id: "widget8", x: 0, y: 35, width: 6, height: 4, minW: 3, minH: 2 },
 ];
 
 function MainDashboard() {
@@ -98,6 +101,7 @@ function MainDashboard() {
     widget17: false,
     widget18: false,
     widget19: false,
+    widget20: false,
   });
 
   const methods = useForm({
@@ -372,6 +376,15 @@ function MainDashboard() {
               </FormProvider>
             );
             break;
+          case "widget20":
+            root.render(
+              <FormProvider {...methods}>
+                <ConfigProvider locale={trTR}>
+                  <AylikMaliyetler />
+                </ConfigProvider>
+              </FormProvider>
+            );
+            break;
           default:
             break;
         }
@@ -399,6 +412,7 @@ function MainDashboard() {
         widget17: false,
         widget18: false,
         widget19: false,
+        widget20: false,
       };
       newGridItems.forEach((item) => {
         if (Object.prototype.hasOwnProperty.call(newChecked, item.id)) {
@@ -437,6 +451,7 @@ function MainDashboard() {
         widget17: false,
         widget18: false,
         widget19: false,
+        widget20: false,
       };
       itemsToLoad.forEach((item) => {
         if (Object.prototype.hasOwnProperty.call(checked, item.id)) {
@@ -657,6 +672,9 @@ function MainDashboard() {
       </Checkbox>
       <Checkbox name="widget19" onChange={handleCheckboxChange} checked={checkedWidgets.widget19}>
         Kat Edilen Mesafeler
+      </Checkbox>{" "}
+      <Checkbox name="widget20" onChange={handleCheckboxChange} checked={checkedWidgets.widget20}>
+        Aylık Maliyetler
       </Checkbox>
       <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Button danger onClick={handleReset}>
@@ -846,19 +864,25 @@ function MainDashboard() {
               <div className="grid-stack-item border-dark" id="widget17">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget17}</div>
-                  <IsEmriTipleri />
+                  <IsTalebiTipleri />
                 </div>
               </div>
               <div className="grid-stack-item border-dark" id="widget18">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget18}</div>
-                  <IsEmriTipleri />
+                  <AylikAracBakimMaliyetleri />
                 </div>
               </div>
               <div className="grid-stack-item border-dark" id="widget19">
                 <div className="grid-stack-item-content">
                   <div className="widget-header">{widgetTitles.widget19}</div>
-                  <IsEmriTipleri />
+                  <KatedilenMesafeler />
+                </div>
+              </div>
+              <div className="grid-stack-item border-dark" id="widget20">
+                <div className="grid-stack-item-content">
+                  <div className="widget-header">{widgetTitles.widget20}</div>
+                  <AylikMaliyetler />
                 </div>
               </div>
             </div>
