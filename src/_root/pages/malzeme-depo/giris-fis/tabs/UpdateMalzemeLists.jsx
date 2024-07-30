@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, InputNumber, Modal, Popconfirm, Select, Table } from "antd";
+import { useEffect, useState } from "react";
+import { Button, InputNumber, message, Modal, Popconfirm, Select, Table } from "antd";
 import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -10,6 +10,7 @@ import Plaka from "../../../../components/form/selects/Plaka";
 import Location from "../../../../components/form/tree/Location";
 import Textarea from "../../../../components/form/inputs/Textarea";
 import MalzemeTable from "./MalzemeTable";
+import { DeleteUpdatedMaterialReceiptService } from "../../../../../api/services/malzeme/services";
 
 const UpdateMalzemeLists = ({
   setTableData,
@@ -41,29 +42,43 @@ const UpdateMalzemeLists = ({
         <Button
           onClick={() => {
             setEditModal(true);
+            setDataSource(record);
             setRecord(record);
-            setValue("edit_indirimTutari", record.indirimTutar);
-            setValue("malzeme_plaka", record.plaka);
+            setValue(
+              "edit_plakaId", record.aracId
+            );
+            setValue(
+              "malzeme_plaka",
+              record.plaka
+            );
+            setValue("edit_indirimOrani", record.indirimOran)
+            setValue("edit_indirimTutari", record.indirimTutar)
             setValue("edit_malzemeTanimi", record.malezemeTanim);
-            setValue("edit_indirimOrani", record.indirimOran);
-            setValue("edit_indirimTutari", record.indirim);
-            setValue("edit_malzemeKod", record.malezemeKod);
-            setValue("edit_miktar", record.miktar ? record.miktar : 1);
+            setValue(
+              "edit_miktar",
+              watch("edit_miktar") ? watch("edit_miktar") : 1
+            );
             setValue("birim", record.birim);
             setValue("edit_birim", record.birimKodId);
             setValue("edit_fiyat", record.fiyat);
             setValue(
               "edit_araToplam",
-              record.miktar ? record.miktar : 1 * record.fiyat
+              watch("edit_miktar")
+                ? watch("edit_miktar") * watch("edit_fiyat")
+                : 1 * watch("edit_fiyat")
             );
             setValue("edit_kdvOrani", record.kdvOran);
-            setValue("edit_kdvTutar", record.kdvTutar);
             setValue("edit_toplam", record.toplam);
+            setValue("edit_malzemeKod", record.malezemeKod);
             setValue("edit_malzemeTip", record.malzemeTip);
             setValue("edit_aciklama", record.aciklama);
-            setValue("edit_lokasyonId", record.lokasyonId);
-            setValue("edit_lokasyon", record.lokasyon);
-            setValue("edit_kdv", record.kdvDahilHaric ? "dahil" : "haric");
+            setValue(
+              "edit_lokasyonId", record.lokasyonId
+            );
+            setValue(
+              "edit_lokasyon", record.lokasyon
+            );
+            setValue("edit_kdv", record.kdvDahilHaric ? "Dahil" : "Hariç");
           }}
         >
           {text}
@@ -158,37 +173,6 @@ const UpdateMalzemeLists = ({
       console.log(res.data)
     );
   };
-
-  useEffect(() => {
-    const newRows = dataSource.map((item) => ({
-      key: item.malzemeId,
-      siraNo: item.siraNo,
-      malzemeKod: item.malezemeKod,
-      malzemeTanim: item.malezemeTanim,
-      malzemeTipKodText: item.malzemeTip,
-      miktar: item.miktar,
-      aciklama: item.aciklama,
-      birim: item.birim,
-      fiyat: item.fiyat,
-      plaka: item.plaka,
-      mlzAracId: item.mlzAracId,
-      araToplam: item.araToplam,
-      kdvOran: item.kdvOran,
-      indirimOran: item.indirimOran,
-      indirimTutar: item.indirim,
-      lokasyon: item.lokasyon,
-      lokasyonId: item.lokasyonId,
-      toplam: item.toplam,
-      kdvDH: item.kdvDahilHaric ? "Dahil" : "Hariç",
-      kdvTutar: item.kdvDahilHaric
-        ? ((1 * item.fiyat) / (1 + item.kdvOran)).toFixed(2)
-        : (1 * item.fiyat * (item.kdvOran / 100)).toFixed(2),
-      isPriceChanged: false,
-    }));
-    setDataSource([...newRows]);
-    // setTableData([...newRows]);
-    setSelectedRows([...newRows]);
-  }, [dataSource]);
 
   useEffect(() => {
     setValue("edit_miktar", 1);
@@ -322,15 +306,15 @@ const UpdateMalzemeLists = ({
     setKeys([]);
     setRows([]);
   };
-
+console.log(tableData)
   const handleEdit = handleSubmit((values) => {
     const key = record.key;
-    const index = dataSource.findIndex((item) => item.key === key);
+    const index = tableData.findIndex((item) => item.key === key);
     if (index !== -1) {
       const currentFiyat = values.edit_fiyat;
-      const originalFiyat = dataSource[index].fiyat;
+      const originalFiyat = tableData[index].fiyat;
 
-      const newData = [...dataSource];
+      const newData = [...tableData];
       newData[index] = {
         ...newData[index],
         malzemeTanim: values.edit_malzemeTanimi,

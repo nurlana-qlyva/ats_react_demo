@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Button, InputNumber, message, Modal, Popconfirm, Select, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -40,12 +40,11 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
             setDataSource(record);
             setRecord(record);
             setValue(
-              "edit_plakaId",
-              watch("edit_plakaId") ? watch("edit_plakaId") : watch("aracId")
+              "edit_plakaId", record.aracId
             );
             setValue(
               "malzeme_plaka",
-              watch("malzeme_plaka") ? watch("malzeme_plaka") : watch("plaka")
+              record.plaka
             );
             setValue("edit_malzemeTanimi", record.malzemeTanim);
             setValue(
@@ -177,8 +176,6 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
     {
       title: t("plaka"),
       dataIndex: "plaka",
-      render: () =>
-        watch("malzeme_plaka") ? watch("malzeme_plaka") : watch("plaka"),
     },
     {
       title: t("lokasyon"),
