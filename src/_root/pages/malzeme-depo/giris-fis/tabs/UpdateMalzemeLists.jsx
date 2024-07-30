@@ -110,16 +110,18 @@ const UpdateMalzemeLists = ({
       dataIndex: "araToplam",
     },
     {
-      title: t("indirimOrani"),
+      title: `${t("indirimOrani")} %`,
       dataIndex: "indirimOran",
+      render: text => `${text} %`
     },
     {
       title: t("indirimTutari"),
       dataIndex: "indirim",
     },
     {
-      title: t("kdvOrani"),
+      title: `${t("kdvOrani")} %`,
       dataIndex: "kdvOran",
+      render: text => `${text} %`
     },
     {
       title: `${t("kdv")} D/H`,
@@ -320,9 +322,7 @@ console.log(tableData)
         malzemeTanim: values.edit_malzemeTanimi,
         miktar: values.edit_miktar,
         birim: values.birim,
-        birimId: values.edit_birim
-          ? values.edit_birim
-          : selectedRows.birimKodId,
+        birimId: values.edit_birim,
         fiyat: values.edit_fiyat,
         araToplam: values.edit_araToplam,
         kdvOran: values.edit_kdvOrani,

@@ -9,7 +9,7 @@ import {
   GetModuleCodeByCode,
   CodeItemValidateService,
 } from "../../../../api/services/code/services";
-import { AddMaterialReceiptService, GetMaterialCardByIdService } from "../../../../api/services/malzeme/services";
+import { AddMaterialReceiptService } from "../../../../api/services/malzeme/services";
 import GeneralInfo from "./tabs/GeneralInfo";
 import MalzemeLists from "./tabs/MalzemeLists";
 import EkBilgiler from "./tabs/EkBilgiler";
@@ -181,6 +181,9 @@ const AddModal = ({ setStatus }) => {
     </Popconfirm>,
   ];
 
+  useEffect(() => {
+    setTableData(tableData.map(item => item = { ...item, lokasyon: watch("lokasyon"), lokasyonId: watch("lokasyonId"), plaka: watch("plaka"), aracId: watch("aracId") }))
+  }, [watch("lokasyon"), watch("lokasyonId"), watch("aracId"), watch("plaka")])
   return (
     <>
       <Button className="btn primary-btn" onClick={() => setIsModalOpen(true)}>

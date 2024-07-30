@@ -21,8 +21,8 @@ const GeneralInfo = ({ isValid }) => {
       isValid === "error"
         ? "#dc3545"
         : isValid === "success"
-        ? "#23b545"
-        : "#000",
+          ? "#23b545"
+          : "#000",
   };
 
   return (
@@ -32,8 +32,8 @@ const GeneralInfo = ({ isValid }) => {
           <div className="grid gap-1">
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("malzemeKodu")}</label>
-                <TextInput name="malzemeKod" style={validateStyle} />
+                <label>{t("malzemeKodu")} <span className="text-danger">*</span></label>
+                <TextInput name="malzemeKod" style={validateStyle} required={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -44,14 +44,14 @@ const GeneralInfo = ({ isValid }) => {
             </div>
             <div className="col-span-8">
               <div className="flex flex-col gap-1">
-                <label>{t("tanimi")}</label>
-                <TextInput name="tanim" />
+                <label>{t("tanimi")} <span className="text-danger">*</span></label>
+                <TextInput name="tanim" required={true} />
               </div>
             </div>
             <div className="col-span-4">
               <div className="flex flex-col gap-1">
-                <label>{t("birim")}</label>
-                <CodeControl name="birim" codeName="birimKodId" id={300} />
+                <label>{t("birim")} <span className="text-danger">*</span></label>
+                <CodeControl name="birim" codeName="birimKodId" id={300} required={true} />
               </div>
             </div>
             <div className="col-span-4">

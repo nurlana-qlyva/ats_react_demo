@@ -108,7 +108,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
           : 1 * record.fiyat,
     },
     {
-      title: t("indirimOrani"),
+      title: `${t("indirimOrani")} %`,
       dataIndex: "indirimOran",
     },
     {
@@ -116,7 +116,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
       dataIndex: "indirimTutar",
     },
     {
-      title: t("kdvOrani"),
+      title: `${t("kdvOrani")} %`,
       dataIndex: "kdvOran",
     },
     {
@@ -377,7 +377,7 @@ const MalzemeLists = ({ setTableData, tableData, isSuccess, setIsSuccess }) => {
         kdvDH: values.edit_kdv,
         kdvTutar: values.edit_kdvTutar,
         plaka: values.malzeme_plaka,
-        mlzAracId: values.edit_plakaId,
+        aracId: values.edit_plakaId,
         lokasyonId: values.edit_lokasyonId,
         lokasyon: values.edit_lokasyon,
         isPriceChanged: currentFiyat !== originalFiyat,
