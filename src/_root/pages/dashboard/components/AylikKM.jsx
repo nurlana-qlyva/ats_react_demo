@@ -12,7 +12,7 @@ const { Text } = Typography;
 
 const monthNames = ["", "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
-function AylikMaliyetler(props = {}) {
+function AylikKM(props = {}) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpandedModalVisible, setIsExpandedModalVisible] = useState(false); // Expanded modal visibility state
@@ -34,7 +34,7 @@ function AylikMaliyetler(props = {}) {
   } = useFormContext();
 
   useEffect(() => {
-    const yilSecimiValue = watch("yilSecimiAylikMaliyetler");
+    const yilSecimiValue = watch("yilSecimiAylikKM");
     if (!yilSecimiValue) {
       // Eğer baslamaTarihi değeri undefined ise, sistem saatinden o senenin yıl hanesini alıp setBaslamaTarihi'ye atar
       const currentYear = dayjs().format("YYYY");
@@ -45,15 +45,16 @@ function AylikMaliyetler(props = {}) {
       const yearOnly = yilSecimiValue.format("YYYY");
       setBaslamaTarihi(yearOnly);
     }
-  }, [watch("yilSecimiAylikMaliyetler")]);
+  }, [watch("yilSecimiAylikKM")]);
 
   const fetchData = async () => {
     setIsLoading(true);
     const body = {
       startYear: baslamaTarihi || dayjs().year(),
+      endYear: Number(baslamaTarihi) + 1 || dayjs().year() + 1,
     };
     try {
-      const response = await http.post("Graphs/GetGraphInfoByType?type=10", body);
+      const response = await http.post("Graphs/GetGraphInfoByType?type=11", body);
 
       // Sort the response by month number
       const apiResponse = response.data;
@@ -100,7 +101,7 @@ function AylikMaliyetler(props = {}) {
 
   const CustomLegend = ({ payload }) => {
     const customNames = {
-      AYLIK_BAKIM_ISEMRI_MALIYET: "Aylık Maliyet",
+      AYLIK_BAKIM_ISEMRI_MALIYET: "Aylık KM",
     };
 
     const handleToggleAll = () => {
@@ -171,7 +172,7 @@ function AylikMaliyetler(props = {}) {
         >
           <p className="label">{`Ay: ${label}`}</p>
           {payload.map((entry, index) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>{`${entry.name}: ${entry.value}  ₺`}</p>
+            <p key={`item-${index}`} style={{ color: entry.color }}>{`${entry.name}: ${entry.value}  km`}</p>
           ))}
         </div>
       );
@@ -196,9 +197,9 @@ function AylikMaliyetler(props = {}) {
 
   useEffect(() => {
     if (isModalVisible === true) {
-      setValue("yilSecimiAylikMaliyetler", null);
+      setValue("yilSecimiAylikKM", null);
       // reset({
-      //   yilSecimiAylikMaliyetler: undefined,
+      //   yilSecimiAylikKM: undefined,
       // });
     }
   }, [isModalVisible]);
@@ -280,7 +281,7 @@ function AylikMaliyetler(props = {}) {
             maxWidth: "calc(100% - 50px)",
           }}
         >
-          Aylık Maliyet
+          Aylık KM
           {baslamaTarihi && ` (${baslamaTarihi})`}
         </Text>
         <Popover placement="bottom" content={content} trigger="click">
@@ -327,10 +328,10 @@ function AylikMaliyetler(props = {}) {
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="AY" name="Ay" />
-                <YAxis unit=" ₺" width={80} />
+                <YAxis unit=" km" width={80} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend content={<CustomLegend />} />
-                <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#FFB200" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık Maliyet" unit=" ₺">
+                <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#173B45" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık KM" unit=" km">
                   {/*<LabelList dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />*/}
                 </Bar>
               </BarChart>
@@ -351,7 +352,7 @@ function AylikMaliyetler(props = {}) {
           >
             <div>Yıl Seç:</div>
             <Controller
-              name="yilSecimiAylikMaliyetler"
+              name="yilSecimiAylikKM"
               control={control}
               render={({ field }) => <DatePicker {...field} picker="year" style={{ width: "130px" }} placeholder="Tarih seçiniz" />}
             />
@@ -380,7 +381,7 @@ function AylikMaliyetler(props = {}) {
                 maxWidth: "calc(100% - 50px)",
               }}
             >
-              Aylık Maliyet
+              Aylık KM
               {baslamaTarihi && ` (${baslamaTarihi})`}
             </Text>
             <PrinterOutlined style={{ cursor: "pointer", fontSize: "20px" }} onClick={downloadPDF} />
@@ -425,10 +426,10 @@ function AylikMaliyetler(props = {}) {
                 //   dy: 10, // Etiketleri aşağı kaydırın
                 // }}
               />
-              <YAxis unit=" ₺" width={80} />
+              <YAxis unit=" km" width={80} />
               <Tooltip content={<CustomTooltip />} />
               <Legend content={<CustomLegend />} />
-              <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#FFB200" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık Maliyet" unit=" ₺">
+              <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#173B45" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık KM" unit=" km">
                 <LabelList style={{ fill: "white" }} dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />
               </Bar>
             </BarChart>
@@ -439,4 +440,4 @@ function AylikMaliyetler(props = {}) {
   );
 }
 
-export default AylikMaliyetler;
+export default AylikKM;
