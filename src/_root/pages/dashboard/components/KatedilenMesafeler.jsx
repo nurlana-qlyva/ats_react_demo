@@ -319,7 +319,7 @@ function KatedilenMesafeler(props = {}) {
                 <YAxis unit="km" width={80} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend content={<CustomLegend />} />
-                <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#8884d8" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
+                <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#00b7ce" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
                   {/*<LabelList dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />*/}
                 </Bar>
               </BarChart>
@@ -417,7 +417,7 @@ function KatedilenMesafeler(props = {}) {
               <YAxis unit="km" width={80} />
               <Tooltip content={<CustomTooltip />} />
               <Legend content={<CustomLegend />} />
-              <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#8884d8" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
+              <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#00b7ce" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Katedilen Mesafe" unit="km">
                 <LabelList style={{ fill: "white" }} dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />
               </Bar>
             </BarChart>
