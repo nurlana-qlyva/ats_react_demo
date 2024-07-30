@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import bg from "../../../../../public/images/bg-card.png";
 import { Button, DatePicker, Modal, Popover, Spin, Typography } from "antd";
 import { FallOutlined, MoreOutlined } from "@ant-design/icons";
 import { Controller, useFormContext } from "react-hook-form";
@@ -60,12 +59,12 @@ function Component3(props) {
     try {
       const response = await http.post("Graphs/GetGraphInfoByType?type=3", body);
       let responseData = response.data;
-        if (typeof responseData === "number") {
-            // Ondalık kısmı yuvarlama
-            responseData = Math.round(responseData);
-            // Sayıyı 100'lük basamaklara ayırma
-            responseData = responseData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
+      if (typeof responseData === "number") {
+        // Ondalık kısmı yuvarlama
+        responseData = Math.round(responseData);
+        // Sayıyı 100'lük basamaklara ayırma
+        responseData = responseData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
       setData(responseData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
@@ -120,7 +119,7 @@ function Component3(props) {
       style={{
         width: "100%",
         height: "100%",
-        background: `url(${bg}), linear-gradient(rgb(27 17 92), #7A6FBE)`,
+        background: `url(/images/bg-card.png), linear-gradient(rgb(27 17 92), #7A6FBE)`,
         backgroundPosition: "inherit",
         backgroundSize: "cover",
         borderRadius: "5px",
