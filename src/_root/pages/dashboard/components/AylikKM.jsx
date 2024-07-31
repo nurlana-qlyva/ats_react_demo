@@ -332,7 +332,7 @@ function AylikKM(props = {}) {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend content={<CustomLegend />} />
                 <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#173B45" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık KM" unit=" km">
-                  {/*<LabelList dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />*/}
+                  <LabelList style={{ fill: "white" }} dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

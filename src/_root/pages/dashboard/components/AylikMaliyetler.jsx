@@ -331,7 +331,7 @@ function AylikMaliyetler(props = {}) {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend content={<CustomLegend />} />
                 <Bar dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" stackId="a" fill="#FFB200" hide={!visibleSeries.AYLIK_BAKIM_ISEMRI_MALIYET} name="Aylık Maliyet" unit=" ₺">
-                  {/*<LabelList dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />*/}
+                  <LabelList style={{ fill: "white" }} dataKey="AYLIK_BAKIM_ISEMRI_MALIYET" position="insideTop" />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
