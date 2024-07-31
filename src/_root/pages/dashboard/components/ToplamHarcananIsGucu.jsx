@@ -531,6 +531,7 @@ function ToplamHarcananIsGucu(props = {}) {
                     ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
+                <Legend content={<CustomLegend />} />
               </PieChart>
             </StyledResponsiveContainer>
           </div>
