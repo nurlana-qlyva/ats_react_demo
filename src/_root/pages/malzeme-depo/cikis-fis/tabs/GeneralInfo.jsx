@@ -59,7 +59,7 @@ const GeneralInfo = ({ isValid }) => {
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("fisNo")}</label>
-            <TextInput name="fisNo" style={validateStyle} />
+            <TextInput name="fisNo" style={validateStyle} required={true} />
           </div>
         </div>
         <div className="col-span-4">
@@ -67,7 +67,7 @@ const GeneralInfo = ({ isValid }) => {
             <div className="col-span-6">
               <div className="flex flex-col gap-1">
                 <label>{t("tarih")}</label>
-                <DateInput name="tarih" />
+                <DateInput name="tarih" required={true} />
               </div>
             </div>
             <div className="col-span-6">
@@ -81,13 +81,13 @@ const GeneralInfo = ({ isValid }) => {
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("cikisDeposu")}</label>
-            <Depo type="YAKIT" /> 
+            <Depo type="YAKIT" required={true} /> 
           </div>
         </div>
         <div className="col-span-4">
           <div className="flex flex-col gap-1">
             <label>{t("firma")}</label>
-            <Firma name="unvan" codeName="firmaId" />
+            <Firma name="unvan" codeName="firmaId" required={true} />
           </div>
         </div>
         <div className="col-span-4">

@@ -1,12 +1,21 @@
-import { Controller, useFormContext } from 'react-hook-form'
 import { t } from 'i18next'
-import { Checkbox, Input, InputNumber } from 'antd'
-import FirmaTip from '../../../../components/form/FirmaTip'
-import Textarea from '../../../../components/form/inputs/Textarea'
+import PropTypes from "prop-types";
 import Location from '../../../../components/form/tree/Location'
+import Textarea from '../../../../components/form/inputs/Textarea'
+import TextInput from '../../../../components/form/inputs/TextInput'
+import CheckboxInput from '../../../../components/form/checkbox/CheckboxInput'
+import CodeControl from '../../../../components/form/selects/CodeControl'
+import NumberInput from '../../../../components/form/inputs/NumberInput'
 
 const GeneralInfo = ({ isValid }) => {
-    const { control } = useFormContext()
+    const validateStyle = {
+        borderColor:
+            isValid === "error"
+                ? "#dc3545"
+                : isValid === "success"
+                    ? "#23b545"
+                    : "#000",
+    };
 
     return (
         <>
@@ -16,163 +25,56 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("firmaKodu")}</label>
-                                <Controller
-                                    name="kod"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            style={
-                                                isValid === "error"
-                                                    ? { borderColor: "#dc3545" }
-                                                    : isValid === "success"
-                                                        ? { borderColor: "#23b545" }
-                                                        : { color: "#000" }
-                                            }
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="kod" style={validateStyle} required={true} />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("aktif")}</label>
-                                <Controller
-                                    name="aktif"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="aktif" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("unvan")}</label>
-                                <Controller
-                                    name="unvan"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="unvan" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("firmaTip")}</label>
-                                <Controller
-                                    name="firmaTipiKodId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <FirmaTip field={field} />
-                                    )}
+                                <label>{t("firmaTipi")}</label>
+                                <CodeControl codeName="firmaTipiKodId" name="firmaTipi" id={202}
                                 />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("vergiDairesi")}</label>
-                                <Controller
-                                    name="vd"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="vd" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("vergiNo")}</label>
-                                <Controller
-                                    name="vno"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="vno" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("sektor")}</label>
-                                <Controller
-                                    name="sektor"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="sektor" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("terminSuresi")}</label>
-                                <Controller
-                                    name="terminSure"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="terminSure" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("indirimOran")}</label>
-                                <Controller
-                                    name="indirimOran"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <InputNumber
-                                            {...field}
-                                            className='w-full'
-                                            onChange={(e) => {
-                                                field.onChange(e)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("indirimOrani")} %</label>
+                                <NumberInput name="indirimOran" />
                             </div>
                         </div>
                         <div className="col-span-6">
@@ -188,127 +90,43 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("servisFirmasi")}</label>
-                                <Controller
-                                    name="tipServis"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipServis" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("sigortaAcentesi")}</label>
-                                <Controller
-                                    name="tipSigorta"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipSigorta" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("tedarikci")}</label>
-                                <Controller
-                                    name="tipTedarikci"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipTedarikci" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("akaryakitIstasyonu")}</label>
-                                <Controller
-                                    name="tipAkaryakitIst"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipAkaryakitIst" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("musteri")}</label>
-                                <Controller
-                                    name="tipMusteri"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipMusteri" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("aracKiralama")}</label>
-                                <Controller
-                                    name="tipKiralama"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipKiralama" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("diger")}</label>
-                                <Controller
-                                    name="tipDiger"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            {...field}
-                                            checked={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.checked);
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <CheckboxInput name="tipDiger" />
                             </div>
                         </div>
                     </div>
@@ -322,6 +140,10 @@ const GeneralInfo = ({ isValid }) => {
             </div>
         </>
     );
+};
+
+GeneralInfo.propTypes = {
+    isValid: PropTypes.string,
 };
 
 export default GeneralInfo;

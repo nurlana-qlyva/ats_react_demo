@@ -9,7 +9,7 @@ const FirmaTip = ({ field }) => {
     const { setValue, watch } = useFormContext()
 
     const handleClick = () => {
-        CodeControlService(202).then(res => {
+        CodeControlService(202).then(res => { 
             setData(res.data)
         })
     }

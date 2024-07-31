@@ -1,20 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import { Button, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { t } from "i18next";
-import { CodeItemValidateService } from "../../../../../api/service";
 import PersonalFields from "../../../../components/form/PersonalFields";
 import GeneralInfo from "./GeneralInfo";
 import {
-  AddFirmaService,
-  GetFirmaCodeService,
-} from "../../../../../api/services/firma_services";
+  AddCompanyItemService,
+} from "../../../../../api/services/sistem-tanimlari/services";
 import Iletisim from "./Iletisim";
+import { CodeItemValidateService, GetModuleCodeByCode } from "../../../../../api/services/code/services";
 
 const AddModal = ({ setStatus }) => {
   const [openModal, setopenModal] = useState(false);
   const [isValid, setIsValid] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
   const isFirstRender = useRef(true);
 
   const [fields, setFields] = useState([
@@ -104,7 +106,7 @@ const AddModal = ({ setStatus }) => {
 
   useEffect(() => {
     if (openModal && isFirstRender.current) {
-      GetFirmaCodeService().then((res) => setValue("kod", res.data));
+      GetModuleCodeByCode("FIRMA_KOD").then((res) => setValue("kod", res.data));
     }
   }, [openModal, setValue]);
 
@@ -169,11 +171,14 @@ const AddModal = ({ setStatus }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
-    AddFirmaService(body).then((res) => {
+    AddCompanyItemService(body).then((res) => {
       if (res.data.statusCode === 200) {
         setStatus(true);
         reset(defaultValues);
         setopenModal(false);
+        setIsValid("normal");
+        setActiveKey("1");
+        setLoading(false);
       }
     });
     setStatus(false);
@@ -204,18 +209,32 @@ const AddModal = ({ setStatus }) => {
   ];
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success" ? false : isValid === "error" ? true : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setopenModal(false);
         reset(defaultValues);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -231,7 +250,7 @@ const AddModal = ({ setStatus }) => {
         <PlusOutlined /> {t("ekle")}
       </Button>
       <Modal
-        title={t("yeniServisGirisi")}
+        title={t("yeniFirmaTanimiGirisi")}
         open={openModal}
         onCancel={() => setopenModal(false)}
         maskClosable={false}
@@ -240,12 +259,16 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>
     </>
   );
+};
+
+AddModal.propTypes = {
+  setStatus: PropTypes.func,
 };
 
 export default AddModal;

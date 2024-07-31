@@ -3,11 +3,11 @@ import { t } from "i18next";
 import dayjs from "dayjs";
 import { Table, Popover, Button, Input, Spin, Checkbox } from "antd";
 import { MenuOutlined, HomeOutlined, LoadingOutlined } from "@ant-design/icons";
-import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import { GetMaterialListService } from "../../../../api/services/malzeme/services";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
 import Content from "../../../components/drag-drop-table/DraggableCheckbox";
+import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 

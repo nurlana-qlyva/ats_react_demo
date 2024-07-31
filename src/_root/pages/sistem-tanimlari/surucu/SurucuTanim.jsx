@@ -12,7 +12,7 @@ import UpdateModal from "./UpdateModal";
 
 const breadcrumb = [
   { href: "/", title: <HomeOutlined /> },
-  { title: t("malzemeTanimlari") },
+  { title: t("surucuTanimlari") },
 ];
 
 const Suruculer = () => {

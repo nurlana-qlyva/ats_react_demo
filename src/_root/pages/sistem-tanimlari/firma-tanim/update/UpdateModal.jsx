@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { t } from "i18next";
-import { Button, Modal, Tabs } from "antd";
+import { Button, message, Modal, Tabs } from "antd";
+import { CodeItemValidateService } from "../../../../../api/services/code/services";
 import {
-  CodeItemValidateService,
-  FileReadService,
-  PhotoReadService,
-} from "../../../../../api/service";
+  GetDocumentsByRefGroupService,
+  GetPhotosByRefGroupService,
+} from "../../../../../api/services/upload/services";
 import {
-  GetFirmaByIdService,
-  UpdateFirmaService,
-} from "../../../../../api/services/firma_services";
+  UpdateCompanyItemService,
+  GetCompanyByIdService,
+} from "../../../../../api/services/sistem-tanimlari/services";
 import GeneralInfo from "./GeneralInfo";
 import Iletisim from "./Iletisim";
 import PersonalFields from "../../../../components/form/PersonalFields";
@@ -22,6 +22,8 @@ import FileUpload from "../../../../components/upload/FileUpload";
 
 const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const [isValid, setIsValid] = useState("normal");
+  const [code, setCode] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
   const [firmaId, setFirmaId] = useState(0);
   // file
   const [filesUrl, setFilesUrl] = useState([]);
@@ -117,7 +119,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const { handleSubmit, reset, setValue, watch } = methods;
 
   useEffect(() => {
-    if (watch("kod")) {
+    if (code !== watch("kod")) {
       const body = {
         tableName: "FirmaTanimlari",
         code: watch("kod"),
@@ -125,11 +127,14 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       CodeItemValidateService(body).then((res) => {
         !res.data.status ? setIsValid("success") : setIsValid("error");
       });
+    } else {
+      setIsValid("normal");
     }
-  }, [watch("kod")]);
+  }, [watch("kod"), code]);
 
   useEffect(() => {
-    GetFirmaByIdService(id).then((res) => {
+    GetCompanyByIdService(id).then((res) => {
+      setCode(res?.data.kod);
       setValue("web", res.data.web);
       setValue("vno", res.data.vno);
       setValue("vd", res.data.vd);
@@ -181,8 +186,8 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       setValue("ozelAlan12", res?.data.ozelAlan12);
     });
 
-    PhotoReadService(id, "FIRMA").then((res) => setImageUrls(res.data));
-    FileReadService(id, "FIRMA").then((res) => setFilesUrl(res.data));
+    GetPhotosByRefGroupService(id, "FIRMA").then((res) => setImageUrls(res.data));
+    GetDocumentsByRefGroupService(id, "FIRMA").then((res) => setFilesUrl(res.data));
   }, [id, updateModal]);
 
   const onSubmit = handleSubmit((values) => {
@@ -235,11 +240,12 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       ozelAlan12: values.ozelAlan12 || 0,
     };
 
-    UpdateFirmaService(body).then((res) => {
+    UpdateCompanyItemService(body).then((res) => {
       if (res.data.statusCode === 202) {
         setUpdateModal(false);
         setStatus(true);
         reset(defaultValues);
+        setActiveKey("1");
       }
     });
 
@@ -251,7 +257,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   const uploadImages = () => {
     try {
       setLoadingImages(true);
-      const data = uploadPhoto(id, "FIRMA", images);
+      const data = uploadPhoto(id, "FIRMA", images, false);
       setImageUrls([...imageUrls, data.imageUrl]);
     } catch (error) {
       message.error("Resim yüklenemedi. Yeniden deneyin.");
@@ -323,7 +329,9 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
   ];
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
+    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit} disabled={
+      isValid === "success" ? false : isValid === "error" ? true : false
+    }>
       {t("guncelle")}
     </Button>,
     <Button
@@ -332,15 +340,16 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
       onClick={() => {
         setUpdateModal(false);
         reset(defaultValues);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
   return (
     <Modal
-      title={t("servisGuncelle")}
+      title={t("firmaTanimBilgileriniGuncelle")}
       open={updateModal}
       onCancel={() => setUpdateModal(false)}
       maskClosable={false}
@@ -349,7 +358,7 @@ const UpdateModal = ({ updateModal, setUpdateModal, setStatus, id }) => {
     >
       <FormProvider {...methods}>
         <form>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
         </form>
       </FormProvider>
     </Modal>
@@ -360,8 +369,7 @@ UpdateModal.propTypes = {
   updateModal: PropTypes.bool,
   setUpdateModal: PropTypes.func,
   setStatus: PropTypes.func,
-  record: PropTypes.object,
-  status: PropTypes.bool,
+  id: PropTypes.number,
 };
 
 export default UpdateModal;

@@ -1,10 +1,7 @@
-import { Controller, useFormContext } from 'react-hook-form'
 import { t } from 'i18next'
-import { Input } from 'antd'
+import TextInput from "../../../../components/form/inputs/TextInput"
 
 const Iletisim = () => {
-    const { control } = useFormContext()
-
     return (
         <>
             <div className="grid gap-1 border">
@@ -12,104 +9,38 @@ const Iletisim = () => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("adres")}</label>
-                                <Controller
-                                    name="adres_1"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("adres")} 1</label>
+                                <TextInput name="adres_1" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("adres")}</label>
-                                <Controller
-                                    name="adres_2"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("adres")} 2</label>
+                                <TextInput name="adres_2" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("sehir")}</label>
-                                <Controller
-                                    name="il"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="il" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("ilce")}</label>
-                                <Controller
-                                    name="ilce"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="ilce" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("ilgili")}</label>
-                                <Controller
-                                    name="ilgili_1"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("ilgili")} 1</label>
+                                <TextInput name="ilgili_1" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("ilgili")}</label>
-                                <Controller
-                                    name="ilgili_2"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("ilgili")} 2</label>
+                                <TextInput name="ilgili_2" />
                             </div>
                         </div>
                     </div>
@@ -118,104 +49,38 @@ const Iletisim = () => {
                     <div className="grid gap-1">
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("telefon")}</label>
-                                <Controller
-                                    name="tel_1"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("telefon")} 1</label>
+                                <TextInput name="tel_1" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
-                                <label>{t("telefon")}</label>
-                                <Controller
-                                    name="tel_2"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <label>{t("telefon")} 2</label>
+                                <TextInput name="tel_2" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("fax")}</label>
-                                <Controller
-                                    name="fax"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="fax" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("gsm")}</label>
-                                <Controller
-                                    name="gsm"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="gsm" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("email")}</label>
-                                <Controller
-                                    name="email"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="email" />
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label>{t("web")}</label>
-                                <Controller
-                                    name="web"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value)
-                                            }}
-                                        />
-                                    )}
-                                />
+                                <TextInput name="web" />
                             </div>
                         </div>
                     </div>

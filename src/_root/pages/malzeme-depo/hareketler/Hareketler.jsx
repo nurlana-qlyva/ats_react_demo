@@ -103,12 +103,12 @@ const Hareketler = () => {
             key: 13,
         },
         {
-            title: t("girisDepo"),
+            title: t("girisDeposu"),
             dataIndex: "girisDepo",
             key: 14,
         },
         {
-            title: t("cikisDepo"),
+            title: t("cikisDeposu"),
             dataIndex: "cikisDepo",
             key: 15,
         },

@@ -8,24 +8,6 @@ import {
 } from "./services/select_services";
 
 import {
-  PhotoUploadService,
-  PhotoReadService,
-  PhotoDownloadService,
-  FileUploadService,
-  FileReadService,
-  FileDownloadService,
-} from "./services/upload_services";
-
-import {
-  VehiclesReadForSearchService,
-  VehiclesReadForPageService,
-  VehiclesReadForFilterService,
-  NewVehicleAddService,
-  VehiclesUpdateReadService,
-  VehiclesUpdateSetService,
-} from "./services/vehicles_services";
-
-import {
   KMGetService,
   KMValidateService,
   KMAddService,
@@ -37,48 +19,6 @@ import {
   KMLogListValidateService,
   KMLogListUpdateService,
 } from "./services/km_services";
-
-import {
-  YakitGetService,
-  YakitListSearchService,
-  YakitGetByIdService,
-  YakitListSearchByIdService,
-  YakitDataGetByIdService,
-  YakitDataGetByDateService,
-  YakitAddService,
-  YakitHistoryGetService,
-  YakitTankGetService,
-  YakitKmLogValidateService,
-  YakitKmLogValidateForUpdateService,
-  YakitPriceGetService,
-  YakitUpdateDataGetService,
-  YakitUpdateDataUpdateService,
-  YakitDataDeleteService,
-} from "./services/yakit_services";
-
-import {
-  MalzemeListGetService,
-  MalzemeListSearchService,
-  MalzemeAddService,
-  MalzemeUpdateService,
-  MalzemeDepoListGetService,
-  MalzemeCodeGetService,
-  MalzemeDataByIdGetService,
-} from "./services/malzeme_services";
-
-import {
-  GirisFisleriListGetService,
-  GirisFisleriListSearchService,
-  GirisFisCodeGetService,
-  GirisFisleriAddService,
-  GetMaterialReceiptByIdService,
-  UpdateMaterialReceiptService
-} from "./services/girisfis_services";
-
-import {
-  DetailInfoGetService,
-  DetailInfoUpdateService,
-} from "./services/detay_services";
 
 // login
 export const LoginUserService = (data) => {
@@ -117,18 +57,6 @@ export {
   MaterialListSelectService,
   GetLocationByDepoIdService,
   CodeItemValidateService,
-  PhotoUploadService,
-  PhotoReadService,
-  PhotoDownloadService,
-  FileUploadService,
-  FileReadService,
-  FileDownloadService,
-  VehiclesReadForSearchService,
-  VehiclesReadForPageService,
-  VehiclesReadForFilterService,
-  NewVehicleAddService,
-  VehiclesUpdateReadService,
-  VehiclesUpdateSetService,
   KMGetService,
   KMValidateService,
   KMAddService,
@@ -139,34 +67,4 @@ export {
   KMLogListDeleteService,
   KMLogListValidateService,
   KMLogListUpdateService,
-  YakitGetService,
-  YakitListSearchService,
-  YakitGetByIdService,
-  YakitListSearchByIdService,
-  YakitDataGetByIdService,
-  YakitDataGetByDateService,
-  YakitAddService,
-  YakitHistoryGetService,
-  YakitTankGetService,
-  YakitKmLogValidateService,
-  YakitKmLogValidateForUpdateService,
-  YakitPriceGetService,
-  YakitUpdateDataGetService,
-  YakitUpdateDataUpdateService,
-  YakitDataDeleteService,
-  MalzemeListGetService,
-  MalzemeListSearchService,
-  MalzemeAddService,
-  MalzemeUpdateService,
-  MalzemeDepoListGetService,
-  MalzemeCodeGetService,
-  MalzemeDataByIdGetService,
-  GirisFisleriListGetService,
-  GirisFisleriListSearchService,
-  GirisFisCodeGetService,
-  GirisFisleriAddService,
-  UpdateMaterialReceiptService,
-  GetMaterialReceiptByIdService,
-  DetailInfoGetService,
-  DetailInfoUpdateService,
 };

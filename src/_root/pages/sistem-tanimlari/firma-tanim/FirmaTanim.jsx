@@ -1,118 +1,24 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import { t } from "i18next";
-import {
-    closestCenter,
-    DndContext,
-    DragOverlay,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core";
-import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
-import {
-    arrayMove,
-    horizontalListSortingStrategy,
-    SortableContext,
-    useSortable,
-} from "@dnd-kit/sortable";
-import { Checkbox, Table, Popover, Button, Input, Popconfirm, Modal } from "antd";
+import { Table, Popover, Button, Input, Spin, Checkbox, Popconfirm } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,
     DeleteOutlined,
+    LoadingOutlined
 } from "@ant-design/icons";
+import { DeleteCompanyItemService, GetCompaniesListService } from "../../../../api/services/sistem-tanimlari/services";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
-import { DeleteFirmaService, GetFirmaListService, SearchFirmaListService } from "../../../../api/services/firma_services";
+import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
+import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import AddModal from "./add/AddModal";
 import UpdateModal from "./update/UpdateModal";
 
 const breadcrumb = [
-    {
-        href: "/",
-        title: <HomeOutlined />,
-    },
-    {
-        title: t("servisTanim"),
-    },
+    { href: "/", title: <HomeOutlined />, },
+    { title: t("firmaTanimlari"), },
 ];
-
-const DragIndexContext = createContext({
-    active: -1,
-    over: -1,
-});
-
-const dragActiveStyle = (dragState, id) => {
-    const { active, over, direction } = dragState;
-    let style = {};
-    if (active && active === id) {
-        style = {
-            backgroundColor: "gray",
-            opacity: 0.5,
-        };
-    } else if (over && id === over && active !== over) {
-        style =
-            direction === "right"
-                ? {
-                    borderRight: "1px dashed gray",
-                }
-                : {
-                    borderLeft: "1px dashed gray",
-                };
-    }
-    return style;
-};
-
-const TableBodyCell = (props) => {
-    const dragState = useContext(DragIndexContext);
-    return (
-        <td
-            {...props}
-            style={{
-                ...props.style,
-                ...dragActiveStyle(dragState, props.id),
-            }}
-        />
-    );
-};
-
-TableBodyCell.propTypes = {
-    id: PropTypes.string,
-    style: PropTypes.object,
-};
-
-const TableHeaderCell = (props) => {
-    const dragState = useContext(DragIndexContext);
-    const { attributes, listeners, setNodeRef, isDragging } = useSortable({
-        id: props.id,
-    });
-    const style = {
-        ...props.style,
-        cursor: "move",
-        ...(isDragging
-            ? {
-                position: "relative",
-                zIndex: 9999,
-                userSelect: "none",
-            }
-            : {}),
-        ...dragActiveStyle(dragState, props.id),
-    };
-    return (
-        <th
-            {...props}
-            ref={setNodeRef}
-            style={style}
-            {...attributes}
-            {...listeners}
-        />
-    );
-};
-
-TableHeaderCell.propTypes = {
-    id: PropTypes.string,
-    style: PropTypes.object,
-};
 
 const FirmaTanim = () => {
     const [dataSource, setDataSource] = useState([]);
@@ -123,10 +29,7 @@ const FirmaTanim = () => {
         },
     });
     const [loading, setLoading] = useState(false);
-    const [dragIndex, setDragIndex] = useState({
-        active: -1,
-        over: -1,
-    });
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState(false);
     const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -136,21 +39,34 @@ const FirmaTanim = () => {
     const [deletedFirma, setDeletedFirma] = useState(0);
     const [servis, setServis] = useState(0);
     const [id, setId] = useState(0);
+    const [filterData, setFilterData] = useState({});
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [keys, setKeys] = useState([]);
+    const [rows, setRows] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        GetFirmaListService(tableParams.pagination.current).then((res) => {
+        const fetchData = async () => {
+            setLoading(true);
+            setIsInitialLoading(true);
+            const res = await GetCompaniesListService(
+                search,
+                tableParams.pagination.current,
+                filterData
+            );
+            setLoading(false);
+            setIsInitialLoading(false);
             setDataSource(res?.data.list);
-            setTableParams({
-                ...tableParams,
+            setTableParams((prevTableParams) => ({
+                ...prevTableParams,
                 pagination: {
-                    ...tableParams.pagination,
+                    ...prevTableParams.pagination,
                     total: res?.data.recordCount,
                 },
-            });
-            setLoading(false);
-        });
-    }, [status]);
+            }));
+        };
+
+        fetchData();
+    }, [search, tableParams.pagination.current, status, filterData]);
 
     const handleDelete = (count) => {
         if (count > 0) {
@@ -161,7 +77,7 @@ const FirmaTanim = () => {
     };
 
     const confirmDelete = () => {
-        DeleteFirmaService(deletedFirma).then(res => {
+        DeleteCompanyItemService(deletedFirma).then(() => {
             setStatus(!status);
             setIsConfirmDeleteModalOpen(false);
         });
@@ -177,39 +93,9 @@ const FirmaTanim = () => {
         setIsConfirmDeleteModalOpen(false);
     };
 
-    useEffect(() => {
-        if (search.length >= 3) {
-            SearchFirmaListService(tableParams?.pagination.current, search).then(
-                (res) => {
-                    setDataSource(res?.data.list);
-                    setTableParams({
-                        ...tableParams,
-                        pagination: {
-                            ...tableParams.pagination,
-                            total: res?.data.recordCount,
-                        },
-                    });
-                    setLoading(false);
-                }
-            );
-        } else {
-            GetFirmaListService(tableParams?.pagination.current).then((res) => {
-                setDataSource(res?.data.list);
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res?.data.recordCount,
-                    },
-                });
-                setLoading(false);
-            });
-        }
-    }, [search, tableParams?.pagination.current, status]);
-
     const baseColumns = [
         {
-            title: t("kod"),
+            title: t("firmaKodu"),
             dataIndex: "kod",
             key: 1,
             render: (text, record) => (
@@ -234,12 +120,12 @@ const FirmaTanim = () => {
             key: 3,
         },
         {
-            title: t("telefon"),
+            title: `${t("telefon")} 1`,
             dataIndex: "tel_1",
             key: 4,
         },
         {
-            title: t("telefon"),
+            title: `${t("telefon")} 2`,
             dataIndex: "tel_2",
             key: 5,
         },
@@ -289,12 +175,12 @@ const FirmaTanim = () => {
             key: 14,
         },
         {
-            title: t("ilgili"),
+            title: `${t("ilgili")} 1`,
             dataIndex: "ilgili_1",
             key: 15,
         },
         {
-            title: t("ilgil"),
+            title: `${t("ilgili")} 2`,
             dataIndex: "ilgili_2",
             key: 16,
         },
@@ -336,13 +222,11 @@ const FirmaTanim = () => {
             onHeaderCell: () => ({
                 id: `${i}`,
             }),
-            onCell: () => ({
-                id: `${i}`,
-            }),
         }))
     );
 
     const handleTableChange = (pagination, filters, sorter) => {
+        setLoading(true);
         setTableParams({
             pagination,
             filters,
@@ -350,64 +234,98 @@ const FirmaTanim = () => {
         });
 
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            console.log(1);
+            setDataSource([]);
         }
+    };
+
+    const filter = (data) => {
+        setLoading(true);
+        setStatus(true);
+        setFilterData(data);
+    };
+
+    const clear = () => {
+        setLoading(true);
+        setFilterData({});
     };
 
     const defaultCheckedList = columns.map((item) => item.key);
     const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
-    const options = columns
-        .map(({ key, title }) => ({
-            label: title,
-            value: key,
-        }));
+    const newColumns = columns.map((col) => ({
+        ...col,
+        hidden: !checkedList.includes(col.key),
+    }));
+
+    const options = columns.map(({ key, title }) => ({
+        label: title,
+        value: key,
+    }));
+
+    const moveCheckbox = (fromIndex, toIndex) => {
+        const updatedColumns = [...columns];
+        const [removed] = updatedColumns.splice(fromIndex, 1);
+        updatedColumns.splice(toIndex, 0, removed);
+
+        setColumns(updatedColumns);
+        setCheckedList(updatedColumns.map((col) => col.key));
+    };
 
     const content = (
-        <>
-            <Checkbox.Group
-                value={checkedList}
-                options={options}
-                onChange={(value) => {
-                    if (value.length > 0) {
-                        setCheckedList(value);
-                    }
-                }}
-            />
-        </>
+        <Content
+            options={options}
+            checkedList={checkedList}
+            setCheckedList={setCheckedList}
+            moveCheckbox={moveCheckbox}
+        />
     );
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 1,
-            },
-        })
+    // Custom loading icon
+    const customIcon = (
+        <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
     );
 
-    const onDragEnd = ({ active, over }) => {
-        if (active.id !== over?.id) {
-            setColumns((prevState) => {
-                const activeIndex = prevState.findIndex((i) => i.key === active?.id);
-                const overIndex = prevState.findIndex((i) => i.key === over?.id);
-                return arrayMove(prevState, activeIndex, overIndex);
-            });
+    // get selected rows data
+    if (!localStorage.getItem("selectedRowKeys"))
+        localStorage.setItem("selectedRowKeys", JSON.stringify([]));
+
+    const handleRowSelection = (row, selected) => {
+        if (selected) {
+            if (!keys.includes(row.siraNo)) {
+                setKeys((prevKeys) => [...prevKeys, row.siraNo]);
+                setRows((prevRows) => [...prevRows, row]);
+            }
+        } else {
+            setKeys((prevKeys) => prevKeys.filter((key) => key !== row.siraNo));
+            setRows((prevRows) =>
+                prevRows.filter((item) => item.siraNo !== row.siraNo)
+            );
         }
-        setDragIndex({
-            active: -1,
-            over: -1,
-        });
     };
 
-    const onDragOver = ({ active, over }) => {
-        const activeIndex = columns.findIndex((i) => i.key === active.id);
-        const overIndex = columns.findIndex((i) => i.key === over?.id);
-        setDragIndex({
-            active: active.id,
-            over: over?.id,
-            direction: overIndex > activeIndex ? "right" : "left",
-        });
-    };
+    useEffect(
+        () => localStorage.setItem("selectedRowKeys", JSON.stringify(keys)),
+        [keys]
+    );
+
+    useEffect(() => {
+        const storedSelectedKeys = JSON.parse(
+            localStorage.getItem("selectedRowKeys")
+        );
+        if (storedSelectedKeys.length) {
+            setKeys(storedSelectedKeys);
+        }
+    }, []);
+
+    useEffect(() => {
+        const storedSelectedKeys = JSON.parse(
+            localStorage.getItem("selectedRowKeys")
+        );
+        if (storedSelectedKeys.length) {
+            setSelectedRowKeys(storedSelectedKeys);
+        }
+    }, [tableParams.pagination.current]);
+
 
     return (
         <>
@@ -430,10 +348,11 @@ const FirmaTanim = () => {
                             </Button>
                         </Popover>
                         <Input
-                            placeholder="Arama"
+                            placeholder={t("arama")}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <AddModal setStatus={setStatus} />
+                        {/* <Filter filter={filter} clearFilters={clear} /> */}
                     </div>
                 </div>
             </div>
@@ -446,89 +365,42 @@ const FirmaTanim = () => {
             />
 
             <div className="content">
-                <DndContext
-                    sensors={sensors}
-                    modifiers={[restrictToHorizontalAxis]}
-                    onDragEnd={onDragEnd}
-                    onDragOver={onDragOver}
-                    collisionDetection={closestCenter}
-                >
-                    <SortableContext
-                        items={columns.map((i) => i.key)}
-                        strategy={horizontalListSortingStrategy}
-                    >
-                        <DragIndexContext.Provider value={dragIndex}>
-                            <Table
-                                columns={columns}
-                                dataSource={dataSource}
-                                pagination={{
-                                    ...tableParams.pagination,
-                                    showTotal: (total) => (
-                                        <p className="text-info">[{total} kayıt]</p>
-                                    ),
-                                    locale: {
-                                        items_per_page: `/ ${t("sayfa")}`,
-                                    },
-                                }}
-                                loading={loading}
-                                size="small"
-                                onChange={handleTableChange}
-                                scroll={{
-                                    x: 600,
-                                }}
-                                components={{
-                                    header: {
-                                        cell: TableHeaderCell,
-                                    },
-                                    body: {
-                                        cell: TableBodyCell,
-                                    },
-                                }}
-                            />
-                        </DragIndexContext.Provider>
-                    </SortableContext>
-                    <DragOverlay>
-                        <th
-                            style={{
-                                backgroundColor: "gray",
-                                padding: 16,
+                <DragAndDropContext items={columns} setItems={setColumns}>
+                    <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+                        <Table
+                            columns={newColumns}
+                            dataSource={dataSource}
+                            pagination={{
+                                ...tableParams.pagination,
+                                showTotal: (total) => (
+                                    <p className="text-info">[{total} {t("kayit")}]</p>
+                                ),
+                                locale: {
+                                    items_per_page: `/ ${t("sayfa")}`,
+                                },
                             }}
-                        >
-                            {
-                                columns[columns.findIndex((i) => i.key === dragIndex.active)]
-                                    ?.title
-                            }
-                        </th>
-                    </DragOverlay>
-                </DndContext>
-
-                <Modal
-                    open={isDeleteModalOpen}
-                    onOk={closeModal}
-                    onCancel={closeModal}
-                    footer={[
-                        <Button key="ok" onClick={closeModal}>
-                            Tamam
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {servis} ] ünvanlı firmaya ait malzeme hareketleri bulunmaktadır. Kayıt silinemez.</p>
-                </Modal>
-                <Modal
-                    open={isConfirmDeleteModalOpen}
-                    onOk={confirmDelete}
-                    onCancel={closeConfirmModal}
-                    footer={[
-                        <Button key="cancel" onClick={closeConfirmModal}>
-                            Hayır
-                        </Button>,
-                        <Button key="confirm" type="primary" onClick={confirmDelete}>
-                            Evet
-                        </Button>,
-                    ]}
-                >
-                    <p>[ {servis} ] firma silinecektir. Devam etmek istediğinizden emin misiniz?</p>
-                </Modal>
+                            loading={loading}
+                            size="small"
+                            onChange={handleTableChange}
+                            rowSelection={{
+                                selectedRowKeys: selectedRowKeys,
+                                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                                onSelect: handleRowSelection,
+                            }}
+                            components={{
+                                header: {
+                                    cell: SortableHeaderCell,
+                                },
+                            }}
+                            scroll={{
+                                x: 2800,
+                            }}
+                            locale={{
+                                emptyText: "Veri Bulunamadı",
+                            }}
+                        />
+                    </Spin>
+                </DragAndDropContext>
             </div>
         </>
     );

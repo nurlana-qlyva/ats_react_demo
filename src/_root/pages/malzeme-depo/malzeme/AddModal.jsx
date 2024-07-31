@@ -18,6 +18,7 @@ const AddModal = ({ setStatus }) => {
   const [isValid, setIsValid] = useState("normal");
   const [activeKey, setActiveKey] = useState("1");
   const [loading, setLoading] = useState(false);
+  
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
