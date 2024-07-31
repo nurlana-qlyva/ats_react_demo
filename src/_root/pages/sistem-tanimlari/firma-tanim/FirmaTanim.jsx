@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
-import { Table, Popover, Button, Input, Spin, Checkbox, Popconfirm } from "antd";
+import { Table, Popover, Button, Input, Spin, Popconfirm } from "antd";
 import {
     MenuOutlined,
     HomeOutlined,

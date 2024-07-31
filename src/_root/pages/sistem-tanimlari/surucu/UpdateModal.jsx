@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { t } from "i18next";
 import dayjs from "dayjs";
 import { Button, Modal, Tabs } from "antd";
-import { CodeItemValidateService } from "../../../../api/service";
+import { CodeItemValidateService } from "../../../../api/services/code/services";
 import {
   GetDriverByIdService,
   UpdateDriverService,

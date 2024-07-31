@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { t } from "i18next";
 import dayjs from "dayjs";
-import { Checkbox, Table, Popover, Button, Input, Popconfirm } from "antd";
-import { MenuOutlined, HomeOutlined, DeleteOutlined } from "@ant-design/icons";
-import { GetDriverListService } from "../../../../api/services/sistem-tanimlari/surucu_services";
+import { Checkbox, Table, Popover, Button, Input, Popconfirm, Spin } from "antd";
+import { MenuOutlined, HomeOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
+import { GetDriverListService } from "../../../../api/services/sistem-tanimlari/services";
 import BreadcrumbComp from "../../../components/breadcrumb/Breadcrumb";
 import DragAndDropContext from "../../../components/drag-drop-table/DragAndDropContext";
 import SortableHeaderCell from "../../../components/drag-drop-table/SortableHeaderCell";
+import Content from "../../../components/drag-drop-table/DraggableCheckbox";
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";
 
@@ -24,6 +25,7 @@ const Suruculer = () => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(false);
   const [openRowHeader, setOpenRowHeader] = useState(false);
@@ -36,7 +38,7 @@ const Suruculer = () => {
 
   const baseColumns = [
     {
-      title: t("surucuKod"),
+      title: t("surucuKodu"),
       dataIndex: "surucuKod",
       key: 1,
       render: (text, record) => (
@@ -119,7 +121,7 @@ const Suruculer = () => {
       key: 14,
     },
     {
-      title: t("cezaPuani"),
+      title: t("cezaPuan"),
       dataIndex: "cezaPuani",
       key: 15,
     },
@@ -168,12 +170,14 @@ const Suruculer = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setIsInitialLoading(true);
       const res = await GetDriverListService(
         search,
         tableParams.pagination.current,
         filterData
       );
       setLoading(false);
+      setIsInitialLoading(false);
       setDataSource(res?.data.list);
       setTableParams((prevTableParams) => ({
         ...prevTableParams,
@@ -230,18 +234,27 @@ const Suruculer = () => {
     value: key,
   }));
 
+  const moveCheckbox = (fromIndex, toIndex) => {
+    const updatedColumns = [...columns];
+    const [removed] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, removed);
+
+    setColumns(updatedColumns);
+    setCheckedList(updatedColumns.map((col) => col.key));
+  };
+
   const content = (
-    <>
-      <Checkbox.Group
-        value={checkedList}
-        options={options}
-        onChange={(value) => {
-          if (value.length > 0) {
-            setCheckedList(value);
-          }
-        }}
-      />
-    </>
+    <Content
+      options={options}
+      checkedList={checkedList}
+      setCheckedList={setCheckedList}
+      moveCheckbox={moveCheckbox}
+    />
+  );
+
+  // Custom loading icon
+  const customIcon = (
+    <LoadingOutlined style={{ fontSize: 36 }} className="text-primary" spin />
   );
 
   // get selected rows data
@@ -306,7 +319,7 @@ const Suruculer = () => {
               </Button>
             </Popover>
             <Input
-              placeholder="Arama"
+              placeholder={t("arama")}
               onChange={(e) => setSearch(e.target.value)}
             />
             <AddModal setStatus={setStatus} />
@@ -319,42 +332,46 @@ const Suruculer = () => {
         updateModal={updateModal}
         setUpdateModal={setUpdateModal}
         setStatus={setStatus}
-        status={status}
         id={id}
       />
 
       <div className="content">
         <DragAndDropContext items={columns} setItems={setColumns}>
-          <Table
-            rowKey={(record) => record.surucuId}
-            columns={newColumns}
-            dataSource={dataSource}
-            pagination={{
-              ...tableParams.pagination,
-              showTotal: (total) => (
-                <p className="text-info">[{total} kayıt]</p>
-              ),
-              locale: {
-                items_per_page: `/ ${t("sayfa")}`,
-              },
-            }}
-            loading={loading}
-            size="small"
-            onChange={handleTableChange}
-            rowSelection={{
-              selectedRowKeys: selectedRowKeys,
-              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
-              onSelect: handleRowSelection,
-            }}
-            components={{
-              header: {
-                cell: SortableHeaderCell,
-              },
-            }}
-            scroll={{
-              x: 2000,
-            }}
-          />
+          <Spin spinning={loading || isInitialLoading} indicator={customIcon}>
+            <Table
+              rowKey={(record) => record.surucuId}
+              columns={newColumns}
+              dataSource={dataSource}
+              pagination={{
+                ...tableParams.pagination,
+                showTotal: (total) => (
+                  <p className="text-info">[{total} {t("kayit")}]</p>
+                ),
+                locale: {
+                  items_per_page: `/ ${t("sayfa")}`,
+                },
+              }}
+              loading={loading}
+              size="small"
+              onChange={handleTableChange}
+              rowSelection={{
+                selectedRowKeys: selectedRowKeys,
+                onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                onSelect: handleRowSelection,
+              }}
+              components={{
+                header: {
+                  cell: SortableHeaderCell,
+                },
+              }}
+              scroll={{
+                x: 2400,
+              }}
+              locale={{
+                emptyText: "Veri Bulunamadı",
+              }}
+            />
+          </Spin>
         </DragAndDropContext>
       </div>
     </>

@@ -3,11 +3,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { Button, Modal, Tabs } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { t } from "i18next";
-import { GetModuleCodeByCode } from "../../../../api/services/code/services";
-import { CodeItemValidateService } from "../../../../api/service";
-import { AddDriverService } from "../../../../api/services/sistem-tanimlari/surucu_services";
+import { GetModuleCodeByCode, CodeItemValidateService } from "../../../../api/services/code/services";
+import { AddDriverService } from "../../../../api/services/sistem-tanimlari/services";
 import PersonalFields from "../../../components/form/personal-fields/PersonalFields";
 import GeneralInfo from "./tabs/GeneralInfo";
 import KisiselBilgiler from "./tabs/KisiselBilgiler";
@@ -19,6 +18,8 @@ const AddModal = ({ setStatus }) => {
   const isFirstRender = useRef(true);
   const [openModal, setopenModal] = useState(false);
   const [isValid, setIsValid] = useState("normal");
+  const [activeKey, setActiveKey] = useState("1");
+  const [loading, setLoading] = useState(false);
   const [fields, setFields] = useState([
     {
       label: "ozelAlan1",
@@ -192,7 +193,6 @@ const AddModal = ({ setStatus }) => {
       ehliyetSeriNo: values.ehliyetSeriNo,
       ehliyetKullandigiChiazProtez: values.ehliyetKullandigiChiazProtez,
       ehliyetNo: values.ehliyetNo,
-      isim: values.isim,
       ozelAlan1: values.ozelAlan1,
       ozelAlan2: values.ozelAlan2,
       ozelAlan3: values.ozelAlan3,
@@ -212,6 +212,8 @@ const AddModal = ({ setStatus }) => {
         setStatus(true);
         reset(defaultValues);
         setopenModal(false);
+        setActiveKey("1");
+        setLoading(false);
       }
     });
     setStatus(false);
@@ -259,18 +261,32 @@ const AddModal = ({ setStatus }) => {
   ];
 
   const footer = [
-    <Button key="submit" className="btn btn-min primary-btn" onClick={onSubmit}>
-      {t("kaydet")}
-    </Button>,
+    loading ? (
+      <Button className="btn btn-min primary-btn">
+        <LoadingOutlined />
+      </Button>
+    ) : (
+      <Button
+        key="submit"
+        className="btn btn-min primary-btn"
+        onClick={onSubmit}
+        disabled={
+          isValid === "success" ? false : isValid === "error" ? true : false
+        }
+      >
+        {t("kaydet")}
+      </Button>
+    ),
     <Button
       key="back"
       className="btn btn-min cancel-btn"
       onClick={() => {
         setopenModal(false);
         reset(defaultValues);
+        setActiveKey("1");
       }}
     >
-      {t("iptal")}
+      {t("kapat")}
     </Button>,
   ];
 
@@ -295,7 +311,7 @@ const AddModal = ({ setStatus }) => {
       >
         <FormProvider {...methods}>
           <form>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs activeKey={activeKey} onChange={setActiveKey} items={items} />
           </form>
         </FormProvider>
       </Modal>
