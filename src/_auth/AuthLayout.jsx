@@ -25,8 +25,9 @@ const AuthLayout = () => {
     const onSubmit = async (data) => {
         setIsLoading(true)
         const body = {
-            KULLANICIKOD: data.username,
-            SIFRE: data.password,
+            kullaniciKod: data.username,
+            sifre: data.password,
+            firmaSifre: "demo"
         }
 
         try {
